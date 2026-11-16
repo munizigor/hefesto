@@ -6,7 +6,7 @@ Protótipo estático para validar, com a área de negócio, a tela de atendiment
 
 - **Atendimento:** simula uma ligação e percorre os quatro passos (local e natureza, entrevista, solicitante, fechamento), com ficha da ocorrência, observações do atendente e registro. O encaminhamento ao despacho acontece no ponto do fluxo da natureza marcado como despacho imediato, ou antes, pelo botão "Adiantar despacho".
 - **Demonstração com o Hermes:** três ligações roteirizadas sobre os fluxos do Miro (incêndio em vegetação, vazamento de gás, pessoa atropelada). O Hermes transcreve a conversa e sugere natureza, local, região, respostas da entrevista, instruções ditas e observações. Cada sugestão aparece no painel e junto do campo, e só entra na ficha quando o atendente aplica. A ocorrência registrada guarda quantas sugestões foram aplicadas e descartadas.
-- **Protocolos (gestor):** edita a entrevista de cada natureza no editor visual, no fluxo em Mermaid (no padrão de cores do quadro do Miro ou na notação compacta) ou no formulário em JSON, com validação e teste. Cada resposta diz se vai ou não para o relato final.
+- **Protocolos (gestor):** edita a entrevista de cada natureza no editor de itens, no **editor visual** em tela cheia (caixas e setas no padrão do quadro do Miro), no fluxo em Mermaid (no padrão de cores do quadro do Miro ou na notação compacta) ou no formulário em JSON, com validação e teste. Cada resposta diz se vai ou não para o relato final.
 - **Feedback:** o botão "Dar feedback", no topo, coleta problemas, sugestões e dúvidas com o contexto da tela.
 - **Importar do Miro:** cola o Mermaid do fluxograma feito no Miro e converte em entrevista, de forma automática ou com um prompt pronto para um assistente de IA. Os dois caminhos mostram o que revisar antes de usar.
 - **Ocorrências:** lista o que foi registrado, com tempo até o encaminhamento e duração da ligação.
@@ -26,6 +26,7 @@ Protótipo estático para validar, com a área de negócio, a tela de atendiment
 | `style.css` | Estilos |
 | `logic.js` | Motor da entrevista, validação, Mermaid e JSON, importação do Miro e prompt para IA, naturezas e protocolos de exemplo. Sem DOM, roda também em Node |
 | `hermes.js` | Roteiros da demonstração do Hermes |
+| `desenho.js` | Editor visual do fluxo (caixas e setas), sem biblioteca externa |
 | `config.js` | Destino do feedback |
 | `protocolos/` | **Fonte de verdade** das entrevistas: `naturezas.json` e um `<id>.json` por natureza |
 | `protocolos.js` | Montado a partir de `protocolos/` por `ferramentas/montar.js`. Não edite à mão |
@@ -119,3 +120,9 @@ O botão **Dar feedback** abre um formulário curto (tipo, comentário, nome opc
 O destino é o formulário do Tally "Hefesto · feedback do protótipo" (https://tally.so/r/GepdoO), configurado em `config.js`. O botão abre o formulário dentro do site, e aba, passo, natureza, pergunta da vez e navegador vão em campos ocultos. As respostas ficam no painel do Tally. `config.js` também aceita um Google Form ou uma tabela do Supabase.
 
 Sem destino configurado, ou quando a pessoa escolhe "Sem internet? Escrever aqui", o feedback fica no navegador, aparece na coluna da esquerda da aba Protocolos e sai no zip exportado (`feedback.json`). Ao aplicar o zip, `montar.js` lista os feedbacks e salva em `feedback-recebido/`, que fica fora do Git porque o repositório é público. `config.js` também aceita uma tabela do Supabase como alternativa.
+
+## Editor visual
+
+O botão **✏️ Editor visual** abre o fluxo da natureza em tela cheia, com as cores do quadro do Miro. Cada item é uma caixa; as respostas de uma pergunta aparecem como linhas dentro dela, amarelas (vão para o relato) ou lilases (ficam fora), cada uma com um ponto ● de saída. Puxe do ponto até a caixa seguinte para ligar; solte no vazio para desfazer a ligação daquela resposta. O ponto embaixo da caixa é o caminho padrão, e o da caixa da natureza escolhe a primeira pergunta. A barra de cima cria caixas (pergunta, pergunta aberta, orientação, despacho, informação, videochamada, troca de natureza) e o painel da direita edita a caixa selecionada. Ctrl+Z desfaz e Delete apaga a caixa, ligando quem vinha antes ao que vinha depois. A validação aparece no alto, ao vivo.
+
+A posição das caixas fica no navegador, vai no zip (`layout` em cada `protocolos/<id>.json`) e é publicada pelo `montar.js`. Sem posição salva, o editor organiza o fluxo em camadas a partir do início ("Reorganizar" refaz isso).
