@@ -719,4 +719,14 @@ function zipLer(buf){
   }
   return Promise.all(tarefas).then(function(ps){ var o={}; ps.forEach(function(x){ o[x[0]]=x[1]; }); return o; });
 }
-if(typeof module!=='undefined') module.exports={exemplo:exemplo,exemplos:exemplos,NATUREZAS:NATUREZAS,grafo:grafo,validar:validar,caminhar:caminhar,previsao:previsao,valorResposta:valorResposta,valorRelato:valorRelato,respondido:respondido,fluxoMermaid:fluxoMermaid,aplicarFluxo:aplicarFluxo,formJSON:formJSON,zipCriar:zipCriar,zipLer:zipLer,aplicarForm:aplicarForm,I:I,O:O,importarMermaidLivre:importarMermaidLivre,importarMiroHefesto:importarMiroHefesto,fluxoMiro:fluxoMiro,aplicarFluxoMiro:aplicarFluxoMiro,ehConvencaoMiro:ehConvencaoMiro,slug:slug,lerRespostaIA:lerRespostaIA,promptMiro:promptMiro,ehPergunta:ehPergunta,temOpcoes:temOpcoes};
+/* Link pré-preenchido do Google Forms -> endereço de envio e campos.
+   As respostas de exemplo (TIPO, COMENTARIO, NOME, CONTEXTO, NAVEGADOR) dizem qual entry.N é cada campo. */
+function lerFormularioGoogle(link){
+  var t=String(link||'').trim(); if(!t) return null;
+  var m=/https:\/\/docs\.google\.com\/forms\/d\/e\/([\w-]+)\//.exec(t); if(!m) return {erro:'O link não é de um Google Form publicado (docs.google.com/forms/d/e/...).'};
+  var campos={},q=t.split('?')[1]||'';
+  q.split('&').forEach(function(par){ var kv=par.split('='); if(!/^entry\.\d+$/.test(kv[0])) return; var v=decodeURIComponent((kv[1]||'').replace(/\+/g,' ')).trim().normalize('NFD').replace(/[̀-ͯ]/g,'').toUpperCase(); if(['TIPO','COMENTARIO','NOME','CONTEXTO','NAVEGADOR'].indexOf(v)>=0) campos[v]=kv[0]; });
+  if(!campos.COMENTARIO) return {erro:'O link não tem a resposta COMENTARIO. Gere de novo o link pré-preenchido respondendo cada pergunta com a palavra indicada em config.js.'};
+  return {envio:'https://docs.google.com/forms/d/e/'+m[1]+'/formResponse',campos:campos};
+}
+if(typeof module!=='undefined') module.exports={exemplo:exemplo,exemplos:exemplos,NATUREZAS:NATUREZAS,grafo:grafo,validar:validar,caminhar:caminhar,previsao:previsao,valorResposta:valorResposta,valorRelato:valorRelato,respondido:respondido,fluxoMermaid:fluxoMermaid,aplicarFluxo:aplicarFluxo,formJSON:formJSON,lerFormularioGoogle:lerFormularioGoogle,zipCriar:zipCriar,zipLer:zipLer,aplicarForm:aplicarForm,I:I,O:O,importarMermaidLivre:importarMermaidLivre,importarMiroHefesto:importarMiroHefesto,fluxoMiro:fluxoMiro,aplicarFluxoMiro:aplicarFluxoMiro,ehConvencaoMiro:ehConvencaoMiro,slug:slug,lerRespostaIA:lerRespostaIA,promptMiro:promptMiro,ehPergunta:ehPergunta,temOpcoes:temOpcoes};

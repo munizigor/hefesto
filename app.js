@@ -944,10 +944,24 @@
     if(V.view==='prot'){ var m=natPorId(S.nat); if(m) c.natureza=m.nome; c.painel=S.aba; }
     return c;
   }
+  function feedbackRemoto(){ var gf=typeof FEEDBACK_FORMULARIO!=='undefined'?lerFormularioGoogle(FEEDBACK_FORMULARIO):null; return !!(gf&&gf.envio)||!!(typeof FEEDBACK_DESTINO!=='undefined'&&FEEDBACK_DESTINO&&FEEDBACK_DESTINO.url); }
   function enviarFeedback(){
     var t=FB.texto.trim(); if(!t){ FB.msg={t:'err',m:'Escreva o seu comentário.'}; desenharFeedback(); return; }
     var reg={quando:new Date().toISOString(),tipo:FB.tipo,texto:t,nome:FB.nome.trim()||null,contexto:FB.ctx?contextoFeedback():null,navegador:navigator.userAgent.slice(0,160)};
     var ok=function(remoto){ if(!remoto){ DB.feedbacks.push(reg); salvar(); } FB.texto=''; FB.enviando=false; FB.msg={t:'okm',m:remoto?'Obrigado! Seu feedback foi enviado.':'Obrigado! Seu feedback ficou guardado neste navegador e vai junto quando os protocolos forem exportados.'}; desenharFeedback(); };
+    var gf=typeof FEEDBACK_FORMULARIO!=='undefined'?lerFormularioGoogle(FEEDBACK_FORMULARIO):null;
+    if(gf&&gf.envio){
+      var c=reg.contexto,onde=c?[c.aba,c.passo,c.natureza,c.item,c.painel?'painel '+c.painel:'',c.hermes?'Hermes: '+c.hermes:''].filter(Boolean).join(' · '):'';
+      var dados={TIPO:reg.tipo,COMENTARIO:reg.texto,NOME:reg.nome||'',CONTEXTO:onde,NAVEGADOR:reg.navegador},corpo=new URLSearchParams();
+      Object.keys(gf.campos).forEach(function(k){ corpo.append(gf.campos[k],dados[k]||''); });
+      if(!gf.campos.CONTEXTO&&onde) corpo.set(gf.campos.COMENTARIO,reg.texto+'\n\n(Onde: '+onde+')');
+      FB.enviando=true; desenharFeedback();
+      /* o Google não deixa ler a resposta de outro site (no-cors): sem erro de rede, conta como enviado */
+      fetch(gf.envio,{method:'POST',mode:'no-cors',body:corpo})
+        .then(function(){ ok(true); })
+        .catch(function(){ ok(false); FB.msg={t:'inf',m:'Não consegui enviar agora (sem internet?). Seu feedback ficou guardado neste navegador e vai junto quando os protocolos forem exportados.'}; desenharFeedback(); });
+      return;
+    }
     if(typeof FEEDBACK_DESTINO!=='undefined'&&FEEDBACK_DESTINO&&FEEDBACK_DESTINO.url){
       FB.enviando=true; desenharFeedback();
       fetch(FEEDBACK_DESTINO.url.replace(/\/$/,'')+'/rest/v1/'+(FEEDBACK_DESTINO.tabela||'feedback'),{method:'POST',headers:{'apikey':FEEDBACK_DESTINO.chave,'Authorization':'Bearer '+FEEDBACK_DESTINO.chave,'Content-Type':'application/json','Prefer':'return=minimal'},body:JSON.stringify(reg)})
@@ -966,7 +980,7 @@
       ta,
       el('input',{type:'text','aria-label':'Seu nome (opcional)',placeholder:'Seu nome (opcional)',value:FB.nome,oninput:function(e){ FB.nome=e.target.value; }}),
       el('label',{class:'row',style:'gap:6px;font-size:13px'},[el('input',{type:'checkbox',checked:FB.ctx,onchange:function(e){ FB.ctx=e.target.checked; }}),'Incluir onde eu estava: '+[c.aba,c.passo,c.natureza,c.item].filter(Boolean).join(' · ')]),
-      el('p',{class:'muted',text:'Não escreva dados reais de ocorrência nem de pessoas.'+(typeof FEEDBACK_DESTINO!=='undefined'&&FEEDBACK_DESTINO?'':' O feedback fica guardado neste navegador até os protocolos serem exportados.')}),
+      el('p',{class:'muted',text:'Não escreva dados reais de ocorrência nem de pessoas.'+(feedbackRemoto()?'':' O feedback fica guardado neste navegador até os protocolos serem exportados.')}),
       FB.msg?el('div',{class:'msg '+FB.msg.t,role:'status',text:FB.msg.m}):null,
       el('div',{class:'row'},[el('button',{class:'btn ok',disabled:FB.enviando,text:FB.enviando?'Enviando…':'Enviar',onclick:enviarFeedback}),el('button',{class:'btn',onclick:fechar},['Fechar ',el('kbd',{text:'Esc'})])])]));
     if(!FB.msg) ta.focus();

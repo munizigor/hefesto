@@ -114,6 +114,8 @@ O passo 1 (local e natureza) só leva à entrevista. A ocorrência é encaminhad
 
 ## Feedback
 
-O botão **Dar feedback** abre um formulário curto (tipo, comentário, nome opcional) e guarda junto onde a pessoa estava: aba, passo, natureza e a pergunta da vez. Sem destino configurado em `config.js`, o feedback fica no navegador, aparece na coluna da esquerda da aba Protocolos e sai no zip exportado (`feedback.json`). Ao aplicar o zip, `montar.js` lista os feedbacks e salva em `feedback-recebido/`, que fica fora do Git porque o repositório é público.
+O botão **Dar feedback** abre um formulário curto (tipo, comentário, nome opcional) e guarda junto onde a pessoa estava: aba, passo, natureza e a pergunta da vez.
 
-Para receber direto, crie no Supabase uma tabela `feedback` (colunas `quando`, `tipo`, `texto`, `nome`, `contexto` jsonb, `navegador`) com política que só permite inserir, e preencha `FEEDBACK_DESTINO` em `config.js` com a URL do projeto e a chave publishable.
+O destino é um **Google Form**, configurado em `config.js` com um único link (o "link pré-preenchido" do formulário; o passo a passo está no próprio arquivo). As respostas caem no formulário e, se ele estiver ligado a uma planilha, na planilha. O Google não deixa o site confirmar a gravação, então o site considera enviado quando não há erro de rede.
+
+Sem link configurado, ou sem internet na hora, o feedback fica no navegador, aparece na coluna da esquerda da aba Protocolos e sai no zip exportado (`feedback.json`). Ao aplicar o zip, `montar.js` lista os feedbacks e salva em `feedback-recebido/`, que fica fora do Git porque o repositório é público. `config.js` também aceita uma tabela do Supabase como alternativa.
