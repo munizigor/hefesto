@@ -1,0 +1,349 @@
+{
+ "natureza": {
+  "id": "ferimento_diverso",
+  "nome": "Ferimento diverso (exceto arma branca e de fogo)"
+ },
+ "itens": [
+  {
+   "id": "como_aconteceu",
+   "tipo": "unica",
+   "texto": "Como aconteceu?",
+   "obrig": false,
+   "outro": true,
+   "mermaid": "",
+   "prox": "pessoa_feriu_proposito",
+   "opcoes": [
+    {
+     "id": "corte_com_vidro_ferramenta",
+     "rotulo": "Corte com vidro / ferramenta",
+     "vai": ""
+    },
+    {
+     "id": "queda_da_propria_altura",
+     "rotulo": "Queda da própria altura",
+     "vai": ""
+    },
+    {
+     "id": "mordida_de_animal",
+     "rotulo": "Mordida de animal",
+     "vai": ""
+    },
+    {
+     "id": "objeto_preso_no_corpo",
+     "rotulo": "Objeto preso no corpo",
+     "vai": ""
+    }
+   ]
+  },
+  {
+   "id": "pessoa_feriu_proposito",
+   "tipo": "unica",
+   "texto": "A pessoa se feriu de propósito?",
+   "obrig": false,
+   "outro": false,
+   "mermaid": "",
+   "prox": "outra_pessoa_causou",
+   "opcoes": [
+    {
+     "id": "sim",
+     "rotulo": "Sim",
+     "vai": "troca_tentativa_suicidio"
+    },
+    {
+     "id": "nao",
+     "rotulo": "Não",
+     "vai": ""
+    },
+    {
+     "id": "nao_sei",
+     "rotulo": "Não sei",
+     "vai": ""
+    }
+   ]
+  },
+  {
+   "id": "troca_tentativa_suicidio",
+   "tipo": "troca",
+   "texto": "Tentativa de suicídio",
+   "obrig": false,
+   "outro": false,
+   "mermaid": "",
+   "prox": "FIM",
+   "opcoes": []
+  },
+  {
+   "id": "outra_pessoa_causou",
+   "tipo": "unica",
+   "texto": "Outra pessoa causou o ferimento?",
+   "obrig": false,
+   "outro": false,
+   "mermaid": "",
+   "prox": "mordida_animal",
+   "opcoes": [
+    {
+     "id": "sim",
+     "rotulo": "Sim",
+     "vai": "troca_agressao_fisica"
+    },
+    {
+     "id": "nao",
+     "rotulo": "Não",
+     "vai": ""
+    },
+    {
+     "id": "nao_sei",
+     "rotulo": "Não sei",
+     "vai": ""
+    }
+   ]
+  },
+  {
+   "id": "troca_agressao_fisica",
+   "tipo": "troca",
+   "texto": "Agressão física",
+   "obrig": false,
+   "outro": false,
+   "mermaid": "",
+   "prox": "FIM",
+   "opcoes": []
+  },
+  {
+   "id": "mordida_animal",
+   "tipo": "unica",
+   "texto": "Foi mordida de animal?",
+   "obrig": false,
+   "outro": false,
+   "mermaid": "",
+   "prox": "sangramento_quando_apert",
+   "opcoes": [
+    {
+     "id": "sim",
+     "rotulo": "Sim",
+     "vai": "troca_ataque_picada"
+    },
+    {
+     "id": "nao",
+     "rotulo": "Não",
+     "vai": ""
+    },
+    {
+     "id": "nao_sei",
+     "rotulo": "Não sei",
+     "vai": ""
+    }
+   ]
+  },
+  {
+   "id": "troca_ataque_picada",
+   "tipo": "troca",
+   "texto": "Ataque / picada de animal",
+   "obrig": false,
+   "outro": false,
+   "mermaid": "",
+   "prox": "FIM",
+   "opcoes": []
+  },
+  {
+   "id": "sangramento_quando_apert",
+   "tipo": "unica",
+   "texto": "O sangramento para quando aperta?",
+   "obrig": false,
+   "outro": false,
+   "mermaid": "",
+   "prox": "onde_ferimento",
+   "opcoes": [
+    {
+     "id": "para",
+     "rotulo": "Para",
+     "vai": ""
+    },
+    {
+     "id": "nao_para",
+     "rotulo": "Não para",
+     "vai": "despacho_2"
+    }
+   ]
+  },
+  {
+   "id": "onde_ferimento",
+   "tipo": "unica",
+   "texto": "Onde é o ferimento?",
+   "obrig": false,
+   "outro": false,
+   "mermaid": "",
+   "prox": "houve_amputacao_parte",
+   "opcoes": [
+    {
+     "id": "cabeca_pescoco",
+     "rotulo": "Cabeça / pescoço",
+     "vai": ""
+    },
+    {
+     "id": "tronco",
+     "rotulo": "Tronco",
+     "vai": ""
+    },
+    {
+     "id": "braco_perna",
+     "rotulo": "Braço / perna",
+     "vai": ""
+    },
+    {
+     "id": "mao_dedo",
+     "rotulo": "Mão / dedo",
+     "vai": ""
+    }
+   ]
+  },
+  {
+   "id": "houve_amputacao_parte",
+   "tipo": "unica",
+   "texto": "Houve amputação de alguma parte?",
+   "obrig": false,
+   "outro": false,
+   "mermaid": "",
+   "prox": "troca_pessoa_prensada",
+   "opcoes": [
+    {
+     "id": "sim",
+     "rotulo": "Sim",
+     "vai": ""
+    },
+    {
+     "id": "nao",
+     "rotulo": "Não",
+     "vai": "vitima_acordada_responde"
+    }
+   ]
+  },
+  {
+   "id": "troca_pessoa_prensada",
+   "tipo": "troca",
+   "texto": "Pessoa prensada por estrutura, máquina ou veículo",
+   "obrig": false,
+   "outro": false,
+   "mermaid": "",
+   "prox": "orientar_conservacao_par",
+   "opcoes": []
+  },
+  {
+   "id": "orientar_conservacao_par",
+   "tipo": "informacao",
+   "texto": "Orientar conservação da parte amputada",
+   "obrig": false,
+   "outro": false,
+   "mermaid": "",
+   "prox": "vitima_acordada_responde",
+   "opcoes": []
+  },
+  {
+   "id": "vitima_acordada_responde",
+   "tipo": "unica",
+   "texto": "A vítima está acordada e responde quando você chama?",
+   "obrig": false,
+   "outro": false,
+   "mermaid": "",
+   "prox": "ela_respira_normalmente",
+   "opcoes": [
+    {
+     "id": "sim",
+     "rotulo": "Sim",
+     "vai": ""
+    },
+    {
+     "id": "nao",
+     "rotulo": "Não",
+     "vai": ""
+    },
+    {
+     "id": "nao_sabe",
+     "rotulo": "Não sabe",
+     "vai": ""
+    }
+   ]
+  },
+  {
+   "id": "ela_respira_normalmente",
+   "tipo": "unica",
+   "texto": "Ela respira normalmente?",
+   "obrig": false,
+   "outro": false,
+   "mermaid": "",
+   "prox": "despacho",
+   "opcoes": [
+    {
+     "id": "sim",
+     "rotulo": "Sim",
+     "vai": ""
+    },
+    {
+     "id": "nao",
+     "rotulo": "Não",
+     "vai": "realize_videochamada_fac"
+    },
+    {
+     "id": "nao_sabe",
+     "rotulo": "Não sabe",
+     "vai": ""
+    }
+   ]
+  },
+  {
+   "id": "despacho",
+   "tipo": "instrucao",
+   "texto": "🚒 Despacho conforme gravidade",
+   "obrig": false,
+   "outro": false,
+   "mermaid": "",
+   "prox": "aperte_local_pano",
+   "opcoes": [],
+   "despacho": true
+  },
+  {
+   "id": "aperte_local_pano",
+   "tipo": "instrucao",
+   "texto": "Aperte o local com um pano limpo e não solte. Objeto cravado: não retire. Parte amputada: pano limpo, saco plástico e o saco sobre gelo.",
+   "obrig": false,
+   "outro": false,
+   "mermaid": "",
+   "prox": "FIM",
+   "opcoes": []
+  },
+  {
+   "id": "realize_videochamada_fac",
+   "tipo": "informacao",
+   "texto": "Realize a videochamada e faça as orientações de RCP",
+   "obrig": false,
+   "outro": false,
+   "mermaid": "",
+   "prox": "troca_parada_cardiorresp",
+   "opcoes": [],
+   "video": true
+  },
+  {
+   "id": "troca_parada_cardiorresp",
+   "tipo": "troca",
+   "texto": "Parada cardiorrespiratória (PCR)",
+   "obrig": false,
+   "outro": false,
+   "mermaid": "",
+   "prox": "FIM",
+   "opcoes": []
+  },
+  {
+   "id": "despacho_2",
+   "tipo": "instrucao",
+   "texto": "🚒 Despacho imediato",
+   "obrig": false,
+   "outro": false,
+   "mermaid": "",
+   "prox": "onde_ferimento",
+   "opcoes": [],
+   "despacho": true
+  }
+ ],
+ "notas": [
+  "Troca para “Ataque / Picada de animal” entendida como “Ataque / picada de animal”.",
+  "Troca para “Pessoa prensada por estrutura, máquina ou veículo (se o membro estiver preso)” entendida como “Pessoa prensada por estrutura, máquina ou veículo”."
+ ]
+}

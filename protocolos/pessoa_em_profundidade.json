@@ -1,0 +1,206 @@
+{
+ "natureza": {
+  "id": "pessoa_em_profundidade",
+  "nome": "Pessoa em profundidade (desnível negativo)"
+ },
+ "itens": [
+  {
+   "id": "onde_pessoa_caiu",
+   "tipo": "unica",
+   "texto": "Onde a pessoa caiu?",
+   "obrig": false,
+   "outro": true,
+   "mermaid": "",
+   "prox": "profundidade_mais_menos",
+   "opcoes": [
+    {
+     "id": "poco_cisterna",
+     "rotulo": "Poço / cisterna",
+     "vai": ""
+    },
+    {
+     "id": "buraco_vala_bueiro",
+     "rotulo": "Buraco / vala / bueiro",
+     "vai": ""
+    },
+    {
+     "id": "barranco_ribanceira",
+     "rotulo": "Barranco / ribanceira",
+     "vai": ""
+    },
+    {
+     "id": "fosso_de_elevador",
+     "rotulo": "Fosso de elevador",
+     "vai": ""
+    }
+   ]
+  },
+  {
+   "id": "profundidade_mais_menos",
+   "tipo": "unica",
+   "texto": "Qual a profundidade, mais ou menos?",
+   "obrig": false,
+   "outro": false,
+   "mermaid": "",
+   "prox": "despacho",
+   "opcoes": [
+    {
+     "id": "ate_3_m",
+     "rotulo": "Até 3 m",
+     "vai": ""
+    },
+    {
+     "id": "3_a_10_m",
+     "rotulo": "3 a 10 m",
+     "vai": ""
+    },
+    {
+     "id": "mais_de_10_m",
+     "rotulo": "Mais de 10 m",
+     "vai": ""
+    },
+    {
+     "id": "nao_sabe",
+     "rotulo": "Não sabe",
+     "vai": ""
+    }
+   ]
+  },
+  {
+   "id": "despacho",
+   "tipo": "instrucao",
+   "texto": "O socorro já foi acionado e está a caminho. Vou fazer algumas perguntas rápidas para ajudar a equipe. Mantenha a calma e siga minhas orientações, por favor.",
+   "obrig": false,
+   "outro": false,
+   "mermaid": "",
+   "prox": "pessoa_responde_quando",
+   "opcoes": [],
+   "despacho": true
+  },
+  {
+   "id": "pessoa_responde_quando",
+   "tipo": "unica",
+   "texto": "A pessoa responde quando você chama?",
+   "obrig": false,
+   "outro": false,
+   "mermaid": "",
+   "prox": "agua_lama_cheiro",
+   "opcoes": [
+    {
+     "id": "sim",
+     "rotulo": "Sim",
+     "vai": ""
+    },
+    {
+     "id": "nao",
+     "rotulo": "Não",
+     "vai": ""
+    }
+   ]
+  },
+  {
+   "id": "agua_lama_cheiro",
+   "tipo": "unica",
+   "texto": "Tem água, lama ou cheiro forte no local?",
+   "obrig": false,
+   "outro": false,
+   "mermaid": "",
+   "prox": "pessoa_submersa_agua",
+   "opcoes": [
+    {
+     "id": "sim",
+     "rotulo": "Sim",
+     "vai": ""
+    },
+    {
+     "id": "nao",
+     "rotulo": "Não",
+     "vai": ""
+    }
+   ]
+  },
+  {
+   "id": "pessoa_submersa_agua",
+   "tipo": "unica",
+   "texto": "A pessoa está submersa na água?",
+   "obrig": false,
+   "outro": false,
+   "mermaid": "",
+   "prox": "troca_afogamento",
+   "opcoes": [
+    {
+     "id": "sim",
+     "rotulo": "Sim",
+     "vai": ""
+    },
+    {
+     "id": "nao",
+     "rotulo": "Não",
+     "vai": "beirada_firme_desmoronan"
+    },
+    {
+     "id": "nao_sei",
+     "rotulo": "Não sei",
+     "vai": "troca_afogamento_2"
+    }
+   ]
+  },
+  {
+   "id": "troca_afogamento",
+   "tipo": "troca",
+   "texto": "Afogamento",
+   "obrig": false,
+   "outro": false,
+   "mermaid": "",
+   "prox": "FIM",
+   "opcoes": []
+  },
+  {
+   "id": "beirada_firme_desmoronan",
+   "tipo": "unica",
+   "texto": "A beirada está firme ou desmoronando?",
+   "obrig": false,
+   "outro": false,
+   "mermaid": "",
+   "prox": "nao_desca_ajudar",
+   "opcoes": [
+    {
+     "id": "firme",
+     "rotulo": "Firme",
+     "vai": ""
+    },
+    {
+     "id": "desmoronando",
+     "rotulo": "Desmoronando",
+     "vai": ""
+    },
+    {
+     "id": "nao_sabe",
+     "rotulo": "Não sabe",
+     "vai": ""
+    }
+   ]
+  },
+  {
+   "id": "nao_desca_ajudar",
+   "tipo": "instrucao",
+   "texto": "Não desça para ajudar. Afaste-se da borda. Se a pessoa estiver consciente, converse com ela e peça que não se mexa.",
+   "obrig": false,
+   "outro": false,
+   "mermaid": "",
+   "prox": "FIM",
+   "opcoes": []
+  },
+  {
+   "id": "troca_afogamento_2",
+   "tipo": "troca",
+   "texto": "Afogamento",
+   "obrig": false,
+   "outro": false,
+   "mermaid": "",
+   "prox": "FIM",
+   "opcoes": []
+  }
+ ],
+ "notas": []
+}

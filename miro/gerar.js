@@ -26,6 +26,6 @@ var out='/* GERADO por miro/gerar.js a partir dos fluxogramas do quadro do Miro.
  +'var NOTAS_MIRO = '+JSON.stringify(notas,null,1)+';\n'
  +'exemplos = function(){ return JSON.parse(JSON.stringify(PROTOCOLOS_MIRO)); };\n'
  +"if(typeof module!=='undefined') module.exports={NATUREZAS:NATUREZAS,PROTOCOLOS_MIRO:PROTOCOLOS_MIRO,NOTAS_MIRO:NOTAS_MIRO};\n";
-fs.writeFileSync(path.join(dir,'..','protocolos-miro.js'),out);
+fs.writeFileSync(path.join(dir,'protocolos-miro.js'),out); /* arquivo histórico: a fonte de verdade agora é protocolos/ */
 console.log(resumo.join('\n')); if(faltam.length) console.log('SEM ARQUIVO: '+faltam.join('; '));
 console.log(nats.length+' naturezas');

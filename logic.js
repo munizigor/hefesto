@@ -602,4 +602,46 @@ String(codigo||'').trim()||'(cole aqui o código do Miro)',
 '- Em "revisar", liste em frases curtas tudo o que você interpretou, mudou ou não teve certeza.'
   ].join('\n');
 }
-if(typeof module!=='undefined') module.exports={exemplo:exemplo,exemplos:exemplos,NATUREZAS:NATUREZAS,grafo:grafo,validar:validar,caminhar:caminhar,previsao:previsao,valorResposta:valorResposta,respondido:respondido,fluxoMermaid:fluxoMermaid,aplicarFluxo:aplicarFluxo,formJSON:formJSON,aplicarForm:aplicarForm,I:I,O:O,importarMermaidLivre:importarMermaidLivre,importarMiroHefesto:importarMiroHefesto,ehConvencaoMiro:ehConvencaoMiro,slug:slug,lerRespostaIA:lerRespostaIA,promptMiro:promptMiro,ehPergunta:ehPergunta,temOpcoes:temOpcoes};
+/* ===== ZIP sem biblioteca =====
+   zipCriar grava sem compressão (funciona em qualquer navegador). zipLer lê arquivos sem compressão e,
+   se o navegador tiver DecompressionStream, também os comprimidos (zip refeito pelo sistema operacional). */
+var CRC_T=(function(){ var t=[],c,n,k; for(n=0;n<256;n++){ c=n; for(k=0;k<8;k++) c=c&1?0xEDB88320^(c>>>1):c>>>1; t[n]=c>>>0; } return t; })();
+function crc32(b){ var c=0xFFFFFFFF; for(var i=0;i<b.length;i++) c=CRC_T[(c^b[i])&255]^(c>>>8); return (c^0xFFFFFFFF)>>>0; }
+function utf8(t){ return new TextEncoder().encode(t); }
+function zipCriar(arquivos,data){
+  var d=data||new Date(),hora=(d.getHours()<<11)|(d.getMinutes()<<5)|(d.getSeconds()>>1),dia=((d.getFullYear()-1980)<<9)|((d.getMonth()+1)<<5)|d.getDate();
+  var partes=[],central=[],pos=0,n=0;
+  var u16=function(v){ return [v&255,(v>>>8)&255]; },u32=function(v){ return [v&255,(v>>>8)&255,(v>>>16)&255,(v>>>24)&255]; };
+  Object.keys(arquivos).forEach(function(nome){
+    var nb=utf8(nome),db=typeof arquivos[nome]==='string'?utf8(arquivos[nome]):arquivos[nome],crc=crc32(db);
+    var comum=[].concat(u16(20),u16(0x0800),u16(0),u16(hora),u16(dia),u32(crc),u32(db.length),u32(db.length),u16(nb.length),u16(0));
+    var loc=new Uint8Array([0x50,0x4b,0x03,0x04].concat(comum));
+    partes.push(loc,nb,db);
+    central.push(new Uint8Array([0x50,0x4b,0x01,0x02].concat(u16(20),comum,u16(0),u16(0),u16(0),u32(0),u32(pos))),nb);
+    pos+=loc.length+nb.length+db.length; n++;
+  });
+  var tam=central.reduce(function(a,x){ return a+x.length; },0);
+  var fim=new Uint8Array([0x50,0x4b,0x05,0x06].concat(u16(0),u16(0),u16(n),u16(n),u32(tam),u32(pos),u16(0)));
+  var tudo=partes.concat(central,[fim]),total=tudo.reduce(function(a,x){ return a+x.length; },0),out=new Uint8Array(total),o=0;
+  tudo.forEach(function(x){ out.set(x,o); o+=x.length; });
+  return out;
+}
+function zipLer(buf){
+  var b=buf instanceof Uint8Array?buf:new Uint8Array(buf),dv=new DataView(b.buffer,b.byteOffset,b.byteLength),fim=-1;
+  for(var i=b.length-22;i>=0&&i>=b.length-65557;i--){ if(dv.getUint32(i,true)===0x06054b50){ fim=i; break; } }
+  if(fim<0) return Promise.reject(new Error('o arquivo não é um zip válido'));
+  var n=dv.getUint16(fim+10,true),p=dv.getUint32(fim+16,true),dec=new TextDecoder(),tarefas=[];
+  for(var k=0;k<n;k++){
+    var metodo=dv.getUint16(p+10,true),comp=dv.getUint32(p+20,true),tn=dv.getUint16(p+28,true),te=dv.getUint16(p+30,true),tc=dv.getUint16(p+32,true),loc=dv.getUint32(p+42,true);
+    var nome=dec.decode(b.subarray(p+46,p+46+tn)); p+=46+tn+te+tc;
+    var ini=loc+30+dv.getUint16(loc+26,true)+dv.getUint16(loc+28,true),dados=b.subarray(ini,ini+comp);
+    if(/\/$/.test(nome)) continue;
+    tarefas.push((function(nome,metodo,dados){
+      if(metodo===0) return Promise.resolve([nome,dec.decode(dados)]);
+      if(metodo===8&&typeof DecompressionStream!=='undefined') return new Response(new Blob([dados]).stream().pipeThrough(new DecompressionStream('deflate-raw'))).text().then(function(t){ return [nome,t]; });
+      return Promise.reject(new Error('“'+nome+'” está comprimido de um jeito que este navegador não lê. Use o zip exportado pelo site, sem refazer.'));
+    })(nome,metodo,dados));
+  }
+  return Promise.all(tarefas).then(function(ps){ var o={}; ps.forEach(function(x){ o[x[0]]=x[1]; }); return o; });
+}
+if(typeof module!=='undefined') module.exports={exemplo:exemplo,exemplos:exemplos,NATUREZAS:NATUREZAS,grafo:grafo,validar:validar,caminhar:caminhar,previsao:previsao,valorResposta:valorResposta,respondido:respondido,fluxoMermaid:fluxoMermaid,aplicarFluxo:aplicarFluxo,formJSON:formJSON,zipCriar:zipCriar,zipLer:zipLer,aplicarForm:aplicarForm,I:I,O:O,importarMermaidLivre:importarMermaidLivre,importarMiroHefesto:importarMiroHefesto,ehConvencaoMiro:ehConvencaoMiro,slug:slug,lerRespostaIA:lerRespostaIA,promptMiro:promptMiro,ehPergunta:ehPergunta,temOpcoes:temOpcoes};

@@ -1,0 +1,198 @@
+{
+ "natureza": {
+  "id": "pessoa_trancada_acesso_bloqueado",
+  "nome": "Pessoa trancada / acesso bloqueado"
+ },
+ "itens": [
+  {
+   "id": "quem_trancado",
+   "tipo": "unica",
+   "texto": "Quem está trancado?",
+   "obrig": false,
+   "outro": true,
+   "mermaid": "",
+   "prox": "onde",
+   "opcoes": [
+    {
+     "id": "crianca",
+     "rotulo": "Criança",
+     "vai": ""
+    },
+    {
+     "id": "idoso_pessoa_doente",
+     "rotulo": "Idoso / pessoa doente",
+     "vai": ""
+    },
+    {
+     "id": "adulto",
+     "rotulo": "Adulto",
+     "vai": ""
+    },
+    {
+     "id": "animal",
+     "rotulo": "Animal",
+     "vai": ""
+    }
+   ]
+  },
+  {
+   "id": "onde",
+   "tipo": "unica",
+   "texto": "Onde?",
+   "obrig": false,
+   "outro": true,
+   "mermaid": "",
+   "prox": "pessoa_risco_agora",
+   "opcoes": [
+    {
+     "id": "casa_apartamento",
+     "rotulo": "Casa / apartamento",
+     "vai": ""
+    },
+    {
+     "id": "veiculo",
+     "rotulo": "Veículo",
+     "vai": ""
+    },
+    {
+     "id": "banheiro_comodo",
+     "rotulo": "Banheiro / cômodo",
+     "vai": ""
+    }
+   ]
+  },
+  {
+   "id": "pessoa_risco_agora",
+   "tipo": "unica",
+   "texto": "A pessoa está em risco agora?",
+   "obrig": false,
+   "outro": false,
+   "mermaid": "",
+   "prox": "troca_emergencia_clinica",
+   "opcoes": [
+    {
+     "id": "sem_resposta_passando_mal",
+     "rotulo": "Sem resposta / passando mal",
+     "vai": ""
+    },
+    {
+     "id": "fogo_ou_gas_ligado",
+     "rotulo": "Fogo ou gás ligado",
+     "vai": "troca_incendio_edificaca"
+    },
+    {
+     "id": "crianca_ou_animal_em_carro_f",
+     "rotulo": "Criança ou animal em carro fechado",
+     "vai": "despacho"
+    },
+    {
+     "id": "nao_ha_risco",
+     "rotulo": "Não há risco",
+     "vai": "orientar_chaveiro_despac"
+    }
+   ]
+  },
+  {
+   "id": "troca_emergencia_clinica",
+   "tipo": "troca",
+   "texto": "Emergência clínica",
+   "obrig": false,
+   "outro": false,
+   "mermaid": "",
+   "prox": "FIM",
+   "opcoes": []
+  },
+  {
+   "id": "troca_incendio_edificaca",
+   "tipo": "troca",
+   "texto": "Incêndio em edificação (fogo) ou Vazamento de gás / GLP (gás)",
+   "obrig": false,
+   "outro": false,
+   "mermaid": "",
+   "prox": "FIM",
+   "opcoes": []
+  },
+  {
+   "id": "despacho",
+   "tipo": "instrucao",
+   "texto": "🚒 Despacho imediato",
+   "obrig": false,
+   "outro": false,
+   "mermaid": "",
+   "prox": "quanto_tempo",
+   "opcoes": [],
+   "despacho": true
+  },
+  {
+   "id": "quanto_tempo",
+   "tipo": "unica",
+   "texto": "Há quanto tempo?",
+   "obrig": false,
+   "outro": false,
+   "mermaid": "",
+   "prox": "chave_reserva_porteiro",
+   "opcoes": [
+    {
+     "id": "menos_de_15_min",
+     "rotulo": "Menos de 15 min",
+     "vai": ""
+    },
+    {
+     "id": "15_a_60_min",
+     "rotulo": "15 a 60 min",
+     "vai": ""
+    },
+    {
+     "id": "mais_de_1_h",
+     "rotulo": "Mais de 1 h",
+     "vai": ""
+    }
+   ]
+  },
+  {
+   "id": "chave_reserva_porteiro",
+   "tipo": "unica",
+   "texto": "Existe chave reserva, porteiro ou síndico no local?",
+   "obrig": false,
+   "outro": false,
+   "mermaid": "",
+   "prox": "converse_pessoa_mantenha",
+   "opcoes": [
+    {
+     "id": "sim",
+     "rotulo": "Sim",
+     "vai": ""
+    },
+    {
+     "id": "nao",
+     "rotulo": "Não",
+     "vai": ""
+    }
+   ]
+  },
+  {
+   "id": "converse_pessoa_mantenha",
+   "tipo": "instrucao",
+   "texto": "Converse com a pessoa e mantenha-a calma. Em carro ao sol, faça sombra no vidro.",
+   "obrig": false,
+   "outro": false,
+   "mermaid": "",
+   "prox": "FIM",
+   "opcoes": []
+  },
+  {
+   "id": "orientar_chaveiro_despac",
+   "tipo": "informacao",
+   "texto": "Orientar chaveiro. Despacho conforme critério da COCB",
+   "obrig": false,
+   "outro": false,
+   "mermaid": "",
+   "prox": "quanto_tempo",
+   "opcoes": []
+  }
+ ],
+ "notas": [
+  "Troca para “Emergência clínica (se não respira: Parada cardiorrespiratória (PCR))” entendida como “Emergência clínica”.",
+  "Troca para “Incêndio em edificação (fogo) ou Vazamento de gás / GLP (gás)”: essa natureza não tem fluxo no quadro."
+ ]
+}

@@ -1,0 +1,75 @@
+{
+ "natureza": {
+  "id": "emergencia_clinica",
+  "nome": "Emergência clínica"
+ },
+ "itens": [
+  {
+   "id": "troca_apoio_instituciona",
+   "tipo": "troca",
+   "texto": "Apoio Institucional ao BM",
+   "obrig": false,
+   "outro": false,
+   "mermaid": "",
+   "prox": "despacho",
+   "opcoes": []
+  },
+  {
+   "id": "despacho",
+   "tipo": "instrucao",
+   "texto": "O socorro já foi acionado e está a caminho. Vou fazer algumas perguntas rápidas para ajudar a equipe. Mantenha a calma e siga minhas orientações, por favor.",
+   "obrig": false,
+   "outro": false,
+   "mermaid": "",
+   "prox": "quem_precisa_apoio",
+   "opcoes": [],
+   "despacho": true
+  },
+  {
+   "id": "quem_precisa_apoio",
+   "tipo": "unica",
+   "texto": "Quem precisa de apoio?",
+   "obrig": false,
+   "outro": false,
+   "mermaid": "",
+   "prox": "emergencia_clinica",
+   "opcoes": [
+    {
+     "id": "bombeiro_militar",
+     "rotulo": "Bombeiro militar",
+     "vai": ""
+    },
+    {
+     "id": "familiar_do_bombeiro_militar",
+     "rotulo": "Familiar do Bombeiro Militar",
+     "vai": ""
+    }
+   ]
+  },
+  {
+   "id": "emergencia_clinica",
+   "tipo": "unica",
+   "texto": "É uma emergência clínica?",
+   "obrig": false,
+   "outro": false,
+   "mermaid": "",
+   "prox": "FIM",
+   "opcoes": [
+    {
+     "id": "sim",
+     "rotulo": "Sim",
+     "vai": ""
+    },
+    {
+     "id": "nao",
+     "rotulo": "Não",
+     "vai": ""
+    }
+   ]
+  }
+ ],
+ "notas": [
+  "“🔁 Trocar natureza: Apoio Institucional ao BM” não está ligado ao início do fluxo.",
+  "Troca para “Apoio Institucional ao BM”: essa natureza não tem fluxo no quadro."
+ ]
+}

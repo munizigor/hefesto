@@ -14,7 +14,7 @@ Protótipo estático para validar, com a área de negócio, a tela de atendiment
 
 - As naturezas e as entrevistas vêm dos fluxogramas do quadro do Miro da equipe (veja "Protocolos do Miro" abaixo). Ainda são rascunho: não são a tabela do SINESPCAD nem protocolo validado.
 - **Não registre dados reais de ocorrência.** O site é público.
-- Protocolos e ocorrências ficam guardados no navegador de cada pessoa (`localStorage`). Para levar protocolos de um navegador a outro, use "Copiar todos" e "Importar" na aba Protocolos.
+- Protocolos e ocorrências ficam guardados no navegador de cada pessoa (`localStorage`). Para levar protocolos de um navegador a outro ou enviá-los para publicação, use "Exportar (.zip)" e "Importar" na aba Protocolos.
 - O Hermes não está ligado neste protótipo. A demonstração é roteirizada: as falas e as sugestões estão escritas em `hermes.js`.
 
 ## Arquivos
@@ -25,8 +25,10 @@ Protótipo estático para validar, com a área de negócio, a tela de atendiment
 | `style.css` | Estilos |
 | `logic.js` | Motor da entrevista, validação, Mermaid e JSON, importação do Miro e prompt para IA, naturezas e protocolos de exemplo. Sem DOM, roda também em Node |
 | `hermes.js` | Roteiros da demonstração do Hermes |
-| `protocolos-miro.js` | Naturezas e entrevistas convertidas do Miro. Gerado, não edite à mão |
-| `miro/` | Código Mermaid de cada diagrama do quadro (`<id>.mmd`), o `manifesto.tsv` e o gerador `gerar.js` |
+| `protocolos/` | **Fonte de verdade** das entrevistas: `naturezas.json` e um `<id>.json` por natureza |
+| `protocolos.js` | Montado a partir de `protocolos/` por `ferramentas/montar.js`. Não edite à mão |
+| `ferramentas/montar.js` | Monta o `protocolos.js` e aplica um zip exportado pelo site |
+| `miro/` | Arquivo histórico da importação do Miro: código de cada diagrama, manifesto e conversor |
 | `app.js` | Interface: atendimento, editor de protocolos e ocorrências |
 
 Não há etapa de build. Dependências externas, carregadas por CDN: Google Fonts e Mermaid 10.9.1 (só para desenhar os fluxogramas).
@@ -37,7 +39,7 @@ Abra o `index.html` no navegador, ou publique pelo GitHub Pages: Settings, Pages
 
 ## Onde mexer
 
-- Naturezas e entrevistas: vêm de `protocolos-miro.js`. Os exemplos antigos de `logic.js` só valem se esse arquivo não for carregado.
+- Naturezas e entrevistas: `protocolos/`. Depois de mudar, rode `node ferramentas/montar.js`.
 - Regiões administrativas e UFs: `RAS` e `UFS` no início de `app.js`.
 - Roteiros do Hermes: `ROTEIROS` em `hermes.js`. Cada fala tem o segundo em que aparece e as sugestões que gera.
 - Prompt de conversão do Miro: `promptMiro()` em `logic.js`.
@@ -51,7 +53,7 @@ Cada roteiro tem o campo `audio`, hoje vazio. Para tocar uma gravação junto da
 2. Coloque o arquivo na pasta `audios/`, por exemplo `audios/capotamento.mp3`.
 3. Em `hermes.js`, preencha `audio:'audios/capotamento.mp3'` e ajuste o `t` de cada fala para o segundo em que ela acontece na gravação.
 
-Com áudio, a transcrição e as sugestões seguem o tempo do áudio, e os botões pausar, velocidade e próxima fala controlam a gravação. Se o arquivo não carregar, a demonstração segue pelo relógio. Para um quarto áudio, copie um roteiro, troque `id`, `titulo`, `resumo`, `natureza` e as falas. Os `id` das perguntas são os de `protocolos-miro.js`.
+Com áudio, a transcrição e as sugestões seguem o tempo do áudio, e os botões pausar, velocidade e próxima fala controlam a gravação. Se o arquivo não carregar, a demonstração segue pelo relógio. Para um quarto áudio, copie um roteiro, troque `id`, `titulo`, `resumo`, `natureza` e as falas. Os `id` das perguntas são os de `protocolos/<natureza>.json`.
 
 ## Fluxogramas do Miro
 
@@ -79,4 +81,15 @@ A cor de cada caixa diz o papel dela, e o conversor (`importarMiroHefesto` em `l
 
 Nos diagramas "(original)" o conversor também entende grupos ("Despacho imediato" em volta das respostas que disparam o despacho), setas pontilhadas para caixas laterais e opções que abrem outras opções. O que não dá para representar fica nas **Notas da importação do Miro**, no topo do editor de cada natureza. As mais comuns são caixas que o desenho deixa sem ligação e trocas para naturezas que ainda não têm fluxo.
 
-Para atualizar depois de mudanças no quadro: extraia de novo o código dos diagramas para `miro/<id>.mmd` (o conector do Miro do Claude faz isso), confira o `manifesto.tsv` e rode `node miro/gerar.js`. Como a chave do armazenamento local mudou, quem já tinha usado o protótipo passa a ver os protocolos do Miro.
+O Miro deixou de ser a fonte: a importação foi feita uma vez e as entrevistas agora são mantidas no site. As notas da importação continuam no editor até alguém corrigir os fluxos.
+
+## Como as correções chegam ao site
+
+A fonte de verdade é a pasta `protocolos/`. Quem corrige não precisa mexer no repositório:
+
+1. Edita as entrevistas na aba Protocolos. Tudo fica salvo só no navegador dela, e a coluna da esquerda mostra quantas naturezas estão alteradas e quando foi a última exportação.
+2. Clica em **Exportar (.zip)**. O arquivo tem `naturezas.json`, um `protocolos/<id>.json` por natureza e um `LEIA-ME.txt` com a lista do que mudou. O zip é gerado pelo próprio site, sem biblioteca externa.
+3. Para continuar em outro computador, usa **Importar** com o mesmo arquivo. Antes de aplicar, o site mostra quais naturezas mudam e avisa se alguma substitui uma edição local.
+4. Para publicar, manda o zip para quem cuida do repositório, que roda `node ferramentas/montar.js caminho/do/arquivo.zip`, confere o `git diff` (cada natureza é um arquivo, então a revisão é linha a linha) e faz o commit.
+
+Quando uma versão nova é publicada, cada navegador atualiza sozinho as naturezas que a pessoa não editou e mantém as que ela editou. "Restaurar versão publicada", no editor, descarta a edição local de uma natureza.

@@ -1,0 +1,181 @@
+{
+ "natureza": {
+  "id": "parada_cardiorrespiratoria",
+  "nome": "Parada cardiorrespiratória (PCR)"
+ },
+ "itens": [
+  {
+   "id": "orientacao_atendente_ava",
+   "tipo": "informacao",
+   "texto": "ORIENTAÇÃO AO ATENDENTE: AVALIAÇÃO INICIAL Verifique responsividade e respiração normal. Ausência de resposta + ausência de respiração normal = suspeita de PCR. -> Não respira, parou de respirar, faltou ar ->Deitada, caída, caído no chão -> Parada, infarto, ataque cardíaco",
+   "obrig": false,
+   "outro": false,
+   "mermaid": "",
+   "prox": "despacho",
+   "opcoes": []
+  },
+  {
+   "id": "despacho",
+   "tipo": "instrucao",
+   "texto": "O socorro já foi acionado e está a caminho. Vou fazer algumas perguntas rápidas para ajudar a equipe. Mantenha a calma e siga minhas orientações, por favor.",
+   "obrig": false,
+   "outro": false,
+   "mermaid": "",
+   "prox": "ela_acordada",
+   "opcoes": [],
+   "despacho": true
+  },
+  {
+   "id": "ela_acordada",
+   "tipo": "unica",
+   "texto": "Ela está acordada?",
+   "obrig": false,
+   "outro": false,
+   "mermaid": "",
+   "prox": "nao_pcr_presumida",
+   "opcoes": [
+    {
+     "id": "sim",
+     "rotulo": "Sim",
+     "vai": ""
+    },
+    {
+     "id": "nao",
+     "rotulo": "Não",
+     "vai": "ela_responde_quando"
+    }
+   ]
+  },
+  {
+   "id": "nao_pcr_presumida",
+   "tipo": "informacao",
+   "texto": "não é uma PCR presumida; realizar a avaliação de emergência clínica/alteração de consciência conforme o protocolo",
+   "obrig": false,
+   "outro": false,
+   "mermaid": "",
+   "prox": "FIM",
+   "opcoes": []
+  },
+  {
+   "id": "ela_responde_quando",
+   "tipo": "unica",
+   "texto": "Ela responde quando você chama ou toca nela?",
+   "obrig": false,
+   "outro": false,
+   "mermaid": "",
+   "prox": "nao_pcr_presumida_2",
+   "opcoes": [
+    {
+     "id": "sim",
+     "rotulo": "Sim",
+     "vai": ""
+    },
+    {
+     "id": "nao",
+     "rotulo": "Não",
+     "vai": "respira_normalmente"
+    }
+   ]
+  },
+  {
+   "id": "nao_pcr_presumida_2",
+   "tipo": "informacao",
+   "texto": "não é uma PCR presumida; realizar a avaliação de emergência clínica/alteração de consciência conforme o protocolo",
+   "obrig": false,
+   "outro": false,
+   "mermaid": "",
+   "prox": "aconteceu",
+   "opcoes": []
+  },
+  {
+   "id": "aconteceu",
+   "tipo": "texto",
+   "texto": "O que aconteceu?",
+   "obrig": false,
+   "outro": false,
+   "mermaid": "",
+   "prox": "troca_emergencia_clinica",
+   "opcoes": []
+  },
+  {
+   "id": "troca_emergencia_clinica",
+   "tipo": "troca",
+   "texto": "Emergência clínica",
+   "obrig": false,
+   "outro": false,
+   "mermaid": "",
+   "prox": "FIM",
+   "opcoes": []
+  },
+  {
+   "id": "respira_normalmente",
+   "tipo": "unica",
+   "texto": "Respira normalmente?",
+   "obrig": false,
+   "outro": false,
+   "mermaid": "",
+   "prox": "nao_pcr_presumida_3",
+   "opcoes": [
+    {
+     "id": "sim",
+     "rotulo": "Sim",
+     "vai": ""
+    },
+    {
+     "id": "nao_sei",
+     "rotulo": "Não sei",
+     "vai": "despacho_2"
+    },
+    {
+     "id": "nao",
+     "rotulo": "Não",
+     "vai": "despacho_3"
+    }
+   ]
+  },
+  {
+   "id": "nao_pcr_presumida_3",
+   "tipo": "informacao",
+   "texto": "não é uma PCR presumida; realizar a avaliação de emergência clínica/alteração de consciência conforme o protocolo",
+   "obrig": false,
+   "outro": false,
+   "mermaid": "",
+   "prox": "aconteceu",
+   "opcoes": []
+  },
+  {
+   "id": "despacho_2",
+   "tipo": "instrucao",
+   "texto": "Iremos realizar uma vídeo chamada para orientá-lo(a) até a chegada da guarnição! Mantenha a calma e siga as orientações.",
+   "obrig": false,
+   "outro": false,
+   "mermaid": "",
+   "prox": "realize_videochamada_fac",
+   "opcoes": [],
+   "despacho": true
+  },
+  {
+   "id": "realize_videochamada_fac",
+   "tipo": "informacao",
+   "texto": "Realize a videochamada e faça as orientações",
+   "obrig": false,
+   "outro": false,
+   "mermaid": "",
+   "prox": "FIM",
+   "opcoes": [],
+   "video": true
+  },
+  {
+   "id": "despacho_3",
+   "tipo": "instrucao",
+   "texto": "Iremos realizar uma vídeo chamada para orientá-lo(a) até a chegada da guarnição! Mantenha a calma e siga as orientações.",
+   "obrig": false,
+   "outro": false,
+   "mermaid": "",
+   "prox": "FIM",
+   "opcoes": [],
+   "despacho": true
+  }
+ ],
+ "notas": []
+}

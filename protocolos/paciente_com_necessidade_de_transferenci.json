@@ -1,0 +1,141 @@
+{
+ "natureza": {
+  "id": "paciente_com_necessidade_de_transferenci",
+  "nome": "Paciente com necessidade de transferência entre unidades"
+ },
+ "itens": [
+  {
+   "id": "quem_solicitando",
+   "tipo": "unica",
+   "texto": "Quem está solicitando?",
+   "obrig": false,
+   "outro": false,
+   "mermaid": "",
+   "prox": "unidade_origem_destino",
+   "opcoes": [
+    {
+     "id": "unidade_de_saude",
+     "rotulo": "Unidade de saúde",
+     "vai": ""
+    },
+    {
+     "id": "familiar",
+     "rotulo": "Familiar",
+     "vai": "troca_fora_competencia"
+    }
+   ]
+  },
+  {
+   "id": "unidade_origem_destino",
+   "tipo": "texto",
+   "texto": "Unidade de origem e de destino",
+   "obrig": false,
+   "outro": false,
+   "mermaid": "",
+   "prox": "vaga_transferencia_ja",
+   "opcoes": []
+  },
+  {
+   "id": "vaga_transferencia_ja",
+   "tipo": "unica",
+   "texto": "A vaga ou a transferência já está regulada / autorizada?",
+   "obrig": false,
+   "outro": false,
+   "mermaid": "",
+   "prox": "condicao_paciente",
+   "opcoes": [
+    {
+     "id": "sim_numero_responsavel",
+     "rotulo": "Sim (número / responsável)",
+     "vai": ""
+    },
+    {
+     "id": "nao",
+     "rotulo": "Não",
+     "vai": ""
+    }
+   ]
+  },
+  {
+   "id": "condicao_paciente",
+   "tipo": "unica",
+   "texto": "Qual a condição do paciente?",
+   "obrig": false,
+   "outro": false,
+   "mermaid": "",
+   "prox": "peso_aproximado_precisa",
+   "opcoes": [
+    {
+     "id": "estavel",
+     "rotulo": "Estável",
+     "vai": ""
+    },
+    {
+     "id": "instavel",
+     "rotulo": "Instável",
+     "vai": ""
+    },
+    {
+     "id": "precisa_de_oxigenio_ou_venti",
+     "rotulo": "Precisa de oxigênio ou ventilação",
+     "vai": ""
+    }
+   ]
+  },
+  {
+   "id": "peso_aproximado_precisa",
+   "tipo": "texto",
+   "texto": "Peso aproximado e se precisa de maca especial",
+   "obrig": false,
+   "outro": false,
+   "mermaid": "",
+   "prox": "havera_profissional_saud",
+   "opcoes": []
+  },
+  {
+   "id": "havera_profissional_saud",
+   "tipo": "unica",
+   "texto": "Haverá profissional de saúde acompanhando?",
+   "obrig": false,
+   "outro": false,
+   "mermaid": "",
+   "prox": "despacho",
+   "opcoes": [
+    {
+     "id": "sim",
+     "rotulo": "Sim",
+     "vai": ""
+    },
+    {
+     "id": "nao",
+     "rotulo": "Não",
+     "vai": ""
+    }
+   ]
+  },
+  {
+   "id": "despacho",
+   "tipo": "instrucao",
+   "texto": "O socorro já foi acionado e está a caminho. Vou fazer algumas perguntas rápidas para ajudar a equipe. Mantenha a calma e siga minhas orientações, por favor.",
+   "obrig": false,
+   "outro": false,
+   "mermaid": "",
+   "prox": "FIM",
+   "opcoes": [],
+   "despacho": true
+  },
+  {
+   "id": "troca_fora_competencia",
+   "tipo": "troca",
+   "texto": "Fora de competência do CBMDF (orientar a regulação)",
+   "obrig": false,
+   "outro": false,
+   "mermaid": "",
+   "prox": "FIM",
+   "opcoes": []
+  }
+ ],
+ "notas": [
+  "Troca para “Fora de competência do CBMDF (orientar a regulação)”: essa natureza não tem fluxo no quadro."
+ ]
+}

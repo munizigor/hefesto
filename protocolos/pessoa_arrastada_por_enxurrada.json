@@ -1,0 +1,185 @@
+{
+ "natureza": {
+  "id": "pessoa_arrastada_por_enxurrada",
+  "nome": "Pessoa arrastada por enxurrada"
+ },
+ "itens": [
+  {
+   "id": "voce_ainda_vendo",
+   "tipo": "unica",
+   "texto": "Você ainda está vendo a pessoa?",
+   "obrig": false,
+   "outro": false,
+   "mermaid": "",
+   "prox": "despacho",
+   "opcoes": [
+    {
+     "id": "sim",
+     "rotulo": "Sim",
+     "vai": ""
+    },
+    {
+     "id": "nao",
+     "rotulo": "Não",
+     "vai": "lado_agua_levando"
+    }
+   ]
+  },
+  {
+   "id": "despacho",
+   "tipo": "instrucao",
+   "texto": "O socorro já foi acionado e está a caminho. Vou fazer algumas perguntas rápidas para ajudar a equipe. Mantenha a calma e siga minhas orientações, por favor.",
+   "obrig": false,
+   "outro": false,
+   "mermaid": "",
+   "prox": "pessoa_agarrada_algo",
+   "opcoes": [],
+   "despacho": true
+  },
+  {
+   "id": "pessoa_agarrada_algo",
+   "tipo": "unica",
+   "texto": "A pessoa está agarrada em algo ou sendo levada?",
+   "obrig": false,
+   "outro": false,
+   "mermaid": "",
+   "prox": "pessoa_afundou_nao",
+   "opcoes": [
+    {
+     "id": "agarrada_poste_arvore_veicul",
+     "rotulo": "Agarrada (poste, árvore, veículo)",
+     "vai": ""
+    },
+    {
+     "id": "sendo_levada",
+     "rotulo": "Sendo levada",
+     "vai": ""
+    },
+    {
+     "id": "entrou_em_bueiro_galeria",
+     "rotulo": "Entrou em bueiro / galeria",
+     "vai": ""
+    }
+   ]
+  },
+  {
+   "id": "pessoa_afundou_nao",
+   "tipo": "unica",
+   "texto": "A pessoa afundou e não voltou?",
+   "obrig": false,
+   "outro": false,
+   "mermaid": "",
+   "prox": "troca_afogamento",
+   "opcoes": [
+    {
+     "id": "sim",
+     "rotulo": "Sim",
+     "vai": ""
+    },
+    {
+     "id": "nao",
+     "rotulo": "Não",
+     "vai": "dentro_veiculo"
+    },
+    {
+     "id": "nao_sei",
+     "rotulo": "Não sei",
+     "vai": "troca_afogamento_2"
+    }
+   ]
+  },
+  {
+   "id": "troca_afogamento",
+   "tipo": "troca",
+   "texto": "Afogamento",
+   "obrig": false,
+   "outro": false,
+   "mermaid": "",
+   "prox": "FIM",
+   "opcoes": []
+  },
+  {
+   "id": "dentro_veiculo",
+   "tipo": "unica",
+   "texto": "Está dentro de um veículo?",
+   "obrig": false,
+   "outro": false,
+   "mermaid": "",
+   "prox": "pessoas",
+   "opcoes": [
+    {
+     "id": "sim",
+     "rotulo": "Sim",
+     "vai": ""
+    },
+    {
+     "id": "nao",
+     "rotulo": "Não",
+     "vai": ""
+    }
+   ]
+  },
+  {
+   "id": "pessoas",
+   "tipo": "unica",
+   "texto": "Quantas pessoas?",
+   "obrig": false,
+   "outro": false,
+   "mermaid": "",
+   "prox": "ponto_referencia_onde",
+   "opcoes": [
+    {
+     "id": "1",
+     "rotulo": "1",
+     "vai": ""
+    },
+    {
+     "id": "mais_de_1",
+     "rotulo": "Mais de 1",
+     "vai": ""
+    }
+   ]
+  },
+  {
+   "id": "ponto_referencia_onde",
+   "tipo": "texto",
+   "texto": "Ponto de referência de onde foi vista por último e para que lado a água vai",
+   "obrig": false,
+   "outro": false,
+   "mermaid": "",
+   "prox": "nao_entre_agua",
+   "opcoes": []
+  },
+  {
+   "id": "nao_entre_agua",
+   "tipo": "instrucao",
+   "texto": "Não entre na água. Se puder, jogue uma corda ou objeto que flutue. Acompanhe a pessoa pela margem, sem se arriscar.",
+   "obrig": false,
+   "outro": false,
+   "mermaid": "",
+   "prox": "FIM",
+   "opcoes": []
+  },
+  {
+   "id": "troca_afogamento_2",
+   "tipo": "troca",
+   "texto": "Afogamento",
+   "obrig": false,
+   "outro": false,
+   "mermaid": "",
+   "prox": "FIM",
+   "opcoes": []
+  },
+  {
+   "id": "lado_agua_levando",
+   "tipo": "texto",
+   "texto": "Para qual lado a água está levando a pessoa? Tem alguma referência (rua, córrego, ponte)?",
+   "obrig": false,
+   "outro": false,
+   "mermaid": "",
+   "prox": "despacho",
+   "opcoes": []
+  }
+ ],
+ "notas": []
+}

@@ -1,0 +1,139 @@
+{
+ "natureza": {
+  "id": "emergencia_nuclear_radiologica",
+  "nome": "Emergência nuclear / radiológica"
+ },
+ "itens": [
+  {
+   "id": "acontecendo",
+   "tipo": "unica",
+   "texto": "O que está acontecendo?",
+   "obrig": false,
+   "outro": true,
+   "mermaid": "",
+   "prox": "despacho",
+   "opcoes": [
+    {
+     "id": "objeto_com_simbolo_de_radiac",
+     "rotulo": "Objeto com símbolo de radiação encontrado",
+     "vai": ""
+    },
+    {
+     "id": "acidente_em_hospital_clinica",
+     "rotulo": "Acidente em hospital / clínica / indústria",
+     "vai": ""
+    },
+    {
+     "id": "veiculo_com_material_radioat",
+     "rotulo": "Veículo com material radioativo",
+     "vai": ""
+    }
+   ]
+  },
+  {
+   "id": "despacho",
+   "tipo": "instrucao",
+   "texto": "O socorro já foi acionado e está a caminho. Vou fazer algumas perguntas rápidas para ajudar a equipe. Mantenha a calma e siga minhas orientações, por favor.",
+   "obrig": false,
+   "outro": false,
+   "mermaid": "",
+   "prox": "tocou_abriu_levou",
+   "opcoes": [],
+   "despacho": true
+  },
+  {
+   "id": "tocou_abriu_levou",
+   "tipo": "unica",
+   "texto": "Alguém tocou, abriu ou levou o objeto?",
+   "obrig": false,
+   "outro": false,
+   "mermaid": "",
+   "prox": "mantenha_essas_pessoas",
+   "opcoes": [
+    {
+     "id": "sim",
+     "rotulo": "Sim",
+     "vai": ""
+    },
+    {
+     "id": "nao",
+     "rotulo": "Não",
+     "vai": "feridos_pessoas_passando"
+    }
+   ]
+  },
+  {
+   "id": "mantenha_essas_pessoas",
+   "tipo": "instrucao",
+   "texto": "Mantenha essas pessoas afastadas das outras e do local até a chegada da equipe.",
+   "obrig": false,
+   "outro": false,
+   "mermaid": "",
+   "prox": "feridos_pessoas_passando",
+   "opcoes": []
+  },
+  {
+   "id": "feridos_pessoas_passando",
+   "tipo": "unica",
+   "texto": "Há feridos ou pessoas passando mal?",
+   "obrig": false,
+   "outro": false,
+   "mermaid": "",
+   "prox": "responsavel_tecnico_loca",
+   "opcoes": [
+    {
+     "id": "sim",
+     "rotulo": "Sim",
+     "vai": ""
+    },
+    {
+     "id": "nao",
+     "rotulo": "Não",
+     "vai": ""
+    }
+   ]
+  },
+  {
+   "id": "responsavel_tecnico_loca",
+   "tipo": "unica",
+   "texto": "Há responsável técnico no local (hospital / empresa)?",
+   "obrig": false,
+   "outro": false,
+   "mermaid": "",
+   "prox": "comunicar_orgaos_compete",
+   "opcoes": [
+    {
+     "id": "sim_contato",
+     "rotulo": "Sim (contato)",
+     "vai": ""
+    },
+    {
+     "id": "nao",
+     "rotulo": "Não",
+     "vai": ""
+    }
+   ]
+  },
+  {
+   "id": "comunicar_orgaos_compete",
+   "tipo": "informacao",
+   "texto": "Comunicar órgãos competentes (ex.: CNEN) conforme protocolo",
+   "obrig": false,
+   "outro": false,
+   "mermaid": "",
+   "prox": "nao_toque_nem",
+   "opcoes": []
+  },
+  {
+   "id": "nao_toque_nem",
+   "tipo": "instrucao",
+   "texto": "Não toque nem abra o objeto. Afaste todos do local. Quem teve contato deve lavar mãos e rosto e não comer nem beber até a chegada da equipe.",
+   "obrig": false,
+   "outro": false,
+   "mermaid": "",
+   "prox": "FIM",
+   "opcoes": []
+  }
+ ],
+ "notas": []
+}

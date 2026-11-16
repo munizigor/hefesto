@@ -1,0 +1,159 @@
+{
+ "natureza": {
+  "id": "naufragio_acidente_nautico",
+  "nome": "Naufrágio / acidente náutico"
+ },
+ "itens": [
+  {
+   "id": "pessoas_agua",
+   "tipo": "unica",
+   "texto": "Há pessoas na água?",
+   "obrig": false,
+   "outro": false,
+   "mermaid": "",
+   "prox": "despacho",
+   "opcoes": [
+    {
+     "id": "sim",
+     "rotulo": "Sim",
+     "vai": ""
+    },
+    {
+     "id": "nao",
+     "rotulo": "Não",
+     "vai": ""
+    },
+    {
+     "id": "nao_sabe",
+     "rotulo": "Não sabe",
+     "vai": ""
+    }
+   ]
+  },
+  {
+   "id": "despacho",
+   "tipo": "instrucao",
+   "texto": "O socorro já foi acionado e está a caminho. Vou fazer algumas perguntas rápidas para ajudar a equipe. Mantenha a calma e siga minhas orientações, por favor.",
+   "obrig": false,
+   "outro": false,
+   "mermaid": "",
+   "prox": "pessoas_estavam_embarcac",
+   "opcoes": [],
+   "despacho": true
+  },
+  {
+   "id": "pessoas_estavam_embarcac",
+   "tipo": "numero",
+   "texto": "Quantas pessoas estavam na embarcação e quantas estão na água?",
+   "obrig": false,
+   "outro": false,
+   "mermaid": "",
+   "prox": "aconteceu",
+   "opcoes": []
+  },
+  {
+   "id": "aconteceu",
+   "tipo": "unica",
+   "texto": "O que aconteceu?",
+   "obrig": false,
+   "outro": false,
+   "mermaid": "",
+   "prox": "pessoas_agua_colete",
+   "opcoes": [
+    {
+     "id": "colisao",
+     "rotulo": "Colisão",
+     "vai": ""
+    },
+    {
+     "id": "virou_afundou",
+     "rotulo": "Virou / afundou",
+     "vai": ""
+    },
+    {
+     "id": "fogo_explosao",
+     "rotulo": "Fogo / explosão",
+     "vai": ""
+    },
+    {
+     "id": "atingido_por_helice_embarcac",
+     "rotulo": "Atingido por hélice / embarcação",
+     "vai": ""
+    }
+   ]
+  },
+  {
+   "id": "pessoas_agua_colete",
+   "tipo": "unica",
+   "texto": "As pessoas na água estão de colete ou agarradas em algo?",
+   "obrig": false,
+   "outro": false,
+   "mermaid": "",
+   "prox": "afundou_nao_voltou",
+   "opcoes": [
+    {
+     "id": "sim",
+     "rotulo": "Sim",
+     "vai": ""
+    },
+    {
+     "id": "nao",
+     "rotulo": "Não",
+     "vai": ""
+    }
+   ]
+  },
+  {
+   "id": "afundou_nao_voltou",
+   "tipo": "unica",
+   "texto": "Alguém afundou e não voltou?",
+   "obrig": false,
+   "outro": false,
+   "mermaid": "",
+   "prox": "troca_afogamento",
+   "opcoes": [
+    {
+     "id": "sim",
+     "rotulo": "Sim",
+     "vai": ""
+    },
+    {
+     "id": "nao",
+     "rotulo": "Não",
+     "vai": "local_exato_lago"
+    }
+   ]
+  },
+  {
+   "id": "troca_afogamento",
+   "tipo": "troca",
+   "texto": "Afogamento",
+   "obrig": false,
+   "outro": false,
+   "mermaid": "",
+   "prox": "FIM",
+   "opcoes": []
+  },
+  {
+   "id": "local_exato_lago",
+   "tipo": "texto",
+   "texto": "Local exato (lago, píer, clube, ponto de referência)",
+   "obrig": false,
+   "outro": false,
+   "mermaid": "",
+   "prox": "estiver_outra_embarcacao",
+   "opcoes": []
+  },
+  {
+   "id": "estiver_outra_embarcacao",
+   "tipo": "instrucao",
+   "texto": "Se estiver em outra embarcação, aproxime-se com cuidado e jogue coletes ou boias. Não pule na água.",
+   "obrig": false,
+   "outro": false,
+   "mermaid": "",
+   "prox": "FIM",
+   "opcoes": []
+  }
+ ],
+ "notas": []
+}

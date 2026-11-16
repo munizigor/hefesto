@@ -1,0 +1,323 @@
+{
+ "natureza": {
+  "id": "insetos_abelha_ou_similares_2",
+  "nome": "Insetos, abelha ou similares (versão 2)"
+ },
+ "itens": [
+  {
+   "id": "picadas_aconteceram",
+   "tipo": "unica",
+   "texto": "Quantas picadas aconteceram?",
+   "obrig": false,
+   "outro": false,
+   "mermaid": "",
+   "prox": "pessoa_picada_crianca",
+   "opcoes": [
+    {
+     "id": "entre_1_e_3_picadas",
+     "rotulo": "entre 1 e 3 picadas",
+     "vai": ""
+    },
+    {
+     "id": "houve_ataque_enxame",
+     "rotulo": "Houve ataque/ enxame",
+     "vai": ""
+    }
+   ]
+  },
+  {
+   "id": "pessoa_picada_crianca",
+   "tipo": "unica",
+   "texto": "A pessoa picada é criança/ pessoa idosa?",
+   "obrig": false,
+   "outro": false,
+   "mermaid": "",
+   "prox": "pessoa_picada_alergica",
+   "opcoes": [
+    {
+     "id": "sim",
+     "rotulo": "Sim",
+     "vai": ""
+    },
+    {
+     "id": "nao",
+     "rotulo": "Não",
+     "vai": ""
+    }
+   ]
+  },
+  {
+   "id": "pessoa_picada_alergica",
+   "tipo": "unica",
+   "texto": "A pessoa picada é alérgica",
+   "obrig": false,
+   "outro": false,
+   "mermaid": "",
+   "prox": "troca_picada_inseto",
+   "opcoes": [
+    {
+     "id": "sim",
+     "rotulo": "Sim",
+     "vai": ""
+    },
+    {
+     "id": "nao_sei",
+     "rotulo": "Não sei",
+     "vai": "troca_picada_inseto_2"
+    },
+    {
+     "id": "nao",
+     "rotulo": "Não",
+     "vai": "troca_picada_inseto_3"
+    }
+   ]
+  },
+  {
+   "id": "troca_picada_inseto",
+   "tipo": "troca",
+   "texto": "Picada de inseto",
+   "obrig": false,
+   "outro": false,
+   "mermaid": "",
+   "prox": "pessoa_picada_respira",
+   "opcoes": []
+  },
+  {
+   "id": "pessoa_picada_respira",
+   "tipo": "unica",
+   "texto": "A pessoa picada respira?",
+   "obrig": false,
+   "outro": false,
+   "mermaid": "",
+   "prox": "pessoa_picada_apresenta",
+   "opcoes": [
+    {
+     "id": "sim",
+     "rotulo": "Sim",
+     "vai": ""
+    },
+    {
+     "id": "nao",
+     "rotulo": "Não",
+     "vai": "realize_videochamada_fac"
+    }
+   ]
+  },
+  {
+   "id": "pessoa_picada_apresenta",
+   "tipo": "unica",
+   "texto": "A pessoa picada apresenta sintomas graves?",
+   "obrig": false,
+   "outro": false,
+   "mermaid": "",
+   "prox": "onde_picada",
+   "opcoes": [
+    {
+     "id": "sim",
+     "rotulo": "Sim",
+     "vai": ""
+    },
+    {
+     "id": "nao",
+     "rotulo": "Não",
+     "vai": ""
+    }
+   ]
+  },
+  {
+   "id": "onde_picada",
+   "tipo": "texto",
+   "texto": "Onde foi a picada?",
+   "obrig": false,
+   "outro": false,
+   "mermaid": "",
+   "prox": "muitos_insetos_local",
+   "opcoes": []
+  },
+  {
+   "id": "muitos_insetos_local",
+   "tipo": "unica",
+   "texto": "Há muitos insetos no local?",
+   "obrig": false,
+   "outro": false,
+   "mermaid": "",
+   "prox": "insetos_atacando_pessoas",
+   "opcoes": [
+    {
+     "id": "sim",
+     "rotulo": "Sim",
+     "vai": ""
+    },
+    {
+     "id": "nao",
+     "rotulo": "Não",
+     "vai": ""
+    }
+   ]
+  },
+  {
+   "id": "insetos_atacando_pessoas",
+   "tipo": "unica",
+   "texto": "Os insetos estão atacando pessoas?",
+   "obrig": false,
+   "outro": false,
+   "mermaid": "",
+   "prox": "insetos_agitados",
+   "opcoes": [
+    {
+     "id": "sim",
+     "rotulo": "Sim",
+     "vai": ""
+    },
+    {
+     "id": "nao",
+     "rotulo": "Não",
+     "vai": ""
+    }
+   ]
+  },
+  {
+   "id": "insetos_agitados",
+   "tipo": "unica",
+   "texto": "Os insetos estão agitados?",
+   "obrig": false,
+   "outro": false,
+   "mermaid": "",
+   "prox": "sera_necessario_averigua",
+   "opcoes": [
+    {
+     "id": "sim",
+     "rotulo": "Sim",
+     "vai": ""
+    },
+    {
+     "id": "nao",
+     "rotulo": "Não",
+     "vai": ""
+    }
+   ]
+  },
+  {
+   "id": "sera_necessario_averigua",
+   "tipo": "unica",
+   "texto": "Será necessário uma averiguação para captura?",
+   "obrig": false,
+   "outro": false,
+   "mermaid": "",
+   "prox": "troca_insetos_abelha",
+   "opcoes": [
+    {
+     "id": "sim",
+     "rotulo": "Sim",
+     "vai": ""
+    },
+    {
+     "id": "nao",
+     "rotulo": "Não",
+     "vai": "emergencia_motivo_senhor"
+    }
+   ]
+  },
+  {
+   "id": "troca_insetos_abelha",
+   "tipo": "troca",
+   "texto": "Insetos, Abelha ou Similares Oferecendo Risco",
+   "obrig": false,
+   "outro": false,
+   "mermaid": "",
+   "prox": "FIM",
+   "opcoes": []
+  },
+  {
+   "id": "emergencia_motivo_senhor",
+   "tipo": "texto",
+   "texto": "Qual é a emergência e por qual motivo o senhor(a) necessita do atendimento do CBMDF, considerando que não há vítimas e não há risco aparente?",
+   "obrig": false,
+   "outro": false,
+   "mermaid": "",
+   "prox": "atencao_teleatendente_ba",
+   "opcoes": []
+  },
+  {
+   "id": "atencao_teleatendente_ba",
+   "tipo": "informacao",
+   "texto": "Atenção Teleatendente! Com base nas informações, esta ocorrência aparenta não ser de competência do CBMDF. Entre em contato com o Chefe de Teleatendimento para confirmar a necessidade de envio de recursos.",
+   "obrig": false,
+   "outro": false,
+   "mermaid": "",
+   "prox": "encaminhar_outro_orgao",
+   "opcoes": []
+  },
+  {
+   "id": "encaminhar_outro_orgao",
+   "tipo": "instrucao",
+   "texto": "Encaminhar para outro órgão",
+   "obrig": false,
+   "outro": false,
+   "mermaid": "",
+   "prox": "FIM",
+   "opcoes": []
+  },
+  {
+   "id": "realize_videochamada_fac",
+   "tipo": "informacao",
+   "texto": "Realize a videochamada e faça as orientações",
+   "obrig": false,
+   "outro": false,
+   "mermaid": "",
+   "prox": "troca_parada_cardiorespi",
+   "opcoes": [],
+   "video": true
+  },
+  {
+   "id": "troca_parada_cardiorespi",
+   "tipo": "troca",
+   "texto": "Parada cardiorrespiratória (PCR)",
+   "obrig": false,
+   "outro": false,
+   "mermaid": "",
+   "prox": "FIM",
+   "opcoes": []
+  },
+  {
+   "id": "troca_picada_inseto_2",
+   "tipo": "troca",
+   "texto": "Picada de inseto",
+   "obrig": false,
+   "outro": false,
+   "mermaid": "",
+   "prox": "muitos_insetos_local",
+   "opcoes": []
+  },
+  {
+   "id": "troca_picada_inseto_3",
+   "tipo": "troca",
+   "texto": "Picada de inseto",
+   "obrig": false,
+   "outro": false,
+   "mermaid": "",
+   "prox": "FIM",
+   "opcoes": []
+  },
+  {
+   "id": "despacho",
+   "tipo": "instrucao",
+   "texto": "O socorro já foi acionado e está a caminho. Vou fazer algumas perguntas rápidas para ajudar a equipe. Mantenha a calma e siga minhas orientações, por favor.",
+   "obrig": false,
+   "outro": false,
+   "mermaid": "",
+   "prox": "FIM",
+   "opcoes": [],
+   "despacho": true
+  }
+ ],
+ "notas": [
+  "Troca para “Picada de inseto”: essa natureza não tem fluxo no quadro.",
+  "Troca para “Insetos, Abelha ou Similares Oferecendo Risco”: essa natureza não tem fluxo no quadro.",
+  "“Atenção Teleatendente! Com base nas informações, esta ocorrê” tem 2 saídas sem pergunta; ficou só a primeira.",
+  "Troca para “Parada Cárdiorespiratória” entendida como “Parada cardiorrespiratória (PCR)”.",
+  "Troca para “Picada de inseto”: essa natureza não tem fluxo no quadro.",
+  "Troca para “Picada de inseto”: essa natureza não tem fluxo no quadro.",
+  "“despacho” está no formulário, mas nenhum caminho do fluxo chega até ele."
+ ]
+}

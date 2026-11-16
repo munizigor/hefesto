@@ -1,0 +1,217 @@
+{
+ "natureza": {
+  "id": "choque_eletrico",
+  "nome": "Choque elétrico"
+ },
+ "itens": [
+  {
+   "id": "pessoa_ainda_contato",
+   "tipo": "unica",
+   "texto": "A pessoa ainda está em contato com o fio ou o equipamento?",
+   "obrig": false,
+   "outro": false,
+   "mermaid": "",
+   "prox": "origem",
+   "opcoes": [
+    {
+     "id": "sim",
+     "rotulo": "Sim",
+     "vai": "orientar_imediatamente_n"
+    },
+    {
+     "id": "nao",
+     "rotulo": "Não",
+     "vai": ""
+    },
+    {
+     "id": "nao_sabe",
+     "rotulo": "Não sabe",
+     "vai": ""
+    }
+   ]
+  },
+  {
+   "id": "orientar_imediatamente_n",
+   "tipo": "informacao",
+   "texto": "Orientar imediatamente: não tocar na vítima, desligar a energia",
+   "obrig": false,
+   "outro": false,
+   "mermaid": "",
+   "prox": "origem",
+   "opcoes": []
+  },
+  {
+   "id": "origem",
+   "tipo": "unica",
+   "texto": "Qual a origem?",
+   "obrig": false,
+   "outro": true,
+   "mermaid": "",
+   "prox": "despacho",
+   "opcoes": [
+    {
+     "id": "rede_de_rua_poste",
+     "rotulo": "Rede de rua / poste",
+     "vai": "acionar_concessionaria_e"
+    },
+    {
+     "id": "tomada_equipamento",
+     "rotulo": "Tomada / equipamento",
+     "vai": ""
+    },
+    {
+     "id": "raio",
+     "rotulo": "Raio",
+     "vai": ""
+    }
+   ]
+  },
+  {
+   "id": "acionar_concessionaria_e",
+   "tipo": "informacao",
+   "texto": "Acionar concessionária de energia",
+   "obrig": false,
+   "outro": false,
+   "mermaid": "",
+   "prox": "despacho",
+   "opcoes": []
+  },
+  {
+   "id": "despacho",
+   "tipo": "instrucao",
+   "texto": "O socorro já foi acionado e está a caminho. Vou fazer algumas perguntas rápidas para ajudar a equipe. Mantenha a calma e siga minhas orientações, por favor.",
+   "obrig": false,
+   "outro": false,
+   "mermaid": "",
+   "prox": "vitima_acordada_responde",
+   "opcoes": [],
+   "despacho": true
+  },
+  {
+   "id": "vitima_acordada_responde",
+   "tipo": "unica",
+   "texto": "A vítima está acordada e responde quando você chama?",
+   "obrig": false,
+   "outro": false,
+   "mermaid": "",
+   "prox": "ela_respira_normalmente",
+   "opcoes": [
+    {
+     "id": "sim",
+     "rotulo": "Sim",
+     "vai": ""
+    },
+    {
+     "id": "nao",
+     "rotulo": "Não",
+     "vai": ""
+    },
+    {
+     "id": "nao_sabe",
+     "rotulo": "Não sabe",
+     "vai": ""
+    }
+   ]
+  },
+  {
+   "id": "ela_respira_normalmente",
+   "tipo": "unica",
+   "texto": "Ela respira normalmente?",
+   "obrig": false,
+   "outro": false,
+   "mermaid": "",
+   "prox": "queimaduras_visiveis",
+   "opcoes": [
+    {
+     "id": "sim",
+     "rotulo": "Sim",
+     "vai": ""
+    },
+    {
+     "id": "nao",
+     "rotulo": "Não",
+     "vai": "realize_videochamada_fac"
+    },
+    {
+     "id": "nao_sabe",
+     "rotulo": "Não sabe",
+     "vai": ""
+    }
+   ]
+  },
+  {
+   "id": "queimaduras_visiveis",
+   "tipo": "unica",
+   "texto": "Há queimaduras visíveis?",
+   "obrig": false,
+   "outro": false,
+   "mermaid": "",
+   "prox": "pessoa_caiu_lugar",
+   "opcoes": [
+    {
+     "id": "sim",
+     "rotulo": "Sim",
+     "vai": ""
+    },
+    {
+     "id": "nao",
+     "rotulo": "Não",
+     "vai": ""
+    }
+   ]
+  },
+  {
+   "id": "pessoa_caiu_lugar",
+   "tipo": "unica",
+   "texto": "A pessoa caiu de algum lugar com o choque?",
+   "obrig": false,
+   "outro": false,
+   "mermaid": "",
+   "prox": "nao_toque_pessoa",
+   "opcoes": [
+    {
+     "id": "sim",
+     "rotulo": "Sim",
+     "vai": ""
+    },
+    {
+     "id": "nao",
+     "rotulo": "Não",
+     "vai": ""
+    }
+   ]
+  },
+  {
+   "id": "nao_toque_pessoa",
+   "tipo": "instrucao",
+   "texto": "Não toque na pessoa enquanto ela estiver em contato com a energia. Em casa, desligue o disjuntor geral. Fio de rua: fique a pelo menos 10 metros de distância.",
+   "obrig": false,
+   "outro": false,
+   "mermaid": "",
+   "prox": "FIM",
+   "opcoes": []
+  },
+  {
+   "id": "realize_videochamada_fac",
+   "tipo": "informacao",
+   "texto": "Realize a videochamada e faça as orientações de RCP",
+   "obrig": false,
+   "outro": false,
+   "mermaid": "",
+   "prox": "troca_parada_cardiorresp",
+   "opcoes": [],
+   "video": true
+  },
+  {
+   "id": "troca_parada_cardiorresp",
+   "tipo": "troca",
+   "texto": "Parada cardiorrespiratória (PCR)",
+   "obrig": false,
+   "outro": false,
+   "mermaid": "",
+   "prox": "FIM",
+   "opcoes": []
+  }
+ ],
+ "notas": []
+}

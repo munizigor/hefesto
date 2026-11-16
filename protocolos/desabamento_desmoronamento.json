@@ -1,0 +1,170 @@
+{
+ "natureza": {
+  "id": "desabamento_desmoronamento",
+  "nome": "Desabamento / desmoronamento"
+ },
+ "itens": [
+  {
+   "id": "desabou",
+   "tipo": "unica",
+   "texto": "O que desabou?",
+   "obrig": false,
+   "outro": true,
+   "mermaid": "",
+   "prox": "soterrado_preso_escombro",
+   "opcoes": [
+    {
+     "id": "casa_predio",
+     "rotulo": "Casa / prédio",
+     "vai": ""
+    },
+    {
+     "id": "muro",
+     "rotulo": "Muro",
+     "vai": ""
+    },
+    {
+     "id": "laje_marquise",
+     "rotulo": "Laje / marquise",
+     "vai": ""
+    },
+    {
+     "id": "barranco_terra",
+     "rotulo": "Barranco / terra",
+     "vai": ""
+    }
+   ]
+  },
+  {
+   "id": "soterrado_preso_escombro",
+   "tipo": "unica",
+   "texto": "Tem alguém soterrado ou preso nos escombros?",
+   "obrig": false,
+   "outro": false,
+   "mermaid": "",
+   "prox": "despacho",
+   "opcoes": [
+    {
+     "id": "sim",
+     "rotulo": "Sim",
+     "vai": ""
+    },
+    {
+     "id": "nao",
+     "rotulo": "Não",
+     "vai": ""
+    },
+    {
+     "id": "nao_sabe",
+     "rotulo": "Não sabe",
+     "vai": ""
+    }
+   ]
+  },
+  {
+   "id": "despacho",
+   "tipo": "instrucao",
+   "texto": "O socorro já foi acionado e está a caminho. Vou fazer algumas perguntas rápidas para ajudar a equipe. Mantenha a calma e siga minhas orientações, por favor.",
+   "obrig": false,
+   "outro": false,
+   "mermaid": "",
+   "prox": "pessoas_estavam_local",
+   "opcoes": [],
+   "despacho": true
+  },
+  {
+   "id": "pessoas_estavam_local",
+   "tipo": "numero",
+   "texto": "Quantas pessoas estavam no local?",
+   "obrig": false,
+   "outro": false,
+   "mermaid": "",
+   "prox": "voce_ouve_chamados",
+   "opcoes": []
+  },
+  {
+   "id": "voce_ouve_chamados",
+   "tipo": "unica",
+   "texto": "Você ouve chamados ou barulhos vindo dos escombros?",
+   "obrig": false,
+   "outro": false,
+   "mermaid": "",
+   "prox": "cheiro_gas_fios",
+   "opcoes": [
+    {
+     "id": "sim",
+     "rotulo": "Sim",
+     "vai": ""
+    },
+    {
+     "id": "nao",
+     "rotulo": "Não",
+     "vai": ""
+    }
+   ]
+  },
+  {
+   "id": "cheiro_gas_fios",
+   "tipo": "unica",
+   "texto": "Há cheiro de gás, fios expostos ou água jorrando?",
+   "obrig": false,
+   "outro": false,
+   "mermaid": "",
+   "prox": "acionar_concessionarias",
+   "opcoes": [
+    {
+     "id": "sim",
+     "rotulo": "Sim",
+     "vai": ""
+    },
+    {
+     "id": "nao",
+     "rotulo": "Não",
+     "vai": "restante_estrutura_racha"
+    }
+   ]
+  },
+  {
+   "id": "acionar_concessionarias",
+   "tipo": "informacao",
+   "texto": "Acionar concessionárias",
+   "obrig": false,
+   "outro": false,
+   "mermaid": "",
+   "prox": "restante_estrutura_racha",
+   "opcoes": []
+  },
+  {
+   "id": "restante_estrutura_racha",
+   "tipo": "unica",
+   "texto": "O restante da estrutura está rachando ou fazendo barulho?",
+   "obrig": false,
+   "outro": false,
+   "mermaid": "",
+   "prox": "nao_entre_escombros",
+   "opcoes": [
+    {
+     "id": "sim",
+     "rotulo": "Sim",
+     "vai": ""
+    },
+    {
+     "id": "nao",
+     "rotulo": "Não",
+     "vai": ""
+    }
+   ]
+  },
+  {
+   "id": "nao_entre_escombros",
+   "tipo": "instrucao",
+   "texto": "Não entre nos escombros nem remova peças grandes. Afaste-se da estrutura. Se estiver preso, bata em canos ou paredes e economize energia.",
+   "obrig": false,
+   "outro": false,
+   "mermaid": "",
+   "prox": "FIM",
+   "opcoes": []
+  }
+ ],
+ "notas": []
+}

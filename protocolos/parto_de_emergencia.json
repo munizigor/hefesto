@@ -1,0 +1,245 @@
+{
+ "natureza": {
+  "id": "parto_de_emergencia",
+  "nome": "Parto de emergência"
+ },
+ "itens": [
+  {
+   "id": "ja_ver_cabeca",
+   "tipo": "unica",
+   "texto": "Já dá para ver a cabeça do bebê ou o bebê já nasceu?",
+   "obrig": false,
+   "outro": false,
+   "mermaid": "",
+   "prox": "despacho_imediato_videoc",
+   "opcoes": [
+    {
+     "id": "cabeca_visivel",
+     "rotulo": "Cabeça visível",
+     "vai": ""
+    },
+    {
+     "id": "ja_nasceu",
+     "rotulo": "Já nasceu",
+     "vai": "despacho_imediato_videoc_2"
+    },
+    {
+     "id": "nao",
+     "rotulo": "Não",
+     "vai": "despacho"
+    }
+   ]
+  },
+  {
+   "id": "despacho_imediato_videoc",
+   "tipo": "informacao",
+   "texto": "Despacho imediato e videochamada de orientação",
+   "obrig": false,
+   "outro": false,
+   "mermaid": "",
+   "prox": "despacho",
+   "opcoes": [],
+   "video": true
+  },
+  {
+   "id": "despacho",
+   "tipo": "instrucao",
+   "texto": "O socorro já foi acionado e está a caminho. Vou fazer algumas perguntas rápidas para ajudar a equipe. Mantenha a calma e siga minhas orientações, por favor.",
+   "obrig": false,
+   "outro": false,
+   "mermaid": "",
+   "prox": "bebe_ja_nasceu",
+   "opcoes": [],
+   "despacho": true
+  },
+  {
+   "id": "bebe_ja_nasceu",
+   "tipo": "unica",
+   "texto": "O bebê já nasceu e não respira ou não chora?",
+   "obrig": false,
+   "outro": false,
+   "mermaid": "",
+   "prox": "semanas_meses_gestacao",
+   "opcoes": [
+    {
+     "id": "sim",
+     "rotulo": "Sim",
+     "vai": "troca_parada_cardiorresp"
+    },
+    {
+     "id": "nao",
+     "rotulo": "Não",
+     "vai": ""
+    },
+    {
+     "id": "nao_sei",
+     "rotulo": "Não sei",
+     "vai": ""
+    }
+   ]
+  },
+  {
+   "id": "troca_parada_cardiorresp",
+   "tipo": "troca",
+   "texto": "Parada cardiorrespiratória (PCR)",
+   "obrig": false,
+   "outro": false,
+   "mermaid": "",
+   "prox": "despacho_2",
+   "opcoes": []
+  },
+  {
+   "id": "despacho_2",
+   "tipo": "instrucao",
+   "texto": "Iremos realizar uma vídeo chamada para orientá-lo(a) até a chegada da guarnição! Mantenha a calma e siga as orientações.",
+   "obrig": false,
+   "outro": false,
+   "mermaid": "",
+   "prox": "realize_videochamada_fac",
+   "opcoes": [],
+   "despacho": true
+  },
+  {
+   "id": "realize_videochamada_fac",
+   "tipo": "informacao",
+   "texto": "Realize a videochamada e faça as orientações",
+   "obrig": false,
+   "outro": false,
+   "mermaid": "",
+   "prox": "FIM",
+   "opcoes": [],
+   "video": true
+  },
+  {
+   "id": "semanas_meses_gestacao",
+   "tipo": "unica",
+   "texto": "De quantas semanas ou meses é a gestação?",
+   "obrig": false,
+   "outro": false,
+   "mermaid": "",
+   "prox": "bolsa_rompeu_cor",
+   "opcoes": [
+    {
+     "id": "menos_de_37_semanas",
+     "rotulo": "Menos de 37 semanas",
+     "vai": ""
+    },
+    {
+     "id": "37_semanas_ou_mais",
+     "rotulo": "37 semanas ou mais",
+     "vai": ""
+    },
+    {
+     "id": "nao_sabe",
+     "rotulo": "Não sabe",
+     "vai": ""
+    }
+   ]
+  },
+  {
+   "id": "bolsa_rompeu_cor",
+   "tipo": "unica",
+   "texto": "A bolsa rompeu? Qual a cor do líquido?",
+   "obrig": false,
+   "outro": false,
+   "mermaid": "",
+   "prox": "contracoes_vem_quanto",
+   "opcoes": [
+    {
+     "id": "sim_clara",
+     "rotulo": "Sim, clara",
+     "vai": ""
+    },
+    {
+     "id": "sim_escura_esverdeada",
+     "rotulo": "Sim, escura / esverdeada",
+     "vai": ""
+    },
+    {
+     "id": "nao",
+     "rotulo": "Não",
+     "vai": ""
+    }
+   ]
+  },
+  {
+   "id": "contracoes_vem_quanto",
+   "tipo": "unica",
+   "texto": "As contrações vêm de quanto em quanto tempo?",
+   "obrig": false,
+   "outro": false,
+   "mermaid": "",
+   "prox": "primeiro_filho_gestacao",
+   "opcoes": [
+    {
+     "id": "menos_de_2_min",
+     "rotulo": "Menos de 2 min",
+     "vai": ""
+    },
+    {
+     "id": "2_a_5_min",
+     "rotulo": "2 a 5 min",
+     "vai": ""
+    },
+    {
+     "id": "mais_de_5_min",
+     "rotulo": "Mais de 5 min",
+     "vai": ""
+    }
+   ]
+  },
+  {
+   "id": "primeiro_filho_gestacao",
+   "tipo": "texto",
+   "texto": "É o primeiro filho? Gestação de gêmeos?",
+   "obrig": false,
+   "outro": false,
+   "mermaid": "",
+   "prox": "sangramento_forte_aparec",
+   "opcoes": []
+  },
+  {
+   "id": "sangramento_forte_aparec",
+   "tipo": "unica",
+   "texto": "Há sangramento forte ou aparece cordão, pé ou braço antes da cabeça?",
+   "obrig": false,
+   "outro": false,
+   "mermaid": "",
+   "prox": "deite_gestante_lado",
+   "opcoes": [
+    {
+     "id": "sim",
+     "rotulo": "Sim",
+     "vai": ""
+    },
+    {
+     "id": "nao",
+     "rotulo": "Não",
+     "vai": ""
+    }
+   ]
+  },
+  {
+   "id": "deite_gestante_lado",
+   "tipo": "instrucao",
+   "texto": "Deite a gestante de lado esquerdo ou recostada. Separe toalhas limpas. Não puxe o bebê nem o cordão.",
+   "obrig": false,
+   "outro": false,
+   "mermaid": "",
+   "prox": "FIM",
+   "opcoes": []
+  },
+  {
+   "id": "despacho_imediato_videoc_2",
+   "tipo": "informacao",
+   "texto": "Despacho imediato e videochamada de orientação",
+   "obrig": false,
+   "outro": false,
+   "mermaid": "",
+   "prox": "despacho",
+   "opcoes": [],
+   "video": true
+  }
+ ],
+ "notas": []
+}

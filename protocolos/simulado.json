@@ -1,0 +1,94 @@
+{
+ "natureza": {
+  "id": "simulado",
+  "nome": "Simulado"
+ },
+ "itens": [
+  {
+   "id": "aviso_simulado_simulado",
+   "tipo": "unica",
+   "texto": "É um aviso de simulado ou um simulado em andamento?",
+   "obrig": false,
+   "outro": false,
+   "mermaid": "",
+   "prox": "instituicao_endereco_dat",
+   "opcoes": [
+    {
+     "id": "aviso_previo",
+     "rotulo": "Aviso prévio",
+     "vai": ""
+    },
+    {
+     "id": "em_andamento",
+     "rotulo": "Em andamento",
+     "vai": ""
+    }
+   ]
+  },
+  {
+   "id": "instituicao_endereco_dat",
+   "tipo": "texto",
+   "texto": "Instituição, endereço, data / horário e responsável",
+   "obrig": false,
+   "outro": false,
+   "mermaid": "",
+   "prox": "simulado_participacao_cb",
+   "opcoes": []
+  },
+  {
+   "id": "simulado_participacao_cb",
+   "tipo": "unica",
+   "texto": "O simulado tem participação do CBMDF autorizada?",
+   "obrig": false,
+   "outro": false,
+   "mermaid": "",
+   "prox": "vitima_real_situacao",
+   "opcoes": [
+    {
+     "id": "sim_referencia",
+     "rotulo": "Sim (referência)",
+     "vai": ""
+    },
+    {
+     "id": "nao",
+     "rotulo": "Não",
+     "vai": ""
+    }
+   ]
+  },
+  {
+   "id": "vitima_real_situacao",
+   "tipo": "unica",
+   "texto": "Há alguma vítima real ou situação fora do roteiro?",
+   "obrig": false,
+   "outro": false,
+   "mermaid": "",
+   "prox": "troca_natureza_correspon",
+   "opcoes": [
+    {
+     "id": "sim",
+     "rotulo": "Sim",
+     "vai": ""
+    },
+    {
+     "id": "nao",
+     "rotulo": "Não",
+     "vai": "FIM"
+    }
+   ]
+  },
+  {
+   "id": "troca_natureza_correspon",
+   "tipo": "troca",
+   "texto": "natureza correspondente à emergência real",
+   "obrig": false,
+   "outro": false,
+   "mermaid": "",
+   "prox": "FIM",
+   "opcoes": []
+  }
+ ],
+ "notas": [
+  "Troca para “natureza correspondente à emergência real”: essa natureza não tem fluxo no quadro."
+ ]
+}

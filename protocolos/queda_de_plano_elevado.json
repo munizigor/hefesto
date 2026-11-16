@@ -1,0 +1,343 @@
+{
+ "natureza": {
+  "id": "queda_de_plano_elevado",
+  "nome": "Queda de plano elevado"
+ },
+ "itens": [
+  {
+   "id": "onde_pessoa_caiu",
+   "tipo": "unica",
+   "texto": "De onde a pessoa caiu?",
+   "obrig": false,
+   "outro": true,
+   "mermaid": "",
+   "prox": "pessoa_jogou_proposito",
+   "opcoes": [
+    {
+     "id": "escada",
+     "rotulo": "Escada",
+     "vai": ""
+    },
+    {
+     "id": "telhado_laje",
+     "rotulo": "Telhado / laje",
+     "vai": ""
+    },
+    {
+     "id": "andaime_obra",
+     "rotulo": "Andaime / obra",
+     "vai": ""
+    },
+    {
+     "id": "arvore",
+     "rotulo": "Árvore",
+     "vai": ""
+    },
+    {
+     "id": "janela_sacada",
+     "rotulo": "Janela / sacada",
+     "vai": ""
+    }
+   ]
+  },
+  {
+   "id": "pessoa_jogou_proposito",
+   "tipo": "unica",
+   "texto": "A pessoa se jogou de propósito?",
+   "obrig": false,
+   "outro": false,
+   "mermaid": "",
+   "prox": "queda_propria_altura",
+   "opcoes": [
+    {
+     "id": "sim",
+     "rotulo": "Sim",
+     "vai": "troca_tentativa_suicidio"
+    },
+    {
+     "id": "nao",
+     "rotulo": "Não",
+     "vai": ""
+    },
+    {
+     "id": "nao_sei",
+     "rotulo": "Não sei",
+     "vai": ""
+    }
+   ]
+  },
+  {
+   "id": "troca_tentativa_suicidio",
+   "tipo": "troca",
+   "texto": "Tentativa de suicídio",
+   "obrig": false,
+   "outro": false,
+   "mermaid": "",
+   "prox": "FIM",
+   "opcoes": []
+  },
+  {
+   "id": "queda_propria_altura",
+   "tipo": "unica",
+   "texto": "A queda foi da própria altura (tropeçou ou escorregou)?",
+   "obrig": false,
+   "outro": false,
+   "mermaid": "",
+   "prox": "queda_moto_bicicleta",
+   "opcoes": [
+    {
+     "id": "sim",
+     "rotulo": "Sim",
+     "vai": "troca_queda_propria"
+    },
+    {
+     "id": "nao",
+     "rotulo": "Não",
+     "vai": ""
+    },
+    {
+     "id": "nao_sei",
+     "rotulo": "Não sei",
+     "vai": ""
+    }
+   ]
+  },
+  {
+   "id": "troca_queda_propria",
+   "tipo": "troca",
+   "texto": "Queda da própria altura",
+   "obrig": false,
+   "outro": false,
+   "mermaid": "",
+   "prox": "FIM",
+   "opcoes": []
+  },
+  {
+   "id": "queda_moto_bicicleta",
+   "tipo": "unica",
+   "texto": "A queda foi de moto, bicicleta ou patinete?",
+   "obrig": false,
+   "outro": false,
+   "mermaid": "",
+   "prox": "altura_mais_menos",
+   "opcoes": [
+    {
+     "id": "sim",
+     "rotulo": "Sim",
+     "vai": "troca_queda_motocicleta"
+    },
+    {
+     "id": "nao",
+     "rotulo": "Não",
+     "vai": ""
+    },
+    {
+     "id": "nao_sei",
+     "rotulo": "Não sei",
+     "vai": ""
+    }
+   ]
+  },
+  {
+   "id": "troca_queda_motocicleta",
+   "tipo": "troca",
+   "texto": "Queda de motocicleta / Queda de bicicleta ou patinete (naturezas a aprovar)",
+   "obrig": false,
+   "outro": false,
+   "mermaid": "",
+   "prox": "FIM",
+   "opcoes": []
+  },
+  {
+   "id": "altura_mais_menos",
+   "tipo": "unica",
+   "texto": "De que altura, mais ou menos?",
+   "obrig": false,
+   "outro": false,
+   "mermaid": "",
+   "prox": "despacho",
+   "opcoes": [
+    {
+     "id": "ate_2_m",
+     "rotulo": "Até 2 m",
+     "vai": ""
+    },
+    {
+     "id": "2_a_6_m",
+     "rotulo": "2 a 6 m",
+     "vai": ""
+    },
+    {
+     "id": "mais_de_6_m",
+     "rotulo": "Mais de 6 m",
+     "vai": ""
+    }
+   ]
+  },
+  {
+   "id": "despacho",
+   "tipo": "instrucao",
+   "texto": "O socorro já foi acionado e está a caminho. Vou fazer algumas perguntas rápidas para ajudar a equipe. Mantenha a calma e siga minhas orientações, por favor.",
+   "obrig": false,
+   "outro": false,
+   "mermaid": "",
+   "prox": "vitima_acordada_responde",
+   "opcoes": [],
+   "despacho": true
+  },
+  {
+   "id": "vitima_acordada_responde",
+   "tipo": "unica",
+   "texto": "A vítima está acordada e responde quando você chama?",
+   "obrig": false,
+   "outro": false,
+   "mermaid": "",
+   "prox": "ela_respira_normalmente",
+   "opcoes": [
+    {
+     "id": "sim",
+     "rotulo": "Sim",
+     "vai": ""
+    },
+    {
+     "id": "nao",
+     "rotulo": "Não",
+     "vai": ""
+    },
+    {
+     "id": "nao_sabe",
+     "rotulo": "Não sabe",
+     "vai": ""
+    }
+   ]
+  },
+  {
+   "id": "ela_respira_normalmente",
+   "tipo": "unica",
+   "texto": "Ela respira normalmente?",
+   "obrig": false,
+   "outro": false,
+   "mermaid": "",
+   "prox": "ela_consegue_mexer",
+   "opcoes": [
+    {
+     "id": "sim",
+     "rotulo": "Sim",
+     "vai": ""
+    },
+    {
+     "id": "nao",
+     "rotulo": "Não",
+     "vai": "realize_videochamada_fac"
+    },
+    {
+     "id": "nao_sabe",
+     "rotulo": "Não sabe",
+     "vai": ""
+    }
+   ]
+  },
+  {
+   "id": "ela_consegue_mexer",
+   "tipo": "unica",
+   "texto": "Ela consegue mexer braços e pernas?",
+   "obrig": false,
+   "outro": false,
+   "mermaid": "",
+   "prox": "sangramento_grande_osso",
+   "opcoes": [
+    {
+     "id": "sim",
+     "rotulo": "Sim",
+     "vai": ""
+    },
+    {
+     "id": "nao",
+     "rotulo": "Não",
+     "vai": ""
+    },
+    {
+     "id": "nao_sabe",
+     "rotulo": "Não sabe",
+     "vai": ""
+    }
+   ]
+  },
+  {
+   "id": "sangramento_grande_osso",
+   "tipo": "unica",
+   "texto": "Há sangramento grande ou osso aparente?",
+   "obrig": false,
+   "outro": false,
+   "mermaid": "",
+   "prox": "pessoa_continua_local",
+   "opcoes": [
+    {
+     "id": "sim",
+     "rotulo": "Sim",
+     "vai": ""
+    },
+    {
+     "id": "nao",
+     "rotulo": "Não",
+     "vai": ""
+    }
+   ]
+  },
+  {
+   "id": "pessoa_continua_local",
+   "tipo": "unica",
+   "texto": "A pessoa continua em local de risco (telhado, poço, água)?",
+   "obrig": false,
+   "outro": false,
+   "mermaid": "",
+   "prox": "nao_mexa_pessoa",
+   "opcoes": [
+    {
+     "id": "sim",
+     "rotulo": "Sim",
+     "vai": ""
+    },
+    {
+     "id": "nao",
+     "rotulo": "Não",
+     "vai": ""
+    }
+   ]
+  },
+  {
+   "id": "nao_mexa_pessoa",
+   "tipo": "instrucao",
+   "texto": "Não mexa a pessoa nem levante a cabeça dela. Mantenha-a aquecida e converse com ela.",
+   "obrig": false,
+   "outro": false,
+   "mermaid": "",
+   "prox": "FIM",
+   "opcoes": []
+  },
+  {
+   "id": "realize_videochamada_fac",
+   "tipo": "informacao",
+   "texto": "Realize a videochamada e faça as orientações de RCP",
+   "obrig": false,
+   "outro": false,
+   "mermaid": "",
+   "prox": "troca_parada_cardiorresp",
+   "opcoes": [],
+   "video": true
+  },
+  {
+   "id": "troca_parada_cardiorresp",
+   "tipo": "troca",
+   "texto": "Parada cardiorrespiratória (PCR)",
+   "obrig": false,
+   "outro": false,
+   "mermaid": "",
+   "prox": "FIM",
+   "opcoes": []
+  }
+ ],
+ "notas": [
+  "Troca para “Queda de motocicleta / Queda de bicicleta ou patinete (naturezas a aprovar)”: essa natureza não tem fluxo no quadro."
+ ]
+}

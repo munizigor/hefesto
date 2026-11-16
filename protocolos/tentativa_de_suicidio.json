@@ -1,0 +1,544 @@
+{
+ "natureza": {
+  "id": "tentativa_de_suicidio",
+  "nome": "Tentativa de suicídio"
+ },
+ "itens": [
+  {
+   "id": "despacho",
+   "tipo": "instrucao",
+   "texto": "O socorro já foi acionado e está a caminho. Vou fazer algumas perguntas rápidas para ajudar a equipe. Mantenha a calma e siga minhas orientações, por favor.",
+   "obrig": false,
+   "outro": false,
+   "mermaid": "",
+   "prox": "pessoa_respirando",
+   "opcoes": [],
+   "despacho": true
+  },
+  {
+   "id": "pessoa_respirando",
+   "tipo": "unica",
+   "texto": "A pessoa está respirando?",
+   "obrig": false,
+   "outro": false,
+   "mermaid": "",
+   "prox": "solicitante_tentante",
+   "opcoes": [
+    {
+     "id": "sim",
+     "rotulo": "Sim",
+     "vai": ""
+    },
+    {
+     "id": "nao",
+     "rotulo": "Não",
+     "vai": "troca_parada_cardiorresp"
+    },
+    {
+     "id": "nao_sei",
+     "rotulo": "Não sei",
+     "vai": "troca_parada_cardiorresp_2"
+    }
+   ]
+  },
+  {
+   "id": "solicitante_tentante",
+   "tipo": "unica",
+   "texto": "Solicitante é o tentante?",
+   "obrig": false,
+   "outro": false,
+   "mermaid": "",
+   "prox": "conduta_humanizada_confo",
+   "opcoes": [
+    {
+     "id": "sim",
+     "rotulo": "Sim",
+     "vai": ""
+    },
+    {
+     "id": "nao",
+     "rotulo": "Não",
+     "vai": "meio_utilizado_pelo"
+    }
+   ]
+  },
+  {
+   "id": "conduta_humanizada_confo",
+   "tipo": "informacao",
+   "texto": "Conduta humanizada conforme ATS",
+   "obrig": false,
+   "outro": false,
+   "mermaid": "",
+   "prox": "FIM",
+   "opcoes": []
+  },
+  {
+   "id": "meio_utilizado_pelo",
+   "tipo": "lista",
+   "texto": "Qual é o meio utilizado pelo tentante?",
+   "obrig": false,
+   "outro": false,
+   "mermaid": "",
+   "prox": "apresenta_lesao_condicao",
+   "opcoes": [
+    {
+     "id": "atirar_se_na_trajetoria_de_v",
+     "rotulo": "Atirar-se na trajetória de veículos",
+     "vai": ""
+    },
+    {
+     "id": "enforcamento",
+     "rotulo": "Enforcamento",
+     "vai": ""
+    },
+    {
+     "id": "lesao_autoprovocada",
+     "rotulo": "Lesão Autoprovocada",
+     "vai": ""
+    },
+    {
+     "id": "envenenamento_produtos_difer",
+     "rotulo": "Envenenamento (produtos diferentes de medicamentos)",
+     "vai": ""
+    },
+    {
+     "id": "arma_de_fogo",
+     "rotulo": "Arma de Fogo",
+     "vai": ""
+    },
+    {
+     "id": "atear_fogo_a_si_proprio",
+     "rotulo": "atear fogo a si próprio",
+     "vai": "manter_natureza_registra"
+    },
+    {
+     "id": "arma_branca_faca_caco_de_vid",
+     "rotulo": "Arma branca (faca, caco de vidro, etc)",
+     "vai": ""
+    },
+    {
+     "id": "salto_de_plano_elevado",
+     "rotulo": "salto de plano elevado",
+     "vai": ""
+    },
+    {
+     "id": "medicamento_overdose",
+     "rotulo": "Medicamento / overdose",
+     "vai": ""
+    }
+   ]
+  },
+  {
+   "id": "apresenta_lesao_condicao",
+   "tipo": "unica",
+   "texto": "Apresenta lesão ou condição grave decorrente da tentativa?",
+   "obrig": false,
+   "outro": false,
+   "mermaid": "",
+   "prox": "sua_relacao_tentante",
+   "opcoes": [
+    {
+     "id": "sim",
+     "rotulo": "Sim",
+     "vai": ""
+    },
+    {
+     "id": "nao",
+     "rotulo": "Não",
+     "vai": ""
+    },
+    {
+     "id": "nao_sei",
+     "rotulo": "Não sei",
+     "vai": ""
+    }
+   ]
+  },
+  {
+   "id": "sua_relacao_tentante",
+   "tipo": "unica",
+   "texto": "Qual sua relação com o tentante?",
+   "obrig": false,
+   "outro": false,
+   "mermaid": "",
+   "prox": "voce_local",
+   "opcoes": [
+    {
+     "id": "familiar",
+     "rotulo": "Familiar",
+     "vai": ""
+    },
+    {
+     "id": "amigo_conhecido",
+     "rotulo": "Amigo/ conhecido",
+     "vai": ""
+    },
+    {
+     "id": "desconhecido",
+     "rotulo": "Desconhecido",
+     "vai": ""
+    }
+   ]
+  },
+  {
+   "id": "voce_local",
+   "tipo": "unica",
+   "texto": "Você está no local?",
+   "obrig": false,
+   "outro": false,
+   "mermaid": "",
+   "prox": "mantenha_calma_nao",
+   "opcoes": [
+    {
+     "id": "sim",
+     "rotulo": "Sim",
+     "vai": ""
+    },
+    {
+     "id": "nao",
+     "rotulo": "Não",
+     "vai": "idade_aproximada_pessoa_2"
+    }
+   ]
+  },
+  {
+   "id": "mantenha_calma_nao",
+   "tipo": "instrucao",
+   "texto": "Mantenha a calma, não confronte, ameace ou julgue a pessoa. Não tente retirar objetos ou realizar intervenção física se isso colocar alguém em risco. Mantenha distância segura e aguarde a chegada da equipe.",
+   "obrig": false,
+   "outro": false,
+   "mermaid": "",
+   "prox": "pessoa_ja_tentou",
+   "opcoes": []
+  },
+  {
+   "id": "pessoa_ja_tentou",
+   "tipo": "unica",
+   "texto": "A Pessoa já tentou suicídio outras vezes?",
+   "obrig": false,
+   "outro": false,
+   "mermaid": "",
+   "prox": "idade_aproximada_pessoa",
+   "opcoes": [
+    {
+     "id": "sim",
+     "rotulo": "Sim",
+     "vai": ""
+    },
+    {
+     "id": "nao",
+     "rotulo": "Não",
+     "vai": ""
+    },
+    {
+     "id": "nao_sei",
+     "rotulo": "Não sei",
+     "vai": ""
+    }
+   ]
+  },
+  {
+   "id": "idade_aproximada_pessoa",
+   "tipo": "unica",
+   "texto": "Qual a idade aproximada da pessoa",
+   "obrig": false,
+   "outro": false,
+   "mermaid": "",
+   "prox": "homem_mulher",
+   "opcoes": [
+    {
+     "id": "crianca_adolescente",
+     "rotulo": "Criança/ Adolescente",
+     "vai": "menino_menina"
+    },
+    {
+     "id": "adulto",
+     "rotulo": "Adulto",
+     "vai": ""
+    },
+    {
+     "id": "idoso",
+     "rotulo": "Idoso",
+     "vai": ""
+    }
+   ]
+  },
+  {
+   "id": "menino_menina",
+   "tipo": "unica",
+   "texto": "Menino ou menina?",
+   "obrig": false,
+   "outro": false,
+   "mermaid": "",
+   "prox": "roupa_pessoa_vestida",
+   "opcoes": [
+    {
+     "id": "menino",
+     "rotulo": "Menino",
+     "vai": ""
+    },
+    {
+     "id": "menina",
+     "rotulo": "Menina",
+     "vai": ""
+    },
+    {
+     "id": "nao_sei",
+     "rotulo": "Não sei",
+     "vai": "FIM"
+    }
+   ]
+  },
+  {
+   "id": "roupa_pessoa_vestida",
+   "tipo": "texto",
+   "texto": "Qual roupa a pessoa está vestida",
+   "obrig": false,
+   "outro": false,
+   "mermaid": "",
+   "prox": "FIM",
+   "opcoes": []
+  },
+  {
+   "id": "homem_mulher",
+   "tipo": "unica",
+   "texto": "É homem ou mulher?",
+   "obrig": false,
+   "outro": false,
+   "mermaid": "",
+   "prox": "roupa_pessoa_vestida",
+   "opcoes": [
+    {
+     "id": "homem",
+     "rotulo": "Homem",
+     "vai": ""
+    },
+    {
+     "id": "mulher",
+     "rotulo": "Mulher",
+     "vai": ""
+    },
+    {
+     "id": "nao_sei",
+     "rotulo": "Não sei",
+     "vai": "FIM"
+    }
+   ]
+  },
+  {
+   "id": "idade_aproximada_pessoa_2",
+   "tipo": "unica",
+   "texto": "Qual a idade aproximada da pessoa?",
+   "obrig": false,
+   "outro": false,
+   "mermaid": "",
+   "prox": "homem_mulher_2",
+   "opcoes": [
+    {
+     "id": "crianca_adolescente",
+     "rotulo": "Criança/ Adolescente",
+     "vai": "menino_menina_2"
+    },
+    {
+     "id": "adulto",
+     "rotulo": "Adulto",
+     "vai": ""
+    },
+    {
+     "id": "idoso",
+     "rotulo": "Idoso",
+     "vai": ""
+    }
+   ]
+  },
+  {
+   "id": "menino_menina_2",
+   "tipo": "unica",
+   "texto": "É menino ou menina?",
+   "obrig": false,
+   "outro": false,
+   "mermaid": "",
+   "prox": "sabe_roupa_pessoa",
+   "opcoes": [
+    {
+     "id": "menina",
+     "rotulo": "Menina",
+     "vai": ""
+    },
+    {
+     "id": "nao_sei",
+     "rotulo": "Não sei",
+     "vai": ""
+    },
+    {
+     "id": "menino",
+     "rotulo": "Menino",
+     "vai": ""
+    }
+   ]
+  },
+  {
+   "id": "sabe_roupa_pessoa",
+   "tipo": "unica",
+   "texto": "Sabe qual roupa a pessoa está vestida",
+   "obrig": false,
+   "outro": false,
+   "mermaid": "",
+   "prox": "FIM",
+   "opcoes": [
+    {
+     "id": "sim",
+     "rotulo": "Sim",
+     "vai": ""
+    },
+    {
+     "id": "nao",
+     "rotulo": "Não",
+     "vai": ""
+    }
+   ]
+  },
+  {
+   "id": "homem_mulher_2",
+   "tipo": "unica",
+   "texto": "É homem ou mulher?",
+   "obrig": false,
+   "outro": false,
+   "mermaid": "",
+   "prox": "sabe_roupa_pessoa",
+   "opcoes": [
+    {
+     "id": "homem",
+     "rotulo": "Homem",
+     "vai": ""
+    },
+    {
+     "id": "mulher",
+     "rotulo": "Mulher",
+     "vai": ""
+    },
+    {
+     "id": "nao_sei",
+     "rotulo": "Não sei",
+     "vai": ""
+    }
+   ]
+  },
+  {
+   "id": "item",
+   "tipo": "multipla",
+   "texto": "Quais?",
+   "obrig": false,
+   "outro": true,
+   "mermaid": "",
+   "prox": "FIM",
+   "opcoes": [
+    {
+     "id": "intoxicacao",
+     "rotulo": "Intoxicação",
+     "vai": ""
+    },
+    {
+     "id": "dificuldade_respiratoria",
+     "rotulo": "Dificuldade respiratória",
+     "vai": ""
+    },
+    {
+     "id": "sangramento_grave",
+     "rotulo": "Sangramento grave",
+     "vai": ""
+    },
+    {
+     "id": "queimadura",
+     "rotulo": "Queimadura",
+     "vai": ""
+    },
+    {
+     "id": "convulsao_desmaio",
+     "rotulo": "Convulsão/ desmaio",
+     "vai": ""
+    }
+   ]
+  },
+  {
+   "id": "manter_natureza_registra",
+   "tipo": "informacao",
+   "texto": "Manter natureza e registrar no relato: Incêndio (manter Tentativa de suicídio)",
+   "obrig": false,
+   "outro": false,
+   "mermaid": "",
+   "prox": "FIM",
+   "opcoes": []
+  },
+  {
+   "id": "troca_parada_cardiorresp",
+   "tipo": "troca",
+   "texto": "Parada cardiorrespiratória (PCR)",
+   "obrig": false,
+   "outro": false,
+   "mermaid": "",
+   "prox": "despacho_2",
+   "opcoes": []
+  },
+  {
+   "id": "despacho_2",
+   "tipo": "instrucao",
+   "texto": "Iremos realizar uma vídeo chamada para orientá-lo(a) até a chegada da guarnição! Mantenha a calma e siga as orientações.",
+   "obrig": false,
+   "outro": false,
+   "mermaid": "",
+   "prox": "realize_videochamada_fac",
+   "opcoes": [],
+   "despacho": true
+  },
+  {
+   "id": "realize_videochamada_fac",
+   "tipo": "informacao",
+   "texto": "Realize a videochamada e faça as orientações",
+   "obrig": false,
+   "outro": false,
+   "mermaid": "",
+   "prox": "FIM",
+   "opcoes": [],
+   "video": true
+  },
+  {
+   "id": "troca_parada_cardiorresp_2",
+   "tipo": "troca",
+   "texto": "Parada cardiorrespiratória (PCR)",
+   "obrig": false,
+   "outro": false,
+   "mermaid": "",
+   "prox": "despacho_3",
+   "opcoes": []
+  },
+  {
+   "id": "despacho_3",
+   "tipo": "instrucao",
+   "texto": "Iremos realizar uma vídeo chamada para orientá-lo(a) até a chegada da guarnição! Mantenha a calma e siga as orientações.",
+   "obrig": false,
+   "outro": false,
+   "mermaid": "",
+   "prox": "realize_videochamada_fac_2",
+   "opcoes": [],
+   "despacho": true
+  },
+  {
+   "id": "realize_videochamada_fac_2",
+   "tipo": "informacao",
+   "texto": "Realize a videochamada e faça as orientações",
+   "obrig": false,
+   "outro": false,
+   "mermaid": "",
+   "prox": "FIM",
+   "opcoes": [],
+   "video": true
+  }
+ ],
+ "notas": [
+  "No quadro, as respostas “Arma branca (faca, caco de vidro, etc)”, “Arma de Fogo”, “Atirar-se na trajetória de veículos”, “Medicamento / overdose”, “Enforcamento”, “salto de plano elevado”, “Lesão Autoprovocada”, “Envenenamento (produtos diferentes de medicamentos)” não têm seta e “Apresenta lesão ou condição grave decorrente da tentativa?” está solto. Foram ligados aqui; confira no quadro.",
+  "“Apresenta lesão ou condição grave decorrente da tentativa?” / “Sim”: a resposta leva a 2 caixas ao mesmo tempo; ficou só “Qual sua relação com o tentante?”.",
+  "“Quais?” virou múltipla escolha pelo texto da pergunta. Confira.",
+  "“item” está no formulário, mas nenhum caminho do fluxo chega até ele."
+ ]
+}

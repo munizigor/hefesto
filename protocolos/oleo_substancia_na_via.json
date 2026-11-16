@@ -1,0 +1,142 @@
+{
+ "natureza": {
+  "id": "oleo_substancia_na_via",
+  "nome": "Óleo / substância na via"
+ },
+ "itens": [
+  {
+   "id": "substancia_parece",
+   "tipo": "unica",
+   "texto": "Que substância parece ser?",
+   "obrig": false,
+   "outro": true,
+   "mermaid": "",
+   "prox": "ja_houve_acidente",
+   "opcoes": [
+    {
+     "id": "oleo_combustivel",
+     "rotulo": "Óleo / combustível",
+     "vai": ""
+    },
+    {
+     "id": "areia_terra",
+     "rotulo": "Areia / terra",
+     "vai": ""
+    },
+    {
+     "id": "produto_desconhecido_com_che",
+     "rotulo": "Produto desconhecido com cheiro forte",
+     "vai": "troca_vazamento_derramam"
+    }
+   ]
+  },
+  {
+   "id": "ja_houve_acidente",
+   "tipo": "unica",
+   "texto": "Já houve acidente ou queda de motociclista?",
+   "obrig": false,
+   "outro": false,
+   "mermaid": "",
+   "prox": "troca_acidente_transito",
+   "opcoes": [
+    {
+     "id": "sim",
+     "rotulo": "Sim",
+     "vai": ""
+    },
+    {
+     "id": "nao",
+     "rotulo": "Não",
+     "vai": "extensao"
+    }
+   ]
+  },
+  {
+   "id": "troca_acidente_transito",
+   "tipo": "troca",
+   "texto": "Acidente de trânsito com vítima ou Queda de motocicleta",
+   "obrig": false,
+   "outro": false,
+   "mermaid": "",
+   "prox": "FIM",
+   "opcoes": []
+  },
+  {
+   "id": "extensao",
+   "tipo": "unica",
+   "texto": "Qual a extensão?",
+   "obrig": false,
+   "outro": false,
+   "mermaid": "",
+   "prox": "curva_descida_cruzamento",
+   "opcoes": [
+    {
+     "id": "mancha_pequena",
+     "rotulo": "Mancha pequena",
+     "vai": ""
+    },
+    {
+     "id": "trecho_longo_mais_de_50_m",
+     "rotulo": "Trecho longo (mais de 50 m)",
+     "vai": ""
+    }
+   ]
+  },
+  {
+   "id": "curva_descida_cruzamento",
+   "tipo": "unica",
+   "texto": "Está em curva, descida ou cruzamento?",
+   "obrig": false,
+   "outro": false,
+   "mermaid": "",
+   "prox": "despacho",
+   "opcoes": [
+    {
+     "id": "sim",
+     "rotulo": "Sim",
+     "vai": ""
+    },
+    {
+     "id": "nao",
+     "rotulo": "Não",
+     "vai": ""
+    }
+   ]
+  },
+  {
+   "id": "despacho",
+   "tipo": "instrucao",
+   "texto": "🚒 Despacho conforme critério da COCB; acionar órgão de trânsito",
+   "obrig": false,
+   "outro": false,
+   "mermaid": "",
+   "prox": "sinalize_antes_trecho",
+   "opcoes": [],
+   "despacho": true
+  },
+  {
+   "id": "sinalize_antes_trecho",
+   "tipo": "instrucao",
+   "texto": "Sinalize antes do trecho, se for seguro. Não jogue água sobre o óleo.",
+   "obrig": false,
+   "outro": false,
+   "mermaid": "",
+   "prox": "FIM",
+   "opcoes": []
+  },
+  {
+   "id": "troca_vazamento_derramam",
+   "tipo": "troca",
+   "texto": "Vazamento / derramamento de combustível ou produto",
+   "obrig": false,
+   "outro": false,
+   "mermaid": "",
+   "prox": "FIM",
+   "opcoes": []
+  }
+ ],
+ "notas": [
+  "Troca para “Acidente de trânsito com vítima ou Queda de motocicleta”: essa natureza não tem fluxo no quadro.",
+  "Troca para “Vazamento / derramamento de combustível ou produto”: essa natureza não tem fluxo no quadro."
+ ]
+}

@@ -1,0 +1,355 @@
+{
+ "natureza": {
+  "id": "fratura_luxacao_ou_entorse",
+  "nome": "Fratura, luxação ou entorse"
+ },
+ "itens": [
+  {
+   "id": "outra_pessoa_causou",
+   "tipo": "unica",
+   "texto": "Outra pessoa causou a lesão?",
+   "obrig": false,
+   "outro": false,
+   "mermaid": "",
+   "prox": "acidente_transito",
+   "opcoes": [
+    {
+     "id": "sim",
+     "rotulo": "Sim",
+     "vai": "troca_agressao_fisica"
+    },
+    {
+     "id": "nao",
+     "rotulo": "Não",
+     "vai": ""
+    },
+    {
+     "id": "nao_sei",
+     "rotulo": "Não sei",
+     "vai": ""
+    }
+   ]
+  },
+  {
+   "id": "troca_agressao_fisica",
+   "tipo": "troca",
+   "texto": "Agressão física",
+   "obrig": false,
+   "outro": false,
+   "mermaid": "",
+   "prox": "FIM",
+   "opcoes": []
+  },
+  {
+   "id": "acidente_transito",
+   "tipo": "unica",
+   "texto": "Foi acidente de trânsito?",
+   "obrig": false,
+   "outro": false,
+   "mermaid": "",
+   "prox": "lesao_causada_queda",
+   "opcoes": [
+    {
+     "id": "sim",
+     "rotulo": "Sim",
+     "vai": "troca_acidente_transito"
+    },
+    {
+     "id": "nao",
+     "rotulo": "Não",
+     "vai": ""
+    },
+    {
+     "id": "nao_sei",
+     "rotulo": "Não sei",
+     "vai": ""
+    }
+   ]
+  },
+  {
+   "id": "troca_acidente_transito",
+   "tipo": "troca",
+   "texto": "Acidente de trânsito com vítima",
+   "obrig": false,
+   "outro": false,
+   "mermaid": "",
+   "prox": "FIM",
+   "opcoes": []
+  },
+  {
+   "id": "lesao_causada_queda",
+   "tipo": "unica",
+   "texto": "A lesão foi causada por queda de altura?",
+   "obrig": false,
+   "outro": false,
+   "mermaid": "",
+   "prox": "parte_corpo_machucada",
+   "opcoes": [
+    {
+     "id": "sim",
+     "rotulo": "Sim",
+     "vai": "troca_queda_plano"
+    },
+    {
+     "id": "nao",
+     "rotulo": "Não",
+     "vai": ""
+    },
+    {
+     "id": "nao_sei",
+     "rotulo": "Não sei",
+     "vai": ""
+    }
+   ]
+  },
+  {
+   "id": "troca_queda_plano",
+   "tipo": "troca",
+   "texto": "Queda de plano elevado",
+   "obrig": false,
+   "outro": false,
+   "mermaid": "",
+   "prox": "FIM",
+   "opcoes": []
+  },
+  {
+   "id": "parte_corpo_machucada",
+   "tipo": "unica",
+   "texto": "Qual parte do corpo está machucada?",
+   "obrig": false,
+   "outro": false,
+   "mermaid": "",
+   "prox": "vitima_respira",
+   "opcoes": [
+    {
+     "id": "outra",
+     "rotulo": "Outra",
+     "vai": "FIM"
+    },
+    {
+     "id": "coluna_pescoco",
+     "rotulo": "Coluna/pescoço",
+     "vai": ""
+    },
+    {
+     "id": "quadril",
+     "rotulo": "Quadril",
+     "vai": ""
+    },
+    {
+     "id": "ombro",
+     "rotulo": "Ombro",
+     "vai": ""
+    },
+    {
+     "id": "perna_pe",
+     "rotulo": "Perna/pé",
+     "vai": ""
+    },
+    {
+     "id": "braco_mao",
+     "rotulo": "Braço/mão",
+     "vai": ""
+    },
+    {
+     "id": "tronco_abdomem",
+     "rotulo": "Tronco/Abdômem",
+     "vai": "FIM"
+    }
+   ]
+  },
+  {
+   "id": "vitima_respira",
+   "tipo": "unica",
+   "texto": "Vítima respira?",
+   "obrig": false,
+   "outro": false,
+   "mermaid": "",
+   "prox": "troca_parada_cardiorespi",
+   "opcoes": [
+    {
+     "id": "nao",
+     "rotulo": "Não",
+     "vai": ""
+    },
+    {
+     "id": "sim",
+     "rotulo": "Sim",
+     "vai": "despacho_2"
+    }
+   ]
+  },
+  {
+   "id": "troca_parada_cardiorespi",
+   "tipo": "troca",
+   "texto": "Parada cardiorrespiratória (PCR)",
+   "obrig": false,
+   "outro": false,
+   "mermaid": "",
+   "prox": "despacho",
+   "opcoes": []
+  },
+  {
+   "id": "despacho",
+   "tipo": "instrucao",
+   "texto": "Iremos realizar uma vídeo chamada para orientá-lo(a) até a chegada da guarnição! Mantenha a calma e siga as orientações.",
+   "obrig": false,
+   "outro": false,
+   "mermaid": "",
+   "prox": "realize_videochamada_fac",
+   "opcoes": [],
+   "despacho": true
+  },
+  {
+   "id": "realize_videochamada_fac",
+   "tipo": "informacao",
+   "texto": "Realize a videochamada e faça as orientações",
+   "obrig": false,
+   "outro": false,
+   "mermaid": "",
+   "prox": "FIM",
+   "opcoes": [],
+   "video": true
+  },
+  {
+   "id": "despacho_2",
+   "tipo": "instrucao",
+   "texto": "O socorro já foi acionado e está a caminho. Vou fazer algumas perguntas rápidas para ajudar a equipe. Mantenha a calma e siga minhas orientações, por favor.",
+   "obrig": false,
+   "outro": false,
+   "mermaid": "",
+   "prox": "deformidade",
+   "opcoes": [],
+   "despacho": true
+  },
+  {
+   "id": "deformidade",
+   "tipo": "unica",
+   "texto": "Há deformidade?",
+   "obrig": false,
+   "outro": false,
+   "mermaid": "",
+   "prox": "osso_exposto",
+   "opcoes": [
+    {
+     "id": "nao",
+     "rotulo": "Não",
+     "vai": ""
+    },
+    {
+     "id": "sim",
+     "rotulo": "Sim",
+     "vai": ""
+    },
+    {
+     "id": "nao_sei",
+     "rotulo": "Não sei",
+     "vai": ""
+    }
+   ]
+  },
+  {
+   "id": "osso_exposto",
+   "tipo": "unica",
+   "texto": "Há osso exposto?",
+   "obrig": false,
+   "outro": false,
+   "mermaid": "",
+   "prox": "sangramento",
+   "opcoes": [
+    {
+     "id": "nao_sei",
+     "rotulo": "Não sei",
+     "vai": ""
+    },
+    {
+     "id": "nao",
+     "rotulo": "Não",
+     "vai": ""
+    },
+    {
+     "id": "sim",
+     "rotulo": "Sim",
+     "vai": ""
+    }
+   ]
+  },
+  {
+   "id": "sangramento",
+   "tipo": "unica",
+   "texto": "Há sangramento?",
+   "obrig": false,
+   "outro": false,
+   "mermaid": "",
+   "prox": "outras_lesoes",
+   "opcoes": [
+    {
+     "id": "nao_sei",
+     "rotulo": "Não sei",
+     "vai": ""
+    },
+    {
+     "id": "nao",
+     "rotulo": "Não",
+     "vai": ""
+    },
+    {
+     "id": "sim",
+     "rotulo": "Sim",
+     "vai": "intenso_controlado"
+    }
+   ]
+  },
+  {
+   "id": "outras_lesoes",
+   "tipo": "unica",
+   "texto": "Há outras lesões?",
+   "obrig": false,
+   "outro": false,
+   "mermaid": "",
+   "prox": "FIM",
+   "opcoes": [
+    {
+     "id": "nao",
+     "rotulo": "Não",
+     "vai": ""
+    },
+    {
+     "id": "sim",
+     "rotulo": "Sim",
+     "vai": ""
+    },
+    {
+     "id": "nao_sei",
+     "rotulo": "Não sei",
+     "vai": ""
+    }
+   ]
+  },
+  {
+   "id": "intenso_controlado",
+   "tipo": "unica",
+   "texto": "Intenso ou controlado?",
+   "obrig": false,
+   "outro": false,
+   "mermaid": "",
+   "prox": "outras_lesoes",
+   "opcoes": [
+    {
+     "id": "controlado",
+     "rotulo": "Controlado",
+     "vai": ""
+    },
+    {
+     "id": "intenso",
+     "rotulo": "Intenso",
+     "vai": ""
+    }
+   ]
+  }
+ ],
+ "notas": [
+  "Troca para “Acidente de trânsito com vítima”: essa natureza não tem fluxo no quadro.",
+  "Troca para “Parada Cárdiorespiratória (PCR)” entendida como “Parada cardiorrespiratória (PCR)”."
+ ]
+}

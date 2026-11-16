@@ -214,3 +214,6 @@ code{font-family:'JetBrains Mono',monospace;font-size:12px;background:#F1F3F5;pa
 .bloco.desp{background:#FFF0F0;border:1px solid #F3A5A5}
 .btn.roxo{background:#5B3FC4;border-color:#5B3FC4;color:#fff}
 .item.troca{border-left-color:#8F7FEE;background:#F6F3FF}
+.impArq{margin-top:10px;border:1px solid #DEE2E6;border-left:4px solid #1976D2;border-radius:4px;padding:8px 10px;font-size:13px;display:flex;flex-direction:column;gap:4px}
+.impArq ul{margin:2px 0;padding-left:18px}
+.aviso{color:#9B1C28}

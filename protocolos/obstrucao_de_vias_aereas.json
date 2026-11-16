@@ -1,0 +1,145 @@
+{
+ "natureza": {
+  "id": "obstrucao_de_vias_aereas",
+  "nome": "Obstrução de vias aéreas (OVACE)"
+ },
+ "itens": [
+  {
+   "id": "quem_engasgado",
+   "tipo": "unica",
+   "texto": "Quem está engasgado?",
+   "obrig": false,
+   "outro": false,
+   "mermaid": "",
+   "prox": "despacho",
+   "opcoes": [
+    {
+     "id": "bebe_menos_de_1_ano",
+     "rotulo": "Bebê (menos de 1 ano)",
+     "vai": ""
+    },
+    {
+     "id": "crianca",
+     "rotulo": "Criança",
+     "vai": ""
+    },
+    {
+     "id": "adulto",
+     "rotulo": "Adulto",
+     "vai": ""
+    },
+    {
+     "id": "gestante_pessoa_obesa",
+     "rotulo": "Gestante / pessoa obesa",
+     "vai": ""
+    }
+   ]
+  },
+  {
+   "id": "despacho",
+   "tipo": "instrucao",
+   "texto": "O socorro já foi acionado e está a caminho. Vou fazer algumas perguntas rápidas para ajudar a equipe. Mantenha a calma e siga minhas orientações, por favor.",
+   "obrig": false,
+   "outro": false,
+   "mermaid": "",
+   "prox": "ela_consegue_tossir",
+   "opcoes": [],
+   "despacho": true
+  },
+  {
+   "id": "ela_consegue_tossir",
+   "tipo": "unica",
+   "texto": "Ela consegue tossir, falar ou chorar?",
+   "obrig": false,
+   "outro": false,
+   "mermaid": "",
+   "prox": "orientar_continuar_tossi",
+   "opcoes": [
+    {
+     "id": "sim",
+     "rotulo": "Sim",
+     "vai": ""
+    },
+    {
+     "id": "nao",
+     "rotulo": "Não",
+     "vai": "realize_videochamada_fac_2"
+    }
+   ]
+  },
+  {
+   "id": "orientar_continuar_tossi",
+   "tipo": "informacao",
+   "texto": "Orientar a continuar tossindo, sem bater nas costas",
+   "obrig": false,
+   "outro": false,
+   "mermaid": "",
+   "prox": "ela_ficou_desacordada",
+   "opcoes": []
+  },
+  {
+   "id": "ela_ficou_desacordada",
+   "tipo": "unica",
+   "texto": "Ela ficou desacordada?",
+   "obrig": false,
+   "outro": false,
+   "mermaid": "",
+   "prox": "realize_videochamada_fac",
+   "opcoes": [
+    {
+     "id": "sim",
+     "rotulo": "Sim",
+     "vai": ""
+    },
+    {
+     "id": "nao",
+     "rotulo": "Não",
+     "vai": "sabe_engasgou"
+    }
+   ]
+  },
+  {
+   "id": "realize_videochamada_fac",
+   "tipo": "informacao",
+   "texto": "Realize a videochamada e faça as orientações de RCP",
+   "obrig": false,
+   "outro": false,
+   "mermaid": "",
+   "prox": "troca_parada_cardiorresp",
+   "opcoes": [],
+   "video": true
+  },
+  {
+   "id": "troca_parada_cardiorresp",
+   "tipo": "troca",
+   "texto": "Parada cardiorrespiratória (PCR)",
+   "obrig": false,
+   "outro": false,
+   "mermaid": "",
+   "prox": "FIM",
+   "opcoes": []
+  },
+  {
+   "id": "sabe_engasgou",
+   "tipo": "texto",
+   "texto": "Sabe com o que engasgou?",
+   "obrig": false,
+   "outro": false,
+   "mermaid": "",
+   "prox": "FIM",
+   "opcoes": []
+  },
+  {
+   "id": "realize_videochamada_fac_2",
+   "tipo": "informacao",
+   "texto": "Realize a videochamada e faça as orientações de OVACE conforme a idade",
+   "obrig": false,
+   "outro": false,
+   "mermaid": "",
+   "prox": "ela_ficou_desacordada",
+   "opcoes": [],
+   "video": true
+  }
+ ],
+ "notas": []
+}

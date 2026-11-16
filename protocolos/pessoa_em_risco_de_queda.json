@@ -1,0 +1,206 @@
+{
+ "natureza": {
+  "id": "pessoa_em_risco_de_queda",
+  "nome": "Pessoa em risco de queda"
+ },
+ "itens": [
+  {
+   "id": "pessoa_ja_caiu",
+   "tipo": "unica",
+   "texto": "A pessoa já caiu?",
+   "obrig": false,
+   "outro": false,
+   "mermaid": "",
+   "prox": "onde_pessoa",
+   "opcoes": [
+    {
+     "id": "sim",
+     "rotulo": "Sim",
+     "vai": "troca_queda_plano"
+    },
+    {
+     "id": "nao",
+     "rotulo": "Não",
+     "vai": ""
+    },
+    {
+     "id": "nao_sei",
+     "rotulo": "Não sei",
+     "vai": ""
+    }
+   ]
+  },
+  {
+   "id": "troca_queda_plano",
+   "tipo": "troca",
+   "texto": "Queda de plano elevado",
+   "obrig": false,
+   "outro": false,
+   "mermaid": "",
+   "prox": "FIM",
+   "opcoes": []
+  },
+  {
+   "id": "onde_pessoa",
+   "tipo": "unica",
+   "texto": "Onde a pessoa está?",
+   "obrig": false,
+   "outro": true,
+   "mermaid": "",
+   "prox": "altura_mais_menos",
+   "opcoes": [
+    {
+     "id": "janela_sacada",
+     "rotulo": "Janela / sacada",
+     "vai": ""
+    },
+    {
+     "id": "telhado_laje",
+     "rotulo": "Telhado / laje",
+     "vai": ""
+    },
+    {
+     "id": "viaduto_ponte",
+     "rotulo": "Viaduto / ponte",
+     "vai": ""
+    },
+    {
+     "id": "torre_andaime",
+     "rotulo": "Torre / andaime",
+     "vai": ""
+    }
+   ]
+  },
+  {
+   "id": "altura_mais_menos",
+   "tipo": "unica",
+   "texto": "A que altura, mais ou menos?",
+   "obrig": false,
+   "outro": false,
+   "mermaid": "",
+   "prox": "despacho",
+   "opcoes": [
+    {
+     "id": "ate_2_andares",
+     "rotulo": "Até 2 andares",
+     "vai": ""
+    },
+    {
+     "id": "3_a_10_andares",
+     "rotulo": "3 a 10 andares",
+     "vai": ""
+    },
+    {
+     "id": "mais_de_10_andares",
+     "rotulo": "Mais de 10 andares",
+     "vai": ""
+    },
+    {
+     "id": "nao_sabe",
+     "rotulo": "Não sabe",
+     "vai": ""
+    }
+   ]
+  },
+  {
+   "id": "despacho",
+   "tipo": "instrucao",
+   "texto": "O socorro já foi acionado e está a caminho. Vou fazer algumas perguntas rápidas para ajudar a equipe. Mantenha a calma e siga minhas orientações, por favor.",
+   "obrig": false,
+   "outro": false,
+   "mermaid": "",
+   "prox": "pessoa_ali_porque",
+   "opcoes": [],
+   "despacho": true
+  },
+  {
+   "id": "pessoa_ali_porque",
+   "tipo": "unica",
+   "texto": "A pessoa está ali porque quer se jogar?",
+   "obrig": false,
+   "outro": false,
+   "mermaid": "",
+   "prox": "pessoa_consciente_segura",
+   "opcoes": [
+    {
+     "id": "nao",
+     "rotulo": "Não",
+     "vai": ""
+    },
+    {
+     "id": "sim",
+     "rotulo": "Sim",
+     "vai": "troca_tentativa_suicidio"
+    },
+    {
+     "id": "nao_sabe",
+     "rotulo": "Não sabe",
+     "vai": ""
+    }
+   ]
+  },
+  {
+   "id": "pessoa_consciente_segura",
+   "tipo": "unica",
+   "texto": "A pessoa está consciente e se segurando?",
+   "obrig": false,
+   "outro": false,
+   "mermaid": "",
+   "prox": "crianca",
+   "opcoes": [
+    {
+     "id": "sim",
+     "rotulo": "Sim",
+     "vai": ""
+    },
+    {
+     "id": "nao",
+     "rotulo": "Não",
+     "vai": ""
+    }
+   ]
+  },
+  {
+   "id": "crianca",
+   "tipo": "unica",
+   "texto": "É criança?",
+   "obrig": false,
+   "outro": false,
+   "mermaid": "",
+   "prox": "nao_aproxime_forma",
+   "opcoes": [
+    {
+     "id": "sim",
+     "rotulo": "Sim",
+     "vai": ""
+    },
+    {
+     "id": "nao",
+     "rotulo": "Não",
+     "vai": ""
+    }
+   ]
+  },
+  {
+   "id": "nao_aproxime_forma",
+   "tipo": "instrucao",
+   "texto": "Não se aproxime de forma brusca nem grite com a pessoa. Afaste curiosos. Se for criança, retire objetos que ela use para subir.",
+   "obrig": false,
+   "outro": false,
+   "mermaid": "",
+   "prox": "FIM",
+   "opcoes": []
+  },
+  {
+   "id": "troca_tentativa_suicidio",
+   "tipo": "troca",
+   "texto": "Tentativa de suicídio",
+   "obrig": false,
+   "outro": false,
+   "mermaid": "",
+   "prox": "FIM",
+   "opcoes": []
+  }
+ ],
+ "notas": []
+}

@@ -10,10 +10,26 @@
 
   /* ---------- dados ---------- */
   var DB={protocolos:null,ocorrencias:[],seq:1};
-  try{ var salvo=JSON.parse(localStorage.getItem(KEY)||'null'); if(salvo&&salvo.protocolos){ DB.protocolos=salvo.protocolos; DB.ocorrencias=salvo.ocorrencias||[]; DB.seq=salvo.seq||1; } }catch(e){}
-  if(!DB.protocolos) DB.protocolos=exemplos();
-  NATUREZAS.forEach(function(n){ if(!Array.isArray(DB.protocolos[n.id])) DB.protocolos[n.id]=[]; });
+  try{ var salvo=JSON.parse(localStorage.getItem(KEY)||'null'); if(salvo&&salvo.protocolos){ DB.protocolos=salvo.protocolos; DB.ocorrencias=salvo.ocorrencias||[]; DB.seq=salvo.seq||1; DB.base=salvo.base||null; DB.ultimaExportacao=salvo.ultimaExportacao||null; } }catch(e){}
+  /* versão publicada (protocolos.js) x cópia deste navegador.
+     DB.base guarda a impressão da versão publicada que este navegador recebeu. Natureza que a pessoa não editou
+     acompanha a nova publicação; natureza editada fica como está até ser exportada e publicada. */
+  var PUB=exemplos(),impr=function(itens){ var t=JSON.stringify(itens||[]),h=5381; for(var i=0;i<t.length;i++) h=((h<<5)+h+t.charCodeAt(i))|0; return (h>>>0).toString(36)+'.'+t.length; };
+  if(!DB.protocolos) DB.protocolos={};
+  if(!DB.base) DB.base={};
+  var atualizadas=0;
+  NATUREZAS.forEach(function(n){
+    var pub=PUB[n.id]||[],meu=DB.protocolos[n.id],ip=impr(pub);
+    if(!Array.isArray(meu)){ DB.protocolos[n.id]=pub; DB.base[n.id]=ip; return; }
+    var im=impr(meu);
+    if(im===ip){ DB.base[n.id]=ip; return; }
+    if(DB.base[n.id]&&DB.base[n.id]===im){ DB.protocolos[n.id]=pub; DB.base[n.id]=ip; atualizadas++; }
+  });
+  try{ if(localStorage.getItem(KEY)||atualizadas) localStorage.setItem(KEY,JSON.stringify(DB)); }catch(e){}
+  function alterada(id){ return impr(DB.protocolos[id])!==impr(PUB[id]||[]); }
+  function alteradas(){ return NATUREZAS.filter(function(n){ return alterada(n.id); }); }
   function status(t){ var s=$('status'); if(s) s.textContent=t; }
+  setTimeout(function(){ if(atualizadas) status(atualizadas+' natureza'+(atualizadas>1?'s':'')+' atualizada'+(atualizadas>1?'s':'')+' com a versão publicada'); },0);
   function salvar(){ try{ localStorage.setItem(KEY,JSON.stringify(DB)); status('Salvo neste navegador'); }catch(e){ status('Não foi possível salvar neste navegador'); } }
   var natPorId=function(id){ return NATUREZAS.filter(function(n){return n.id===id;})[0]||null; };
   var norm=function(s){ return String(s||'').normalize('NFD').replace(/[̀-ͯ]/g,'').toLowerCase().replace(/[^a-z0-9]+/g,' ').trim(); };
@@ -514,16 +530,67 @@
   function mudou(estrutura){ S.resp={}; S.fluxoSujo=false; S.formSujo=false; salvar(); if(estrutura) desenharEditor(); desenharLado(); desenharNats(); }
   function desenharNats(){
     var n=$('pNats'); n.textContent='';
-    n.appendChild(el('h2',{text:'Naturezas'}));
+    desenharArquivo(n);
+    n.appendChild(el('h2',{style:'margin-top:16px',text:'Naturezas'}));
     n.appendChild(el('p',{class:'muted',text:'A lista é padronizada pelo sistema. O gestor edita só a entrevista de cada uma.'}));
     NATUREZAS.forEach(function(x){ var q=DB.protocolos[x.id].length,erro=q&&validar(DB.protocolos[x.id]).erros.length;
-      n.appendChild(el('button',{class:'natBtn'+(x.id===S.nat?' on':''),'aria-current':x.id===S.nat?'true':null,onclick:function(){ S.nat=x.id; S.msg=null; S.resp={}; S.fluxoSujo=false; S.formSujo=false; desenharProt(); }},[el('span',{text:x.nome}),el('span',{class:'natQ'+(erro?' er':q?'':' vz'),text:erro?'com erros':q?q+' itens':'sem entrevista'})])); });
-    var ta=el('textarea',{class:'code',style:'min-height:90px','aria-label':'Cópia de segurança dos protocolos em JSON',placeholder:'Cole aqui um JSON de protocolos para importar'});
-    n.appendChild(el('h2',{style:'margin-top:16px',text:'Cópia dos protocolos'}));
-    n.appendChild(el('div',{class:'row',style:'margin-top:8px'},[
-      el('button',{class:'btn sm',text:'Copiar todos',onclick:function(){ copiar(JSON.stringify(DB.protocolos)); }}),
-      el('button',{class:'btn sm',text:'Importar',onclick:function(){ try{ var o=JSON.parse(ta.value); if(!o||typeof o!=='object'||Array.isArray(o)) throw new Error('formato'); NATUREZAS.forEach(function(x){ if(Array.isArray(o[x.id])) DB.protocolos[x.id]=o[x.id]; }); salvar(); status('Protocolos importados'); desenharProt(); }catch(e){ status('JSON inválido: nada foi importado'); } }})]));
-    n.appendChild(ta);
+      n.appendChild(el('button',{class:'natBtn'+(x.id===S.nat?' on':''),'aria-current':x.id===S.nat?'true':null,onclick:function(){ S.nat=x.id; S.msg=null; S.resp={}; S.fluxoSujo=false; S.formSujo=false; desenharProt(); }},[el('span',{text:x.nome}),el('span',{class:'natQ'+(erro?' er':q?'':' vz'),text:(erro?'com erros':q?q+' itens':'sem entrevista')+(alterada(x.id)?' · alterada':'')})])); });
+  }
+  /* ---------- exportar e importar (.zip) ---------- */
+  var IMP=null;
+  function arquivoProtocolo(n){ return JSON.stringify({natureza:{id:n.id,nome:n.nome},itens:DB.protocolos[n.id]||[],notas:(typeof NOTAS_PROTOCOLOS!=='undefined'&&NOTAS_PROTOCOLOS[n.id])||[]},null,1)+'\n'; }
+  function exportarZip(){
+    var z={},d=new Date(),dd=function(x){ return ('0'+x).slice(-2); },carimbo=d.getFullYear()+'-'+dd(d.getMonth()+1)+'-'+dd(d.getDate())+'-'+dd(d.getHours())+'h'+dd(d.getMinutes()),alt=alteradas();
+    z['naturezas.json']=(JSON.stringify(NATUREZAS,null,1)+'\n');
+    NATUREZAS.forEach(function(n){ z['protocolos/'+n.id+'.json']=arquivoProtocolo(n); });
+    z['LEIA-ME.txt']=('Protocolos do protótipo Hefesto, exportados em '+d.toLocaleString('pt-BR')+'.\n\nPara continuar em outro navegador: aba Protocolos, Importar, escolha este arquivo.\nPara publicar: envie este arquivo para quem cuida do repositório.\n\nNaturezas alteradas em relação à versão publicada ('+alt.length+'):\n'+(alt.map(function(n){ return '- '+n.nome; }).join('\n')||'(nenhuma)')+'\n');
+    (function(b){
+      var a=document.createElement('a'); a.href=URL.createObjectURL(b); a.download='hefesto-protocolos-'+carimbo+'.zip'; document.body.appendChild(a); a.click(); setTimeout(function(){ URL.revokeObjectURL(a.href); a.remove(); },1000);
+      DB.ultimaExportacao=Date.now(); salvar(); status('Arquivo exportado: '+a.download); desenharNats();
+    })(new Blob([zipCriar(z,d)],{type:'application/zip'}));
+  }
+  function lerArquivo(f){
+    IMP=null;
+    var fim=function(mapa){ /* mapa: {idNatureza: itens} */
+      var linhas=[];
+      Object.keys(mapa).forEach(function(id){
+        var n=natPorId(id),itens=mapa[id];
+        if(!n){ linhas.push({id:id,nome:id,sit:'desconhecida'}); return; }
+        if(!Array.isArray(itens)){ linhas.push({id:id,nome:n.nome,sit:'inválida'}); return; }
+        var igual=impr(itens)===impr(DB.protocolos[id]);
+        linhas.push({id:id,nome:n.nome,sit:igual?'igual':'muda',itens:itens,antes:(DB.protocolos[id]||[]).length,erros:itens.length?validar(itens).erros.length:0});
+      });
+      IMP={nome:f.name,linhas:linhas}; desenharNats();
+    };
+    var erro=function(e){ IMP={nome:f.name,erro:String(e&&e.message||e)}; desenharNats(); };
+    if(/\.json$/i.test(f.name)){ f.text().then(function(t){ var o=JSON.parse(t); if(o&&o.itens&&o.natureza) { var m={}; m[o.natureza.id]=o.itens; fim(m); } else fim(o); }).catch(erro); return; }
+    f.arrayBuffer().then(zipLer).then(function(z){
+      var arqs=Object.keys(z).filter(function(k){ return /(^|\/)protocolos\/[a-z0-9_]+\.json$/.test(k); });
+      if(!arqs.length) throw new Error('o arquivo não tem a pasta protocolos/. Use um zip exportado pelo site.');
+      var m={}; arqs.forEach(function(k){ m[k.replace(/^.*\//,'').replace(/\.json$/,'')]=JSON.parse(z[k]).itens; }); fim(m);
+    }).catch(erro);
+  }
+  function desenharArquivo(n){
+    var alt=alteradas();
+    n.appendChild(el('h2',{text:'Arquivo'}));
+    n.appendChild(el('p',{class:'muted',text:alt.length?alt.length+' natureza'+(alt.length>1?'s alteradas':' alterada')+' neste navegador.'+(DB.ultimaExportacao?' Última exportação: '+new Date(DB.ultimaExportacao).toLocaleString('pt-BR')+'.':' Ainda não exportado.'):'Nenhuma alteração em relação à versão publicada.'}));
+    var inp=el('input',{type:'file',accept:'.zip,.json',style:'display:none',onchange:function(e){ if(e.target.files[0]) lerArquivo(e.target.files[0]); e.target.value=''; }});
+    n.appendChild(el('div',{class:'row',style:'margin-top:4px'},[
+      el('button',{class:'btn sm '+(alt.length?'ok':''),text:'Exportar (.zip)',onclick:exportarZip}),
+      el('button',{class:'btn sm',text:'Importar',onclick:function(){ inp.click(); }}),inp]));
+    n.appendChild(el('p',{class:'muted',style:'margin-top:6px',text:'O que você edita fica só neste navegador. Exporte para levar a outro computador ou para enviar as correções para publicação.'}));
+    if(!IMP) return;
+    var box=el('div',{class:'impArq',role:'status'});
+    if(IMP.erro){ box.appendChild(el('div',{class:'msg err',text:'Não consegui ler '+IMP.nome+': '+IMP.erro})); box.appendChild(el('button',{class:'btn sm',text:'Fechar',onclick:function(){ IMP=null; desenharNats(); }})); n.appendChild(box); return; }
+    var muda=IMP.linhas.filter(function(l){ return l.sit==='muda'; }),outras=IMP.linhas.filter(function(l){ return l.sit==='desconhecida'||l.sit==='inválida'; });
+    box.appendChild(el('b',{text:IMP.nome}));
+    box.appendChild(el('div',{class:'muted',text:muda.length?muda.length+' natureza'+(muda.length>1?'s':'')+' diferente'+(muda.length>1?'s':'')+' do que está neste navegador:':'Tudo igual ao que está neste navegador.'}));
+    if(muda.length) box.appendChild(el('ul',{},muda.map(function(l){ return el('li',{},[l.nome+' ('+l.antes+' → '+l.itens.length+' itens)',alterada(l.id)?el('b',{class:'aviso',text:' · substitui sua edição'}):null,l.erros?el('span',{class:'aviso',text:' · com erros'}):null]); })));
+    if(outras.length) box.appendChild(el('div',{class:'msg inf',text:'Ignoradas, porque a natureza não existe neste site: '+outras.map(function(l){ return l.nome; }).join(', ')+'.'}));
+    box.appendChild(el('div',{class:'row',style:'margin-top:6px'},[
+      muda.length?el('button',{class:'btn sm ok',text:'Aplicar',onclick:function(){ muda.forEach(function(l){ DB.protocolos[l.id]=l.itens; }); IMP=null; salvar(); S.resp={}; status(muda.length+' natureza'+(muda.length>1?'s importadas':' importada')); desenharProt(); }}):null,
+      el('button',{class:'btn sm',text:muda.length?'Cancelar':'Fechar',onclick:function(){ IMP=null; desenharNats(); }})]));
+    n.appendChild(box);
   }
   function desenharProt(){ desenharNats(); desenharEditor(); desenharLado(); }
   /* ---------- editor visual ---------- */
@@ -749,11 +816,11 @@
   function desenharEditorTopo(ed){
     var n=natPorId(S.nat),ex=exemplos()[S.nat];
     ed.appendChild(el('div',{class:'row'},[el('h2',{class:'grow',text:'Entrevista · '+n.nome}),
-      ex?el('button',{class:'btn sm',text:n.fonte?'Restaurar do Miro':'Restaurar exemplo',onclick:function(){ S.itens=ex; S.msg=null; mudou(true); }}):null,
+      ex&&alterada(S.nat)?el('button',{class:'btn sm',text:'Restaurar versão publicada',onclick:function(){ if(!confirm('Descartar as suas mudanças em '+n.nome+'?')) return; S.itens=ex; S.msg=null; mudou(true); }}):null,
       el('button',{class:'btn sm del',text:'Remover entrevista',onclick:function(){ S.itens=[]; S.msg=null; mudou(true); }})]));
-    var notas=(typeof NOTAS_MIRO!=='undefined'&&NOTAS_MIRO[S.nat])||[];
-    if(n.fonte) ed.appendChild(el('div',{class:'muted',style:'margin-top:6px',text:'Origem: quadro do Miro, '+n.fonte+'. “Restaurar do Miro” volta ao fluxo importado.'}));
-    if(notas.length) ed.appendChild(el('details',{class:'msg inf'},[el('summary',{text:'Notas da importação do Miro ('+notas.length+')'}),el('ul',{},notas.map(function(x){ return el('li',{text:x}); }))]));
+    var notas=(typeof NOTAS_PROTOCOLOS!=='undefined'&&NOTAS_PROTOCOLOS[S.nat])||[],alt=alterada(S.nat);
+    ed.appendChild(el('div',{class:'muted',style:'margin-top:6px',text:alt?'Alterada neste navegador. “Restaurar versão publicada” descarta as suas mudanças nesta natureza.':'Igual à versão publicada.'}));
+    if(notas.length) ed.appendChild(el('details',{class:'msg inf'},[el('summary',{text:'Notas da importação do Miro ('+notas.length+')'}),el('p',{class:'muted',text:'Apontadas quando o fluxo veio do Miro. Podem já ter sido corrigidas.'}),el('ul',{},notas.map(function(x){ return el('li',{text:x}); }))]));
     ed.appendChild(el('div',{class:'muted',style:'margin-top:6px',text:'Cada item tem um identificador. O primeiro da lista inicia a entrevista. Em “Depois” e em cada opção você escolhe para onde o fluxo vai. O que você muda aqui vale na próxima ligação da aba Atendimento.'}));
     if(!S.itens.length) ed.appendChild(el('div',{class:'msg inf',text:'Esta natureza está sem entrevista: no atendimento, o passo Entrevista avisa e segue direto para o solicitante. Use os botões abaixo para criar o primeiro item.'}));
   }

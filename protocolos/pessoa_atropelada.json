@@ -1,0 +1,248 @@
+{
+ "natureza": {
+  "id": "pessoa_atropelada",
+  "nome": "Pessoa atropelada"
+ },
+ "itens": [
+  {
+   "id": "atropelada_veiculo",
+   "tipo": "unica",
+   "texto": "Atropelada por qual veículo?",
+   "obrig": false,
+   "outro": false,
+   "mermaid": "",
+   "prox": "despacho",
+   "opcoes": [
+    {
+     "id": "carro",
+     "rotulo": "Carro",
+     "vai": ""
+    },
+    {
+     "id": "moto",
+     "rotulo": "Moto",
+     "vai": ""
+    },
+    {
+     "id": "onibus_caminhao",
+     "rotulo": "Ônibus / caminhão",
+     "vai": ""
+    },
+    {
+     "id": "trem_metro",
+     "rotulo": "Trem / metrô",
+     "vai": ""
+    },
+    {
+     "id": "bicicleta",
+     "rotulo": "Bicicleta",
+     "vai": ""
+    }
+   ]
+  },
+  {
+   "id": "despacho",
+   "tipo": "instrucao",
+   "texto": "O socorro já foi acionado e está a caminho. Vou fazer algumas perguntas rápidas para ajudar a equipe. Mantenha a calma e siga minhas orientações, por favor.",
+   "obrig": false,
+   "outro": false,
+   "mermaid": "",
+   "prox": "pessoa_jogou_frente",
+   "opcoes": [],
+   "despacho": true
+  },
+  {
+   "id": "pessoa_jogou_frente",
+   "tipo": "unica",
+   "texto": "A pessoa se jogou na frente do veículo?",
+   "obrig": false,
+   "outro": false,
+   "mermaid": "",
+   "prox": "vitimas",
+   "opcoes": [
+    {
+     "id": "sim",
+     "rotulo": "Sim",
+     "vai": "troca_tentativa_suicidio"
+    },
+    {
+     "id": "nao",
+     "rotulo": "Não",
+     "vai": ""
+    },
+    {
+     "id": "nao_sei",
+     "rotulo": "Não sei",
+     "vai": ""
+    }
+   ]
+  },
+  {
+   "id": "troca_tentativa_suicidio",
+   "tipo": "troca",
+   "texto": "Tentativa de suicídio",
+   "obrig": false,
+   "outro": false,
+   "mermaid": "",
+   "prox": "FIM",
+   "opcoes": []
+  },
+  {
+   "id": "vitimas",
+   "tipo": "unica",
+   "texto": "Quantas vítimas?",
+   "obrig": false,
+   "outro": false,
+   "mermaid": "",
+   "prox": "vitima_acordada_responde",
+   "opcoes": [
+    {
+     "id": "1",
+     "rotulo": "1",
+     "vai": ""
+    },
+    {
+     "id": "mais_de_1",
+     "rotulo": "Mais de 1",
+     "vai": ""
+    }
+   ]
+  },
+  {
+   "id": "vitima_acordada_responde",
+   "tipo": "unica",
+   "texto": "A vítima está acordada e responde quando você chama?",
+   "obrig": false,
+   "outro": false,
+   "mermaid": "",
+   "prox": "ela_respira_normalmente",
+   "opcoes": [
+    {
+     "id": "sim",
+     "rotulo": "Sim",
+     "vai": ""
+    },
+    {
+     "id": "nao",
+     "rotulo": "Não",
+     "vai": ""
+    },
+    {
+     "id": "nao_sabe",
+     "rotulo": "Não sabe",
+     "vai": ""
+    }
+   ]
+  },
+  {
+   "id": "ela_respira_normalmente",
+   "tipo": "unica",
+   "texto": "Ela respira normalmente?",
+   "obrig": false,
+   "outro": false,
+   "mermaid": "",
+   "prox": "pessoa_presa_embaixo",
+   "opcoes": [
+    {
+     "id": "sim",
+     "rotulo": "Sim",
+     "vai": ""
+    },
+    {
+     "id": "nao",
+     "rotulo": "Não",
+     "vai": "realize_videochamada_fac"
+    },
+    {
+     "id": "nao_sabe",
+     "rotulo": "Não sabe",
+     "vai": ""
+    }
+   ]
+  },
+  {
+   "id": "pessoa_presa_embaixo",
+   "tipo": "unica",
+   "texto": "A pessoa está presa embaixo do veículo?",
+   "obrig": false,
+   "outro": false,
+   "mermaid": "",
+   "prox": "meio_via_transito",
+   "opcoes": [
+    {
+     "id": "sim",
+     "rotulo": "Sim",
+     "vai": ""
+    },
+    {
+     "id": "nao",
+     "rotulo": "Não",
+     "vai": ""
+    }
+   ]
+  },
+  {
+   "id": "meio_via_transito",
+   "tipo": "unica",
+   "texto": "Está no meio da via com trânsito passando?",
+   "obrig": false,
+   "outro": false,
+   "mermaid": "",
+   "prox": "acionar_orgao_transito",
+   "opcoes": [
+    {
+     "id": "sim",
+     "rotulo": "Sim",
+     "vai": ""
+    },
+    {
+     "id": "nao",
+     "rotulo": "Não",
+     "vai": "sinalize_via_for"
+    }
+   ]
+  },
+  {
+   "id": "acionar_orgao_transito",
+   "tipo": "informacao",
+   "texto": "Acionar órgão de trânsito / PMDF",
+   "obrig": false,
+   "outro": false,
+   "mermaid": "",
+   "prox": "sinalize_via_for",
+   "opcoes": []
+  },
+  {
+   "id": "sinalize_via_for",
+   "tipo": "instrucao",
+   "texto": "Sinalize a via se for seguro. Não mova a vítima nem retire o capacete.",
+   "obrig": false,
+   "outro": false,
+   "mermaid": "",
+   "prox": "FIM",
+   "opcoes": []
+  },
+  {
+   "id": "realize_videochamada_fac",
+   "tipo": "informacao",
+   "texto": "Realize a videochamada e faça as orientações de RCP",
+   "obrig": false,
+   "outro": false,
+   "mermaid": "",
+   "prox": "troca_parada_cardiorresp",
+   "opcoes": [],
+   "video": true
+  },
+  {
+   "id": "troca_parada_cardiorresp",
+   "tipo": "troca",
+   "texto": "Parada cardiorrespiratória (PCR)",
+   "obrig": false,
+   "outro": false,
+   "mermaid": "",
+   "prox": "FIM",
+   "opcoes": []
+  }
+ ],
+ "notas": []
+}

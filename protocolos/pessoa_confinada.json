@@ -1,0 +1,337 @@
+{
+ "natureza": {
+  "id": "pessoa_confinada",
+  "nome": "Pessoa confinada"
+ },
+ "itens": [
+  {
+   "id": "despacho",
+   "tipo": "instrucao",
+   "texto": "O socorro já foi acionado e está a caminho. Vou fazer algumas perguntas rápidas para ajudar a equipe. Mantenha a calma e siga minhas orientações, por favor.",
+   "obrig": false,
+   "outro": false,
+   "mermaid": "",
+   "prox": "onde_ocorre",
+   "opcoes": [],
+   "despacho": true
+  },
+  {
+   "id": "onde_ocorre",
+   "tipo": "unica",
+   "texto": "Onde ocorre?",
+   "obrig": false,
+   "outro": false,
+   "mermaid": "",
+   "prox": "vitima_dentro_espaco",
+   "opcoes": [
+    {
+     "id": "veiculo",
+     "rotulo": "Veículo",
+     "vai": ""
+    },
+    {
+     "id": "poco_vala",
+     "rotulo": "Poço/vala",
+     "vai": ""
+    },
+    {
+     "id": "outro",
+     "rotulo": "Outro",
+     "vai": ""
+    },
+    {
+     "id": "maquina_equipamento",
+     "rotulo": "Máquina/ equipamento",
+     "vai": ""
+    },
+    {
+     "id": "cisterna_tanque_silo",
+     "rotulo": "Cisterna/tanque/ silo",
+     "vai": ""
+    },
+    {
+     "id": "elevador",
+     "rotulo": "Elevador",
+     "vai": ""
+    }
+   ]
+  },
+  {
+   "id": "vitima_dentro_espaco",
+   "tipo": "unica",
+   "texto": "A vítima está dentro de um espaço do qual não consegue sair, sem estar presa por um objeto ou estrutura?",
+   "obrig": false,
+   "outro": false,
+   "mermaid": "",
+   "prox": "vitima_parte_corpo",
+   "opcoes": [
+    {
+     "id": "sim",
+     "rotulo": "Sim",
+     "vai": ""
+    },
+    {
+     "id": "nao",
+     "rotulo": "Não",
+     "vai": ""
+    },
+    {
+     "id": "nao_sei",
+     "rotulo": "Não sei",
+     "vai": ""
+    }
+   ]
+  },
+  {
+   "id": "vitima_parte_corpo",
+   "tipo": "unica",
+   "texto": "A vítima tem parte do corpo ou corpo inteiro fisicamente retido por objeto, estrutura, máquina, ferragem ou escombros?",
+   "obrig": false,
+   "outro": false,
+   "mermaid": "",
+   "prox": "pessoas_presas_confinada",
+   "opcoes": [
+    {
+     "id": "sim",
+     "rotulo": "Sim",
+     "vai": "troca_pessoa_prensada"
+    },
+    {
+     "id": "nao",
+     "rotulo": "Não",
+     "vai": ""
+    },
+    {
+     "id": "nao_sei",
+     "rotulo": "Não sei",
+     "vai": ""
+    }
+   ]
+  },
+  {
+   "id": "troca_pessoa_prensada",
+   "tipo": "troca",
+   "texto": "Pessoa prensada por estrutura, máquina ou veículo",
+   "obrig": false,
+   "outro": false,
+   "mermaid": "",
+   "prox": "FIM",
+   "opcoes": []
+  },
+  {
+   "id": "pessoas_presas_confinada",
+   "tipo": "numero",
+   "texto": "Quantas pessoas estão presas ou confinadas?",
+   "obrig": false,
+   "outro": false,
+   "mermaid": "",
+   "prox": "ferido_passando_mal",
+   "opcoes": []
+  },
+  {
+   "id": "ferido_passando_mal",
+   "tipo": "unica",
+   "texto": "Tem alguem ferido ou passando mal?",
+   "obrig": false,
+   "outro": false,
+   "mermaid": "",
+   "prox": "pessoas_inconscientes",
+   "opcoes": [
+    {
+     "id": "sim",
+     "rotulo": "Sim",
+     "vai": ""
+    },
+    {
+     "id": "nao",
+     "rotulo": "Não",
+     "vai": ""
+    }
+   ]
+  },
+  {
+   "id": "pessoas_inconscientes",
+   "tipo": "unica",
+   "texto": "Há pessoas inconscientes?",
+   "obrig": false,
+   "outro": false,
+   "mermaid": "",
+   "prox": "pessoa_inconsciente_resp",
+   "opcoes": [
+    {
+     "id": "sim",
+     "rotulo": "Sim",
+     "vai": ""
+    },
+    {
+     "id": "nao",
+     "rotulo": "Não",
+     "vai": "idoso_gestante_crianca"
+    }
+   ]
+  },
+  {
+   "id": "pessoa_inconsciente_resp",
+   "tipo": "unica",
+   "texto": "A pessoa inconsciente respira normalmente?",
+   "obrig": false,
+   "outro": false,
+   "mermaid": "",
+   "prox": "idoso_gestante_crianca",
+   "opcoes": [
+    {
+     "id": "sim",
+     "rotulo": "Sim",
+     "vai": ""
+    },
+    {
+     "id": "nao",
+     "rotulo": "Não",
+     "vai": "troca_parada_cardiorresp"
+    },
+    {
+     "id": "nao_sei",
+     "rotulo": "Não sei",
+     "vai": "troca_parada_cardiorresp_2"
+    }
+   ]
+  },
+  {
+   "id": "idoso_gestante_crianca",
+   "tipo": "unica",
+   "texto": "há algum idoso, gestante, criança ou com outra condição que exija atenção especial?",
+   "obrig": false,
+   "outro": false,
+   "mermaid": "",
+   "prox": "presenca_outros_riscos",
+   "opcoes": [
+    {
+     "id": "sim",
+     "rotulo": "Sim",
+     "vai": ""
+    },
+    {
+     "id": "nao",
+     "rotulo": "Não",
+     "vai": ""
+    }
+   ]
+  },
+  {
+   "id": "presenca_outros_riscos",
+   "tipo": "unica",
+   "texto": "Há presença de outros riscos no local? (Elétricos, incêndios, desabamentos ou outros).",
+   "obrig": false,
+   "outro": false,
+   "mermaid": "",
+   "prox": "FIM",
+   "opcoes": [
+    {
+     "id": "sim",
+     "rotulo": "Sim",
+     "vai": "troca_incendio_edificaca"
+    },
+    {
+     "id": "nao",
+     "rotulo": "Não",
+     "vai": ""
+    },
+    {
+     "id": "nao_sei",
+     "rotulo": "Não sei",
+     "vai": ""
+    }
+   ]
+  },
+  {
+   "id": "troca_incendio_edificaca",
+   "tipo": "troca",
+   "texto": "Incêndio em edificação ou Desabamento (conforme o risco)",
+   "obrig": false,
+   "outro": false,
+   "mermaid": "",
+   "prox": "FIM",
+   "opcoes": []
+  },
+  {
+   "id": "troca_parada_cardiorresp",
+   "tipo": "troca",
+   "texto": "Parada cardiorrespiratória (PCR)",
+   "obrig": false,
+   "outro": false,
+   "mermaid": "",
+   "prox": "despacho_2",
+   "opcoes": []
+  },
+  {
+   "id": "despacho_2",
+   "tipo": "instrucao",
+   "texto": "Iremos realizar uma vídeo chamada para orientá-lo(a) até a chegada da guarnição! Mantenha a calma e siga as orientações.",
+   "obrig": false,
+   "outro": false,
+   "mermaid": "",
+   "prox": "realize_videochamada_fac",
+   "opcoes": [],
+   "despacho": true
+  },
+  {
+   "id": "realize_videochamada_fac",
+   "tipo": "informacao",
+   "texto": "Realize a videochamada e faça as orientações",
+   "obrig": false,
+   "outro": false,
+   "mermaid": "",
+   "prox": "FIM",
+   "opcoes": [],
+   "video": true
+  },
+  {
+   "id": "troca_parada_cardiorresp_2",
+   "tipo": "troca",
+   "texto": "Parada cardiorrespiratória (PCR)",
+   "obrig": false,
+   "outro": false,
+   "mermaid": "",
+   "prox": "despacho_3",
+   "opcoes": []
+  },
+  {
+   "id": "despacho_3",
+   "tipo": "instrucao",
+   "texto": "Iremos realizar uma vídeo chamada para orientá-lo(a) até a chegada da guarnição! Mantenha a calma e siga as orientações.",
+   "obrig": false,
+   "outro": false,
+   "mermaid": "",
+   "prox": "realize_videochamada_fac_2",
+   "opcoes": [],
+   "despacho": true
+  },
+  {
+   "id": "realize_videochamada_fac_2",
+   "tipo": "informacao",
+   "texto": "Realize a videochamada e faça as orientações",
+   "obrig": false,
+   "outro": false,
+   "mermaid": "",
+   "prox": "FIM",
+   "opcoes": [],
+   "video": true
+  },
+  {
+   "id": "nao_tente_retirar",
+   "tipo": "instrucao",
+   "texto": "Não tente retirar a vítima por meios próprios nem acessar o local de risco. Mantenha a vítima calma e, se for seguro, tente manter contato até a chegada da equipe de socorro.",
+   "obrig": false,
+   "outro": false,
+   "mermaid": "",
+   "prox": "FIM",
+   "opcoes": []
+  }
+ ],
+ "notas": [
+  "No quadro, as respostas “Elevador”, “Poço/vala”, “Cisterna/tanque/ silo”, “Máquina/ equipamento”, “Veículo”, “Outro” não têm seta e “A vítima está dentro de um espaço do qual não consegue sair, sem estar presa por” está solto. Foram ligados aqui; confira no quadro.",
+  "“ORIENTAÇÃO AO SOLICITANTE: Não tente retirar a vítima por meios próprios nem acessar o local de risco. Mantenha a vítima calma e, se for seguro, tente manter contato até a chegada da equipe de socorro.” não está ligado ao início do fluxo.",
+  "Troca para “Incêndio em edificação ou Desabamento (conforme o risco)”: essa natureza não tem fluxo no quadro.",
+  "“nao_tente_retirar” está no formulário, mas nenhum caminho do fluxo chega até ele."
+ ]
+}
