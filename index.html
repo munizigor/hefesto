@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Hefesto · protótipo de atendimento e protocolos</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&family=JetBrains+Mono:wght@500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<header id="topo">
+  <div><div class="marca">Hefesto · protótipo</div><div class="sub">Atendimento 193 e protocolos por natureza · conteúdo ilustrativo, não validado</div></div>
+  <div id="abas" role="tablist" aria-label="Áreas do protótipo">
+    <button role="tab" id="t_atend">Atendimento</button>
+    <button role="tab" id="t_prot">Protocolos (gestor)</button>
+    <button role="tab" id="t_ocorr">Ocorrências</button>
+  </div>
+  <span class="grow"></span>
+  <span id="status" class="muted" role="status"></span>
+</header>
+<div id="vAtend"></div>
+<div id="vProt" style="display:none">
+  <div class="wrap">
+    <nav class="col" id="pNats" aria-label="Naturezas"></nav>
+    <section class="col" id="pEditor" aria-label="Editor da entrevista"></section>
+    <aside class="col" id="pSide" aria-label="Teste, fluxo e formulário">
+      <div class="tabs" id="pTabs" role="tablist">
+        <button role="tab" data-tab="teste">Testar</button>
+        <button role="tab" data-tab="fluxo">Fluxo (Mermaid)</button>
+        <button role="tab" data-tab="form">Formulário (JSON)</button>
+        <button role="tab" data-tab="manual">Manual</button>
+      </div>
+      <div id="pValid"></div>
+      <div id="pPanel"></div>
+    </aside>
+  </div>
+</div>
+<div id="vOcorr" style="display:none"></div>
+<div id="ajuda" style="display:none"></div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mermaid/10.9.1/mermaid.min.js"></script>
+<script src="logic.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
