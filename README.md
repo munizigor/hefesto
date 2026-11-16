@@ -92,4 +92,10 @@ A fonte de verdade é a pasta `protocolos/`. Quem corrige não precisa mexer no 
 3. Para continuar em outro computador, usa **Importar** com o mesmo arquivo. Antes de aplicar, o site mostra quais naturezas mudam e avisa se alguma substitui uma edição local.
 4. Para publicar, manda o zip para quem cuida do repositório, que roda `node ferramentas/montar.js caminho/do/arquivo.zip`, confere o `git diff` (cada natureza é um arquivo, então a revisão é linha a linha) e faz o commit.
 
-Quando uma versão nova é publicada, cada navegador atualiza sozinho as naturezas que a pessoa não editou e mantém as que ela editou. "Restaurar versão publicada", no editor, descarta a edição local de uma natureza.
+### Naturezas
+
+Na coluna da esquerda da aba Protocolos, **+ Nova natureza** cria uma natureza vazia, pronta para receber a entrevista. No editor de cada uma há **Renomear** e **Excluir natureza**. Ao renomear, as trocas de natureza das outras entrevistas que apontavam para o nome antigo são atualizadas. Ao excluir, o site avisa quantas trocas ficam sem destino. Nas trocas de natureza, o destino é escolhido numa lista, então uma natureza criada com o nome que a troca já usava (por exemplo "Incêndio em veículo", citada em Acidente de trânsito) passa a funcionar na hora.
+
+Tudo isso vai no zip (`naturezas.json`). Ao importar, naturezas novas e renomeadas entram; naturezas que existem no navegador e não no arquivo ficam como estão. No repositório, `montar.js` avisa quando sobra o arquivo de uma natureza excluída, para apagar com `git rm`.
+
+Quando uma versão nova é publicada, cada navegador atualiza sozinho as entrevistas que a pessoa não editou e mantém as que ela editou. Com a lista de naturezas é igual: o que a publicação criou, renomeou ou removeu chega, e o que a pessoa criou ou renomeou no navegador fica. "Restaurar versão publicada", no editor, descarta a edição local de uma natureza.

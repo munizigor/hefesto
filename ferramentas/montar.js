@@ -29,6 +29,9 @@ if(arg){
   console.log(mud.length?mud.join('\n'):'Nada mudou.');
 }
 var nats=JSON.parse(fs.readFileSync(path.join(dir,'naturezas.json'),'utf8')),prot={},notas={};
+var listados={}; nats.forEach(function(n){ listados[n.id+'.json']=1; });
+var orfaos=fs.readdirSync(dir).filter(function(f){ return /\.json$/.test(f)&&f!=='naturezas.json'&&!listados[f]; });
+if(orfaos.length) console.log('Atenção: estes arquivos não estão em naturezas.json (natureza excluída?) e ficaram fora do site: '+orfaos.join(', ')+'. Apague com git rm se for o caso.');
 nats.forEach(function(n){ var f=path.join(dir,n.id+'.json'); var o=fs.existsSync(f)?JSON.parse(fs.readFileSync(f,'utf8')):{itens:[]}; prot[n.id]=o.itens||[]; if(o.notas&&o.notas.length) notas[n.id]=o.notas; });
 var out='/* GERADO por ferramentas/montar.js a partir da pasta protocolos/. Não edite à mão. */\n'
  +'NATUREZAS = '+JSON.stringify(nats,null,0).replace(/\},\{/g,'},\n  {')+';\n'
