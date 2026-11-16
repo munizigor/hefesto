@@ -969,9 +969,28 @@
         .catch(function(){ ok(false); FB.msg={t:'inf',m:'Não consegui enviar agora. Seu feedback ficou guardado neste navegador e vai junto quando os protocolos forem exportados.'}; desenharFeedback(); });
     } else ok(false);
   }
+  function tallyId(){ return typeof FEEDBACK_TALLY!=='undefined'&&/^[\w-]+$/.test(FEEDBACK_TALLY||'')?FEEDBACK_TALLY:''; }
+  window.addEventListener('message',function(e){
+    if(!/tally\.so$/.test(String(e.origin).replace(/^https?:\/\//,''))) return;
+    var d=e.data; try{ if(typeof d==='string') d=JSON.parse(d); }catch(x){ return; }
+    if(d&&d.event==='Tally.FormSubmitted'&&FB.aberto){ FB.enviadoTally=true; desenharFeedback(); }
+  });
   function desenharFeedback(){
     var h=$('feedback'); h.textContent=''; if(!FB.aberto){ h.style.display='none'; return; } h.style.display='';
-    var c=contextoFeedback(),fechar=function(){ FB.aberto=false; FB.msg=null; desenharFeedback(); };
+    var c=contextoFeedback(),fechar=function(){ FB.aberto=false; FB.msg=null; FB.enviadoTally=false; desenharFeedback(); };
+    var tid=tallyId();
+    if(tid&&!FB.local){
+      var q=['alignLeft=1','hideTitle=1','transparentBackground=1'];
+      [['aba',c.aba],['passo',c.passo],['natureza',c.natureza],['pergunta',c.item],['painel',c.painel],['hermes',c.hermes],['navegador',navigator.userAgent.slice(0,160)]].forEach(function(x){ if(x[1]) q.push(x[0]+'='+encodeURIComponent(x[1])); });
+      var url='https://tally.so/embed/'+tid+'?'+q.join('&');
+      h.appendChild(el('div',{class:'ajBox fbBox fbTally',role:'dialog','aria-label':'Dar feedback'},[
+        el('div',{class:'row'},[el('h2',{class:'grow',text:'Dar feedback sobre o protótipo'}),el('button',{class:'btn sm',onclick:fechar},['Fechar ',el('kbd',{text:'Esc'})])]),
+        FB.enviadoTally?el('div',{class:'msg okm',role:'status',text:'Obrigado! Seu feedback foi enviado.'}):null,
+        el('p',{class:'muted',text:'Vai junto: '+([c.aba,c.passo,c.natureza,c.item].filter(Boolean).join(' · ')||'a tela atual')+'.'}),
+        el('iframe',{src:url,title:'Formulário de feedback',loading:'lazy'}),
+        el('div',{class:'row'},[el('a',{class:'lnk',href:url.replace('/embed/','/r/'),target:'_blank',rel:'noopener',text:'Abrir em outra aba'}),el('button',{class:'lnk',text:'Sem internet? Escrever aqui e guardar no navegador',onclick:function(){ FB.local=true; desenharFeedback(); }})])]));
+      return;
+    }
     var tipos=['Problema','Sugestão','Dúvida','Elogio'];
     var ta=el('textarea',{rows:'5',id:'fbTxt','aria-label':'Seu comentário',placeholder:'O que aconteceu, o que você esperava, o que mudaria…',value:FB.texto,oninput:function(e){ FB.texto=e.target.value; }});
     h.appendChild(el('div',{class:'ajBox fbBox',role:'dialog','aria-label':'Dar feedback'},[
@@ -985,7 +1004,7 @@
       el('div',{class:'row'},[el('button',{class:'btn ok',disabled:FB.enviando,text:FB.enviando?'Enviando…':'Enviar',onclick:enviarFeedback}),el('button',{class:'btn',onclick:fechar},['Fechar ',el('kbd',{text:'Esc'})])])]));
     if(!FB.msg) ta.focus();
   }
-  $('bFeedback').addEventListener('click',function(){ FB.aberto=true; FB.msg=null; desenharFeedback(); });
+  $('bFeedback').addEventListener('click',function(){ FB.aberto=true; FB.msg=null; FB.local=false; FB.enviadoTally=false; desenharFeedback(); });
 
   /* ---------- navegação entre as três áreas ---------- */
   function mostrar(v){

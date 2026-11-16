@@ -238,3 +238,5 @@ code{font-family:'JetBrains Mono',monospace;font-size:12px;background:#F1F3F5;pa
 .opts .row input.grow{flex:1 1 120px;min-width:0}
 .opts .row select{max-width:200px;min-width:0}
 .opts .row input.id{width:96px!important;flex:0 0 auto}
+.fbBox.fbTally{max-width:640px;max-height:calc(100vh - 32px)}
+.fbTally iframe{width:100%;height:min(520px,60vh);border:1px solid #DEE2E6;border-radius:4px;background:#fff}

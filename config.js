@@ -1,17 +1,19 @@
-/* Configuração do protótipo.
+/* Configuração do protótipo: para onde vai o feedback de quem usa o site.
+   O site usa o primeiro destino configurado, nesta ordem. Sem nenhum, o feedback fica guardado
+   no navegador da pessoa, aparece na aba Protocolos e sai junto no zip exportado (feedback.json). */
 
-   FEEDBACK_FORMULARIO: link pré-preenchido do Google Form que recebe o feedback de quem usa o site.
-   Como gerar (uma vez só):
-     1. Crie um Google Form com 5 perguntas de resposta curta ou parágrafo, nesta ordem:
-        Tipo · Comentário · Nome · Onde estava · Navegador
-        (não marque nenhuma como obrigatória e deixe desligado "Coletar e-mails" e "Restringir a usuários")
-     2. No menu ⋮ do formulário, "Gerar link pré-preenchido". Responda cada pergunta com a palavra em maiúsculas:
-        TIPO · COMENTARIO · NOME · CONTEXTO · NAVEGADOR
-     3. Clique em "Gerar link", copie e cole abaixo, entre as aspas.
-   As respostas caem na aba Respostas do formulário (e na planilha ligada a ele, se você criar uma).
-   Sem link, o feedback fica guardado no navegador da pessoa e sai junto no zip exportado. */
+/* 1. Tally: id do formulário (https://tally.so/r/<id>). O botão "Dar feedback" abre o formulário
+   dentro do site, com aba, passo, natureza e pergunta preenchidos em campos ocultos. */
+var FEEDBACK_TALLY = 'GepdoO';
+
+/* 2. Google Form: link pré-preenchido. Como gerar:
+     a. Crie um Google Form com 5 perguntas de resposta curta ou parágrafo, nesta ordem:
+        Tipo · Comentário · Nome · Onde estava · Navegador (nenhuma obrigatória; deixe desligados
+        "Coletar e-mails" e "Restringir a usuários").
+     b. No menu ⋮, "Gerar link pré-preenchido", respondendo cada pergunta com a palavra em maiúsculas:
+        TIPO · COMENTARIO · NOME · CONTEXTO · NAVEGADOR. Gere, copie e cole entre as aspas. */
 var FEEDBACK_FORMULARIO = '';
 
-/* Alternativa: tabela do Supabase só com permissão de inserir.
+/* 3. Tabela do Supabase só com permissão de inserir:
    FEEDBACK_DESTINO = { url: 'https://<projeto>.supabase.co', chave: '<chave publishable>', tabela: 'feedback' }; */
 var FEEDBACK_DESTINO = null;

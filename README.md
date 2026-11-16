@@ -116,6 +116,6 @@ O passo 1 (local e natureza) só leva à entrevista. A ocorrência é encaminhad
 
 O botão **Dar feedback** abre um formulário curto (tipo, comentário, nome opcional) e guarda junto onde a pessoa estava: aba, passo, natureza e a pergunta da vez.
 
-O destino é um **Google Form**, configurado em `config.js` com um único link (o "link pré-preenchido" do formulário; o passo a passo está no próprio arquivo). As respostas caem no formulário e, se ele estiver ligado a uma planilha, na planilha. O Google não deixa o site confirmar a gravação, então o site considera enviado quando não há erro de rede.
+O destino é o formulário do Tally "Hefesto · feedback do protótipo" (https://tally.so/r/GepdoO), configurado em `config.js`. O botão abre o formulário dentro do site, e aba, passo, natureza, pergunta da vez e navegador vão em campos ocultos. As respostas ficam no painel do Tally. `config.js` também aceita um Google Form ou uma tabela do Supabase.
 
-Sem link configurado, ou sem internet na hora, o feedback fica no navegador, aparece na coluna da esquerda da aba Protocolos e sai no zip exportado (`feedback.json`). Ao aplicar o zip, `montar.js` lista os feedbacks e salva em `feedback-recebido/`, que fica fora do Git porque o repositório é público. `config.js` também aceita uma tabela do Supabase como alternativa.
+Sem destino configurado, ou quando a pessoa escolhe "Sem internet? Escrever aqui", o feedback fica no navegador, aparece na coluna da esquerda da aba Protocolos e sai no zip exportado (`feedback.json`). Ao aplicar o zip, `montar.js` lista os feedbacks e salva em `feedback-recebido/`, que fica fora do Git porque o repositório é público. `config.js` também aceita uma tabela do Supabase como alternativa.
