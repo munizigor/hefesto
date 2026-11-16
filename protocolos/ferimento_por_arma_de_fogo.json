@@ -112,57 +112,14 @@
   },
   {
    "id": "vitima_acordada_responde",
-   "tipo": "unica",
-   "texto": "A vítima está acordada e responde quando você chama?",
-   "obrig": false,
-   "outro": false,
-   "mermaid": "",
-   "prox": "ela_respira_normalmente",
-   "opcoes": [
-    {
-     "id": "sim",
-     "rotulo": "Sim",
-     "vai": ""
-    },
-    {
-     "id": "nao",
-     "rotulo": "Não",
-     "vai": ""
-    },
-    {
-     "id": "nao_sabe",
-     "rotulo": "Não sabe",
-     "vai": "",
-     "relato": false
-    }
-   ]
-  },
-  {
-   "id": "ela_respira_normalmente",
-   "tipo": "unica",
-   "texto": "Ela respira normalmente?",
+   "tipo": "bloco",
+   "texto": "Consciência e respiração da vítima",
    "obrig": false,
    "outro": false,
    "mermaid": "",
    "prox": "onde_pessoa_atingida",
-   "opcoes": [
-    {
-     "id": "sim",
-     "rotulo": "Sim",
-     "vai": ""
-    },
-    {
-     "id": "nao",
-     "rotulo": "Não",
-     "vai": "realize_videochamada_fac"
-    },
-    {
-     "id": "nao_sabe",
-     "rotulo": "Não sabe",
-     "vai": "",
-     "relato": false
-    }
-   ]
+   "opcoes": [],
+   "bloco": "consciencia_e_respiracao"
   },
   {
    "id": "onde_pessoa_atingida",
@@ -194,27 +151,6 @@
    "id": "proteja_primeiro_for",
    "tipo": "instrucao",
    "texto": "Proteja-se primeiro. Se for seguro, aperte o ferimento com um pano e mantenha a pessoa deitada.",
-   "obrig": false,
-   "outro": false,
-   "mermaid": "",
-   "prox": "FIM",
-   "opcoes": []
-  },
-  {
-   "id": "realize_videochamada_fac",
-   "tipo": "informacao",
-   "texto": "Realize a videochamada e faça as orientações de RCP",
-   "obrig": false,
-   "outro": false,
-   "mermaid": "",
-   "prox": "troca_parada_cardiorresp",
-   "opcoes": [],
-   "video": true
-  },
-  {
-   "id": "troca_parada_cardiorresp",
-   "tipo": "troca",
-   "texto": "Parada cardiorrespiratória (PCR)",
    "obrig": false,
    "outro": false,
    "mermaid": "",

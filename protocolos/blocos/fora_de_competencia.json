@@ -1,0 +1,38 @@
+{
+ "bloco": {
+  "id": "fora_de_competencia",
+  "nome": "Fora de competência do CBMDF"
+ },
+ "itens": [
+  {
+   "id": "emergencia_motivo_senhor",
+   "tipo": "texto",
+   "texto": "Qual é a emergência e por qual motivo o senhor(a) necessita do atendimento do CBMDF, considerando que não há vítimas e não há risco aparente?",
+   "obrig": false,
+   "outro": false,
+   "mermaid": "",
+   "prox": "atencao_teleatendente_ba",
+   "opcoes": []
+  },
+  {
+   "id": "atencao_teleatendente_ba",
+   "tipo": "informacao",
+   "texto": "Atenção Teleatendente! Com base nas informações, esta ocorrência aparenta não ser de competência do CBMDF. Entre em contato com o Chefe de Teleatendimento para confirmar a necessidade de envio de recursos.",
+   "obrig": false,
+   "outro": false,
+   "mermaid": "",
+   "prox": "encaminhar_outro_orgao",
+   "opcoes": []
+  },
+  {
+   "id": "encaminhar_outro_orgao",
+   "tipo": "instrucao",
+   "texto": "Encaminhar para outro órgão",
+   "obrig": false,
+   "outro": false,
+   "mermaid": "",
+   "prox": "FIM",
+   "opcoes": []
+  }
+ ]
+}

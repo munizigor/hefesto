@@ -20,11 +20,12 @@ var arg=process.argv[2];
 if(arg){
   var z=lerZip(fs.readFileSync(arg)),mud=[];
   Object.keys(z).forEach(function(nome){
-    var m=/(?:^|\/)protocolos\/([a-z0-9_]+)\.json$|(?:^|\/)(naturezas)\.json$/.exec(nome); if(!m) return;
-    var alvo=path.join(dir,(m[1]||m[2])+'.json'),novo=z[nome].toString('utf8');
+    var m=/(?:^|\/)protocolos\/([a-z0-9_]+)\.json$|(?:^|\/)(naturezas|blocos)\.json$|(?:^|\/)blocos\/([a-z0-9_]+)\.json$/.exec(nome); if(!m) return;
+    if(m[3]&&!fs.existsSync(path.join(dir,'blocos'))) fs.mkdirSync(path.join(dir,'blocos'));
+    var alvo=m[3]?path.join(dir,'blocos',m[3]+'.json'):path.join(dir,(m[1]||m[2])+'.json'),novo=z[nome].toString('utf8');
     JSON.parse(novo);
     var velho=fs.existsSync(alvo)?fs.readFileSync(alvo,'utf8'):null;
-    if(velho!==novo){ fs.writeFileSync(alvo,novo); mud.push((velho==null?'nova  ':'mudou ')+(m[1]||m[2])); }
+    if(velho!==novo){ fs.writeFileSync(alvo,novo); mud.push((velho==null?'nova  ':'mudou ')+(m[3]?'bloco '+m[3]:(m[1]||m[2]))); }
   });
   console.log(mud.length?mud.join('\n'):'Nada mudou.');
   var fbk=Object.keys(z).filter(function(k){ return /(^|\/)feedback\.json$/.test(k); })[0];
@@ -36,7 +37,10 @@ if(arg){
   }
 }
 var nats=JSON.parse(fs.readFileSync(path.join(dir,'naturezas.json'),'utf8')),prot={},notas={},lays={};
-var listados={'impressoes-publicadas.json':1}; nats.forEach(function(n){ listados[n.id+'.json']=1; });
+/* blocos reutilizáveis: protocolos/blocos.json e protocolos/blocos/<id>.json */
+var blocos=fs.existsSync(path.join(dir,'blocos.json'))?JSON.parse(fs.readFileSync(path.join(dir,'blocos.json'),'utf8')):[];
+blocos.forEach(function(b){ var f=path.join(dir,'blocos',b.id+'.json'); var o=fs.existsSync(f)?JSON.parse(fs.readFileSync(f,'utf8')):{itens:[]}; prot['bloco:'+b.id]=o.itens||[]; if(o.layout) lays['bloco:'+b.id]=o.layout; });
+var listados={'impressoes-publicadas.json':1,'blocos.json':1}; nats.forEach(function(n){ listados[n.id+'.json']=1; });
 var orfaos=fs.readdirSync(dir).filter(function(f){ return /\.json$/.test(f)&&f!=='naturezas.json'&&!listados[f]; });
 if(orfaos.length) console.log('Atenção: estes arquivos não estão em naturezas.json (natureza excluída?) e ficaram fora do site: '+orfaos.join(', ')+'. Apague com git rm se for o caso.');
 nats.forEach(function(n){ var f=path.join(dir,n.id+'.json'); var o=fs.existsSync(f)?JSON.parse(fs.readFileSync(f,'utf8')):{itens:[]}; prot[n.id]=o.itens||[]; if(o.notas&&o.notas.length) notas[n.id]=o.notas; if(o.layout) lays[n.id]=o.layout; });
@@ -44,15 +48,16 @@ nats.forEach(function(n){ var f=path.join(dir,n.id+'.json'); var o=fs.existsSync
    O site usa a lista para saber se a cópia do navegador é só uma versão publicada antiga, e então atualiza. */
 var impr=function(itens){ var t=JSON.stringify(itens||[]),h=5381; for(var i=0;i<t.length;i++) h=((h<<5)+h+t.charCodeAt(i))|0; return (h>>>0).toString(36)+'.'+t.length; };
 var arqImp=path.join(dir,'impressoes-publicadas.json'),imps=fs.existsSync(arqImp)?JSON.parse(fs.readFileSync(arqImp,'utf8')):{};
-nats.forEach(function(n){ var x=impr(prot[n.id]); imps[n.id]=imps[n.id]||[]; if(imps[n.id].indexOf(x)<0) imps[n.id].push(x); });
+Object.keys(prot).forEach(function(k){ var x=impr(prot[k]); imps[k]=imps[k]||[]; if(imps[k].indexOf(x)<0) imps[k].push(x); });
 fs.writeFileSync(arqImp,JSON.stringify(imps,null,1)+'\n');
 var out='/* GERADO por ferramentas/montar.js a partir da pasta protocolos/. Não edite à mão. */\n'
  +'NATUREZAS = '+JSON.stringify(nats,null,0).replace(/\},\{/g,'},\n  {')+';\n'
+ +'var BLOCOS = '+JSON.stringify(blocos)+';\n'
  +'var PROTOCOLOS_PUBLICADOS = '+JSON.stringify(prot)+';\n'
  +'var NOTAS_PROTOCOLOS = '+JSON.stringify(notas)+';\n'
  +'var LAYOUTS_PUBLICADOS = '+JSON.stringify(lays)+';\n'
  +'var IMPRESSOES_PUBLICADAS = '+JSON.stringify(imps)+';\n'
  +'exemplos = function(){ return JSON.parse(JSON.stringify(PROTOCOLOS_PUBLICADOS)); };\n'
- +"if(typeof module!=='undefined') module.exports={NATUREZAS:NATUREZAS,PROTOCOLOS_PUBLICADOS:PROTOCOLOS_PUBLICADOS,NOTAS_PROTOCOLOS:NOTAS_PROTOCOLOS};\n";
+ +"if(typeof module!=='undefined') module.exports={NATUREZAS:NATUREZAS,BLOCOS:BLOCOS,PROTOCOLOS_PUBLICADOS:PROTOCOLOS_PUBLICADOS,NOTAS_PROTOCOLOS:NOTAS_PROTOCOLOS};\n";
 fs.writeFileSync(path.join(raiz,'protocolos.js'),out);
-console.log('protocolos.js montado: '+nats.length+' naturezas.');
+console.log('protocolos.js montado: '+nats.length+' naturezas, '+blocos.length+' blocos.');

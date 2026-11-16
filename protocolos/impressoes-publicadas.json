@@ -2,7 +2,8 @@
  "acidente_de_transito": [
   "9v95o2.39284",
   "1lddrn6.40604",
-  "1vn366n.40812"
+  "1vn366n.40812",
+  "1yb8np4.39888"
  ],
  "afogamento": [
   "16aj5n7.4245"
@@ -33,7 +34,8 @@
  ],
  "choque_eletrico": [
   "17o0d30.3087",
-  "1lnmrio.3132"
+  "1lnmrio.3132",
+  "fmhudo.2312"
  ],
  "desabamento_desmoronamento": [
   "5j1mr8.2375",
@@ -56,19 +58,23 @@
  ],
  "ferimento_diverso": [
   "1wbf5ef.4656",
-  "l27l8j.4731"
+  "l27l8j.4731",
+  "1x8xa7z.3911"
  ],
  "ferimento_por_arma_branca": [
   "1ruwm7a.3452",
-  "1di0jzq.3512"
+  "1di0jzq.3512",
+  "o3486q.2692"
  ],
  "ferimento_por_arma_de_fogo": [
   "10bad07.3275",
-  "fg78iv.3335"
+  "fg78iv.3335",
+  "114lskj.2515"
  ],
  "fratura_luxacao_ou_entorse": [
   "p55ywa.4303",
-  "1029kp6.4423"
+  "1029kp6.4423",
+  "1ff2vji.3990"
  ],
  "incendio_em_edificacao": [
   "irutxj.5134",
@@ -87,7 +93,8 @@
   "1sx5gsx.3849"
  ],
  "insetos_abelha_ou_similares_2": [
-  "1dzie5f.4627"
+  "1dzie5f.4627",
+  "hk2r4x.4168"
  ],
  "insetos_abelha_ou_similares": [
   "wbii09.5590",
@@ -119,7 +126,8 @@
  ],
  "parto_de_emergencia": [
   "1edqgk1.3743",
-  "5v8odl.3773"
+  "5v8odl.3773",
+  "1knre17.3336"
  ],
  "pessoa_arrastada_por_enxurrada": [
   "pzr44m.2630",
@@ -127,18 +135,21 @@
  ],
  "pessoa_atropelada": [
   "l6q8u2.3265",
-  "rl4kdq.3310"
+  "rl4kdq.3310",
+  "12rolbe.2490"
  ],
  "pessoa_com_necessidade_de_auxilio_para_m": [
   "1vldig3.2214"
  ],
  "pessoa_confinada": [
   "iz24f1.5128",
-  "cxa4ot.5248"
+  "cxa4ot.5248",
+  "1rrzxj1.4370"
  ],
  "pessoa_em_obito_evidente": [
   "hrfrse.2902",
-  "7jlpxe.2947"
+  "7jlpxe.2947",
+  "lk50bo.2510"
  ],
  "pessoa_em_profundidade": [
   "1y11je3.2718",
@@ -150,7 +161,8 @@
  ],
  "pessoa_prensada_por_estrutura_maquina_ou": [
   "15jp21t.3696",
-  "b17o25.3771"
+  "b17o25.3771",
+  "101zxzd.2951"
  ],
  "pessoa_presa_ou_confinada": [
   "1coxjgm.3999",
@@ -168,7 +180,8 @@
  ],
  "queda_de_plano_elevado": [
   "byfw9j.4496",
-  "1yfyg9r.4586"
+  "1yfyg9r.4586",
+  "qaf0rf.3766"
  ],
  "risco_de_choque_eletrico": [
   "1sofvd0.2132"
@@ -182,10 +195,20 @@
  ],
  "tentativa_de_suicidio": [
   "1icgclu.7555",
-  "1k7si0a.7705"
+  "1k7si0a.7705",
+  "b3vnca.6827"
  ],
  "vazamento_de_gas_glp": [
   "1sk89a3.2741",
   "1sk5pir.2771"
+ ],
+ "bloco:consciencia_e_respiracao": [
+  "19iv9n8.1018"
+ ],
+ "bloco:fora_de_competencia": [
+  "1o40vgs.799"
+ ],
+ "bloco:suspeita_de_pcr": [
+  "tdcuc2.623"
  ]
 }

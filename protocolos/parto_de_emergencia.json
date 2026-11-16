@@ -81,35 +81,14 @@
   },
   {
    "id": "troca_parada_cardiorresp",
-   "tipo": "troca",
-   "texto": "Parada cardiorrespiratória (PCR)",
-   "obrig": false,
-   "outro": false,
-   "mermaid": "",
-   "prox": "despacho_2",
-   "opcoes": []
-  },
-  {
-   "id": "despacho_2",
-   "tipo": "instrucao",
-   "texto": "Iremos realizar uma vídeo chamada para orientá-lo(a) até a chegada da guarnição! Mantenha a calma e siga as orientações.",
-   "obrig": false,
-   "outro": false,
-   "mermaid": "",
-   "prox": "realize_videochamada_fac",
-   "opcoes": [],
-   "despacho": true
-  },
-  {
-   "id": "realize_videochamada_fac",
-   "tipo": "informacao",
-   "texto": "Realize a videochamada e faça as orientações",
+   "tipo": "bloco",
+   "texto": "Suspeita de PCR: troca e videochamada",
    "obrig": false,
    "outro": false,
    "mermaid": "",
    "prox": "FIM",
    "opcoes": [],
-   "video": true
+   "bloco": "suspeita_de_pcr"
   },
   {
    "id": "semanas_meses_gestacao",

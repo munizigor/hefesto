@@ -28,9 +28,10 @@ Protótipo estático para validar, com a área de negócio, a tela de atendiment
 | `hermes.js` | Roteiros da demonstração do Hermes |
 | `desenho.js` | Editor visual do fluxo (caixas e setas), sem biblioteca externa |
 | `config.js` | Destino do feedback |
-| `protocolos/` | **Fonte de verdade** das entrevistas: `naturezas.json` e um `<id>.json` por natureza |
+| `protocolos/` | **Fonte de verdade** das entrevistas: `naturezas.json` e um `<id>.json` por natureza; `blocos.json` e `blocos/<id>.json` com os blocos reutilizáveis |
 | `protocolos.js` | Montado a partir de `protocolos/` por `ferramentas/montar.js`. Não edite à mão |
 | `ferramentas/montar.js` | Monta o `protocolos.js` e aplica um zip exportado pelo site |
+| `ferramentas/blocos.js` | Encontra trechos idênticos entre naturezas e os transforma em blocos, conferindo que o atendimento não muda |
 | `miro/` | Arquivo histórico da importação do Miro: código de cada diagrama, manifesto e conversor |
 | `app.js` | Interface: atendimento, editor de protocolos e ocorrências |
 
@@ -126,3 +127,19 @@ Sem destino configurado, ou quando a pessoa escolhe "Sem internet? Escrever aqui
 O botão **✏️ Editor visual** abre o fluxo da natureza em tela cheia, com as cores do quadro do Miro. Cada item é uma caixa; as respostas de uma pergunta aparecem como linhas dentro dela, amarelas (vão para o relato) ou lilases (ficam fora), cada uma com um ponto ● de saída. Puxe do ponto até a caixa seguinte para ligar; solte no vazio para desfazer a ligação daquela resposta. O ponto embaixo da caixa é o caminho padrão, e o da caixa da natureza escolhe a primeira pergunta. A barra de cima cria caixas (pergunta, pergunta aberta, orientação, despacho, informação, videochamada, troca de natureza) e o painel da direita edita a caixa selecionada. Ctrl+Z desfaz e Delete apaga a caixa, ligando quem vinha antes ao que vinha depois. A validação aparece no alto, ao vivo.
 
 A posição das caixas fica no navegador, vai no zip (`layout` em cada `protocolos/<id>.json`) e é publicada pelo `montar.js`. Sem posição salva, o editor organiza o fluxo em camadas a partir do início ("Reorganizar" refaz isso).
+
+## Blocos reutilizáveis
+
+Um bloco é um trecho de entrevista com nome, guardado uma vez e usado em várias naturezas. Na natureza ele é um item do tipo `bloco` (`{"tipo":"bloco","bloco":"<id>","prox":...}`); no atendimento, no teste e na validação, `expandir()` (em `logic.js`) põe os itens do bloco no lugar, com identificadores `<item>__<item do bloco>`. Dentro do bloco, o destino `SAIDA` (e o fim da lista) continua para o "depois" do item que usa o bloco, e `FIM` encerra a entrevista.
+
+Blocos publicados hoje, extraídos de trechos idênticos (`node ferramentas/blocos.js --aplicar`):
+
+| Bloco | Usado em |
+| --- | --- |
+| Consciência e respiração da vítima | 7 naturezas (choque elétrico, ferimentos, pessoa atropelada, pessoa prensada, queda de plano elevado) |
+| Suspeita de PCR: troca e videochamada | 7 usos em 5 naturezas (fratura, parto, pessoa confinada, óbito evidente, tentativa de suicídio) |
+| Fora de competência do CBMDF | 3 usos (acidente de trânsito, insetos versão 2) |
+
+A ferramenta só junta trechos idênticos e, antes de gravar, percorre todos os caminhos de cada entrevista nova e original em paralelo: se qualquer pergunta, resposta ou destino mudar, nada é gravado. Em Acidente de trânsito as cópias dos riscos variam de um ramo para outro (despacho, "veículo capotado", vazamento e trocas em pontos diferentes), então harmonizá-las num bloco único é decisão de protocolo. Para isso, o editor visual tem **Transformar em bloco** (Shift+clique nas caixas) e **+ Bloco…**.
+
+Blocos vão no zip (`blocos.json` e `blocos/<id>.json`) e entram pelo `montar.js` como as naturezas.

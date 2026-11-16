@@ -438,23 +438,14 @@
   },
   {
    "id": "emergencia_motivo_senhor",
-   "tipo": "texto",
-   "texto": "Qual é a emergência e por qual motivo o senhor(a) necessita do atendimento do CBMDF, considerando que não há vítimas e não há risco aparente?",
+   "tipo": "bloco",
+   "texto": "Fora de competência do CBMDF",
    "obrig": false,
    "outro": false,
    "mermaid": "",
-   "prox": "atencao_teleatendente_ba",
-   "opcoes": []
-  },
-  {
-   "id": "atencao_teleatendente_ba",
-   "tipo": "informacao",
-   "texto": "Atenção Teleatendente! Com base nas informações, esta ocorrência aparenta não ser de competência do CBMDF. Entre em contato com o Chefe de Teleatendimento para confirmar a necessidade de envio de recursos.",
-   "obrig": false,
-   "outro": false,
-   "mermaid": "",
-   "prox": "encaminhar_outro_orgao",
-   "opcoes": []
+   "prox": "FIM",
+   "opcoes": [],
+   "bloco": "fora_de_competencia"
   },
   {
    "id": "encaminhar_outro_orgao",
@@ -1566,23 +1557,14 @@
   },
   {
    "id": "emergencia_motivo_senhor_2",
-   "tipo": "texto",
-   "texto": "Qual é a emergência e por qual motivo o senhor(a) necessita do atendimento do CBMDF, considerando que não há vítimas e não há risco aparente?",
+   "tipo": "bloco",
+   "texto": "Fora de competência do CBMDF",
    "obrig": false,
    "outro": false,
    "mermaid": "",
-   "prox": "atencao_teleatendente_ba_2",
-   "opcoes": []
-  },
-  {
-   "id": "atencao_teleatendente_ba_2",
-   "tipo": "informacao",
-   "texto": "Atenção Teleatendente! Com base nas informações, esta ocorrência aparenta não ser de competência do CBMDF. Entre em contato com o Chefe de Teleatendimento para confirmar a necessidade de envio de recursos.",
-   "obrig": false,
-   "outro": false,
-   "mermaid": "",
-   "prox": "encaminhar_outro_orgao_2",
-   "opcoes": []
+   "prox": "FIM",
+   "opcoes": [],
+   "bloco": "fora_de_competencia"
   },
   {
    "id": "encaminhar_outro_orgao_2",
