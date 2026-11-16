@@ -397,7 +397,7 @@ function importarMermaidLivre(src){
    desp (rosa, despacho imediato) · acao (branco, borda cinza) · orient (amarelo, orientação) · video (verde, videochamada)
    troca (roxo, trocar natureza) · relato (verde claro, relato final). Nos diagramas "(original)" as classes têm o nome
    da cor (cfff6b6, cdedaff...), então o papel é lido pelo preenchimento declarado no classDef. */
-var MIRO_CORES={'c6dcff':'azul','fe9f4d':'acao','af7e04':'titulo','fff6b6':'opc','dedaff':'ns','ff6464':'ab','ffc6c6':'desp','ffdc4a':'orient','adf0c7':'relato','d5f2e0':'relato','8f7fee':'troca','2dc75c':'video','f8d3af':'recl'};
+var MIRO_CORES={'ff9e9e':'desp','c6dcff':'azul','fe9f4d':'acao','af7e04':'titulo','fff6b6':'opc','dedaff':'ns','ff6464':'ab','ffc6c6':'desp','ffdc4a':'orient','adf0c7':'relato','d5f2e0':'relato','8f7fee':'troca','2dc75c':'video','f8d3af':'recl'};
 var MIRO_PAPEIS=['titulo','perg','opc','ns','ab','desp','acao','orient','relato','troca','video','recl','diag'];
 function ehConvencaoMiro(src){ return /classDef\s+(perg|opc|cfff6b6|cdedaff)\b/.test(String(src||'')); }
 function papeisMiro(src){
