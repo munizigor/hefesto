@@ -1,0 +1,236 @@
+{
+ "natureza": {
+  "id": "ferimento_por_arma_de_fogo",
+  "nome": "Ferimento por arma de fogo"
+ },
+ "itens": [
+  {
+   "id": "atirador_ainda_local",
+   "tipo": "unica",
+   "texto": "O atirador ainda está no local ou há tiros acontecendo?",
+   "obrig": false,
+   "outro": false,
+   "mermaid": "",
+   "prox": "acionar_pmdf_guarnicao",
+   "opcoes": [
+    {
+     "id": "sim",
+     "rotulo": "Sim",
+     "vai": ""
+    },
+    {
+     "id": "nao",
+     "rotulo": "Não",
+     "vai": "despacho"
+    },
+    {
+     "id": "nao_sabe",
+     "rotulo": "Não sabe",
+     "vai": "acionar_pmdf_guarnicao_2",
+     "relato": false
+    }
+   ]
+  },
+  {
+   "id": "acionar_pmdf_guarnicao",
+   "tipo": "informacao",
+   "texto": "Acionar PMDF; guarnição só entra com área liberada",
+   "obrig": false,
+   "outro": false,
+   "mermaid": "",
+   "prox": "despacho",
+   "opcoes": []
+  },
+  {
+   "id": "despacho",
+   "tipo": "instrucao",
+   "texto": "O socorro já foi acionado e está a caminho. Vou fazer algumas perguntas rápidas para ajudar a equipe. Mantenha a calma e siga minhas orientações, por favor.",
+   "obrig": false,
+   "outro": false,
+   "mermaid": "",
+   "prox": "propria_pessoa_atirou",
+   "opcoes": [],
+   "despacho": true
+  },
+  {
+   "id": "propria_pessoa_atirou",
+   "tipo": "unica",
+   "texto": "A própria pessoa atirou em si?",
+   "obrig": false,
+   "outro": false,
+   "mermaid": "",
+   "prox": "vitimas",
+   "opcoes": [
+    {
+     "id": "sim",
+     "rotulo": "Sim",
+     "vai": "troca_tentativa_suicidio"
+    },
+    {
+     "id": "nao",
+     "rotulo": "Não",
+     "vai": ""
+    },
+    {
+     "id": "nao_sei",
+     "rotulo": "Não sei",
+     "vai": "",
+     "relato": false
+    }
+   ]
+  },
+  {
+   "id": "troca_tentativa_suicidio",
+   "tipo": "troca",
+   "texto": "Tentativa de suicídio",
+   "obrig": false,
+   "outro": false,
+   "mermaid": "",
+   "prox": "FIM",
+   "opcoes": []
+  },
+  {
+   "id": "vitimas",
+   "tipo": "unica",
+   "texto": "Quantas vítimas?",
+   "obrig": false,
+   "outro": false,
+   "mermaid": "",
+   "prox": "vitima_acordada_responde",
+   "opcoes": [
+    {
+     "id": "1",
+     "rotulo": "1",
+     "vai": ""
+    },
+    {
+     "id": "mais_de_1",
+     "rotulo": "Mais de 1",
+     "vai": ""
+    }
+   ]
+  },
+  {
+   "id": "vitima_acordada_responde",
+   "tipo": "unica",
+   "texto": "A vítima está acordada e responde quando você chama?",
+   "obrig": false,
+   "outro": false,
+   "mermaid": "",
+   "prox": "ela_respira_normalmente",
+   "opcoes": [
+    {
+     "id": "sim",
+     "rotulo": "Sim",
+     "vai": ""
+    },
+    {
+     "id": "nao",
+     "rotulo": "Não",
+     "vai": ""
+    },
+    {
+     "id": "nao_sabe",
+     "rotulo": "Não sabe",
+     "vai": "",
+     "relato": false
+    }
+   ]
+  },
+  {
+   "id": "ela_respira_normalmente",
+   "tipo": "unica",
+   "texto": "Ela respira normalmente?",
+   "obrig": false,
+   "outro": false,
+   "mermaid": "",
+   "prox": "onde_pessoa_atingida",
+   "opcoes": [
+    {
+     "id": "sim",
+     "rotulo": "Sim",
+     "vai": ""
+    },
+    {
+     "id": "nao",
+     "rotulo": "Não",
+     "vai": "realize_videochamada_fac"
+    },
+    {
+     "id": "nao_sabe",
+     "rotulo": "Não sabe",
+     "vai": "",
+     "relato": false
+    }
+   ]
+  },
+  {
+   "id": "onde_pessoa_atingida",
+   "tipo": "unica",
+   "texto": "Onde a pessoa foi atingida?",
+   "obrig": false,
+   "outro": false,
+   "mermaid": "",
+   "prox": "proteja_primeiro_for",
+   "opcoes": [
+    {
+     "id": "cabeca_pescoco",
+     "rotulo": "Cabeça / pescoço",
+     "vai": ""
+    },
+    {
+     "id": "peito_barriga_costas",
+     "rotulo": "Peito / barriga / costas",
+     "vai": ""
+    },
+    {
+     "id": "braco_perna",
+     "rotulo": "Braço / perna",
+     "vai": ""
+    }
+   ]
+  },
+  {
+   "id": "proteja_primeiro_for",
+   "tipo": "instrucao",
+   "texto": "Proteja-se primeiro. Se for seguro, aperte o ferimento com um pano e mantenha a pessoa deitada.",
+   "obrig": false,
+   "outro": false,
+   "mermaid": "",
+   "prox": "FIM",
+   "opcoes": []
+  },
+  {
+   "id": "realize_videochamada_fac",
+   "tipo": "informacao",
+   "texto": "Realize a videochamada e faça as orientações de RCP",
+   "obrig": false,
+   "outro": false,
+   "mermaid": "",
+   "prox": "troca_parada_cardiorresp",
+   "opcoes": [],
+   "video": true
+  },
+  {
+   "id": "troca_parada_cardiorresp",
+   "tipo": "troca",
+   "texto": "Parada cardiorrespiratória (PCR)",
+   "obrig": false,
+   "outro": false,
+   "mermaid": "",
+   "prox": "FIM",
+   "opcoes": []
+  },
+  {
+   "id": "acionar_pmdf_guarnicao_2",
+   "tipo": "informacao",
+   "texto": "Acionar PMDF; guarnição só entra com área liberada",
+   "obrig": false,
+   "outro": false,
+   "mermaid": "",
+   "prox": "despacho",
+   "opcoes": []
+  }
+ ],
+ "notas": []
+}

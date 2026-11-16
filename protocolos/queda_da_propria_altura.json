@@ -1,0 +1,367 @@
+{
+ "natureza": {
+  "id": "queda_da_propria_altura",
+  "nome": "Queda da própria altura"
+ },
+ "itens": [
+  {
+   "id": "pessoa_respirando",
+   "tipo": "unica",
+   "texto": "A pessoa está respirando?",
+   "obrig": false,
+   "outro": false,
+   "mermaid": "",
+   "prox": "idade_aproximada_pessoa",
+   "opcoes": [
+    {
+     "id": "sim",
+     "rotulo": "Sim",
+     "vai": ""
+    },
+    {
+     "id": "nao",
+     "rotulo": "Não",
+     "vai": "troca_parada_cardiorespi"
+    }
+   ]
+  },
+  {
+   "id": "idade_aproximada_pessoa",
+   "tipo": "unica",
+   "texto": "Idade aproximada da pessoa",
+   "obrig": false,
+   "outro": false,
+   "mermaid": "",
+   "prox": "houve_desmaio_antes",
+   "opcoes": [
+    {
+     "id": "idoso",
+     "rotulo": "Idoso",
+     "vai": ""
+    },
+    {
+     "id": "adulto",
+     "rotulo": "Adulto",
+     "vai": ""
+    },
+    {
+     "id": "crianca",
+     "rotulo": "Criança",
+     "vai": ""
+    }
+   ]
+  },
+  {
+   "id": "houve_desmaio_antes",
+   "tipo": "unica",
+   "texto": "Houve desmaio antes da queda?",
+   "obrig": false,
+   "outro": false,
+   "mermaid": "",
+   "prox": "despacho",
+   "opcoes": [
+    {
+     "id": "nao_sei",
+     "rotulo": "Não sei",
+     "vai": "",
+     "relato": false
+    },
+    {
+     "id": "nao",
+     "rotulo": "Não",
+     "vai": "despacho_2"
+    },
+    {
+     "id": "sim",
+     "rotulo": "Sim",
+     "vai": "despacho_3"
+    }
+   ]
+  },
+  {
+   "id": "despacho",
+   "tipo": "instrucao",
+   "texto": "O socorro já foi acionado e está a caminho. Vou fazer algumas perguntas rápidas para ajudar a equipe. Mantenha a calma e siga minhas orientações, por favor.",
+   "obrig": false,
+   "outro": false,
+   "mermaid": "",
+   "prox": "como_aconteceu_queda",
+   "opcoes": [],
+   "despacho": true
+  },
+  {
+   "id": "como_aconteceu_queda",
+   "tipo": "unica",
+   "texto": "Como aconteceu a queda?",
+   "obrig": false,
+   "outro": false,
+   "mermaid": "",
+   "prox": "bateu_cabeca_quando",
+   "opcoes": [
+    {
+     "id": "escorregou_tropecou",
+     "rotulo": "Escorregou/tropeçou",
+     "vai": ""
+    },
+    {
+     "id": "perdeu_o_equilibrio",
+     "rotulo": "Perdeu o equilíbrio",
+     "vai": ""
+    },
+    {
+     "id": "outro",
+     "rotulo": "Outro",
+     "vai": "",
+     "relato": false
+    }
+   ]
+  },
+  {
+   "id": "bateu_cabeca_quando",
+   "tipo": "unica",
+   "texto": "Bateu a cabeça quando caiu?",
+   "obrig": false,
+   "outro": false,
+   "mermaid": "",
+   "prox": "houe_crise_convulsiva",
+   "opcoes": [
+    {
+     "id": "nao",
+     "rotulo": "Não",
+     "vai": "",
+     "relato": false
+    },
+    {
+     "id": "sim",
+     "rotulo": "Sim",
+     "vai": ""
+    },
+    {
+     "id": "nao_sei",
+     "rotulo": "Não sei",
+     "vai": "",
+     "relato": false
+    }
+   ]
+  },
+  {
+   "id": "houe_crise_convulsiva",
+   "tipo": "unica",
+   "texto": "Houe alguma crise convulsiva?",
+   "obrig": false,
+   "outro": false,
+   "mermaid": "",
+   "prox": "teve_vomito_apos",
+   "opcoes": [
+    {
+     "id": "nao_sei",
+     "rotulo": "Não sei",
+     "vai": "",
+     "relato": false
+    },
+    {
+     "id": "nao",
+     "rotulo": "Não",
+     "vai": "teve_vomito_apos_2",
+     "relato": false
+    },
+    {
+     "id": "sim",
+     "rotulo": "Sim",
+     "vai": "troca_convulsao_crise"
+    }
+   ]
+  },
+  {
+   "id": "teve_vomito_apos",
+   "tipo": "texto",
+   "texto": "Teve vômito após a queda?",
+   "obrig": false,
+   "outro": false,
+   "mermaid": "",
+   "prox": "FIM",
+   "opcoes": []
+  },
+  {
+   "id": "teve_vomito_apos_2",
+   "tipo": "unica",
+   "texto": "Teve vômito após a queda?",
+   "obrig": false,
+   "outro": false,
+   "mermaid": "",
+   "prox": "consciente_conversando_n",
+   "opcoes": [
+    {
+     "id": "nao_sabe",
+     "rotulo": "Não sabe",
+     "vai": "",
+     "relato": false
+    },
+    {
+     "id": "nao",
+     "rotulo": "Não",
+     "vai": "",
+     "relato": false
+    },
+    {
+     "id": "sim",
+     "rotulo": "Sim",
+     "vai": ""
+    }
+   ]
+  },
+  {
+   "id": "consciente_conversando_n",
+   "tipo": "unica",
+   "texto": "Está consciente e conversando normalmente?",
+   "obrig": false,
+   "outro": false,
+   "mermaid": "",
+   "prox": "FIM",
+   "opcoes": [
+    {
+     "id": "nao",
+     "rotulo": "Não",
+     "vai": ""
+    },
+    {
+     "id": "sim",
+     "rotulo": "Sim",
+     "vai": "pessoal_relata_dor"
+    }
+   ]
+  },
+  {
+   "id": "pessoal_relata_dor",
+   "tipo": "unica",
+   "texto": "A pessoal relata dor?",
+   "obrig": false,
+   "outro": false,
+   "mermaid": "",
+   "prox": "FIM",
+   "opcoes": [
+    {
+     "id": "nao",
+     "rotulo": "Não",
+     "vai": "",
+     "relato": false
+    },
+    {
+     "id": "sim",
+     "rotulo": "Sim",
+     "vai": "onde_vitima_relata"
+    }
+   ]
+  },
+  {
+   "id": "onde_vitima_relata",
+   "tipo": "unica",
+   "texto": "Onde a vítima relata mais dor?",
+   "obrig": false,
+   "outro": false,
+   "mermaid": "",
+   "prox": "FIM",
+   "opcoes": [
+    {
+     "id": "membros",
+     "rotulo": "Membros",
+     "vai": ""
+    },
+    {
+     "id": "torax_abdomem",
+     "rotulo": "Tórax / abdômem",
+     "vai": ""
+    },
+    {
+     "id": "costas",
+     "rotulo": "Costas",
+     "vai": ""
+    },
+    {
+     "id": "cabeca_pescoco",
+     "rotulo": "Cabeça/pescoço",
+     "vai": ""
+    }
+   ]
+  },
+  {
+   "id": "troca_convulsao_crise",
+   "tipo": "troca",
+   "texto": "Convulsão / crise convulsiva",
+   "obrig": false,
+   "outro": false,
+   "mermaid": "",
+   "prox": "FIM",
+   "opcoes": []
+  },
+  {
+   "id": "despacho_2",
+   "tipo": "instrucao",
+   "texto": "O socorro já foi acionado e está a caminho. Vou fazer algumas perguntas rápidas para ajudar a equipe. Mantenha a calma e siga minhas orientações, por favor.",
+   "obrig": false,
+   "outro": false,
+   "mermaid": "",
+   "prox": "FIM",
+   "opcoes": [],
+   "despacho": true
+  },
+  {
+   "id": "despacho_3",
+   "tipo": "instrucao",
+   "texto": "O socorro já foi acionado e está a caminho. Vou fazer algumas perguntas rápidas para ajudar a equipe. Mantenha a calma e siga minhas orientações, por favor.",
+   "obrig": false,
+   "outro": false,
+   "mermaid": "",
+   "prox": "troca_emergencia_clinica",
+   "opcoes": [],
+   "despacho": true
+  },
+  {
+   "id": "troca_emergencia_clinica",
+   "tipo": "troca",
+   "texto": "Emergência clínica",
+   "obrig": false,
+   "outro": false,
+   "mermaid": "",
+   "prox": "FIM",
+   "opcoes": []
+  },
+  {
+   "id": "troca_parada_cardiorespi",
+   "tipo": "troca",
+   "texto": "Parada cardiorrespiratória (PCR)",
+   "obrig": false,
+   "outro": false,
+   "mermaid": "",
+   "prox": "realize_videochamada_fac",
+   "opcoes": []
+  },
+  {
+   "id": "realize_videochamada_fac",
+   "tipo": "informacao",
+   "texto": "Realize a videochamada e faça as orientações",
+   "obrig": false,
+   "outro": false,
+   "mermaid": "",
+   "prox": "despacho_4",
+   "opcoes": [],
+   "video": true
+  },
+  {
+   "id": "despacho_4",
+   "tipo": "instrucao",
+   "texto": "Iremos realizar uma vídeo chamada para orientá-lo(a) até a chegada da guarnição! Mantenha a calma e siga as orientações.",
+   "obrig": false,
+   "outro": false,
+   "mermaid": "",
+   "prox": "FIM",
+   "opcoes": [],
+   "despacho": true
+  }
+ ],
+ "notas": [
+  "“A pessoa está respirando?” / “Não”: a resposta leva a 2 caixas ao mesmo tempo; ficou só “🔁 Trocar natureza: Parada Cárdiorespiratória (PCR)”.",
+  "Troca para “Convulsão / crise convulsiva”: essa natureza não tem fluxo no quadro.",
+  "Troca para “Parada Cárdiorespiratória (PCR)” entendida como “Parada cardiorrespiratória (PCR)”."
+ ]
+}

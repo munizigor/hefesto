@@ -1,0 +1,303 @@
+{
+ "natureza": {
+  "id": "pessoa_presa_ou_confinada",
+  "nome": "Pessoa presa ou confinada"
+ },
+ "itens": [
+  {
+   "id": "onde_pessoa_presa",
+   "tipo": "unica",
+   "texto": "Onde a pessoa está presa?",
+   "obrig": false,
+   "outro": true,
+   "mermaid": "",
+   "prox": "despacho",
+   "opcoes": [
+    {
+     "id": "elevador",
+     "rotulo": "Elevador",
+     "vai": "elevador_parado_entre"
+    },
+    {
+     "id": "poco_cisterna_galeria",
+     "rotulo": "Poço / cisterna / galeria",
+     "vai": ""
+    },
+    {
+     "id": "silo_tanque",
+     "rotulo": "Silo / tanque",
+     "vai": ""
+    },
+    {
+     "id": "escombros",
+     "rotulo": "Escombros",
+     "vai": "troca_desabamento_desmor"
+    }
+   ]
+  },
+  {
+   "id": "elevador_parado_entre",
+   "tipo": "unica",
+   "texto": "O elevador está parado entre andares?",
+   "obrig": false,
+   "outro": false,
+   "mermaid": "",
+   "prox": "empresa_manutencao_eleva",
+   "opcoes": [
+    {
+     "id": "sim",
+     "rotulo": "Sim",
+     "vai": ""
+    },
+    {
+     "id": "nao",
+     "rotulo": "Não",
+     "vai": ""
+    },
+    {
+     "id": "nao_sei",
+     "rotulo": "Não sei",
+     "vai": "",
+     "relato": false
+    }
+   ]
+  },
+  {
+   "id": "empresa_manutencao_eleva",
+   "tipo": "unica",
+   "texto": "A empresa de manutenção do elevador já foi chamada?",
+   "obrig": false,
+   "outro": false,
+   "mermaid": "",
+   "prox": "despacho",
+   "opcoes": [
+    {
+     "id": "sim",
+     "rotulo": "Sim",
+     "vai": ""
+    },
+    {
+     "id": "nao",
+     "rotulo": "Não",
+     "vai": ""
+    },
+    {
+     "id": "nao_sei",
+     "rotulo": "Não sei",
+     "vai": "",
+     "relato": false
+    }
+   ]
+  },
+  {
+   "id": "despacho",
+   "tipo": "instrucao",
+   "texto": "O socorro já foi acionado e está a caminho. Vou fazer algumas perguntas rápidas para ajudar a equipe. Mantenha a calma e siga minhas orientações, por favor.",
+   "obrig": false,
+   "outro": false,
+   "mermaid": "",
+   "prox": "fogo_fumaca_local",
+   "opcoes": [],
+   "despacho": true
+  },
+  {
+   "id": "fogo_fumaca_local",
+   "tipo": "unica",
+   "texto": "Tem fogo ou fumaça no local?",
+   "obrig": false,
+   "outro": false,
+   "mermaid": "",
+   "prox": "entrando_agua_pessoa",
+   "opcoes": [
+    {
+     "id": "sim",
+     "rotulo": "Sim",
+     "vai": "troca_incendio_edificaca"
+    },
+    {
+     "id": "nao",
+     "rotulo": "Não",
+     "vai": ""
+    },
+    {
+     "id": "nao_sei",
+     "rotulo": "Não sei",
+     "vai": "",
+     "relato": false
+    }
+   ]
+  },
+  {
+   "id": "troca_incendio_edificaca",
+   "tipo": "troca",
+   "texto": "Incêndio em edificação",
+   "obrig": false,
+   "outro": false,
+   "mermaid": "",
+   "prox": "FIM",
+   "opcoes": []
+  },
+  {
+   "id": "entrando_agua_pessoa",
+   "tipo": "unica",
+   "texto": "Está entrando água e a pessoa pode ficar submersa?",
+   "obrig": false,
+   "outro": false,
+   "mermaid": "",
+   "prox": "troca_afogamento",
+   "opcoes": [
+    {
+     "id": "sim",
+     "rotulo": "Sim",
+     "vai": ""
+    },
+    {
+     "id": "nao",
+     "rotulo": "Não",
+     "vai": "parte_corpo_presa"
+    },
+    {
+     "id": "nao_sei",
+     "rotulo": "Não sei",
+     "vai": "troca_afogamento_2",
+     "relato": false
+    }
+   ]
+  },
+  {
+   "id": "troca_afogamento",
+   "tipo": "troca",
+   "texto": "Afogamento",
+   "obrig": false,
+   "outro": false,
+   "mermaid": "",
+   "prox": "FIM",
+   "opcoes": []
+  },
+  {
+   "id": "parte_corpo_presa",
+   "tipo": "unica",
+   "texto": "Alguma parte do corpo está presa por máquina, ferragem ou estrutura?",
+   "obrig": false,
+   "outro": false,
+   "mermaid": "",
+   "prox": "pessoas_presas",
+   "opcoes": [
+    {
+     "id": "sim",
+     "rotulo": "Sim",
+     "vai": "troca_pessoa_prensada"
+    },
+    {
+     "id": "nao",
+     "rotulo": "Não",
+     "vai": ""
+    },
+    {
+     "id": "nao_sei",
+     "rotulo": "Não sei",
+     "vai": "",
+     "relato": false
+    }
+   ]
+  },
+  {
+   "id": "troca_pessoa_prensada",
+   "tipo": "troca",
+   "texto": "Pessoa prensada por estrutura, máquina ou veículo",
+   "obrig": false,
+   "outro": false,
+   "mermaid": "",
+   "prox": "FIM",
+   "opcoes": []
+  },
+  {
+   "id": "pessoas_presas",
+   "tipo": "unica",
+   "texto": "Quantas pessoas estão presas?",
+   "obrig": false,
+   "outro": false,
+   "mermaid": "",
+   "prox": "voce_consegue_falar",
+   "opcoes": [
+    {
+     "id": "1",
+     "rotulo": "1",
+     "vai": ""
+    },
+    {
+     "id": "2_a_5",
+     "rotulo": "2 a 5",
+     "vai": ""
+    },
+    {
+     "id": "mais_de_5",
+     "rotulo": "Mais de 5",
+     "vai": ""
+    }
+   ]
+  },
+  {
+   "id": "voce_consegue_falar",
+   "tipo": "unica",
+   "texto": "Você consegue falar com elas? Elas respondem?",
+   "obrig": false,
+   "outro": false,
+   "mermaid": "",
+   "prox": "ferido_passando_mal",
+   "opcoes": [
+    {
+     "id": "sim",
+     "rotulo": "Sim",
+     "vai": ""
+    },
+    {
+     "id": "nao",
+     "rotulo": "Não",
+     "vai": ""
+    }
+   ]
+  },
+  {
+   "id": "ferido_passando_mal",
+   "tipo": "texto",
+   "texto": "Alguém está ferido, passando mal ou com falta de ar?",
+   "obrig": false,
+   "outro": false,
+   "mermaid": "",
+   "prox": "nao_entre_poco",
+   "opcoes": []
+  },
+  {
+   "id": "nao_entre_poco",
+   "tipo": "instrucao",
+   "texto": "Não entre em poço, tanque ou galeria para tirar a pessoa: o ar pode ser tóxico. No elevador, peça que ninguém force a porta.",
+   "obrig": false,
+   "outro": false,
+   "mermaid": "",
+   "prox": "FIM",
+   "opcoes": []
+  },
+  {
+   "id": "troca_afogamento_2",
+   "tipo": "troca",
+   "texto": "Afogamento",
+   "obrig": false,
+   "outro": false,
+   "mermaid": "",
+   "prox": "FIM",
+   "opcoes": []
+  },
+  {
+   "id": "troca_desabamento_desmor",
+   "tipo": "troca",
+   "texto": "Desabamento / desmoronamento",
+   "obrig": false,
+   "outro": false,
+   "mermaid": "",
+   "prox": "FIM",
+   "opcoes": []
+  }
+ ],
+ "notas": []
+}

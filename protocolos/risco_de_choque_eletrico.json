@@ -1,0 +1,156 @@
+{
+ "natureza": {
+  "id": "risco_de_choque_eletrico",
+  "nome": "Risco de choque elétrico"
+ },
+ "itens": [
+  {
+   "id": "situacao",
+   "tipo": "unica",
+   "texto": "Qual a situação?",
+   "obrig": false,
+   "outro": true,
+   "mermaid": "",
+   "prox": "levou_choque",
+   "opcoes": [
+    {
+     "id": "fio_partido_no_chao_pendurad",
+     "rotulo": "Fio partido no chão / pendurado",
+     "vai": ""
+    },
+    {
+     "id": "fio_encostando_em_arvore_tel",
+     "rotulo": "Fio encostando em árvore / telhado / grade",
+     "vai": ""
+    },
+    {
+     "id": "poste_danificado",
+     "rotulo": "Poste danificado",
+     "vai": ""
+    },
+    {
+     "id": "equipamento_estrutura_dando_",
+     "rotulo": "Equipamento / estrutura dando choque",
+     "vai": ""
+    }
+   ]
+  },
+  {
+   "id": "levou_choque",
+   "tipo": "unica",
+   "texto": "Alguém levou choque?",
+   "obrig": false,
+   "outro": false,
+   "mermaid": "",
+   "prox": "troca_choque_eletrico",
+   "opcoes": [
+    {
+     "id": "sim",
+     "rotulo": "Sim",
+     "vai": ""
+    },
+    {
+     "id": "nao",
+     "rotulo": "Não",
+     "vai": "fogo_faisca"
+    }
+   ]
+  },
+  {
+   "id": "troca_choque_eletrico",
+   "tipo": "troca",
+   "texto": "Choque elétrico",
+   "obrig": false,
+   "outro": false,
+   "mermaid": "",
+   "prox": "FIM",
+   "opcoes": []
+  },
+  {
+   "id": "fogo_faisca",
+   "tipo": "unica",
+   "texto": "Há fogo ou faísca?",
+   "obrig": false,
+   "outro": false,
+   "mermaid": "",
+   "prox": "troca_incendio_objeto",
+   "opcoes": [
+    {
+     "id": "sim",
+     "rotulo": "Sim",
+     "vai": ""
+    },
+    {
+     "id": "nao",
+     "rotulo": "Não",
+     "vai": "local_circulacao_pessoas"
+    }
+   ]
+  },
+  {
+   "id": "troca_incendio_objeto",
+   "tipo": "troca",
+   "texto": "Incêndio em objeto / equipamento",
+   "obrig": false,
+   "outro": false,
+   "mermaid": "",
+   "prox": "FIM",
+   "opcoes": []
+  },
+  {
+   "id": "local_circulacao_pessoas",
+   "tipo": "unica",
+   "texto": "É em local com circulação de pessoas (escola, calçada, parada de ônibus)?",
+   "obrig": false,
+   "outro": false,
+   "mermaid": "",
+   "prox": "acionar_concessionaria_e",
+   "opcoes": [
+    {
+     "id": "sim",
+     "rotulo": "Sim",
+     "vai": ""
+    },
+    {
+     "id": "nao",
+     "rotulo": "Não",
+     "vai": ""
+    }
+   ]
+  },
+  {
+   "id": "acionar_concessionaria_e",
+   "tipo": "informacao",
+   "texto": "Acionar concessionária de energia",
+   "obrig": false,
+   "outro": false,
+   "mermaid": "",
+   "prox": "despacho",
+   "opcoes": []
+  },
+  {
+   "id": "despacho",
+   "tipo": "instrucao",
+   "texto": "🚒 Despacho conforme critério da COCB",
+   "obrig": false,
+   "outro": false,
+   "mermaid": "",
+   "prox": "fique_pelo_menos",
+   "opcoes": [],
+   "despacho": true
+  },
+  {
+   "id": "fique_pelo_menos",
+   "tipo": "instrucao",
+   "texto": "Fique a pelo menos 10 metros do fio, mesmo que pareça desligado. Se houver água no chão perto, afaste-se mais.",
+   "obrig": false,
+   "outro": false,
+   "mermaid": "",
+   "prox": "FIM",
+   "opcoes": []
+  }
+ ],
+ "notas": [
+  "Troca para “Incêndio em objeto / equipamento”: essa natureza não tem fluxo no quadro."
+ ]
+}

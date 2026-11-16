@@ -1,0 +1,167 @@
+{
+ "natureza": {
+  "id": "animal_domestico_em_situacao_de_risco",
+  "nome": "Animal doméstico em situação de risco"
+ },
+ "itens": [
+  {
+   "id": "animal",
+   "tipo": "unica",
+   "texto": "Qual animal?",
+   "obrig": false,
+   "outro": true,
+   "mermaid": "",
+   "prox": "situacao",
+   "opcoes": [
+    {
+     "id": "cao",
+     "rotulo": "Cão",
+     "vai": ""
+    },
+    {
+     "id": "gato",
+     "rotulo": "Gato",
+     "vai": ""
+    },
+    {
+     "id": "cavalo_boi",
+     "rotulo": "Cavalo / boi",
+     "vai": ""
+    }
+   ]
+  },
+  {
+   "id": "situacao",
+   "tipo": "unica",
+   "texto": "Qual a situação?",
+   "obrig": false,
+   "outro": true,
+   "mermaid": "",
+   "prox": "animal_oferece_risco",
+   "opcoes": [
+    {
+     "id": "preso_em_altura",
+     "rotulo": "Preso em altura",
+     "vai": ""
+    },
+    {
+     "id": "preso_em_buraco_poco_vala",
+     "rotulo": "Preso em buraco / poço / vala",
+     "vai": ""
+    },
+    {
+     "id": "na_agua",
+     "rotulo": "Na água",
+     "vai": ""
+    },
+    {
+     "id": "preso_em_veiculo_fechado",
+     "rotulo": "Preso em veículo fechado",
+     "vai": ""
+    },
+    {
+     "id": "preso_em_grade_cano",
+     "rotulo": "Preso em grade / cano",
+     "vai": ""
+    }
+   ]
+  },
+  {
+   "id": "animal_oferece_risco",
+   "tipo": "unica",
+   "texto": "O animal oferece risco a pessoas (agressivo, solto em via movimentada)?",
+   "obrig": false,
+   "outro": false,
+   "mermaid": "",
+   "prox": "mordido_feriu_tentando",
+   "opcoes": [
+    {
+     "id": "sim",
+     "rotulo": "Sim",
+     "vai": ""
+    },
+    {
+     "id": "nao",
+     "rotulo": "Não",
+     "vai": ""
+    }
+   ]
+  },
+  {
+   "id": "mordido_feriu_tentando",
+   "tipo": "unica",
+   "texto": "Alguém foi mordido ou se feriu tentando ajudar?",
+   "obrig": false,
+   "outro": false,
+   "mermaid": "",
+   "prox": "troca_ataque_picada",
+   "opcoes": [
+    {
+     "id": "sim",
+     "rotulo": "Sim",
+     "vai": ""
+    },
+    {
+     "id": "nao",
+     "rotulo": "Não",
+     "vai": "animal_ferido"
+    }
+   ]
+  },
+  {
+   "id": "troca_ataque_picada",
+   "tipo": "troca",
+   "texto": "Ataque / picada de animal",
+   "obrig": false,
+   "outro": false,
+   "mermaid": "",
+   "prox": "FIM",
+   "opcoes": []
+  },
+  {
+   "id": "animal_ferido",
+   "tipo": "unica",
+   "texto": "O animal está ferido?",
+   "obrig": false,
+   "outro": false,
+   "mermaid": "",
+   "prox": "despacho",
+   "opcoes": [
+    {
+     "id": "sim",
+     "rotulo": "Sim",
+     "vai": ""
+    },
+    {
+     "id": "nao",
+     "rotulo": "Não",
+     "vai": ""
+    }
+   ]
+  },
+  {
+   "id": "despacho",
+   "tipo": "instrucao",
+   "texto": "O socorro já foi acionado e está a caminho. Vou fazer algumas perguntas rápidas para ajudar a equipe. Mantenha a calma e siga minhas orientações, por favor.",
+   "obrig": false,
+   "outro": false,
+   "mermaid": "",
+   "prox": "nao_tente_pegar",
+   "opcoes": [],
+   "despacho": true
+  },
+  {
+   "id": "nao_tente_pegar",
+   "tipo": "instrucao",
+   "texto": "Não tente pegar o animal assustado ou ferido. Mantenha pessoas e outros animais afastados.",
+   "obrig": false,
+   "outro": false,
+   "mermaid": "",
+   "prox": "FIM",
+   "opcoes": []
+  }
+ ],
+ "notas": [
+  "Troca para “Ataque / Picada de animal” entendida como “Ataque / picada de animal”."
+ ]
+}

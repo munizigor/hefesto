@@ -1,0 +1,146 @@
+{
+ "natureza": {
+  "id": "obstrucao_de_via_publica",
+  "nome": "Obstrução de via pública"
+ },
+ "itens": [
+  {
+   "id": "obstruindo",
+   "tipo": "unica",
+   "texto": "O que está obstruindo?",
+   "obrig": false,
+   "outro": true,
+   "mermaid": "",
+   "prox": "feriu_veiculo_atingido",
+   "opcoes": [
+    {
+     "id": "arvore_caida",
+     "rotulo": "Árvore caída",
+     "vai": ""
+    },
+    {
+     "id": "poste_fios",
+     "rotulo": "Poste / fios",
+     "vai": "troca_risco_choque"
+    },
+    {
+     "id": "veiculo_carga_tombada",
+     "rotulo": "Veículo / carga tombada",
+     "vai": ""
+    },
+    {
+     "id": "terra_entulho",
+     "rotulo": "Terra / entulho",
+     "vai": ""
+    }
+   ]
+  },
+  {
+   "id": "feriu_veiculo_atingido",
+   "tipo": "unica",
+   "texto": "Alguém se feriu ou há veículo atingido com pessoa dentro?",
+   "obrig": false,
+   "outro": false,
+   "mermaid": "",
+   "prox": "troca_acidente_transito",
+   "opcoes": [
+    {
+     "id": "sim",
+     "rotulo": "Sim",
+     "vai": ""
+    },
+    {
+     "id": "nao",
+     "rotulo": "Não",
+     "vai": "via_totalmente_bloqueada"
+    }
+   ]
+  },
+  {
+   "id": "troca_acidente_transito",
+   "tipo": "troca",
+   "texto": "Acidente de trânsito com vítima",
+   "obrig": false,
+   "outro": false,
+   "mermaid": "",
+   "prox": "FIM",
+   "opcoes": []
+  },
+  {
+   "id": "via_totalmente_bloqueada",
+   "tipo": "unica",
+   "texto": "A via está totalmente bloqueada?",
+   "obrig": false,
+   "outro": false,
+   "mermaid": "",
+   "prox": "via_grande_movimento",
+   "opcoes": [
+    {
+     "id": "total",
+     "rotulo": "Total",
+     "vai": ""
+    },
+    {
+     "id": "parcial",
+     "rotulo": "Parcial",
+     "vai": ""
+    }
+   ]
+  },
+  {
+   "id": "via_grande_movimento",
+   "tipo": "unica",
+   "texto": "É via de grande movimento ou com curva / pouca visibilidade?",
+   "obrig": false,
+   "outro": false,
+   "mermaid": "",
+   "prox": "despacho",
+   "opcoes": [
+    {
+     "id": "sim",
+     "rotulo": "Sim",
+     "vai": ""
+    },
+    {
+     "id": "nao",
+     "rotulo": "Não",
+     "vai": ""
+    }
+   ]
+  },
+  {
+   "id": "despacho",
+   "tipo": "instrucao",
+   "texto": "🚒 Despacho conforme critério da COCB; acionar órgão de trânsito",
+   "obrig": false,
+   "outro": false,
+   "mermaid": "",
+   "prox": "sinalize_pisca_alerta",
+   "opcoes": [],
+   "despacho": true
+  },
+  {
+   "id": "sinalize_pisca_alerta",
+   "tipo": "instrucao",
+   "texto": "Sinalize com pisca-alerta ou triângulo se for seguro e fique fora da pista.",
+   "obrig": false,
+   "outro": false,
+   "mermaid": "",
+   "prox": "FIM",
+   "opcoes": []
+  },
+  {
+   "id": "troca_risco_choque",
+   "tipo": "troca",
+   "texto": "Risco de choque elétrico",
+   "obrig": false,
+   "outro": false,
+   "mermaid": "",
+   "prox": "FIM",
+   "opcoes": []
+  }
+ ],
+ "notas": [
+  "Troca para “Acidente de trânsito com vítima”: essa natureza não tem fluxo no quadro."
+ ]
+}

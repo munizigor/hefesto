@@ -1,0 +1,278 @@
+{
+ "natureza": {
+  "id": "incendio_em_vegetacao",
+  "nome": "Incêndio em vegetação"
+ },
+ "itens": [
+  {
+   "id": "fogo_tipo_area",
+   "tipo": "unica",
+   "texto": "O fogo está em qual tipo de área?",
+   "obrig": false,
+   "outro": true,
+   "mermaid": "",
+   "prox": "despacho",
+   "opcoes": [
+    {
+     "id": "lote_terreno_urbano",
+     "rotulo": "Lote / terreno urbano",
+     "vai": ""
+    },
+    {
+     "id": "area_rural_chacara",
+     "rotulo": "Área rural / chácara",
+     "vai": ""
+    },
+    {
+     "id": "parque_reserva",
+     "rotulo": "Parque / reserva",
+     "vai": ""
+    },
+    {
+     "id": "margem_de_rodovia",
+     "rotulo": "Margem de rodovia",
+     "vai": ""
+    }
+   ]
+  },
+  {
+   "id": "despacho",
+   "tipo": "instrucao",
+   "texto": "O socorro já foi acionado e está a caminho. Vou fazer algumas perguntas rápidas para ajudar a equipe. Mantenha a calma e siga minhas orientações, por favor.",
+   "obrig": false,
+   "outro": false,
+   "mermaid": "",
+   "prox": "fogo_ja_atingiu",
+   "opcoes": [],
+   "despacho": true
+  },
+  {
+   "id": "fogo_ja_atingiu",
+   "tipo": "unica",
+   "texto": "O fogo já atingiu alguma casa ou construção?",
+   "obrig": false,
+   "outro": false,
+   "mermaid": "",
+   "prox": "fogo_atingiu_veiculo",
+   "opcoes": [
+    {
+     "id": "sim",
+     "rotulo": "Sim",
+     "vai": "troca_incendio_edificaca"
+    },
+    {
+     "id": "nao",
+     "rotulo": "Não",
+     "vai": ""
+    },
+    {
+     "id": "nao_sei",
+     "rotulo": "Não sei",
+     "vai": "",
+     "relato": false
+    }
+   ]
+  },
+  {
+   "id": "troca_incendio_edificaca",
+   "tipo": "troca",
+   "texto": "Incêndio em edificação",
+   "obrig": false,
+   "outro": false,
+   "mermaid": "",
+   "prox": "FIM",
+   "opcoes": []
+  },
+  {
+   "id": "fogo_atingiu_veiculo",
+   "tipo": "unica",
+   "texto": "O fogo atingiu algum veículo?",
+   "obrig": false,
+   "outro": false,
+   "mermaid": "",
+   "prox": "fogo_perto_casas",
+   "opcoes": [
+    {
+     "id": "sim",
+     "rotulo": "Sim",
+     "vai": "troca_incendio_meio"
+    },
+    {
+     "id": "nao",
+     "rotulo": "Não",
+     "vai": ""
+    },
+    {
+     "id": "nao_sei",
+     "rotulo": "Não sei",
+     "vai": "",
+     "relato": false
+    }
+   ]
+  },
+  {
+   "id": "troca_incendio_meio",
+   "tipo": "troca",
+   "texto": "Incêndio em meio de transporte",
+   "obrig": false,
+   "outro": false,
+   "mermaid": "",
+   "prox": "FIM",
+   "opcoes": []
+  },
+  {
+   "id": "fogo_perto_casas",
+   "tipo": "unica",
+   "texto": "O fogo está perto de casas, pessoas, animais ou rede elétrica?",
+   "obrig": false,
+   "outro": false,
+   "mermaid": "",
+   "prox": "tamanho_aproximado_area",
+   "opcoes": [
+    {
+     "id": "sim",
+     "rotulo": "Sim",
+     "vai": "distancia_fogo_casas"
+    },
+    {
+     "id": "nao",
+     "rotulo": "Não",
+     "vai": ""
+    },
+    {
+     "id": "nao_sabe",
+     "rotulo": "Não sabe",
+     "vai": "",
+     "relato": false
+    }
+   ]
+  },
+  {
+   "id": "distancia_fogo_casas",
+   "tipo": "unica",
+   "texto": "A que distância o fogo está das casas?",
+   "obrig": false,
+   "outro": false,
+   "mermaid": "",
+   "prox": "tamanho_aproximado_area",
+   "opcoes": [
+    {
+     "id": "encostando",
+     "rotulo": "Encostando",
+     "vai": ""
+    },
+    {
+     "id": "menos_de_50_metros",
+     "rotulo": "Menos de 50 metros",
+     "vai": ""
+    },
+    {
+     "id": "mais_de_50_metros",
+     "rotulo": "Mais de 50 metros",
+     "vai": ""
+    },
+    {
+     "id": "nao_sei",
+     "rotulo": "Não sei",
+     "vai": "",
+     "relato": false
+    }
+   ]
+  },
+  {
+   "id": "tamanho_aproximado_area",
+   "tipo": "unica",
+   "texto": "Qual o tamanho aproximado da área queimando?",
+   "obrig": false,
+   "outro": false,
+   "mermaid": "",
+   "prox": "fogo_espalhando_rapido",
+   "opcoes": [
+    {
+     "id": "pequena_ate_um_lote",
+     "rotulo": "Pequena (até um lote)",
+     "vai": ""
+    },
+    {
+     "id": "media_varios_lotes",
+     "rotulo": "Média (vários lotes)",
+     "vai": ""
+    },
+    {
+     "id": "grande_nao_da_para_ver_o_fim",
+     "rotulo": "Grande (não dá para ver o fim)",
+     "vai": ""
+    }
+   ]
+  },
+  {
+   "id": "fogo_espalhando_rapido",
+   "tipo": "unica",
+   "texto": "O fogo está se espalhando rápido?",
+   "obrig": false,
+   "outro": false,
+   "mermaid": "",
+   "prox": "ferido_cercado_pelo",
+   "opcoes": [
+    {
+     "id": "sim",
+     "rotulo": "Sim",
+     "vai": ""
+    },
+    {
+     "id": "nao",
+     "rotulo": "Não",
+     "vai": ""
+    },
+    {
+     "id": "nao_sabe",
+     "rotulo": "Não sabe",
+     "vai": "",
+     "relato": false
+    }
+   ]
+  },
+  {
+   "id": "ferido_cercado_pelo",
+   "tipo": "unica",
+   "texto": "Há alguém ferido ou cercado pelo fogo?",
+   "obrig": false,
+   "outro": false,
+   "mermaid": "",
+   "prox": "onde_viatura_consegue",
+   "opcoes": [
+    {
+     "id": "sim",
+     "rotulo": "Sim",
+     "vai": ""
+    },
+    {
+     "id": "nao",
+     "rotulo": "Não",
+     "vai": ""
+    }
+   ]
+  },
+  {
+   "id": "onde_viatura_consegue",
+   "tipo": "texto",
+   "texto": "Por onde a viatura consegue chegar? (portão, estrada de terra, referência)",
+   "obrig": false,
+   "outro": false,
+   "mermaid": "",
+   "prox": "afaste_fogo_fumaca",
+   "opcoes": []
+  },
+  {
+   "id": "afaste_fogo_fumaca",
+   "tipo": "instrucao",
+   "texto": "Afaste-se do fogo e da fumaça, fique contra o vento. Não tente apagar se o fogo estiver grande.",
+   "obrig": false,
+   "outro": false,
+   "mermaid": "",
+   "prox": "FIM",
+   "opcoes": []
+  }
+ ],
+ "notas": []
+}

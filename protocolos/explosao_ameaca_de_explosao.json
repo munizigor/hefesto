@@ -1,0 +1,196 @@
+{
+ "natureza": {
+  "id": "explosao_ameaca_de_explosao",
+  "nome": "Explosão / ameaça de explosão"
+ },
+ "itens": [
+  {
+   "id": "ja_houve_explosao",
+   "tipo": "unica",
+   "texto": "Já houve explosão ou é uma ameaça / objeto suspeito?",
+   "obrig": false,
+   "outro": false,
+   "mermaid": "",
+   "prox": "despacho",
+   "opcoes": [
+    {
+     "id": "ja_explodiu",
+     "rotulo": "Já explodiu",
+     "vai": ""
+    },
+    {
+     "id": "ameaca_objeto_suspeito",
+     "rotulo": "Ameaça / objeto suspeito",
+     "vai": "acionar_pmdf_esquadrao"
+    }
+   ]
+  },
+  {
+   "id": "despacho",
+   "tipo": "instrucao",
+   "texto": "O socorro já foi acionado e está a caminho. Vou fazer algumas perguntas rápidas para ajudar a equipe. Mantenha a calma e siga minhas orientações, por favor.",
+   "obrig": false,
+   "outro": false,
+   "mermaid": "",
+   "prox": "explodiu_pode_explodir",
+   "opcoes": [],
+   "despacho": true
+  },
+  {
+   "id": "explodiu_pode_explodir",
+   "tipo": "unica",
+   "texto": "O que explodiu ou pode explodir?",
+   "obrig": false,
+   "outro": true,
+   "mermaid": "",
+   "prox": "feridos",
+   "opcoes": [
+    {
+     "id": "botijao_gas",
+     "rotulo": "Botijão / gás",
+     "vai": ""
+    },
+    {
+     "id": "caldeira_tanque",
+     "rotulo": "Caldeira / tanque",
+     "vai": ""
+    },
+    {
+     "id": "fogos_de_artificio",
+     "rotulo": "Fogos de artifício",
+     "vai": ""
+    },
+    {
+     "id": "artefato_objeto_suspeito",
+     "rotulo": "Artefato / objeto suspeito",
+     "vai": ""
+    }
+   ]
+  },
+  {
+   "id": "feridos",
+   "tipo": "unica",
+   "texto": "Há feridos? Quantos?",
+   "obrig": false,
+   "outro": false,
+   "mermaid": "",
+   "prox": "fogo_estrutura_caida",
+   "opcoes": [
+    {
+     "id": "nenhum",
+     "rotulo": "Nenhum",
+     "vai": ""
+    },
+    {
+     "id": "1_a_3",
+     "rotulo": "1 a 3",
+     "vai": ""
+    },
+    {
+     "id": "mais_de_3",
+     "rotulo": "Mais de 3",
+     "vai": ""
+    }
+   ]
+  },
+  {
+   "id": "fogo_estrutura_caida",
+   "tipo": "unica",
+   "texto": "Há fogo ou estrutura caída?",
+   "obrig": false,
+   "outro": false,
+   "mermaid": "",
+   "prox": "pessoas_presas",
+   "opcoes": [
+    {
+     "id": "fogo",
+     "rotulo": "Fogo",
+     "vai": "manter_natureza_registra"
+    },
+    {
+     "id": "estrutura_caida_rachada",
+     "rotulo": "Estrutura caída / rachada",
+     "vai": ""
+    },
+    {
+     "id": "ambos",
+     "rotulo": "Ambos",
+     "vai": "manter_natureza_registra_2"
+    },
+    {
+     "id": "nenhum",
+     "rotulo": "Nenhum",
+     "vai": ""
+    }
+   ]
+  },
+  {
+   "id": "manter_natureza_registra",
+   "tipo": "informacao",
+   "texto": "Manter natureza e registrar no relato: Incêndio (manter Explosão)",
+   "obrig": false,
+   "outro": false,
+   "mermaid": "",
+   "prox": "pessoas_presas",
+   "opcoes": []
+  },
+  {
+   "id": "pessoas_presas",
+   "tipo": "unica",
+   "texto": "Há pessoas presas?",
+   "obrig": false,
+   "outro": false,
+   "mermaid": "",
+   "prox": "objeto_suspeito_afaste",
+   "opcoes": [
+    {
+     "id": "sim",
+     "rotulo": "Sim",
+     "vai": ""
+    },
+    {
+     "id": "nao",
+     "rotulo": "Não",
+     "vai": ""
+    },
+    {
+     "id": "nao_sabe",
+     "rotulo": "Não sabe",
+     "vai": "",
+     "relato": false
+    }
+   ]
+  },
+  {
+   "id": "objeto_suspeito_afaste",
+   "tipo": "instrucao",
+   "texto": "Objeto suspeito: afaste-se pelo menos 300 metros, não toque nele e não use o celular perto. Após explosão, saia e não volte para buscar objetos.",
+   "obrig": false,
+   "outro": false,
+   "mermaid": "",
+   "prox": "FIM",
+   "opcoes": []
+  },
+  {
+   "id": "manter_natureza_registra_2",
+   "tipo": "informacao",
+   "texto": "Manter natureza e registrar no relato: Incêndio (manter Explosão)",
+   "obrig": false,
+   "outro": false,
+   "mermaid": "",
+   "prox": "pessoas_presas",
+   "opcoes": []
+  },
+  {
+   "id": "acionar_pmdf_esquadrao",
+   "tipo": "informacao",
+   "texto": "Acionar PMDF (esquadrão antibombas) conforme protocolo",
+   "obrig": false,
+   "outro": false,
+   "mermaid": "",
+   "prox": "despacho",
+   "opcoes": []
+  }
+ ],
+ "notas": []
+}

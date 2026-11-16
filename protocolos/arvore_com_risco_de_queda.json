@@ -1,0 +1,306 @@
+{
+ "natureza": {
+  "id": "arvore_com_risco_de_queda",
+  "nome": "Árvore com risco de queda"
+ },
+ "itens": [
+  {
+   "id": "arvore_atingiu_pessoa",
+   "tipo": "unica",
+   "texto": "A árvore atingiu alguma pessoa?",
+   "obrig": false,
+   "outro": false,
+   "mermaid": "",
+   "prox": "arvore_ja_caiu",
+   "opcoes": [
+    {
+     "id": "sim",
+     "rotulo": "Sim",
+     "vai": "troca_pessoa_prensada"
+    },
+    {
+     "id": "nao",
+     "rotulo": "Não",
+     "vai": ""
+    },
+    {
+     "id": "nao_sei",
+     "rotulo": "Não sei",
+     "vai": "",
+     "relato": false
+    }
+   ]
+  },
+  {
+   "id": "troca_pessoa_prensada",
+   "tipo": "troca",
+   "texto": "Pessoa prensada por estrutura, máquina ou veículo",
+   "obrig": false,
+   "outro": false,
+   "mermaid": "",
+   "prox": "FIM",
+   "opcoes": []
+  },
+  {
+   "id": "arvore_ja_caiu",
+   "tipo": "unica",
+   "texto": "A árvore já caiu?",
+   "obrig": false,
+   "outro": false,
+   "mermaid": "",
+   "prox": "arvore_apresenta_rachadu",
+   "opcoes": [
+    {
+     "id": "sim",
+     "rotulo": "Sim",
+     "vai": "troca_obstrucao_via"
+    },
+    {
+     "id": "nao",
+     "rotulo": "Não",
+     "vai": ""
+    },
+    {
+     "id": "nao_sei",
+     "rotulo": "Não sei",
+     "vai": "",
+     "relato": false
+    }
+   ]
+  },
+  {
+   "id": "troca_obstrucao_via",
+   "tipo": "troca",
+   "texto": "Obstrução de via pública (caiu na via) ou Desabamento (caiu sobre imóvel)",
+   "obrig": false,
+   "outro": false,
+   "mermaid": "",
+   "prox": "FIM",
+   "opcoes": []
+  },
+  {
+   "id": "arvore_apresenta_rachadu",
+   "tipo": "unica",
+   "texto": "A árvore apresenta rachaduras",
+   "obrig": false,
+   "outro": false,
+   "mermaid": "",
+   "prox": "arvore_consumida_deterio",
+   "opcoes": [
+    {
+     "id": "sim",
+     "rotulo": "Sim",
+     "vai": ""
+    },
+    {
+     "id": "nao",
+     "rotulo": "Não",
+     "vai": ""
+    },
+    {
+     "id": "nao_sabe",
+     "rotulo": "Não sabe",
+     "vai": "",
+     "relato": false
+    }
+   ]
+  },
+  {
+   "id": "arvore_consumida_deterio",
+   "tipo": "unica",
+   "texto": "A árvore esta consumida/deteriorada por inseto, fogo, fungos ou outros?",
+   "obrig": false,
+   "outro": false,
+   "mermaid": "",
+   "prox": "arvore_apresenta_inclina",
+   "opcoes": [
+    {
+     "id": "sim",
+     "rotulo": "Sim",
+     "vai": ""
+    },
+    {
+     "id": "nao",
+     "rotulo": "Não",
+     "vai": ""
+    },
+    {
+     "id": "nao_sabe",
+     "rotulo": "Não sabe",
+     "vai": "",
+     "relato": false
+    }
+   ]
+  },
+  {
+   "id": "arvore_apresenta_inclina",
+   "tipo": "unica",
+   "texto": "A árvore apresenta uma inclinação do troco?",
+   "obrig": false,
+   "outro": false,
+   "mermaid": "",
+   "prox": "existem_raizes_romidas",
+   "opcoes": [
+    {
+     "id": "sim",
+     "rotulo": "Sim",
+     "vai": ""
+    },
+    {
+     "id": "nao",
+     "rotulo": "Não",
+     "vai": ""
+    },
+    {
+     "id": "nao_sabe",
+     "rotulo": "Não sabe",
+     "vai": "",
+     "relato": false
+    }
+   ]
+  },
+  {
+   "id": "existem_raizes_romidas",
+   "tipo": "unica",
+   "texto": "Existem raizes romidas?",
+   "obrig": false,
+   "outro": false,
+   "mermaid": "",
+   "prox": "troco_galhos_arvore",
+   "opcoes": [
+    {
+     "id": "sim",
+     "rotulo": "Sim",
+     "vai": ""
+    },
+    {
+     "id": "nao",
+     "rotulo": "Não",
+     "vai": ""
+    },
+    {
+     "id": "nao_sabe",
+     "rotulo": "Não sabe",
+     "vai": "",
+     "relato": false
+    }
+   ]
+  },
+  {
+   "id": "troco_galhos_arvore",
+   "tipo": "unica",
+   "texto": "O troco ou galhos da árvore se apresentam secos ou mortos?",
+   "obrig": false,
+   "outro": false,
+   "mermaid": "",
+   "prox": "raiz_sob_estrutura",
+   "opcoes": [
+    {
+     "id": "sim",
+     "rotulo": "Sim",
+     "vai": ""
+    },
+    {
+     "id": "nao",
+     "rotulo": "Não",
+     "vai": ""
+    },
+    {
+     "id": "nao_sabe",
+     "rotulo": "Não sabe",
+     "vai": "",
+     "relato": false
+    }
+   ]
+  },
+  {
+   "id": "raiz_sob_estrutura",
+   "tipo": "unica",
+   "texto": "Tem raíz sob estrutura de edificações ou casas?",
+   "obrig": false,
+   "outro": false,
+   "mermaid": "",
+   "prox": "arvore_contato_poste",
+   "opcoes": [
+    {
+     "id": "sim",
+     "rotulo": "Sim",
+     "vai": ""
+    },
+    {
+     "id": "nao",
+     "rotulo": "Não",
+     "vai": ""
+    },
+    {
+     "id": "nao_sabe",
+     "rotulo": "Não sabe",
+     "vai": "",
+     "relato": false
+    }
+   ]
+  },
+  {
+   "id": "arvore_contato_poste",
+   "tipo": "unica",
+   "texto": "A árvore está em contato com poste ou rede elétrica?",
+   "obrig": false,
+   "outro": false,
+   "mermaid": "",
+   "prox": "FIM",
+   "opcoes": [
+    {
+     "id": "sim",
+     "rotulo": "Sim",
+     "vai": "atencao_risco_choque"
+    },
+    {
+     "id": "nao",
+     "rotulo": "Não",
+     "vai": ""
+    },
+    {
+     "id": "nao_sabe",
+     "rotulo": "Não sabe",
+     "vai": "",
+     "relato": false
+    }
+   ]
+  },
+  {
+   "id": "atencao_risco_choque",
+   "tipo": "instrucao",
+   "texto": "Atenção ao risco de choque elétrico: não se aproxime e mantenha todos afastados. Caso tenha alguém próximo ao incêndio, grite de uma distância segura para que se afastem.",
+   "obrig": false,
+   "outro": false,
+   "mermaid": "",
+   "prox": "troca_risco_choque",
+   "opcoes": []
+  },
+  {
+   "id": "troca_risco_choque",
+   "tipo": "troca",
+   "texto": "Risco de choque elétrico",
+   "obrig": false,
+   "outro": false,
+   "mermaid": "",
+   "prox": "FIM",
+   "opcoes": []
+  },
+  {
+   "id": "mantenha_distancia_arvor",
+   "tipo": "instrucao",
+   "texto": "Mantenha distância da árvore e não tente cortá-la, removê-la ou subir nela. Afaste pessoas e veículos da área de risco e, se houver proximidade com rede elétrica, não toque na árvore ou em objetos que estejam em contato com ela.",
+   "obrig": false,
+   "outro": false,
+   "mermaid": "",
+   "prox": "FIM",
+   "opcoes": []
+  }
+ ],
+ "notas": [
+  "“ORIENTAÇÃO AO SOLICITANTE: Mantenha distância da árvore e não tente cortá-la, removê-la ou subir nela. Afaste pessoas e veículos da área de risco e, se houver proximidade com rede elétrica, não toque na árvore ou em objetos que estejam em contato com ela.” não está ligado ao início do fluxo.",
+  "Troca para “Obstrução de via pública (caiu na via) ou Desabamento (caiu sobre imóvel)”: essa natureza não tem fluxo no quadro.",
+  "“mantenha_distancia_arvor” está no formulário, mas nenhum caminho do fluxo chega até ele."
+ ]
+}

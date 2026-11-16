@@ -1,0 +1,156 @@
+{
+ "natureza": {
+  "id": "apoio_a_outros_orgaos",
+  "nome": "Apoio a outros órgãos"
+ },
+ "itens": [
+  {
+   "id": "orgao_solicita",
+   "tipo": "unica",
+   "texto": "Qual órgão solicita?",
+   "obrig": false,
+   "outro": true,
+   "mermaid": "",
+   "prox": "nome_posto_cargo",
+   "opcoes": [
+    {
+     "id": "pmdf",
+     "rotulo": "PMDF",
+     "vai": ""
+    },
+    {
+     "id": "pcdf",
+     "rotulo": "PCDF",
+     "vai": ""
+    },
+    {
+     "id": "samu",
+     "rotulo": "SAMU",
+     "vai": ""
+    },
+    {
+     "id": "defesa_civil",
+     "rotulo": "Defesa Civil",
+     "vai": ""
+    },
+    {
+     "id": "concessionaria",
+     "rotulo": "Concessionária",
+     "vai": ""
+    }
+   ]
+  },
+  {
+   "id": "nome_posto_cargo",
+   "tipo": "texto",
+   "texto": "Nome, posto / cargo e contato de quem solicita",
+   "obrig": false,
+   "outro": false,
+   "mermaid": "",
+   "prox": "apoio_necessario",
+   "opcoes": []
+  },
+  {
+   "id": "apoio_necessario",
+   "tipo": "unica",
+   "texto": "Que apoio é necessário?",
+   "obrig": false,
+   "outro": true,
+   "mermaid": "",
+   "prox": "vitima_risco_imediato",
+   "opcoes": [
+    {
+     "id": "iluminacao",
+     "rotulo": "Iluminação",
+     "vai": ""
+    },
+    {
+     "id": "acesso_arrombamento",
+     "rotulo": "Acesso / arrombamento",
+     "vai": ""
+    },
+    {
+     "id": "salvamento",
+     "rotulo": "Salvamento",
+     "vai": ""
+    },
+    {
+     "id": "combate_a_fogo",
+     "rotulo": "Combate a fogo",
+     "vai": ""
+    },
+    {
+     "id": "apoio_logistico",
+     "rotulo": "Apoio logístico",
+     "vai": ""
+    }
+   ]
+  },
+  {
+   "id": "vitima_risco_imediato",
+   "tipo": "unica",
+   "texto": "Há vítima ou risco imediato?",
+   "obrig": false,
+   "outro": false,
+   "mermaid": "",
+   "prox": "troca_natureza_correspon",
+   "opcoes": [
+    {
+     "id": "sim",
+     "rotulo": "Sim",
+     "vai": ""
+    },
+    {
+     "id": "nao",
+     "rotulo": "Não",
+     "vai": "riscos_guarnicao_area"
+    }
+   ]
+  },
+  {
+   "id": "troca_natureza_correspon",
+   "tipo": "troca",
+   "texto": "natureza correspondente à vítima ou ao risco (despacho imediato)",
+   "obrig": false,
+   "outro": false,
+   "mermaid": "",
+   "prox": "FIM",
+   "opcoes": []
+  },
+  {
+   "id": "riscos_guarnicao_area",
+   "tipo": "unica",
+   "texto": "Há riscos para a guarnição (área conflagrada, produto perigoso)?",
+   "obrig": false,
+   "outro": false,
+   "mermaid": "",
+   "prox": "despacho",
+   "opcoes": [
+    {
+     "id": "sim",
+     "rotulo": "Sim",
+     "vai": ""
+    },
+    {
+     "id": "nao",
+     "rotulo": "Não",
+     "vai": ""
+    }
+   ]
+  },
+  {
+   "id": "despacho",
+   "tipo": "instrucao",
+   "texto": "O socorro já foi acionado e está a caminho. Vou fazer algumas perguntas rápidas para ajudar a equipe. Mantenha a calma e siga minhas orientações, por favor.",
+   "obrig": false,
+   "outro": false,
+   "mermaid": "",
+   "prox": "FIM",
+   "opcoes": [],
+   "despacho": true
+  }
+ ],
+ "notas": [
+  "Troca para “natureza correspondente à vítima ou ao risco (despacho imediato)”: essa natureza não tem fluxo no quadro."
+ ]
+}

@@ -1,0 +1,371 @@
+{
+ "natureza": {
+  "id": "incendio_em_edificacao",
+  "nome": "Incêndio em edificação"
+ },
+ "itens": [
+  {
+   "id": "despacho",
+   "tipo": "instrucao",
+   "texto": "O socorro já foi acionado e está a caminho. Vou fazer algumas perguntas rápidas para ajudar a equipe. Mantenha a calma e siga minhas orientações, por favor.",
+   "obrig": false,
+   "outro": false,
+   "mermaid": "",
+   "prox": "nao_respira",
+   "opcoes": [],
+   "despacho": true
+  },
+  {
+   "id": "nao_respira",
+   "tipo": "unica",
+   "texto": "Há alguém que não respira?",
+   "obrig": false,
+   "outro": false,
+   "mermaid": "",
+   "prox": "pessoas_local_incendio",
+   "opcoes": [
+    {
+     "id": "sim",
+     "rotulo": "Sim",
+     "vai": "manter_natureza_registra"
+    },
+    {
+     "id": "nao",
+     "rotulo": "Não",
+     "vai": ""
+    },
+    {
+     "id": "nao_sei",
+     "rotulo": "Não sei",
+     "vai": "",
+     "relato": false
+    }
+   ]
+  },
+  {
+   "id": "manter_natureza_registra",
+   "tipo": "informacao",
+   "texto": "Manter natureza e registrar no relato: Parada cardiorrespiratória (PCR) (manter Incêndio em edificação)",
+   "obrig": false,
+   "outro": false,
+   "mermaid": "",
+   "prox": "despacho_2",
+   "opcoes": []
+  },
+  {
+   "id": "despacho_2",
+   "tipo": "instrucao",
+   "texto": "Iremos realizar uma vídeo chamada para orientá-lo(a) até a chegada da guarnição! Mantenha a calma e siga as orientações.",
+   "obrig": false,
+   "outro": false,
+   "mermaid": "",
+   "prox": "realize_videochamada_fac",
+   "opcoes": [],
+   "despacho": true
+  },
+  {
+   "id": "realize_videochamada_fac",
+   "tipo": "informacao",
+   "texto": "Realize a videochamada e faça as orientações",
+   "obrig": false,
+   "outro": false,
+   "mermaid": "",
+   "prox": "FIM",
+   "opcoes": [],
+   "video": true
+  },
+  {
+   "id": "pessoas_local_incendio",
+   "tipo": "unica",
+   "texto": "Tem pessoas no local do incêndio?",
+   "obrig": false,
+   "outro": false,
+   "mermaid": "",
+   "prox": "edificacao_terrea_predio",
+   "opcoes": [
+    {
+     "id": "sim",
+     "rotulo": "Sim",
+     "vai": "item"
+    },
+    {
+     "id": "nao",
+     "rotulo": "Não",
+     "vai": ""
+    },
+    {
+     "id": "nao_sei",
+     "rotulo": "Não sei",
+     "vai": "",
+     "relato": false
+    }
+   ]
+  },
+  {
+   "id": "item",
+   "tipo": "numero",
+   "texto": "Quantas?",
+   "obrig": false,
+   "outro": false,
+   "mermaid": "",
+   "prox": "pessoas_feridas_perdidas",
+   "opcoes": []
+  },
+  {
+   "id": "pessoas_feridas_perdidas",
+   "tipo": "unica",
+   "texto": "Há pessoas feridas ou perdidas?",
+   "obrig": false,
+   "outro": false,
+   "mermaid": "",
+   "prox": "edificacao_terrea_predio",
+   "opcoes": [
+    {
+     "id": "sim",
+     "rotulo": "Sim",
+     "vai": ""
+    },
+    {
+     "id": "nao",
+     "rotulo": "Não",
+     "vai": ""
+    },
+    {
+     "id": "nao_sei",
+     "rotulo": "Não sei",
+     "vai": "",
+     "relato": false
+    }
+   ]
+  },
+  {
+   "id": "edificacao_terrea_predio",
+   "tipo": "unica",
+   "texto": "A edificação é térrea ou prédio",
+   "obrig": false,
+   "outro": false,
+   "mermaid": "",
+   "prox": "andar_vindo_incendio",
+   "opcoes": [
+    {
+     "id": "predio",
+     "rotulo": "Prédio",
+     "vai": ""
+    },
+    {
+     "id": "terrea",
+     "rotulo": "Térrea",
+     "vai": "tipo_edificacao"
+    }
+   ]
+  },
+  {
+   "id": "andar_vindo_incendio",
+   "tipo": "texto",
+   "texto": "De qual andar está vindo o incêndio?",
+   "obrig": false,
+   "outro": false,
+   "mermaid": "",
+   "prox": "predio_ja_evacuado",
+   "opcoes": []
+  },
+  {
+   "id": "predio_ja_evacuado",
+   "tipo": "unica",
+   "texto": "O prédio já foi evacuado?",
+   "obrig": false,
+   "outro": false,
+   "mermaid": "",
+   "prox": "tipo_edificacao",
+   "opcoes": [
+    {
+     "id": "sim",
+     "rotulo": "Sim",
+     "vai": ""
+    },
+    {
+     "id": "nao",
+     "rotulo": "Não",
+     "vai": ""
+    },
+    {
+     "id": "nao_sei",
+     "rotulo": "Não sei",
+     "vai": "",
+     "relato": false
+    }
+   ]
+  },
+  {
+   "id": "tipo_edificacao",
+   "tipo": "lista",
+   "texto": "Qual o tipo da edificação?",
+   "obrig": false,
+   "outro": false,
+   "mermaid": "",
+   "prox": "incendio_dentro_fora",
+   "opcoes": [
+    {
+     "id": "deposito",
+     "rotulo": "Depósito",
+     "vai": ""
+    },
+    {
+     "id": "predio_residencial",
+     "rotulo": "Prédio Residencial",
+     "vai": ""
+    },
+    {
+     "id": "comercial",
+     "rotulo": "Comercial",
+     "vai": ""
+    },
+    {
+     "id": "industria",
+     "rotulo": "Indústria",
+     "vai": ""
+    },
+    {
+     "id": "escola",
+     "rotulo": "Escola",
+     "vai": ""
+    },
+    {
+     "id": "unidade_hospitalar",
+     "rotulo": "Unidade hospitalar",
+     "vai": ""
+    },
+    {
+     "id": "terminal_de_passageiros",
+     "rotulo": "Terminal de Passageiros",
+     "vai": ""
+    },
+    {
+     "id": "instalacao_energizada",
+     "rotulo": "Instalação Energizada",
+     "vai": ""
+    },
+    {
+     "id": "instalacao_com_risco_de_expl",
+     "rotulo": "Instalação com risco de explosão",
+     "vai": ""
+    },
+    {
+     "id": "casa",
+     "rotulo": "Casa",
+     "vai": "atencao_risco_choque"
+    }
+   ]
+  },
+  {
+   "id": "incendio_dentro_fora",
+   "tipo": "unica",
+   "texto": "O incêndio está dentro ou fora da edificação?",
+   "obrig": false,
+   "outro": false,
+   "mermaid": "",
+   "prox": "materiais_inflamaveis_ga",
+   "opcoes": [
+    {
+     "id": "dentro",
+     "rotulo": "Dentro",
+     "vai": ""
+    },
+    {
+     "id": "fora",
+     "rotulo": "Fora",
+     "vai": "troca_incendio_vegetacao"
+    }
+   ]
+  },
+  {
+   "id": "materiais_inflamaveis_ga",
+   "tipo": "unica",
+   "texto": "Há materiais inflamáveis, gás ou produtos químicos?",
+   "obrig": false,
+   "outro": false,
+   "mermaid": "",
+   "prox": "rede_eletrica_local",
+   "opcoes": [
+    {
+     "id": "sim",
+     "rotulo": "Sim",
+     "vai": ""
+    },
+    {
+     "id": "nao",
+     "rotulo": "Não",
+     "vai": ""
+    }
+   ]
+  },
+  {
+   "id": "rede_eletrica_local",
+   "tipo": "unica",
+   "texto": "Há rede elétrica no local?",
+   "obrig": false,
+   "outro": false,
+   "mermaid": "",
+   "prox": "incendio_propagando_esta",
+   "opcoes": [
+    {
+     "id": "sim",
+     "rotulo": "Sim",
+     "vai": ""
+    },
+    {
+     "id": "nao",
+     "rotulo": "Não",
+     "vai": ""
+    }
+   ]
+  },
+  {
+   "id": "incendio_propagando_esta",
+   "tipo": "unica",
+   "texto": "O incêndio está se propagando para estabelecimentos vizinhos?",
+   "obrig": false,
+   "outro": false,
+   "mermaid": "",
+   "prox": "FIM",
+   "opcoes": [
+    {
+     "id": "sim",
+     "rotulo": "Sim",
+     "vai": ""
+    },
+    {
+     "id": "nao",
+     "rotulo": "Não",
+     "vai": "",
+     "relato": false
+    }
+   ]
+  },
+  {
+   "id": "troca_incendio_vegetacao",
+   "tipo": "troca",
+   "texto": "Incêndio em vegetação ou Incêndio em lixo (se o fogo não atingiu a edificação)",
+   "obrig": false,
+   "outro": false,
+   "mermaid": "",
+   "prox": "materiais_inflamaveis_ga",
+   "opcoes": []
+  },
+  {
+   "id": "atencao_risco_choque",
+   "tipo": "instrucao",
+   "texto": "Atenção ao risco de choque elétrico: não se aproxime e mantenha todos afastados. Caso tenha alguém próximo ao incêndio, grite de uma distância segura para que se afastem.",
+   "obrig": false,
+   "outro": false,
+   "mermaid": "",
+   "prox": "incendio_propagando_esta",
+   "opcoes": []
+  }
+ ],
+ "notas": [
+  "No quadro, a resposta “Casa” não tem seta e “Atenção ao risco de choque elétrico: não se aproxime e mantenha todos afastados.” está solto. Foram ligados aqui; confira no quadro.",
+  "“Há alguém que não respira?” / “Sim”: a resposta leva a 2 caixas ao mesmo tempo; ficou só “⚠️ Manter natureza e registrar no relato: Parada cardiorrespiratória (PCR) (manter Incêndio em edificação)”.",
+  "Troca para “Incêndio em vegetação ou Incêndio em lixo (se o fogo não atingiu a edificação)”: essa natureza não tem fluxo no quadro."
+ ]
+}

@@ -1,0 +1,199 @@
+{
+ "natureza": {
+  "id": "pessoa_em_obito_evidente",
+  "nome": "Pessoa em óbito evidente"
+ },
+ "itens": [
+  {
+   "id": "faz_voce_achar",
+   "tipo": "unica",
+   "texto": "O que faz você achar que a pessoa morreu?",
+   "obrig": false,
+   "outro": false,
+   "mermaid": "",
+   "prox": "onde_corpo",
+   "opcoes": [
+    {
+     "id": "fria_e_endurecida",
+     "rotulo": "Fria e endurecida",
+     "vai": ""
+    },
+    {
+     "id": "decomposicao_odor",
+     "rotulo": "Decomposição / odor",
+     "vai": ""
+    },
+    {
+     "id": "lesao_incompativel_com_a_vid",
+     "rotulo": "Lesão incompatível com a vida",
+     "vai": ""
+    },
+    {
+     "id": "imovel_mas_nao_sabe",
+     "rotulo": "Imóvel, mas não sabe",
+     "vai": "troca_parada_cardiorresp",
+     "relato": false
+    }
+   ]
+  },
+  {
+   "id": "onde_corpo",
+   "tipo": "unica",
+   "texto": "Onde está o corpo?",
+   "obrig": false,
+   "outro": false,
+   "mermaid": "",
+   "prox": "sinais_violencia",
+   "opcoes": [
+    {
+     "id": "residencia",
+     "rotulo": "Residência",
+     "vai": ""
+    },
+    {
+     "id": "via_publica",
+     "rotulo": "Via pública",
+     "vai": ""
+    },
+    {
+     "id": "agua",
+     "rotulo": "Água",
+     "vai": ""
+    },
+    {
+     "id": "mata_area_isolada",
+     "rotulo": "Mata / área isolada",
+     "vai": ""
+    }
+   ]
+  },
+  {
+   "id": "sinais_violencia",
+   "tipo": "unica",
+   "texto": "Há sinais de violência?",
+   "obrig": false,
+   "outro": false,
+   "mermaid": "",
+   "prox": "acionar_pmdf_pcdf",
+   "opcoes": [
+    {
+     "id": "sim",
+     "rotulo": "Sim",
+     "vai": ""
+    },
+    {
+     "id": "nao",
+     "rotulo": "Não",
+     "vai": "pessoa_tinha_doenca"
+    },
+    {
+     "id": "nao_sabe",
+     "rotulo": "Não sabe",
+     "vai": "acionar_pmdf_pcdf_2",
+     "relato": false
+    }
+   ]
+  },
+  {
+   "id": "acionar_pmdf_pcdf",
+   "tipo": "informacao",
+   "texto": "Acionar PMDF / PCDF conforme protocolo",
+   "obrig": false,
+   "outro": false,
+   "mermaid": "",
+   "prox": "pessoa_tinha_doenca",
+   "opcoes": []
+  },
+  {
+   "id": "pessoa_tinha_doenca",
+   "tipo": "unica",
+   "texto": "A pessoa tinha doença grave ou acompanhamento médico?",
+   "obrig": false,
+   "outro": false,
+   "mermaid": "",
+   "prox": "despacho",
+   "opcoes": [
+    {
+     "id": "sim",
+     "rotulo": "Sim",
+     "vai": ""
+    },
+    {
+     "id": "nao",
+     "rotulo": "Não",
+     "vai": ""
+    },
+    {
+     "id": "nao_sabe",
+     "rotulo": "Não sabe",
+     "vai": "",
+     "relato": false
+    }
+   ]
+  },
+  {
+   "id": "despacho",
+   "tipo": "instrucao",
+   "texto": "O socorro já foi acionado e está a caminho. Vou fazer algumas perguntas rápidas para ajudar a equipe. Mantenha a calma e siga minhas orientações, por favor.",
+   "obrig": false,
+   "outro": false,
+   "mermaid": "",
+   "prox": "nao_mexa_corpo",
+   "opcoes": [],
+   "despacho": true
+  },
+  {
+   "id": "nao_mexa_corpo",
+   "tipo": "instrucao",
+   "texto": "Não mexa no corpo nem em objetos ao redor. Afaste curiosos.",
+   "obrig": false,
+   "outro": false,
+   "mermaid": "",
+   "prox": "FIM",
+   "opcoes": []
+  },
+  {
+   "id": "acionar_pmdf_pcdf_2",
+   "tipo": "informacao",
+   "texto": "Acionar PMDF / PCDF conforme protocolo",
+   "obrig": false,
+   "outro": false,
+   "mermaid": "",
+   "prox": "pessoa_tinha_doenca",
+   "opcoes": []
+  },
+  {
+   "id": "troca_parada_cardiorresp",
+   "tipo": "troca",
+   "texto": "Parada cardiorrespiratória (PCR)",
+   "obrig": false,
+   "outro": false,
+   "mermaid": "",
+   "prox": "despacho_2",
+   "opcoes": []
+  },
+  {
+   "id": "despacho_2",
+   "tipo": "instrucao",
+   "texto": "Iremos realizar uma vídeo chamada para orientá-lo(a) até a chegada da guarnição! Mantenha a calma e siga as orientações.",
+   "obrig": false,
+   "outro": false,
+   "mermaid": "",
+   "prox": "realize_videochamada_fac",
+   "opcoes": [],
+   "despacho": true
+  },
+  {
+   "id": "realize_videochamada_fac",
+   "tipo": "informacao",
+   "texto": "Realize a videochamada e faça as orientações",
+   "obrig": false,
+   "outro": false,
+   "mermaid": "",
+   "prox": "FIM",
+   "opcoes": [],
+   "video": true
+  }
+ ],
+ "notas": []
+}

@@ -1,0 +1,197 @@
+{
+ "natureza": {
+  "id": "embarcacao_a_deriva",
+  "nome": "Embarcação à deriva"
+ },
+ "itens": [
+  {
+   "id": "gente_embarcacao",
+   "tipo": "unica",
+   "texto": "Tem gente na embarcação?",
+   "obrig": false,
+   "outro": false,
+   "mermaid": "",
+   "prox": "tipo_embarcacao",
+   "opcoes": [
+    {
+     "id": "sim",
+     "rotulo": "Sim",
+     "vai": "despacho"
+    },
+    {
+     "id": "nao",
+     "rotulo": "Não",
+     "vai": ""
+    },
+    {
+     "id": "nao_sabe",
+     "rotulo": "Não sabe",
+     "vai": "",
+     "relato": false
+    }
+   ]
+  },
+  {
+   "id": "despacho",
+   "tipo": "instrucao",
+   "texto": "O socorro já foi acionado e está a caminho. Vou fazer algumas perguntas rápidas para ajudar a equipe. Mantenha a calma e siga minhas orientações, por favor.",
+   "obrig": false,
+   "outro": false,
+   "mermaid": "",
+   "prox": "tipo_embarcacao",
+   "opcoes": [],
+   "despacho": true
+  },
+  {
+   "id": "tipo_embarcacao",
+   "tipo": "unica",
+   "texto": "Qual o tipo de embarcação?",
+   "obrig": false,
+   "outro": true,
+   "mermaid": "",
+   "prox": "onde_lago_regiao",
+   "opcoes": [
+    {
+     "id": "lancha",
+     "rotulo": "Lancha",
+     "vai": ""
+    },
+    {
+     "id": "barco_a_remo_caiaque",
+     "rotulo": "Barco a remo / caiaque",
+     "vai": ""
+    },
+    {
+     "id": "jet_ski",
+     "rotulo": "Jet ski",
+     "vai": ""
+    },
+    {
+     "id": "veleiro",
+     "rotulo": "Veleiro",
+     "vai": ""
+    }
+   ]
+  },
+  {
+   "id": "onde_lago_regiao",
+   "tipo": "texto",
+   "texto": "Onde está (lago, região, ponto de referência)?",
+   "obrig": false,
+   "outro": false,
+   "mermaid": "",
+   "prox": "afundando_fogo_pessoa",
+   "opcoes": []
+  },
+  {
+   "id": "afundando_fogo_pessoa",
+   "tipo": "unica",
+   "texto": "Está afundando, com fogo ou com pessoa na água?",
+   "obrig": false,
+   "outro": false,
+   "mermaid": "",
+   "prox": "pessoas_colete",
+   "opcoes": [
+    {
+     "id": "afundando",
+     "rotulo": "Afundando",
+     "vai": "troca_naufragio_acidente"
+    },
+    {
+     "id": "fogo",
+     "rotulo": "Fogo",
+     "vai": ""
+    },
+    {
+     "id": "pessoa_na_agua",
+     "rotulo": "Pessoa na água",
+     "vai": "troca_afogamento"
+    },
+    {
+     "id": "nenhum",
+     "rotulo": "Nenhum",
+     "vai": ""
+    }
+   ]
+  },
+  {
+   "id": "troca_naufragio_acidente",
+   "tipo": "troca",
+   "texto": "Naufrágio / acidente náutico",
+   "obrig": false,
+   "outro": false,
+   "mermaid": "",
+   "prox": "FIM",
+   "opcoes": []
+  },
+  {
+   "id": "pessoas_colete",
+   "tipo": "unica",
+   "texto": "As pessoas estão de colete?",
+   "obrig": false,
+   "outro": false,
+   "mermaid": "",
+   "prox": "consegue_falar_quem",
+   "opcoes": [
+    {
+     "id": "sim",
+     "rotulo": "Sim",
+     "vai": ""
+    },
+    {
+     "id": "nao",
+     "rotulo": "Não",
+     "vai": ""
+    },
+    {
+     "id": "nao_sabe",
+     "rotulo": "Não sabe",
+     "vai": "",
+     "relato": false
+    }
+   ]
+  },
+  {
+   "id": "consegue_falar_quem",
+   "tipo": "unica",
+   "texto": "Consegue falar com quem está a bordo (celular)?",
+   "obrig": false,
+   "outro": false,
+   "mermaid": "",
+   "prox": "quem_bordo_vistam",
+   "opcoes": [
+    {
+     "id": "sim_numero",
+     "rotulo": "Sim (número)",
+     "vai": ""
+    },
+    {
+     "id": "nao",
+     "rotulo": "Não",
+     "vai": ""
+    }
+   ]
+  },
+  {
+   "id": "quem_bordo_vistam",
+   "tipo": "instrucao",
+   "texto": "Para quem está a bordo: vistam os coletes e fiquem na embarcação. Não tentem nadar até a margem.",
+   "obrig": false,
+   "outro": false,
+   "mermaid": "",
+   "prox": "FIM",
+   "opcoes": []
+  },
+  {
+   "id": "troca_afogamento",
+   "tipo": "troca",
+   "texto": "Afogamento",
+   "obrig": false,
+   "outro": false,
+   "mermaid": "",
+   "prox": "FIM",
+   "opcoes": []
+  }
+ ],
+ "notas": []
+}

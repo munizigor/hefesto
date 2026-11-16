@@ -1,0 +1,169 @@
+{
+ "natureza": {
+  "id": "risco_de_desabamento",
+  "nome": "Risco de desabamento"
+ },
+ "itens": [
+  {
+   "id": "risco",
+   "tipo": "unica",
+   "texto": "O que está com risco?",
+   "obrig": false,
+   "outro": true,
+   "mermaid": "",
+   "prox": "sinais_voce_ve",
+   "opcoes": [
+    {
+     "id": "casa_predio",
+     "rotulo": "Casa / prédio",
+     "vai": ""
+    },
+    {
+     "id": "muro",
+     "rotulo": "Muro",
+     "vai": ""
+    },
+    {
+     "id": "marquise_laje",
+     "rotulo": "Marquise / laje",
+     "vai": ""
+    },
+    {
+     "id": "barranco_encosta",
+     "rotulo": "Barranco / encosta",
+     "vai": ""
+    }
+   ]
+  },
+  {
+   "id": "sinais_voce_ve",
+   "tipo": "multipla",
+   "texto": "Quais sinais você vê?",
+   "obrig": false,
+   "outro": false,
+   "mermaid": "",
+   "prox": "pessoas_dentro_embaixo",
+   "opcoes": [
+    {
+     "id": "rachaduras_novas_ou_aumentan",
+     "rotulo": "Rachaduras novas ou aumentando",
+     "vai": ""
+    },
+    {
+     "id": "estalos_barulhos",
+     "rotulo": "Estalos / barulhos",
+     "vai": ""
+    },
+    {
+     "id": "portas_e_janelas_emperrando",
+     "rotulo": "Portas e janelas emperrando",
+     "vai": ""
+    },
+    {
+     "id": "parte_ja_caiu",
+     "rotulo": "Parte já caiu",
+     "vai": "troca_desabamento_desmor"
+    }
+   ]
+  },
+  {
+   "id": "pessoas_dentro_embaixo",
+   "tipo": "unica",
+   "texto": "Há pessoas dentro ou embaixo da estrutura?",
+   "obrig": false,
+   "outro": false,
+   "mermaid": "",
+   "prox": "despacho",
+   "opcoes": [
+    {
+     "id": "sim",
+     "rotulo": "Sim",
+     "vai": ""
+    },
+    {
+     "id": "nao",
+     "rotulo": "Não",
+     "vai": "comecou_depois_chuva"
+    }
+   ]
+  },
+  {
+   "id": "despacho",
+   "tipo": "instrucao",
+   "texto": "O socorro já foi acionado e está a caminho. Vou fazer algumas perguntas rápidas para ajudar a equipe. Mantenha a calma e siga minhas orientações, por favor.",
+   "obrig": false,
+   "outro": false,
+   "mermaid": "",
+   "prox": "comecou_depois_chuva",
+   "opcoes": [],
+   "despacho": true
+  },
+  {
+   "id": "comecou_depois_chuva",
+   "tipo": "unica",
+   "texto": "Começou depois de chuva, obra ou batida de veículo?",
+   "obrig": false,
+   "outro": false,
+   "mermaid": "",
+   "prox": "despacho_2",
+   "opcoes": [
+    {
+     "id": "chuva",
+     "rotulo": "Chuva",
+     "vai": ""
+    },
+    {
+     "id": "obra",
+     "rotulo": "Obra",
+     "vai": ""
+    },
+    {
+     "id": "batida",
+     "rotulo": "Batida",
+     "vai": ""
+    },
+    {
+     "id": "nao_sabe",
+     "rotulo": "Não sabe",
+     "vai": "",
+     "relato": false
+    }
+   ]
+  },
+  {
+   "id": "despacho_2",
+   "tipo": "instrucao",
+   "texto": "🚒 Despacho conforme critério da COCB; avaliar acionamento da Defesa Civil",
+   "obrig": false,
+   "outro": false,
+   "mermaid": "",
+   "prox": "saia_imovel_nao",
+   "opcoes": [],
+   "despacho": true
+  },
+  {
+   "id": "saia_imovel_nao",
+   "tipo": "instrucao",
+   "texto": "Saia do imóvel e não volte para buscar objetos. Afaste pessoas e veículos da área.",
+   "obrig": false,
+   "outro": false,
+   "mermaid": "",
+   "prox": "FIM",
+   "opcoes": []
+  },
+  {
+   "id": "troca_desabamento_desmor",
+   "tipo": "troca",
+   "texto": "Desabamento / desmoronamento",
+   "obrig": false,
+   "outro": false,
+   "mermaid": "",
+   "prox": "FIM",
+   "opcoes": []
+  }
+ ],
+ "notas": [
+  "“Quais sinais você vê?” virou múltipla escolha pelo texto da pergunta. Confira.",
+  "“sinais_voce_ve / parte_ja_caiu”: o desvio não volta para “pessoas_dentro_embaixo”; a entrevista termina nesse ramo."
+ ]
+}

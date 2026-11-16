@@ -1,0 +1,438 @@
+{
+ "natureza": {
+  "id": "insetos_abelha_ou_similares",
+  "nome": "Insetos, abelha ou similares (versão do Quadro 2)"
+ },
+ "itens": [
+  {
+   "id": "picado",
+   "tipo": "unica",
+   "texto": "Alguém foi picado?",
+   "obrig": false,
+   "outro": false,
+   "mermaid": "",
+   "prox": "quem_picado_possui",
+   "opcoes": [
+    {
+     "id": "sim",
+     "rotulo": "Sim",
+     "vai": ""
+    },
+    {
+     "id": "nao",
+     "rotulo": "Não",
+     "vai": "formacao_colmeia"
+    }
+   ]
+  },
+  {
+   "id": "quem_picado_possui",
+   "tipo": "unica",
+   "texto": "Quem foi picado possui alergia?",
+   "obrig": false,
+   "outro": false,
+   "mermaid": "",
+   "prox": "pessoa_picada_respira",
+   "opcoes": [
+    {
+     "id": "sim",
+     "rotulo": "Sim",
+     "vai": ""
+    },
+    {
+     "id": "nao",
+     "rotulo": "Não",
+     "vai": ""
+    },
+    {
+     "id": "nao_sei",
+     "rotulo": "Não sei",
+     "vai": ""
+    }
+   ]
+  },
+  {
+   "id": "pessoa_picada_respira",
+   "tipo": "unica",
+   "texto": "A pessoa picada respira?",
+   "obrig": false,
+   "outro": false,
+   "mermaid": "",
+   "prox": "picadas_aconteceram",
+   "opcoes": [
+    {
+     "id": "sim",
+     "rotulo": "Sim",
+     "vai": ""
+    },
+    {
+     "id": "nao",
+     "rotulo": "Não",
+     "vai": "troca_parada_cardiorespi"
+    }
+   ]
+  },
+  {
+   "id": "picadas_aconteceram",
+   "tipo": "unica",
+   "texto": "Quantas picadas aconteceram?",
+   "obrig": false,
+   "outro": false,
+   "mermaid": "",
+   "prox": "pessoa_picada",
+   "opcoes": [
+    {
+     "id": "houve_ataque_enxame",
+     "rotulo": "Houve ataque/ enxame",
+     "vai": ""
+    },
+    {
+     "id": "entre_1_e_3_picadas",
+     "rotulo": "entre 1 e 3 picadas",
+     "vai": ""
+    }
+   ]
+  },
+  {
+   "id": "pessoa_picada",
+   "tipo": "unica",
+   "texto": "A pessoa picada é :",
+   "obrig": false,
+   "outro": false,
+   "mermaid": "",
+   "prox": "FIM",
+   "opcoes": [
+    {
+     "id": "adulta",
+     "rotulo": "adulta",
+     "vai": ""
+    },
+    {
+     "id": "crianca",
+     "rotulo": "criança",
+     "vai": ""
+    },
+    {
+     "id": "idosa",
+     "rotulo": "idosa",
+     "vai": ""
+    }
+   ]
+  },
+  {
+   "id": "troca_ataque_picada",
+   "tipo": "troca",
+   "texto": "Ataque / picada de animal",
+   "obrig": false,
+   "outro": false,
+   "mermaid": "",
+   "prox": "despacho",
+   "opcoes": []
+  },
+  {
+   "id": "despacho",
+   "tipo": "instrucao",
+   "texto": "O socorro já foi acionado e está a caminho. Vou fazer algumas perguntas rápidas para ajudar a equipe. Mantenha a calma e siga minhas orientações, por favor.",
+   "obrig": false,
+   "outro": false,
+   "mermaid": "",
+   "prox": "FIM",
+   "opcoes": [],
+   "despacho": true
+  },
+  {
+   "id": "troca_parada_cardiorespi",
+   "tipo": "troca",
+   "texto": "Parada cardiorrespiratória (PCR)",
+   "obrig": false,
+   "outro": false,
+   "mermaid": "",
+   "prox": "realize_videochamada_fac",
+   "opcoes": []
+  },
+  {
+   "id": "realize_videochamada_fac",
+   "tipo": "informacao",
+   "texto": "Realize a videochamada e faça as orientações",
+   "obrig": false,
+   "outro": false,
+   "mermaid": "",
+   "prox": "despacho_2",
+   "opcoes": [],
+   "video": true
+  },
+  {
+   "id": "despacho_2",
+   "tipo": "instrucao",
+   "texto": "Iremos realizar uma vídeo chamada para orientá-lo(a) até a chegada da guarnição! Mantenha a calma e siga as orientações.",
+   "obrig": false,
+   "outro": false,
+   "mermaid": "",
+   "prox": "FIM",
+   "opcoes": [],
+   "despacho": true
+  },
+  {
+   "id": "formacao_colmeia",
+   "tipo": "unica",
+   "texto": "Tem formação de colméia?",
+   "obrig": false,
+   "outro": false,
+   "mermaid": "",
+   "prox": "dias_insetos_local",
+   "opcoes": [
+    {
+     "id": "nao_sabe",
+     "rotulo": "Não sabe",
+     "vai": "",
+     "relato": false
+    },
+    {
+     "id": "nao",
+     "rotulo": "Não",
+     "vai": ""
+    },
+    {
+     "id": "sim",
+     "rotulo": "Sim",
+     "vai": ""
+    }
+   ]
+  },
+  {
+   "id": "dias_insetos_local",
+   "tipo": "unica",
+   "texto": "Ha quantos dias os insetos estão no local?",
+   "obrig": false,
+   "outro": false,
+   "mermaid": "",
+   "prox": "insetos_agitados",
+   "opcoes": [
+    {
+     "id": "nao_sabe",
+     "rotulo": "Não sabe",
+     "vai": "",
+     "relato": false
+    },
+    {
+     "id": "mais_de_3_dias",
+     "rotulo": "Mais de 3 dias",
+     "vai": ""
+    },
+    {
+     "id": "1_a_3_dias",
+     "rotulo": "1 a 3 dias",
+     "vai": ""
+    }
+   ]
+  },
+  {
+   "id": "insetos_agitados",
+   "tipo": "unica",
+   "texto": "Os insetos estão agitados?",
+   "obrig": false,
+   "outro": false,
+   "mermaid": "",
+   "prox": "localizacao_insetos",
+   "opcoes": [
+    {
+     "id": "sem_agitacao",
+     "rotulo": "Sem agitação",
+     "vai": ""
+    },
+    {
+     "id": "pouco_agitados",
+     "rotulo": "Pouco agitados",
+     "vai": ""
+    },
+    {
+     "id": "muito_agitados",
+     "rotulo": "Muito agitados",
+     "vai": ""
+    }
+   ]
+  },
+  {
+   "id": "localizacao_insetos",
+   "tipo": "lista",
+   "texto": "Qual a localização dos insetos?",
+   "obrig": false,
+   "outro": false,
+   "mermaid": "",
+   "prox": "altura",
+   "opcoes": [
+    {
+     "id": "outro",
+     "rotulo": "Outro",
+     "vai": "",
+     "relato": false
+    },
+    {
+     "id": "bueiro",
+     "rotulo": "Bueiro",
+     "vai": ""
+    },
+    {
+     "id": "telhado_forro",
+     "rotulo": "Telhado / Forro",
+     "vai": ""
+    },
+    {
+     "id": "poste",
+     "rotulo": "Poste",
+     "vai": ""
+    },
+    {
+     "id": "solo",
+     "rotulo": "Solo",
+     "vai": ""
+    },
+    {
+     "id": "via_publica_calcada_canteiro",
+     "rotulo": "Via pública (calçada, canteiro central, meio-fio)",
+     "vai": ""
+    },
+    {
+     "id": "edificacao",
+     "rotulo": "Edificação",
+     "vai": ""
+    },
+    {
+     "id": "muro_cerca",
+     "rotulo": "Muro/Cerca",
+     "vai": ""
+    },
+    {
+     "id": "caixa_d_agua",
+     "rotulo": "Caixa d´água",
+     "vai": ""
+    },
+    {
+     "id": "arvore",
+     "rotulo": "Árvore",
+     "vai": ""
+    },
+    {
+     "id": "veiculo",
+     "rotulo": "Veículo",
+     "vai": ""
+    },
+    {
+     "id": "estrutura_metalica_torre_ant",
+     "rotulo": "Estrutura metálica (torre, antena, passarela, outdoor etc.)",
+     "vai": ""
+    }
+   ]
+  },
+  {
+   "id": "altura",
+   "tipo": "unica",
+   "texto": "Estão em altura?",
+   "obrig": false,
+   "outro": false,
+   "mermaid": "",
+   "prox": "acesso_local_insetos",
+   "opcoes": [
+    {
+     "id": "nao",
+     "rotulo": "Não",
+     "vai": ""
+    },
+    {
+     "id": "sim",
+     "rotulo": "Sim",
+     "vai": "aproximadamente_metros"
+    }
+   ]
+  },
+  {
+   "id": "acesso_local_insetos",
+   "tipo": "unica",
+   "texto": "O acesso ao local dos insetos é fácil?",
+   "obrig": false,
+   "outro": false,
+   "mermaid": "",
+   "prox": "FIM",
+   "opcoes": [
+    {
+     "id": "nao",
+     "rotulo": "Não",
+     "vai": ""
+    },
+    {
+     "id": "sim",
+     "rotulo": "Sim",
+     "vai": "isole_area_onde"
+    }
+   ]
+  },
+  {
+   "id": "isole_area_onde",
+   "tipo": "instrucao",
+   "texto": "• Isole a área onde se encontra o enxame (mín. 5 metros); • Mantenha fechadas as portas e janelas, para evitar a entrada dos insetos; • O quartel mais próximo irá entrar em contao para realizar a averiguação",
+   "obrig": false,
+   "outro": false,
+   "mermaid": "",
+   "prox": "FIM",
+   "opcoes": []
+  },
+  {
+   "id": "aproximadamente_metros",
+   "tipo": "unica",
+   "texto": "Aproximadamente a quantos metros?",
+   "obrig": false,
+   "outro": false,
+   "mermaid": "",
+   "prox": "acesso_local_insetos",
+   "opcoes": [
+    {
+     "id": "acima_de_15m",
+     "rotulo": "Acima de 15m",
+     "vai": ""
+    },
+    {
+     "id": "acima_de_10m",
+     "rotulo": "Acima de 10m",
+     "vai": ""
+    },
+    {
+     "id": "entre_5_e_10m",
+     "rotulo": "Entre 5 e 10m",
+     "vai": ""
+    },
+    {
+     "id": "entre_2_e_5_m",
+     "rotulo": "Entre 2 e 5 m",
+     "vai": ""
+    },
+    {
+     "id": "ate_2m",
+     "rotulo": "Até 2m",
+     "vai": ""
+    }
+   ]
+  },
+  {
+   "id": "troca_insetos_oferecendo",
+   "tipo": "troca",
+   "texto": "Insetos Oferecendo Risco",
+   "obrig": false,
+   "outro": false,
+   "mermaid": "",
+   "prox": "FIM",
+   "opcoes": []
+  }
+ ],
+ "notas": [
+  "No quadro, as respostas “Edificação”, “Muro/Cerca”, “Telhado / Forro”, “Árvore”, “Caixa d´água”, “Outro”, “Solo”, “Veículo”, “Via pública (calçada, canteiro central, meio-fio)”, “Estrutura metálica (torre, antena, passarela, outdoor etc.)”, “Poste”, “Bueiro” não têm seta e “Estão em altura?” está solto. Foram ligados aqui; confira no quadro.",
+  "“🔁 Trocar natureza: Insetos Oferecendo Risco” não está ligado ao início do fluxo.",
+  "“A pessoa picada respira?” / “Sim”: a resposta leva a 2 caixas ao mesmo tempo; ficou só “Quantas picadas aconteceram?”.",
+  "“A pessoa picada respira?” / “Não”: a resposta leva a 3 caixas ao mesmo tempo; ficou só “🔁 Trocar natureza: Parada Cárdiorespiratória (PCR)”.",
+  "Troca para “Ataque / Picada de animal” entendida como “Ataque / picada de animal”.",
+  "Troca para “Parada Cárdiorespiratória (PCR)” entendida como “Parada cardiorrespiratória (PCR)”.",
+  "Troca para “Insetos Oferecendo Risco”: essa natureza não tem fluxo no quadro.",
+  "“troca_ataque_picada” está no formulário, mas nenhum caminho do fluxo chega até ele.",
+  "“despacho” está no formulário, mas nenhum caminho do fluxo chega até ele.",
+  "“troca_insetos_oferecendo” está no formulário, mas nenhum caminho do fluxo chega até ele."
+ ]
+}

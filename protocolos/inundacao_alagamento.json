@@ -1,0 +1,224 @@
+{
+ "natureza": {
+  "id": "inundacao_alagamento",
+  "nome": "Inundação / alagamento"
+ },
+ "itens": [
+  {
+   "id": "pessoas_ilhadas_presas",
+   "tipo": "unica",
+   "texto": "Há pessoas ilhadas, presas ou sendo levadas pela água?",
+   "obrig": false,
+   "outro": false,
+   "mermaid": "",
+   "prox": "despacho",
+   "opcoes": [
+    {
+     "id": "sim",
+     "rotulo": "Sim",
+     "vai": ""
+    },
+    {
+     "id": "nao",
+     "rotulo": "Não",
+     "vai": "sendo_levado_pela"
+    }
+   ]
+  },
+  {
+   "id": "despacho",
+   "tipo": "instrucao",
+   "texto": "O socorro já foi acionado e está a caminho. Vou fazer algumas perguntas rápidas para ajudar a equipe. Mantenha a calma e siga minhas orientações, por favor.",
+   "obrig": false,
+   "outro": false,
+   "mermaid": "",
+   "prox": "sendo_levado_pela",
+   "opcoes": [],
+   "despacho": true
+  },
+  {
+   "id": "sendo_levado_pela",
+   "tipo": "unica",
+   "texto": "Alguém está sendo levado pela água?",
+   "obrig": false,
+   "outro": false,
+   "mermaid": "",
+   "prox": "troca_pessoa_arrastada",
+   "opcoes": [
+    {
+     "id": "sim",
+     "rotulo": "Sim",
+     "vai": ""
+    },
+    {
+     "id": "nao",
+     "rotulo": "Não",
+     "vai": "onde_agua"
+    },
+    {
+     "id": "nao_sei",
+     "rotulo": "Não sei",
+     "vai": "troca_pessoa_arrastada_2",
+     "relato": false
+    }
+   ]
+  },
+  {
+   "id": "troca_pessoa_arrastada",
+   "tipo": "troca",
+   "texto": "Pessoa arrastada por enxurrada",
+   "obrig": false,
+   "outro": false,
+   "mermaid": "",
+   "prox": "FIM",
+   "opcoes": []
+  },
+  {
+   "id": "onde_agua",
+   "tipo": "unica",
+   "texto": "Onde a água está?",
+   "obrig": false,
+   "outro": true,
+   "mermaid": "",
+   "prox": "altura_agua",
+   "opcoes": [
+    {
+     "id": "dentro_de_casa_comercio",
+     "rotulo": "Dentro de casa / comércio",
+     "vai": ""
+    },
+    {
+     "id": "rua_via",
+     "rotulo": "Rua / via",
+     "vai": ""
+    },
+    {
+     "id": "subsolo_garagem",
+     "rotulo": "Subsolo / garagem",
+     "vai": ""
+    }
+   ]
+  },
+  {
+   "id": "altura_agua",
+   "tipo": "unica",
+   "texto": "Qual a altura da água?",
+   "obrig": false,
+   "outro": false,
+   "mermaid": "",
+   "prox": "agua_subindo",
+   "opcoes": [
+    {
+     "id": "ate_o_tornozelo",
+     "rotulo": "Até o tornozelo",
+     "vai": ""
+    },
+    {
+     "id": "ate_o_joelho",
+     "rotulo": "Até o joelho",
+     "vai": ""
+    },
+    {
+     "id": "acima_da_cintura",
+     "rotulo": "Acima da cintura",
+     "vai": ""
+    }
+   ]
+  },
+  {
+   "id": "agua_subindo",
+   "tipo": "unica",
+   "texto": "A água está subindo?",
+   "obrig": false,
+   "outro": false,
+   "mermaid": "",
+   "prox": "idosos_criancas_acamados",
+   "opcoes": [
+    {
+     "id": "sim",
+     "rotulo": "Sim",
+     "vai": ""
+    },
+    {
+     "id": "nao",
+     "rotulo": "Não",
+     "vai": ""
+    }
+   ]
+  },
+  {
+   "id": "idosos_criancas_acamados",
+   "tipo": "unica",
+   "texto": "Há idosos, crianças, acamados ou pessoas com deficiência no local?",
+   "obrig": false,
+   "outro": false,
+   "mermaid": "",
+   "prox": "agua_chegou_tomadas",
+   "opcoes": [
+    {
+     "id": "sim",
+     "rotulo": "Sim",
+     "vai": ""
+    },
+    {
+     "id": "nao",
+     "rotulo": "Não",
+     "vai": ""
+    }
+   ]
+  },
+  {
+   "id": "agua_chegou_tomadas",
+   "tipo": "unica",
+   "texto": "A água chegou a tomadas ou ao quadro de energia?",
+   "obrig": false,
+   "outro": false,
+   "mermaid": "",
+   "prox": "despacho_2",
+   "opcoes": [
+    {
+     "id": "sim",
+     "rotulo": "Sim",
+     "vai": ""
+    },
+    {
+     "id": "nao",
+     "rotulo": "Não",
+     "vai": ""
+    }
+   ]
+  },
+  {
+   "id": "despacho_2",
+   "tipo": "instrucao",
+   "texto": "🚒 Despacho conforme critério da COCB; avaliar acionamento da Defesa Civil",
+   "obrig": false,
+   "outro": false,
+   "mermaid": "",
+   "prox": "desligue_disjuntor_geral",
+   "opcoes": [],
+   "despacho": true
+  },
+  {
+   "id": "desligue_disjuntor_geral",
+   "tipo": "instrucao",
+   "texto": "Desligue o disjuntor geral se puder alcançá-lo sem pisar na água. Suba para um ponto mais alto. Não atravesse ruas alagadas a pé nem de carro.",
+   "obrig": false,
+   "outro": false,
+   "mermaid": "",
+   "prox": "FIM",
+   "opcoes": []
+  },
+  {
+   "id": "troca_pessoa_arrastada_2",
+   "tipo": "troca",
+   "texto": "Pessoa arrastada por enxurrada",
+   "obrig": false,
+   "outro": false,
+   "mermaid": "",
+   "prox": "FIM",
+   "opcoes": []
+  }
+ ],
+ "notas": []
+}

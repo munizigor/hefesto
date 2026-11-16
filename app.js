@@ -10,10 +10,44 @@
 
   /* ---------- dados ---------- */
   var DB={protocolos:null,ocorrencias:[],seq:1};
-  try{ var salvo=JSON.parse(localStorage.getItem(KEY)||'null'); if(salvo&&salvo.protocolos){ DB.protocolos=salvo.protocolos; DB.ocorrencias=salvo.ocorrencias||[]; DB.seq=salvo.seq||1; } }catch(e){}
-  if(!DB.protocolos) DB.protocolos=exemplos();
-  NATUREZAS.forEach(function(n){ if(!Array.isArray(DB.protocolos[n.id])) DB.protocolos[n.id]=[]; });
+  try{ var salvo=JSON.parse(localStorage.getItem(KEY)||'null'); if(salvo&&salvo.protocolos){ DB.protocolos=salvo.protocolos; DB.ocorrencias=salvo.ocorrencias||[]; DB.seq=salvo.seq||1; DB.base=salvo.base||null; DB.ultimaExportacao=salvo.ultimaExportacao||null; DB.naturezas=salvo.naturezas||null; DB.pubNat=salvo.pubNat||null; DB.feedbacks=salvo.feedbacks||[]; } }catch(e){}
+  /* versão publicada (protocolos.js) x cópia deste navegador.
+     DB.base guarda a impressão da versão publicada que este navegador recebeu. Natureza que a pessoa não editou
+     acompanha a nova publicação; natureza editada fica como está até ser exportada e publicada. */
+  var PUB=exemplos(),impr=function(itens){ var t=JSON.stringify(itens||[]),h=5381; for(var i=0;i<t.length;i++) h=((h<<5)+h+t.charCodeAt(i))|0; return (h>>>0).toString(36)+'.'+t.length; };
+  if(!DB.protocolos) DB.protocolos={};
+  if(!DB.base) DB.base={};
+  /* lista de naturezas: a publicada, mais o que a pessoa criou, renomeou ou excluiu neste navegador.
+     Junta em três vias: publicada antiga (DB.pubNat), publicada nova e a deste navegador. */
+  var PUB_NAT=JSON.parse(JSON.stringify(NATUREZAS)),natsMudaram=false;
+  (function(){
+    var loc=DB.naturezas,velha=DB.pubNat||PUB_NAT;
+    if(!loc){ DB.naturezas=JSON.parse(JSON.stringify(PUB_NAT)); DB.pubNat=PUB_NAT; return; }
+    var mapa=function(l){ var m={}; l.forEach(function(n){ m[n.id]=n; }); return m; },L_=mapa(loc),V=mapa(velha),N=mapa(PUB_NAT),out=[];
+    PUB_NAT.forEach(function(n){
+      if(V[n.id]&&!L_[n.id]) return; /* excluída aqui */
+      var x=JSON.parse(JSON.stringify(n)); if(L_[n.id]&&V[n.id]&&L_[n.id].nome!==V[n.id].nome) x.nome=L_[n.id].nome; out.push(x);
+    });
+    loc.forEach(function(n){ if(!N[n.id]&&!V[n.id]) out.push(n); }); /* criadas aqui */
+    out.sort(function(a,b){ return a.nome.localeCompare(b.nome,'pt-BR'); });
+    if(JSON.stringify(velha)!==JSON.stringify(PUB_NAT)) natsMudaram=true;
+    DB.naturezas=out; DB.pubNat=PUB_NAT;
+  })();
+  NATUREZAS=DB.naturezas;
+  function listaAlterada(){ return JSON.stringify(NATUREZAS.map(function(n){ return [n.id,n.nome]; }))!==JSON.stringify(PUB_NAT.map(function(n){ return [n.id,n.nome]; })); }
+  var atualizadas=0;
+  NATUREZAS.forEach(function(n){
+    var pub=PUB[n.id]||[],meu=DB.protocolos[n.id],ip=impr(pub);
+    if(!Array.isArray(meu)){ DB.protocolos[n.id]=pub; DB.base[n.id]=ip; return; }
+    var im=impr(meu);
+    if(im===ip){ DB.base[n.id]=ip; return; }
+    if(DB.base[n.id]&&DB.base[n.id]===im){ DB.protocolos[n.id]=pub; DB.base[n.id]=ip; atualizadas++; }
+  });
+  try{ if(localStorage.getItem(KEY)||atualizadas||natsMudaram) localStorage.setItem(KEY,JSON.stringify(DB)); }catch(e){}
+  function alterada(id){ return impr(DB.protocolos[id])!==impr(PUB[id]||[]); }
+  function alteradas(){ return NATUREZAS.filter(function(n){ return alterada(n.id); }); }
   function status(t){ var s=$('status'); if(s) s.textContent=t; }
+  setTimeout(function(){ if(atualizadas) status(atualizadas+' natureza'+(atualizadas>1?'s':'')+' atualizada'+(atualizadas>1?'s':'')+' com a versão publicada'); },0);
   function salvar(){ try{ localStorage.setItem(KEY,JSON.stringify(DB)); status('Salvo neste navegador'); }catch(e){ status('Não foi possível salvar neste navegador'); } }
   var natPorId=function(id){ return NATUREZAS.filter(function(n){return n.id===id;})[0]||null; };
   var norm=function(s){ return String(s||'').normalize('NFD').replace(/[̀-ͯ]/g,'').toLowerCase().replace(/[^a-z0-9]+/g,' ').trim(); };
@@ -99,7 +133,7 @@
     else if(s.c==='nome'){ A.nome=s.v; A.nomeNI=false; }
     else if(s.c==='resp'){
       var it=hermesItem(s.id);
-      if(s.v===true) A.resp[s.id]=true;
+      if(s.v===true){ A.resp[s.id]=true; if(it&&it.despacho&&A.encS==null&&!faltasEncaminhar().length) A.encS=seg(); }
       else if(s.v.ops&&it.tipo==='multipla'){ var r=A.resp[s.id]||{ops:[],outro:''},ops=(r.ops||[]).slice(); s.v.ops.forEach(function(o){ if(ops.indexOf(o)<0) ops.push(o); }); A.resp[s.id]={ops:ops,outro:r.outro||''}; }
       else if(s.v.ops) A.resp[s.id]={ops:[s.v.ops[0]]};
       else A.resp[s.id]={valor:String(s.v.valor)};
@@ -107,7 +141,7 @@
     else A[s.c]=s.v;
     A.hermes.est[x.k]='ok';
   }
-  function hermesDepois(){ desenharCentro(); desenharFicha(); hermesSugPainel(); hermesTopo(); }
+  function hermesDepois(){ relogio(); desenharChamada(); desenharCentro(); desenharFicha(); hermesSugPainel(); hermesTopo(); }
   function hermesAceitar(x){ hermesAplicar(x); hermesDepois(); }
   function hermesDescartar(x){ A.hermes.est[x.k]='x'; hermesDepois(); }
   function hermesAceitarTodas(){
@@ -206,8 +240,8 @@
     if(A.ref) p.push('Referência: '+A.ref+'.');
     var P=protocolo();
     if(P.est) P.est.path.forEach(function(id){ var it=P.g.item[id],r=A.resp[id]; if(!respondido(it,r)) return;
-      if(ehPergunta(it)){ if(!r.pulada) p.push(it.texto.replace(/\?\s*$/,'')+': '+valorResposta(it,r)+'.'); }
-      else if(it.tipo==='instrucao'&&!it.despacho) p.push('Orientado: '+it.texto); });
+      if(ehPergunta(it)){ var v=valorRelato(it,r); if(v) p.push(it.texto.replace(/\?\s*$/,'')+': '+v+'.'); }
+      else if(it.tipo==='instrucao'&&!it.despacho&&it.relato!==false) p.push('Orientado: '+it.texto); });
     return p.join(' ');
   }
   function relatoAtual(){ return A.relManual?A.relato:relatoAuto(); }
@@ -216,6 +250,7 @@
     var f=[],P=protocolo();
     if(P.est) P.lista.forEach(function(id){ var it=P.g.item[id]; if(ehPergunta(it)&&it.obrig){ var r=A.resp[id]; if(!respondido(it,r)||r.pulada) f.push('pergunta obrigatória “'+it.texto+'”'); } });
     if(!A.nomeNI&&!A.nome.trim()) f.push('nome do solicitante (ou marcar “Não informado”)');
+    if(A.encS==null) f.push('encaminhamento ao despacho (a ocorrência não foi encaminhada)');
     return f;
   }
   function contagem(P){ var t=0,n=0; if(P.est) P.lista.forEach(function(id){ var it=P.g.item[id]; if(ehPergunta(it)){ t++; var r=A.resp[id]; if(respondido(it,r)&&!r.pulada) n++; } }); return {t:t,n:n}; }
@@ -226,18 +261,19 @@
   }
 
   /* ---------- atendimento: ações ---------- */
-  function ir(p){ if(!A) return; p=Math.max(0,Math.min(3,p)); if(p>0&&A.encS==null) return; A.passo=p; A.max=Math.max(A.max,p); A.erro=''; desenharPassos(); desenharCentro(); desenharFicha(); foco(); }
+  function ir(p){ if(!A) return; p=Math.max(0,Math.min(3,p)); if(p>0&&faltasEncaminhar().length){ A.erro='Para seguir para a entrevista falta: '+faltasEncaminhar().join(', ')+'.'; desenharCentro(); foco(); return; } A.passo=p; A.max=Math.max(A.max,p); A.erro=''; desenharPassos(); desenharCentro(); desenharFicha(); foco(); }
+  /* encaminhamento ao despacho: acontece no item "Despacho imediato" do fluxo da natureza, ou antes, pelo botão "Encaminhar agora" */
   function encaminhar(){
     var f=faltasEncaminhar();
-    if(f.length){ A.erro='Para encaminhar falta: '+f.join(', ')+'.'; desenharCentro(); foco(); return; }
+    if(f.length){ A.erro='Para encaminhar falta: '+f.join(', ')+'.'; desenharCentro(); foco(); return false; }
     if(A.encS==null) A.encS=seg();
-    relogio(); ir(1);
+    relogio(); desenharChamada(); desenharFicha(); return true;
   }
-  function avancar(){ if(!A) return; if(A.passo===0) encaminhar(); else ir(A.passo+1); }
+  function avancar(){ if(!A) return; ir(A.passo+1); }
   function responder(id,r){ if(r==null) delete A.resp[id]; else A.resp[id]=r; desenharCentro(); desenharFicha(); foco(); }
   function registrar(forcar,depois){
     if(!A) return;
-    if(A.encS==null){ A.erro='Encaminhe a ocorrência antes de registrar.'; A.passo=0; desenharPassos(); desenharCentro(); return; }
+    if(faltasEncaminhar().length){ A.erro='Para registrar falta: '+faltasEncaminhar().join(', ')+'.'; A.passo=0; desenharPassos(); desenharCentro(); return; }
     var f=faltasRegistro();
     if(f.length&&!forcar){ A.conf={tipo:'reg',faltas:f}; desenharConf(); return; }
     var P=protocolo(),n=natPorId(A.nat),ent=[];
@@ -253,6 +289,12 @@
   function encerrarSemRegistrar(){ var t=A.conf&&A.conf.tipo; V.aviso={t:'inf',m:A.encS!=null?'Ligação encerrada sem registro da ficha.':'Ligação encerrada. Nada foi encaminhado.'}; V.pausa=t==='pausa'; fimLigacao(); }
 
   /* ---------- atendimento: desenho ---------- */
+  function desenharChamada(){
+    var c=$('encAgora'); if(!c||!A) return; c.textContent='';
+    if(A.encS!=null) return;
+    var ok=!faltasEncaminhar().length;
+    c.appendChild(el('button',{class:'btn sm '+(ok?'verm':'apag'),title:ok?'Encaminhar ao despacho antes de chegar ao ponto do fluxo':'Preencha natureza, local e região para encaminhar',disabled:!ok,onclick:function(){ encaminhar(); desenharCentro(); }},['🚒 Encaminhar agora']));
+  }
   function relogio(){
     if(!A) return; var s=seg(),t=$('timer'); if(!t) return;
     t.textContent=mmss(s);
@@ -292,6 +334,7 @@
         el('span',{class:'chFone',text:A.fone}),
         el('span',{class:'chTimer',id:'timer',role:'timer','aria-label':'Tempo de ligação',text:'00:00'}),
         el('span',{class:'chip verde',id:'chipEnc',style:'display:none'}),
+        el('span',{id:'encAgora'}),
         A.hermes?el('span',{class:'chip roxo',text:'Hermes · demonstração'}):el('span',{class:'chip cinza',text:'Hermes desligado'}),
         el('span',{class:'grow'}),
         el('button',{class:'btn laranja',text:'Transferir',onclick:function(){ A.erro='Transferência não faz parte deste protótipo.'; desenharCentro(); }}),
@@ -302,7 +345,7 @@
     r.appendChild(el('div',{id:'conf'}));
     r.appendChild(el('nav',{id:'passos','aria-label':'Passos do atendimento'}));
     r.appendChild(el('div',{class:'grade'},[el('main',{id:'centro'}),el('aside',{id:'ficha','aria-label':'Ficha da ocorrência'})]));
-    relogio(); desenharConf(); desenharPassos(); desenharCentro(); desenharFicha(); if(A.hermes) desenharHermes();
+    relogio(); desenharChamada(); desenharConf(); desenharPassos(); desenharCentro(); desenharFicha(); if(A.hermes) desenharHermes();
   }
   function desenharConf(){
     var c=$('conf'); if(!c) return; c.textContent=''; if(!A||!A.conf) return;
@@ -314,8 +357,9 @@
       kids.push(el('button',{class:'btn',text:'Voltar e completar',onclick:fechar}));
     } else {
       var pausa=k.tipo==='pausa';
-      kids.push(el('div',{class:'confTxt'},[el('b',{text:A.encS!=null?'A ocorrência foi encaminhada, mas a ficha ainda não foi registrada.':'Nada foi encaminhado. Encerrar agora descarta o que foi preenchido.'})]));
-      if(A.encS!=null) kids.push(el('button',{class:'btn ok',text:'Registrar e '+(pausa?'pausar':'encerrar'),onclick:function(){ registrar(true,pausa?'pausa':''); }}));
+      var podeReg=!faltasEncaminhar().length;
+      kids.push(el('div',{class:'confTxt'},[el('b',{text:A.encS!=null?'A ocorrência foi encaminhada, mas a ficha ainda não foi registrada.':podeReg?'A ocorrência não foi encaminhada nem registrada.':'Nada foi encaminhado. Encerrar agora descarta o que foi preenchido.'})]));
+      if(podeReg) kids.push(el('button',{class:'btn ok',text:'Registrar e '+(pausa?'pausar':'encerrar'),onclick:function(){ registrar(true,pausa?'pausa':''); }}));
       kids.push(el('button',{class:'btn vermv',text:(pausa?'Encerrar e pausar':'Encerrar')+' sem registrar',onclick:encerrarSemRegistrar}));
       kids.push(el('button',{class:'btn',onclick:fechar},['Cancelar ',el('kbd',{text:'Esc'})]));
     }
@@ -326,7 +370,7 @@
     var n=$('passos'); if(!n) return; n.textContent='';
     var ol=el('ol',{});
     PASSOS.forEach(function(l,i){
-      var feito=i<=A.max&&i!==A.passo,agora=i===A.passo,pode=feito&&(i===0||A.encS!=null);
+      var feito=i<=A.max&&i!==A.passo,agora=i===A.passo,pode=feito&&(i===0||!faltasEncaminhar().length);
       ol.appendChild(el('li',{class:(agora?'agora':feito?'feito':'')},[
         el('button',{disabled:!pode,'aria-current':agora?'step':null,'aria-label':(pode?'Voltar para o passo ':'Passo ')+(i+1)+', '+l,onclick:function(){ ir(i); }},[
           el('span',{class:'bola',text:feito&&i<A.passo?'✓':String(i+1)}),
@@ -339,11 +383,11 @@
   function navBotoes(){
     var kids=[];
     if(A.passo>0) kids.push(el('button',{class:'btn azulv grande',onclick:function(){ ir(A.passo-1); }},['‹ Anterior ',el('kbd',{text:'Alt+PgUp'})]));
-    if(A.passo===0&&A.encS==null){ var ok=!faltasEncaminhar().length; kids.push(el('button',{class:'btn grande '+(ok?'ok':'apag'),id:'bEnc',onclick:encaminhar},['Encaminhar e avançar ',el('kbd',{text:'Ctrl+Enter'}),' ›'])); }
+    if(A.passo===0){ var ok=!faltasEncaminhar().length; kids.push(el('button',{class:'btn grande '+(ok?'pri':'apag'),id:'bEnc',onclick:function(){ ir(1); }},['Seguir para a entrevista ',el('kbd',{text:'Ctrl+Enter'}),' ›'])); }
     else if(A.passo<3) kids.push(el('button',{class:'btn pri grande',onclick:avancar},['Próximo ',el('kbd',{text:'Alt+PgDn'}),' ›']));
     return el('div',{class:'nav'},kids);
   }
-  function atualizarEnc(){ var f=faltasEncaminhar().length,b=$('bEnc'); if(b) b.className='btn grande '+(f?'apag':'ok'); if(!f&&A.erro){ A.erro=''; var m=document.querySelector('#centro > .msg.err'); if(m) m.remove(); } }
+  function atualizarEnc(){ var f=faltasEncaminhar().length,b=$('bEnc'); if(b) b.className='btn grande '+(f?'apag':'pri'); desenharChamada(); if(!f&&A.erro){ A.erro=''; var m=document.querySelector('#centro > .msg.err'); if(m) m.remove(); } }
   function desenharCentro(){
     var c=$('centro'); if(!c||!A) return; c.textContent='';
     if(A.erro) c.appendChild(el('div',{class:'msg err',role:'alert',text:A.erro}));
@@ -396,7 +440,12 @@
           el('span',{class:'bTag',text:it.despacho?'🚒 Despacho imediato · diga ao solicitante':it.video?'📞 Videochamada':it.tipo==='instrucao'?'Diga ao solicitante':it.tipo==='informacao'?'Para você, não ler ao solicitante':'Fluxograma de consulta'}),
           el('span',{class:'bTxt',text:it.texto})]);
         if(it.tipo==='diagrama'){ var d=el('div',{class:'diag'}); bloco.appendChild(d); if(!fut) desenhar(it.mermaid,d); }
-        if(ans) bloco.appendChild(el('span',{class:'feito',text:it.tipo==='instrucao'?'✓ Dita':'✓ Ciente'}));
+        if(it.despacho){
+          if(A.encS!=null) bloco.appendChild(el('span',{class:'apoio',text:'Ocorrência encaminhada ao despacho aos '+mmss(A.encS)+'.'}));
+          if(ans) bloco.appendChild(el('span',{class:'feito',text:'✓ Dita'}));
+          else if(!fut) bloco.appendChild(A.encS==null?el('button',{class:'btn verm',text:'🚒 Encaminhar ao despacho e dizer a fala',onclick:function(){ if(encaminhar()) responder(id,true); }}):el('button',{class:'btn ok',text:'✓ Dito',onclick:function(){ responder(id,true); }}));
+        }
+        else if(ans) bloco.appendChild(el('span',{class:'feito',text:it.tipo==='instrucao'?'✓ Dita':'✓ Ciente'}));
         else if(!fut) bloco.appendChild(el('button',{class:'btn '+(it.tipo==='instrucao'?'ok':'pri'),text:it.tipo==='instrucao'?'✓ Dito':'Ciente',onclick:function(){ responder(id,true); }}));
         row.appendChild(bloco);
       } else {
@@ -431,6 +480,7 @@
   }
   function passoFechamento(c){
     c.appendChild(el('h1',{class:'tit',text:'Relato'}));
+    if(A.encS==null) c.appendChild(el('div',{class:'msg inf'},['A ocorrência ainda não foi encaminhada ao despacho. O fluxo desta natureza não pediu o encaminhamento nas respostas dadas. ',el('button',{class:'btn sm verm',text:'🚒 Encaminhar agora',onclick:function(){ encaminhar(); desenharCentro(); }})]));
     var ta=el('textarea',{id:'fRel',rows:'7','data-foco':'1','aria-label':'Relato da ocorrência',value:relatoAtual(),oninput:function(e){ A.relato=e.target.value; A.relManual=true; var s=$('relFicha'); if(s) s.textContent=A.relato; }});
     c.appendChild(ta);
     c.appendChild(el('div',{class:'linhaBtn'},[
@@ -459,25 +509,26 @@
     else rel.appendChild(el('span',{class:'fv',id:'relFicha',text:relatoAtual()||'—'}));
     f.appendChild(rel);
     f.appendChild(el('div',{class:'frel'},[el('label',{class:'fr',for:'obsF',text:'Observações do atendente'}),el('textarea',{id:'obsF',rows:'3',placeholder:'Algo a destacar para a equipe que vai atender a ocorrência',value:A.obs,oninput:function(e){ A.obs=e.target.value; }}),el('span',{class:'apoio',text:'Pode escrever a qualquer momento do atendimento.'})]));
-    var pode=A.encS!=null;
+    var pode=!faltasEncaminhar().length;
     f.appendChild(el('div',{class:'frod'},[
       el('button',{class:'btn grande '+(pode?'ok':'apag'),id:'bReg',onclick:function(){ registrar(false); }},['Registrar ocorrência ✓ ',el('kbd',{text:'F8'})]),
-      el('span',{class:'apoio',text:pode?(A.passo<3?'Se a ligação cair, registre com o que já tem.':'Confira os dados acima antes de registrar.'):'Liberado depois do encaminhamento.'})]));
+      el('span',{class:'apoio',text:pode?(A.passo<3?'Se a ligação cair, registre com o que já tem.':'Confira os dados acima antes de registrar.'):'Liberado depois de preencher natureza, local e região.'})]));
     f.scrollTop=st; if(foc==='relEd'||foc==='obsF'){ var x=$(foc); if(x) x.focus(); }
   }
   function desenharAjuda(){
     var h=$('ajuda'); h.textContent=''; if(!V.help){ h.style.display='none'; return; } h.style.display='';
-    var itens=[['Encaminhar e avançar (passo 1)','Ctrl+Enter'],['Próximo passo','Alt+PgDn'],['Passo anterior','Alt+PgUp'],['Responder a pergunta destacada','1 a 9'],['Registrar ocorrência','F8'],['Fechar confirmação ou esta ajuda','Esc'],['Abrir esta ajuda','F1']];
+    var itens=[['Seguir para a entrevista (passo 1)','Ctrl+Enter'],['Próximo passo','Alt+PgDn'],['Passo anterior','Alt+PgUp'],['Responder a pergunta destacada','1 a 9'],['Registrar ocorrência','F8'],['Fechar confirmação ou esta ajuda','Esc'],['Abrir esta ajuda','F1']];
     h.appendChild(el('div',{class:'ajBox',role:'dialog','aria-label':'Atalhos de teclado'},[el('h2',{text:'Atalhos de teclado'}),el('table',{},itens.map(function(x){ return el('tr',{},[el('td',{text:x[0]}),el('td',{},[el('kbd',{text:x[1]})])]); })),el('button',{class:'btn pri',text:'Fechar',onclick:function(){ V.help=false; desenharAjuda(); }})]));
     h.querySelector('button').focus();
   }
   document.addEventListener('keydown',function(e){
     var k=e.key;
+    if(k==='Escape'&&FB.aberto){ FB.aberto=false; desenharFeedback(); e.preventDefault(); return; }
     if(k==='Escape'){ if(V.help){ V.help=false; desenharAjuda(); e.preventDefault(); return; } if(A&&A.conf){ A.conf=null; desenharConf(); e.preventDefault(); return; } }
     if(V.view!=='atend') return;
     if(k==='F1'){ e.preventDefault(); V.help=!V.help; desenharAjuda(); return; }
-    if(!A||A.conf||V.help) return;
-    if(e.ctrlKey&&k==='Enter'){ e.preventDefault(); if(A.passo===0) encaminhar(); return; }
+    if(!A||A.conf||V.help||FB.aberto) return;
+    if(e.ctrlKey&&k==='Enter'){ e.preventDefault(); if(A.passo===0) ir(1); return; }
     if(e.altKey&&k==='PageDown'){ e.preventDefault(); avancar(); return; }
     if(e.altKey&&k==='PageUp'){ e.preventDefault(); ir(A.passo-1); return; }
     if(k==='F8'){ e.preventDefault(); registrar(false); return; }
@@ -514,16 +565,107 @@
   function mudou(estrutura){ S.resp={}; S.fluxoSujo=false; S.formSujo=false; salvar(); if(estrutura) desenharEditor(); desenharLado(); desenharNats(); }
   function desenharNats(){
     var n=$('pNats'); n.textContent='';
-    n.appendChild(el('h2',{text:'Naturezas'}));
-    n.appendChild(el('p',{class:'muted',text:'A lista é padronizada pelo sistema. O gestor edita só a entrevista de cada uma.'}));
+    desenharArquivo(n);
+    n.appendChild(el('h2',{style:'margin-top:16px',text:'Naturezas'}));
+    n.appendChild(el('p',{class:'muted',text:'Crie, renomeie ou exclua naturezas aqui. A entrevista de cada uma é editada ao lado.'}));
+    desenharNova(n);
     NATUREZAS.forEach(function(x){ var q=DB.protocolos[x.id].length,erro=q&&validar(DB.protocolos[x.id]).erros.length;
-      n.appendChild(el('button',{class:'natBtn'+(x.id===S.nat?' on':''),'aria-current':x.id===S.nat?'true':null,onclick:function(){ S.nat=x.id; S.msg=null; S.resp={}; S.fluxoSujo=false; S.formSujo=false; desenharProt(); }},[el('span',{text:x.nome}),el('span',{class:'natQ'+(erro?' er':q?'':' vz'),text:erro?'com erros':q?q+' itens':'sem entrevista'})])); });
-    var ta=el('textarea',{class:'code',style:'min-height:90px','aria-label':'Cópia de segurança dos protocolos em JSON',placeholder:'Cole aqui um JSON de protocolos para importar'});
-    n.appendChild(el('h2',{style:'margin-top:16px',text:'Cópia dos protocolos'}));
-    n.appendChild(el('div',{class:'row',style:'margin-top:8px'},[
-      el('button',{class:'btn sm',text:'Copiar todos',onclick:function(){ copiar(JSON.stringify(DB.protocolos)); }}),
-      el('button',{class:'btn sm',text:'Importar',onclick:function(){ try{ var o=JSON.parse(ta.value); if(!o||typeof o!=='object'||Array.isArray(o)) throw new Error('formato'); NATUREZAS.forEach(function(x){ if(Array.isArray(o[x.id])) DB.protocolos[x.id]=o[x.id]; }); salvar(); status('Protocolos importados'); desenharProt(); }catch(e){ status('JSON inválido: nada foi importado'); } }})]));
-    n.appendChild(ta);
+      n.appendChild(el('button',{class:'natBtn'+(x.id===S.nat?' on':''),'aria-current':x.id===S.nat?'true':null,onclick:function(){ S.nat=x.id; S.msg=null; S.resp={}; S.fluxoSujo=false; S.formSujo=false; desenharProt(); }},[el('span',{text:x.nome}),el('span',{class:'natQ'+(erro?' er':q?'':' vz'),text:(erro?'com erros':q?q+' itens':'sem entrevista')+(x.fonte==='criada no site'&&!PUB_NAT.some(function(p){ return p.id===x.id; })?' · nova':alterada(x.id)?' · alterada':'')})])); });
+  }
+  /* ---------- naturezas: criar, renomear, excluir ---------- */
+  function trocarNomeEmTrocas(de,para){ var n=0; Object.keys(DB.protocolos).forEach(function(k){ (DB.protocolos[k]||[]).forEach(function(it){ if(it.tipo==='troca'&&norm(it.texto)===norm(de)){ it.texto=para; n++; } }); }); return n; }
+  function nomeLivre(nome,exceto){ var a=norm(nome); return !NATUREZAS.some(function(n){ return n.id!==exceto&&norm(n.nome)===a; }); }
+  function ordenarNats(){ NATUREZAS.sort(function(a,b){ return a.nome.localeCompare(b.nome,'pt-BR'); }); }
+  function criarNatureza(nome){
+    nome=String(nome||'').replace(/\s+/g,' ').trim(); if(!nome) return 'Escreva o nome da natureza.';
+    if(!nomeLivre(nome)) return 'Já existe uma natureza com esse nome.';
+    var base=String(nome).normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase().replace(/\(.*?\)/g,' ').replace(/[^a-z0-9]+/g,'_').replace(/^_+|_+$/g,'').slice(0,40).replace(/_+$/,'')||'natureza';
+    var id=base,k=2; while(natPorId(id)||PUB_NAT.some(function(n){ return n.id===id; })){ id=base+'_'+k; k++; }
+    NATUREZAS.push({id:id,nome:nome,fonte:'criada no site'}); ordenarNats(); DB.protocolos[id]=[]; salvar();
+    S.nat=id; S.resp={}; S.msg=null; desenharProt(); return '';
+  }
+  function renomearNatureza(id,nome){
+    nome=String(nome||'').replace(/\s+/g,' ').trim(); var n=natPorId(id); if(!n||!nome||nome===n.nome) return '';
+    if(!nomeLivre(nome,id)) return 'Já existe uma natureza com esse nome.';
+    var t=trocarNomeEmTrocas(n.nome,nome); n.nome=nome; ordenarNats(); salvar(); desenharProt();
+    status('Natureza renomeada'+(t?'; '+t+' troca'+(t>1?'s':'')+' de natureza atualizada'+(t>1?'s':''):''));
+    return '';
+  }
+  function excluirNatureza(id){
+    var n=natPorId(id); if(!n) return;
+    var refs=0; Object.keys(DB.protocolos).forEach(function(k){ (DB.protocolos[k]||[]).forEach(function(it){ if(it.tipo==='troca'&&norm(it.texto)===norm(n.nome)) refs++; }); });
+    if(!confirm('Excluir a natureza “'+n.nome+'” e a entrevista dela?'+(refs?'\n\n'+refs+' troca'+(refs>1?'s':'')+' de natureza em outras entrevistas aponta'+(refs>1?'m':'')+' para ela e vão ficar sem destino.':''))) return;
+    NATUREZAS.splice(NATUREZAS.indexOf(n),1); delete DB.protocolos[id]; salvar();
+    S.nat=NATUREZAS[0]?NATUREZAS[0].id:''; S.resp={}; desenharProt(); status('Natureza excluída');
+  }
+  var NOVA={aberta:false,erro:''};
+  function desenharNova(n){
+    if(!NOVA.aberta){ n.appendChild(el('button',{class:'btn dash sm',style:'margin-top:8px',text:'+ Nova natureza',onclick:function(){ NOVA.aberta=true; NOVA.erro=''; desenharNats(); var x=$('novaNat'); if(x) x.focus(); }})); return; }
+    var inp=el('input',{type:'text',id:'novaNat',placeholder:'Nome da natureza','aria-label':'Nome da nova natureza',onkeydown:function(e){ if(e.key==='Enter') ok(); if(e.key==='Escape'){ NOVA.aberta=false; desenharNats(); } }});
+    var ok=function(){ var r=criarNatureza(inp.value); if(r){ NOVA.erro=r; desenharNats(); var x=$('novaNat'); if(x){ x.value=inp.value; x.focus(); } } else NOVA.aberta=false; };
+    n.appendChild(el('div',{class:'novaNat'},[inp,el('div',{class:'row'},[el('button',{class:'btn sm ok',text:'Criar',onclick:ok}),el('button',{class:'btn sm',text:'Cancelar',onclick:function(){ NOVA.aberta=false; desenharNats(); }})]),NOVA.erro?el('div',{class:'msg err',text:NOVA.erro}):null]));
+  }
+  /* ---------- exportar e importar (.zip) ---------- */
+  var IMP=null;
+  function arquivoProtocolo(n){ return JSON.stringify({natureza:{id:n.id,nome:n.nome},itens:DB.protocolos[n.id]||[],notas:(typeof NOTAS_PROTOCOLOS!=='undefined'&&NOTAS_PROTOCOLOS[n.id])||[]},null,1)+'\n'; }
+  function exportarZip(){
+    var z={},d=new Date(),dd=function(x){ return ('0'+x).slice(-2); },carimbo=d.getFullYear()+'-'+dd(d.getMonth()+1)+'-'+dd(d.getDate())+'-'+dd(d.getHours())+'h'+dd(d.getMinutes()),alt=alteradas();
+    z['naturezas.json']=(JSON.stringify(NATUREZAS,null,1)+'\n');
+    NATUREZAS.forEach(function(n){ z['protocolos/'+n.id+'.json']=arquivoProtocolo(n); });
+    if(DB.feedbacks.length) z['feedback.json']=JSON.stringify(DB.feedbacks,null,1)+'\n';
+    z['LEIA-ME.txt']=('Protocolos do protótipo Hefesto, exportados em '+d.toLocaleString('pt-BR')+'.\n\nPara continuar em outro navegador: aba Protocolos, Importar, escolha este arquivo.\nPara publicar: envie este arquivo para quem cuida do repositório.\n\nNaturezas alteradas em relação à versão publicada ('+alt.length+'):\n'+(alt.map(function(n){ return '- '+n.nome; }).join('\n')||'(nenhuma)')+'\n'+(listaAlterada()?'\nA lista de naturezas também foi alterada (naturezas criadas, renomeadas ou excluídas).\n':''));
+    (function(b){
+      var a=document.createElement('a'); a.href=URL.createObjectURL(b); a.download='hefesto-protocolos-'+carimbo+'.zip'; document.body.appendChild(a); a.click(); setTimeout(function(){ URL.revokeObjectURL(a.href); a.remove(); },1000);
+      DB.ultimaExportacao=Date.now(); salvar(); status('Arquivo exportado: '+a.download); desenharNats();
+    })(new Blob([zipCriar(z,d)],{type:'application/zip'}));
+  }
+  function lerArquivo(f){
+    IMP=null;
+    var fim=function(mapa,natsZip){ /* mapa: {idNatureza: itens}; natsZip: lista de naturezas do arquivo, se houver */
+      var linhas=[],nz={}; (natsZip||[]).forEach(function(n){ nz[n.id]=n; });
+      Object.keys(mapa).forEach(function(id){
+        var n=natPorId(id),itens=mapa[id],z=nz[id];
+        if(!n&&!z){ linhas.push({id:id,nome:id,sit:'desconhecida'}); return; }
+        if(!Array.isArray(itens)){ linhas.push({id:id,nome:(n||z).nome,sit:'inválida'}); return; }
+        var nova=!n,renome=n&&z&&z.nome!==n.nome,igual=!nova&&impr(itens)===impr(DB.protocolos[id]);
+        linhas.push({id:id,nome:z?z.nome:n.nome,antigo:renome?n.nome:'',nova:nova,nat:z||n,sit:igual&&!renome?'igual':'muda',itens:itens,antes:nova?0:(DB.protocolos[id]||[]).length,erros:itens.length?validar(itens).erros.length:0});
+      });
+      var fora=NATUREZAS.filter(function(n){ return natsZip&&!nz[n.id]; });
+      IMP={nome:f.name,linhas:linhas,fora:fora}; desenharNats();
+    };
+    var erro=function(e){ IMP={nome:f.name,erro:String(e&&e.message||e)}; desenharNats(); };
+    if(/\.json$/i.test(f.name)){ f.text().then(function(t){ var o=JSON.parse(t); if(o&&o.itens&&o.natureza) { var m={}; m[o.natureza.id]=o.itens; fim(m); } else fim(o); }).catch(erro); return; }
+    f.arrayBuffer().then(zipLer).then(function(z){
+      var arqs=Object.keys(z).filter(function(k){ return /(^|\/)protocolos\/[a-z0-9_]+\.json$/.test(k); });
+      if(!arqs.length) throw new Error('o arquivo não tem a pasta protocolos/. Use um zip exportado pelo site.');
+      var m={}; arqs.forEach(function(k){ m[k.replace(/^.*\//,'').replace(/\.json$/,'')]=JSON.parse(z[k]).itens; });
+      var nk=Object.keys(z).filter(function(k){ return /(^|\/)naturezas\.json$/.test(k); })[0];
+      fim(m,nk?JSON.parse(z[nk]):null);
+    }).catch(erro);
+  }
+  function desenharArquivo(n){
+    var alt=alteradas(),la=listaAlterada();
+    n.appendChild(el('h2',{text:'Arquivo'}));
+    n.appendChild(el('p',{class:'muted',text:alt.length||la?(alt.length?alt.length+' entrevista'+(alt.length>1?'s alteradas':' alterada'):'')+(alt.length&&la?' e ':'')+(la?'lista de naturezas alterada':'')+' neste navegador.'+(DB.ultimaExportacao?' Última exportação: '+new Date(DB.ultimaExportacao).toLocaleString('pt-BR')+'.':' Ainda não exportado.'):'Nenhuma alteração em relação à versão publicada.'}));
+    var inp=el('input',{type:'file',accept:'.zip,.json',style:'display:none',onchange:function(e){ if(e.target.files[0]) lerArquivo(e.target.files[0]); e.target.value=''; }});
+    n.appendChild(el('div',{class:'row',style:'margin-top:4px'},[
+      el('button',{class:'btn sm '+(alt.length||la?'ok':''),text:'Exportar (.zip)',onclick:exportarZip}),
+      el('button',{class:'btn sm',text:'Importar',onclick:function(){ inp.click(); }}),inp]));
+    if(DB.feedbacks.length) n.appendChild(el('details',{class:'fbLista'},[el('summary',{text:'Feedbacks guardados neste navegador ('+DB.feedbacks.length+')'}),el('ul',{},DB.feedbacks.slice().reverse().map(function(f){ return el('li',{},[el('b',{text:f.tipo+': '}),f.texto,f.contexto?el('span',{class:'muted',text:' ('+[f.contexto.aba,f.contexto.natureza,f.contexto.item].filter(Boolean).join(' · ')+')'}):null]); })),el('span',{class:'apoio',text:'Vão no zip exportado (feedback.json).'})]));
+    n.appendChild(el('p',{class:'muted',style:'margin-top:6px',text:'O que você edita fica só neste navegador. Exporte para levar a outro computador ou para enviar as correções para publicação.'}));
+    if(!IMP) return;
+    var box=el('div',{class:'impArq',role:'status'});
+    if(IMP.erro){ box.appendChild(el('div',{class:'msg err',text:'Não consegui ler '+IMP.nome+': '+IMP.erro})); box.appendChild(el('button',{class:'btn sm',text:'Fechar',onclick:function(){ IMP=null; desenharNats(); }})); n.appendChild(box); return; }
+    var muda=IMP.linhas.filter(function(l){ return l.sit==='muda'; }),outras=IMP.linhas.filter(function(l){ return l.sit==='desconhecida'||l.sit==='inválida'; });
+    box.appendChild(el('b',{text:IMP.nome}));
+    box.appendChild(el('div',{class:'muted',text:muda.length?muda.length+' natureza'+(muda.length>1?'s':'')+' diferente'+(muda.length>1?'s':'')+' do que está neste navegador:':'Tudo igual ao que está neste navegador.'}));
+    if(muda.length) box.appendChild(el('ul',{},muda.map(function(l){ return el('li',{},[l.nova?el('b',{text:'Nova: '}):null,l.nome+(l.antigo?' (antes “'+l.antigo+'”)':'')+' ('+l.antes+' → '+l.itens.length+' itens)',!l.nova&&alterada(l.id)&&impr(l.itens)!==impr(DB.protocolos[l.id])?el('b',{class:'aviso',text:' · substitui sua edição'}):null,l.erros?el('span',{class:'aviso',text:' · com erros'}):null]); })));
+    if(IMP.fora&&IMP.fora.length) box.appendChild(el('div',{class:'muted',text:IMP.fora.length+' natureza'+(IMP.fora.length>1?'s existem':' existe')+' aqui e não no arquivo; '+(IMP.fora.length>1?'ficam':'fica')+' como '+(IMP.fora.length>1?'estão':'está')+': '+IMP.fora.map(function(n){ return n.nome; }).join(', ')+'.'}));
+    if(outras.length) box.appendChild(el('div',{class:'msg inf',text:'Ignoradas, porque a natureza não existe neste site: '+outras.map(function(l){ return l.nome; }).join(', ')+'.'}));
+    box.appendChild(el('div',{class:'row',style:'margin-top:6px'},[
+      muda.length?el('button',{class:'btn sm ok',text:'Aplicar',onclick:function(){ muda.forEach(function(l){ if(l.nova){ if(!nomeLivre(l.nome)) l.nat=Object.assign({},l.nat,{nome:l.nome+' (importada)'}); NATUREZAS.push({id:l.id,nome:l.nat.nome,fonte:l.nat.fonte||'criada no site'}); } else if(l.antigo){ trocarNomeEmTrocas(l.antigo,l.nome); natPorId(l.id).nome=l.nome; } DB.protocolos[l.id]=l.itens; }); ordenarNats(); IMP=null; salvar(); S.resp={}; status(muda.length+' natureza'+(muda.length>1?'s importadas':' importada')); desenharProt(); }}):null,
+      el('button',{class:'btn sm',text:muda.length?'Cancelar':'Fechar',onclick:function(){ IMP=null; desenharNats(); }})]));
+    n.appendChild(box);
   }
   function desenharProt(){ desenharNats(); desenharEditor(); desenharLado(); }
   /* ---------- editor visual ---------- */
@@ -542,10 +684,12 @@
       el('button',{class:'btn ic','aria-label':'Mover para cima',text:'↑',onclick:function(){ if(i>0){ var x=S.itens[i]; S.itens[i]=S.itens[i-1]; S.itens[i-1]=x; mudou(true); } }}),
       el('button',{class:'btn ic','aria-label':'Mover para baixo',text:'↓',onclick:function(){ if(i<S.itens.length-1){ var x=S.itens[i]; S.itens[i]=S.itens[i+1]; S.itens[i+1]=x; mudou(true); } }}),
       el('button',{class:'btn ic del','aria-label':'Excluir '+it.id,text:'✕',onclick:function(){ S.itens.splice(i,1); mudou(true); }})]));
-    box.appendChild(el('div',{class:'row',style:'margin-top:8px'},[el('input',{type:'text',class:'grow',value:it.texto,placeholder:it.tipo==='diagrama'?'Título do fluxograma':'Texto','aria-label':'Texto de '+it.id,oninput:function(e){ it.texto=e.target.value; mudou(false); }})]));
+    if(it.tipo==='troca'){ var tem=natPorNome(it.texto); box.appendChild(el('div',{class:'row',style:'margin-top:8px'},[el('span',{class:'lbl',text:'Trocar para:'}),el('select',{class:'grow','aria-label':'Natureza de destino da troca',onchange:function(e){ it.texto=e.target.value; mudou(true); }},(tem?[]:[el('option',{value:it.texto,text:(it.texto||'(escolha)')+' · não existe na lista',selected:true})]).concat(NATUREZAS.map(function(x){ return el('option',{value:x.nome,text:x.nome,selected:tem===x}); })))])); if(!tem&&it.texto) box.appendChild(el('div',{class:'apoio',text:'Escolha uma natureza da lista ou crie uma nova com esse nome.'})); }
+    else box.appendChild(el('div',{class:'row',style:'margin-top:8px'},[el('input',{type:'text',class:'grow',value:it.texto,placeholder:it.tipo==='diagrama'?'Título do fluxograma':'Texto','aria-label':'Texto de '+it.id,oninput:function(e){ it.texto=e.target.value; mudou(false); }})]));
     if(it.tipo==='diagrama'){ var ta=el('textarea',{class:'code',style:'min-height:110px;margin-top:8px','aria-label':'Código Mermaid do fluxograma de consulta',spellcheck:'false'}); ta.value=it.mermaid||''; ta.addEventListener('input',function(){ it.mermaid=ta.value; mudou(false); }); box.appendChild(ta); }
     var linha=el('div',{class:'row',style:'margin-top:8px'});
     if(ehPergunta(it)) linha.appendChild(el('label',{class:'row',style:'gap:6px'},[el('input',{type:'checkbox',checked:!!it.obrig,onchange:function(e){ it.obrig=e.target.checked; mudou(false); }}),'Obrigatória']));
+    if(it.tipo==='numero'||it.tipo==='texto'||it.tipo==='instrucao') linha.appendChild(el('label',{class:'row',style:'gap:6px',title:'Se desmarcado, a resposta ou a orientação não aparece no relato final'},[el('input',{type:'checkbox',checked:it.relato!==false,onchange:function(e){ if(e.target.checked) delete it.relato; else it.relato=false; mudou(false); }}),'No relato']));
     if(temOpcoes(it)) linha.appendChild(el('label',{class:'row',style:'gap:6px'},[el('input',{type:'checkbox',checked:!!it.outro,onchange:function(e){ it.outro=e.target.checked; mudou(false); }}),'Incluir “Outro”']));
     linha.appendChild(el('span',{class:'lbl',text:it.tipo==='multipla'?'Depois dos desvios:':temOpcoes(it)?'Depois (padrão):':'Depois:'}));
     linha.appendChild(seletorDestino(it.prox,it.id,'próximo da lista','Depois de '+it.id,function(v){ it.prox=v; }));
@@ -556,6 +700,7 @@
         opts.appendChild(el('div',{class:'row'},[
           el('input',{type:'text',class:'id',style:'width:110px',value:o.id,'aria-label':'Identificador da opção',onchange:function(e){ var u={}; it.opcoes.forEach(function(x){ if(x!==o) u[x.id]=1; }); o.id=idLivre(e.target.value,u); mudou(true); }}),
           el('input',{type:'text',class:'grow',value:o.rotulo,'aria-label':'Rótulo da opção '+o.id,oninput:function(e){ o.rotulo=e.target.value; mudou(false); }}),
+          el('button',{class:'relTg'+(o.relato===false?' off':''),'aria-pressed':o.relato===false?'false':'true',title:o.relato===false?'Esta resposta não aparece no relato final. Clique para incluir.':'Esta resposta aparece no relato final. Clique para tirar.',onclick:function(){ if(o.relato===false) delete o.relato; else o.relato=false; mudou(true); }},[o.relato===false?'fora do relato':'no relato']),
           seletorDestino(o.vai,it.id,it.tipo==='multipla'?'sem desvio':'segue o padrão','Destino da opção '+o.id,function(v){ o.vai=v; }),
           el('button',{class:'btn ic del','aria-label':'Remover opção '+o.id,text:'✕',onclick:function(){ it.opcoes.splice(j,1); mudou(true); }})]));
       });
@@ -620,23 +765,50 @@
     }
   }
   /* ---------- fluxo (mermaid) ---------- */
+  var LEGENDA=[['titulo','#af7e04','#fff','Natureza (início)','inicio(["Natureza: Nome"]):::titulo'],['perg','#ffffff','#1a1a1a','Pergunta','id["Texto da pergunta?"]:::perg'],['opc','#fff6b6','#1a1a1a','Resposta que vai para o relato','id__sim("Sim"):::opc'],['ns','#dedaff','#1a1a1a','Resposta fora do relato','id__nao("Não"):::ns'],['ab','#ff6464','#1a1a1a','Resposta aberta (texto livre)','id__outro("Aberta"):::ab'],['desp','#ffc6c6','#1a1a1a','Despacho imediato: encaminha e diz a fala','despacho["Fala: O socorro já foi acionado..."]:::desp'],['orient','#ffdc4a','#1a1a1a','Orientação ao solicitante','id("Afaste-se do local."):::orient'],['acao','#ffffff','#1a1a1a','Informação ao atendente','id["Acionar PMDF"]:::acao'],['video','#2dc75c','#1a1a1a','Videochamada','id>"Realize a videochamada"]:::video'],['troca','#8f7fee','#fff','Trocar natureza','id{{"Trocar natureza: Nome"}}:::troca'],['relato','#adf0c7','#1a1a1a','Relato final (fim)','fim(["Relato final"]):::relato']];
   function painelFluxo(p,v){
-    if(!S.fluxoSujo) S.fluxo=v.erros.length&&!S.fluxo?'':fluxoMermaid(S.itens,false);
-    p.appendChild(el('div',{class:'muted'},['Só a ordem e as ramificações, ligando identificadores do formulário. O texto da seta é o identificador da opção. Um identificador novo cria o item: use ',el('code',{text:'id{"pergunta"}'}),', ',el('code',{text:'id["instrução"]'}),' ou ',el('code',{text:'id("informação")'}),'.']));
-    var ta=el('textarea',{class:'code','aria-label':'Fluxo em Mermaid',spellcheck:'false',style:'margin-top:8px'}); ta.value=S.fluxo;
+    var miro=S.notacao!=='compacta',nat=natPorId(S.nat);
+    if(!S.fluxoSujo) S.fluxo=v.erros.length&&!S.fluxo?'':(miro?fluxoMiro(S.itens,nat.nome):fluxoMermaid(S.itens,false));
+    p.appendChild(el('div',{class:'row'},[el('span',{class:'lbl',text:'Notação:'}),
+      el('button',{class:'btn sm'+(miro?' pri':''),'aria-pressed':miro?'true':'false',text:'Padrão do Miro (cores)',onclick:function(){ S.notacao='miro'; S.fluxoSujo=false; S.msg=null; desenharLado(); }}),
+      el('button',{class:'btn sm'+(!miro?' pri':''),'aria-pressed':!miro?'true':'false',text:'Compacta',onclick:function(){ S.notacao='compacta'; S.fluxoSujo=false; S.msg=null; desenharLado(); }})]));
+    if(miro){
+      p.appendChild(el('div',{class:'muted',style:'margin-top:6px',text:'Desenhe como no quadro do Miro: cada caixa tem uma classe de cor, e as respostas são caixas ligadas à pergunta. A classe da resposta diz se ela vai para o relato. Identificadores novos criam itens; os existentes guardam o que o desenho não mostra (obrigatória, múltipla escolha, lista, número).'}));
+      p.appendChild(el('details',{class:'legenda'},[el('summary',{text:'Legenda das classes'}),el('table',{},LEGENDA.map(function(x){ return el('tr',{},[el('td',{},[el('span',{class:'cor',style:'background:'+x[1]+';color:'+x[2],text:x[0]})]),el('td',{text:x[3]}),el('td',{},[el('code',{text:x[4]})])]); }))]));
+    } else p.appendChild(el('div',{class:'muted',style:'margin-top:6px'},['Só a ordem e as ramificações, ligando identificadores do formulário. O texto da seta é o identificador da opção. Um identificador novo cria o item: use ',el('code',{text:'id{"pergunta"}'}),', ',el('code',{text:'id["instrução"]'}),' ou ',el('code',{text:'id("informação")'}),'.']));
+    var ta=el('textarea',{class:'code','aria-label':'Fluxo em Mermaid',spellcheck:'false',style:'margin-top:8px;min-height:'+(miro?'300px':'220px')}); ta.value=S.fluxo;
     ta.addEventListener('input',function(){ S.fluxo=ta.value; S.fluxoSujo=true; });
     p.appendChild(ta);
     var diag=el('div',{class:'diag'});
     p.appendChild(el('div',{class:'row',style:'margin-top:8px'},[
       el('button',{class:'btn pri',text:'Aplicar fluxo',onclick:function(){
+        if(miro){
+          var m=aplicarFluxoMiro(S.itens,ta.value,NATUREZAS);
+          if(!m.itens){ S.msg={t:'err',m:m.erros.join(' ')}; S.fluxo=ta.value; S.fluxoSujo=true; desenharLado(); return; }
+          var vv=validar(m.itens);
+          if(vv.erros.length){ S.msg={t:'err',m:'O desenho gera erros: '+vv.erros.slice(0,3).join(' ')+' Nada foi alterado.'}; S.fluxo=ta.value; S.fluxoSujo=true; desenharLado(); return; }
+          if(m.removidos.length&&!confirm('Estes itens não estão no desenho e vão sair da entrevista: '+m.removidos.join(', ')+'. Continuar?')) return;
+          S.itens=m.itens; S.msg={t:'okm',m:'Fluxo aplicado.'+(m.novos.length?' Criados: '+m.novos.join(', ')+'.':'')+(m.removidos.length?' Removidos: '+m.removidos.join(', ')+'.':'')+(m.avisos.length?' Atenção: '+m.avisos.slice(0,3).join(' '):'')}; mudou(true); return;
+        }
         var r=aplicarFluxo(S.itens,ta.value);
         if(!r.itens||r.erros.length){ S.msg={t:'err',m:r.erros.slice(0,3).join(' ')}; S.fluxo=ta.value; S.fluxoSujo=true; desenharLado(); return; }
         S.itens=r.itens; S.msg={t:'okm',m:'Fluxo aplicado.'+(r.criados.length?' Criados no formulário: '+r.criados.join(', ')+'.':'')}; mudou(true); }}),
       el('button',{class:'btn',text:'Gerar do editor',onclick:function(){ S.fluxoSujo=false; S.msg=null; desenharLado(); }}),
+      el('button',{class:'btn',text:'Ver rascunho',title:'Desenha o texto acima sem aplicar',onclick:function(){ desenhar(ta.value,diag); }}),
       el('button',{class:'btn',text:'Copiar',onclick:function(){ copiar(ta.value); }})]));
     if(S.msg) p.appendChild(el('div',{class:'msg '+S.msg.t,text:S.msg.m}));
-    p.appendChild(el('div',{class:'muted',style:'margin-top:10px',text:'Desenho (com os textos do formulário):'}));
-    p.appendChild(diag); if(!v.erros.length) desenhar(fluxoMermaid(S.itens,true),diag); else diag.appendChild(el('span',{class:'muted',text:'Corrija os erros para ver o desenho.'}));
+    diag.className='diag ajusta'; diag.title='Clique para alternar entre caber na tela e tamanho real';
+    diag.addEventListener('click',function(){ diag.classList.toggle('ajusta'); });
+    p.appendChild(el('div',{class:'row',style:'margin-top:10px'},[el('span',{class:'muted grow',text:'Desenho (clique para ampliar ou reduzir):'}),el('button',{class:'btn sm',text:'Tela cheia',onclick:function(){ telaCheia(diag.innerHTML); }})]));
+    p.appendChild(diag); if(!v.erros.length) desenhar(miro?fluxoMiro(S.itens,nat.nome):fluxoMermaid(S.itens,true),diag); else diag.appendChild(el('span',{class:'muted',text:'Corrija os erros para ver o desenho.'}));
+  }
+  function telaCheia(html){
+    var h=el('div',{class:'cheia',role:'dialog','aria-label':'Desenho do fluxo'});
+    var fechar=function(){ h.remove(); document.removeEventListener('keydown',esc,true); };
+    var esc=function(e){ if(e.key==='Escape'){ e.stopPropagation(); fechar(); } };
+    var area=el('div',{class:'cheiaArea'}); area.innerHTML=html;
+    h.appendChild(el('div',{class:'row'},[el('b',{class:'grow',text:'Desenho do fluxo'}),el('button',{class:'btn sm',onclick:fechar},['Fechar ',el('kbd',{text:'Esc'})])]));
+    h.appendChild(area); document.body.appendChild(h); document.addEventListener('keydown',esc,true);
   }
   /* ---------- formulário (json) ---------- */
   function painelForm(p){
@@ -709,13 +881,14 @@
   + '<li><b>Múltipla escolha:</b> cada opção marcada abre um desvio, na ordem das opções. Cada desvio precisa voltar ao item indicado em “Depois dos desvios”.</li>'
   + '<li><b>Fechamento:</b> encerra a entrevista. Um caminho que chega ao fechamento dentro de um desvio encerra tudo.</li>'
   + '<li>O mesmo item pode ser destino de vários caminhos. Não é preciso copiar.</li></ul>'
-  + '<h3>4. Escrever o fluxo em Mermaid</h3>'
-  + '<p>Na aba <b>Fluxo</b>, cada linha é uma seta entre identificadores. O texto no meio da seta é o identificador da opção.</p>'
-  + '<pre>flowchart TD\n  preso -- sim --&gt; nao_remover\n  preso --&gt; vitimas\n  nao_remover --&gt; vitimas\n  vitimas --&gt; FIM</pre>'
-  + '<p>Para rascunhar do zero, escreva o formato junto do identificador e o item é criado ao aplicar:</p>'
-  + '<pre>fogo{"Tem fogo?"} -- Sim --&gt; afastar["Afaste todos do veículo."]\nfogo -- Não --&gt; FIM\nafastar --&gt; gas("Chama azul pode indicar gás.") --&gt; FIM</pre>'
-  + '<table><tr><th>Formato</th><th>Cria</th></tr><tr><td><code>id{"texto"}</code></td><td>Pergunta de escolha única</td></tr><tr><td><code>id["texto"]</code></td><td>Instrução ao solicitante</td></tr><tr><td><code>id("texto")</code></td><td>Informação ao atendente</td></tr><tr><td><code>id[["texto"]]</code></td><td>Fluxograma de consulta</td></tr><tr><td><code>FIM</code></td><td>Fechamento</td></tr></table>'
-  + '<p>Depois de aplicar, ajuste no editor o tipo de resposta, a obrigatoriedade e os rótulos.</p>'
+  + '<h3>4. Desenhar o fluxo em Mermaid</h3>'
+  + '<p>Na aba <b>Fluxo</b>, a notação <b>Padrão do Miro</b> desenha a entrevista com as mesmas cores do quadro. Cada caixa tem uma classe, e as respostas são caixas ligadas à pergunta. Abra a <b>Legenda das classes</b> para ver todas.</p>'
+  + '<pre>inicio(["Natureza: Vazamento de gás"]):::titulo --> tipo\ntipo["É botijão ou encanado?"]:::perg\ntipo --> tipo__botijao("Botijão"):::opc --> despacho\ntipo --> tipo__nao_sabe("Não sabe"):::ns --> despacho\ndespacho["Fala: O socorro já foi acionado."]:::desp --> afastar\nafastar("Saia do local e não acenda luz."):::orient --> fim(["Relato final"]):::relato</pre>'
+  + '<ul><li>Resposta <code>:::opc</code> vai para o relato; <code>:::ns</code> não vai. <code>:::ab</code> é resposta aberta.</li>'
+  + '<li>O nome da resposta é <code>pergunta__resposta</code>. Identificadores que já existem guardam o que o desenho não mostra: obrigatória, múltipla escolha, lista, número.</li>'
+  + '<li>A caixa <code>:::desp</code> é o ponto do despacho imediato: no atendimento, o botão dela encaminha a ocorrência.</li>'
+  + '<li><b>Ver rascunho</b> desenha sem aplicar. <b>Aplicar fluxo</b> confere tudo antes de mudar a entrevista.</li></ul>'
+  + '<p>A notação <b>Compacta</b> continua disponível: cada linha é uma seta entre identificadores, e o texto da seta é a opção.</p>'
   + '<h3>5. Escrever o formulário em JSON</h3>'
   + '<p>Na aba <b>Formulário</b>, cada identificador tem tipo, texto e, nas perguntas com opções, a lista de opções.</p>'
   + '<pre>{\n  "preso": {\n    "tipo": "unica",\n    "texto": "Tem alguém preso?",\n    "obrigatoria": true,\n    "opcoes": [\n      { "id": "sim", "rotulo": "Sim" },\n      { "id": "nao", "rotulo": "Não" }\n    ]\n  },\n  "vitimas": { "tipo": "numero", "texto": "Quantas vítimas?" }\n}</pre>'
@@ -725,13 +898,16 @@
   + '<tr><td>“O fluxo tem um ciclo”</td><td>Algum caminho volta para um item anterior. Toda entrevista precisa chegar ao fechamento.</td></tr>'
   + '<tr><td>“nenhum caminho chega até ele”</td><td>O item existe, mas nada aponta para ele. Ligue-o a alguma opção ou exclua.</td></tr>'
   + '<tr><td>“o desvio não volta para …”</td><td>Em múltipla escolha, o ramo termina sem voltar ao tronco. Aponte o último item do ramo para o item de “Depois dos desvios”.</td></tr></table>'
-  + '<h3>7. Boas práticas</h3><ul>'
+  + '<h3>7. Relato final e despacho</h3><ul>'
+  + '<li>Ao lado de cada resposta, o botão <b>no relato</b> / <b>fora do relato</b> diz se ela entra no texto do relato. Respostas que só descartam uma hipótese, como “Não” em “Há outras pessoas no local?”, ficam fora. Nas perguntas abertas e nas orientações, use a caixa <b>No relato</b>.</li>'
+  + '<li>O encaminhamento ao despacho acontece no item de despacho imediato do fluxo. O atendente pode adiantar com <b>Encaminhar agora</b>, no topo da ligação.</li></ul>'
+  + '<h3>8. Boas práticas</h3><ul>'
   + '<li>Pergunte primeiro o que muda o recurso enviado ou a instrução dada.</li>'
   + '<li>Uma pergunta por item, com texto curto, do jeito que o atendente fala.</li>'
   + '<li>Marque como obrigatória só a pergunta sem a qual não dá para registrar.</li>'
   + '<li>Inclua “Não sabe” quando o solicitante puder não ter a resposta.</li>'
   + '<li>O texto de instruções de primeiros socorros deve ser validado pela área técnica antes de publicar.</li></ul>'
-  + '<h3>8. Trazer um fluxograma do Miro</h3>'
+  + '<h3>9. Trazer um fluxograma do Miro</h3>'
   + '<p>O fluxograma do Miro desenha caixas e setas; a entrevista precisa saber o que é pergunta, o que é dito ao solicitante e o que é só para o atendente. Na aba <b>Importar do Miro</b>:</p><ol>'
   + '<li>No Miro, copie o código Mermaid do diagrama e cole no campo 1.</li>'
   + '<li><b>Converter automaticamente</b> lê o desenho: losango e caixa com setas rotuladas viram pergunta, o texto da seta vira a opção, início e fim somem, ações como “Acionar viatura” viram informação ao atendente, laços são retirados.</li>'
@@ -749,14 +925,86 @@
   function desenharEditorTopo(ed){
     var n=natPorId(S.nat),ex=exemplos()[S.nat];
     ed.appendChild(el('div',{class:'row'},[el('h2',{class:'grow',text:'Entrevista · '+n.nome}),
-      ex?el('button',{class:'btn sm',text:n.fonte?'Restaurar do Miro':'Restaurar exemplo',onclick:function(){ S.itens=ex; S.msg=null; mudou(true); }}):null,
-      el('button',{class:'btn sm del',text:'Remover entrevista',onclick:function(){ S.itens=[]; S.msg=null; mudou(true); }})]));
-    var notas=(typeof NOTAS_MIRO!=='undefined'&&NOTAS_MIRO[S.nat])||[];
-    if(n.fonte) ed.appendChild(el('div',{class:'muted',style:'margin-top:6px',text:'Origem: quadro do Miro, '+n.fonte+'. “Restaurar do Miro” volta ao fluxo importado.'}));
-    if(notas.length) ed.appendChild(el('details',{class:'msg inf'},[el('summary',{text:'Notas da importação do Miro ('+notas.length+')'}),el('ul',{},notas.map(function(x){ return el('li',{text:x}); }))]));
+      ex&&alterada(S.nat)?el('button',{class:'btn sm',text:'Restaurar versão publicada',onclick:function(){ if(!confirm('Descartar as suas mudanças em '+n.nome+'?')) return; S.itens=ex; S.msg=null; mudou(true); }}):null,
+      el('button',{class:'btn sm',text:'Renomear',onclick:function(){ var nv=prompt('Novo nome da natureza:',n.nome); if(nv==null) return; var r=renomearNatureza(n.id,nv); if(r) alert(r); }}),
+      el('button',{class:'btn sm del',text:'Excluir natureza',onclick:function(){ excluirNatureza(n.id); }})]));
+    var notas=(typeof NOTAS_PROTOCOLOS!=='undefined'&&NOTAS_PROTOCOLOS[S.nat])||[],alt=alterada(S.nat);
+    ed.appendChild(el('div',{class:'muted',style:'margin-top:6px',text:alt?'Alterada neste navegador. “Restaurar versão publicada” descarta as suas mudanças nesta natureza.':'Igual à versão publicada.'}));
+    if(notas.length) ed.appendChild(el('details',{class:'msg inf'},[el('summary',{text:'Notas da importação do Miro ('+notas.length+')'}),el('p',{class:'muted',text:'Apontadas quando o fluxo veio do Miro. Podem já ter sido corrigidas.'}),el('ul',{},notas.map(function(x){ return el('li',{text:x}); }))]));
     ed.appendChild(el('div',{class:'muted',style:'margin-top:6px',text:'Cada item tem um identificador. O primeiro da lista inicia a entrevista. Em “Depois” e em cada opção você escolhe para onde o fluxo vai. O que você muda aqui vale na próxima ligação da aba Atendimento.'}));
     if(!S.itens.length) ed.appendChild(el('div',{class:'msg inf',text:'Esta natureza está sem entrevista: no atendimento, o passo Entrevista avisa e segue direto para o solicitante. Use os botões abaixo para criar o primeiro item.'}));
   }
+
+  /* ---------- feedback de quem usa ---------- */
+  if(!DB.feedbacks) DB.feedbacks=[];
+  var FB={aberto:false,tipo:'Problema',texto:'',nome:'',ctx:true,msg:null,enviando:false};
+  function contextoFeedback(){
+    var c={aba:{atend:'Atendimento',prot:'Protocolos',ocorr:'Ocorrências'}[V.view]};
+    if(V.view==='atend'&&A){ c.passo=PASSOS[A.passo]; var n=natPorId(A.nat); if(n) c.natureza=n.nome; if(A.passo===1){ var P=protocolo(); if(P.est&&P.est.pendente){ var it=P.g.item[P.est.pendente]; c.item=it.id+': '+it.texto; } } if(A.hermes) c.hermes=A.hermes.rot.titulo; }
+    if(V.view==='prot'){ var m=natPorId(S.nat); if(m) c.natureza=m.nome; c.painel=S.aba; }
+    return c;
+  }
+  function feedbackRemoto(){ var gf=typeof FEEDBACK_FORMULARIO!=='undefined'?lerFormularioGoogle(FEEDBACK_FORMULARIO):null; return !!(gf&&gf.envio)||!!(typeof FEEDBACK_DESTINO!=='undefined'&&FEEDBACK_DESTINO&&FEEDBACK_DESTINO.url); }
+  function enviarFeedback(){
+    var t=FB.texto.trim(); if(!t){ FB.msg={t:'err',m:'Escreva o seu comentário.'}; desenharFeedback(); return; }
+    var reg={quando:new Date().toISOString(),tipo:FB.tipo,texto:t,nome:FB.nome.trim()||null,contexto:FB.ctx?contextoFeedback():null,navegador:navigator.userAgent.slice(0,160)};
+    var ok=function(remoto){ if(!remoto){ DB.feedbacks.push(reg); salvar(); } FB.texto=''; FB.enviando=false; FB.msg={t:'okm',m:remoto?'Obrigado! Seu feedback foi enviado.':'Obrigado! Seu feedback ficou guardado neste navegador e vai junto quando os protocolos forem exportados.'}; desenharFeedback(); };
+    var gf=typeof FEEDBACK_FORMULARIO!=='undefined'?lerFormularioGoogle(FEEDBACK_FORMULARIO):null;
+    if(gf&&gf.envio){
+      var c=reg.contexto,onde=c?[c.aba,c.passo,c.natureza,c.item,c.painel?'painel '+c.painel:'',c.hermes?'Hermes: '+c.hermes:''].filter(Boolean).join(' · '):'';
+      var dados={TIPO:reg.tipo,COMENTARIO:reg.texto,NOME:reg.nome||'',CONTEXTO:onde,NAVEGADOR:reg.navegador},corpo=new URLSearchParams();
+      Object.keys(gf.campos).forEach(function(k){ corpo.append(gf.campos[k],dados[k]||''); });
+      if(!gf.campos.CONTEXTO&&onde) corpo.set(gf.campos.COMENTARIO,reg.texto+'\n\n(Onde: '+onde+')');
+      FB.enviando=true; desenharFeedback();
+      /* o Google não deixa ler a resposta de outro site (no-cors): sem erro de rede, conta como enviado */
+      fetch(gf.envio,{method:'POST',mode:'no-cors',body:corpo})
+        .then(function(){ ok(true); })
+        .catch(function(){ ok(false); FB.msg={t:'inf',m:'Não consegui enviar agora (sem internet?). Seu feedback ficou guardado neste navegador e vai junto quando os protocolos forem exportados.'}; desenharFeedback(); });
+      return;
+    }
+    if(typeof FEEDBACK_DESTINO!=='undefined'&&FEEDBACK_DESTINO&&FEEDBACK_DESTINO.url){
+      FB.enviando=true; desenharFeedback();
+      fetch(FEEDBACK_DESTINO.url.replace(/\/$/,'')+'/rest/v1/'+(FEEDBACK_DESTINO.tabela||'feedback'),{method:'POST',headers:{'apikey':FEEDBACK_DESTINO.chave,'Authorization':'Bearer '+FEEDBACK_DESTINO.chave,'Content-Type':'application/json','Prefer':'return=minimal'},body:JSON.stringify(reg)})
+        .then(function(r){ if(!r.ok) throw new Error('HTTP '+r.status); ok(true); })
+        .catch(function(){ ok(false); FB.msg={t:'inf',m:'Não consegui enviar agora. Seu feedback ficou guardado neste navegador e vai junto quando os protocolos forem exportados.'}; desenharFeedback(); });
+    } else ok(false);
+  }
+  function tallyId(){ return typeof FEEDBACK_TALLY!=='undefined'&&/^[\w-]+$/.test(FEEDBACK_TALLY||'')?FEEDBACK_TALLY:''; }
+  window.addEventListener('message',function(e){
+    if(!/tally\.so$/.test(String(e.origin).replace(/^https?:\/\//,''))) return;
+    var d=e.data; try{ if(typeof d==='string') d=JSON.parse(d); }catch(x){ return; }
+    if(d&&d.event==='Tally.FormSubmitted'&&FB.aberto){ FB.enviadoTally=true; desenharFeedback(); }
+  });
+  function desenharFeedback(){
+    var h=$('feedback'); h.textContent=''; if(!FB.aberto){ h.style.display='none'; return; } h.style.display='';
+    var c=contextoFeedback(),fechar=function(){ FB.aberto=false; FB.msg=null; FB.enviadoTally=false; desenharFeedback(); };
+    var tid=tallyId();
+    if(tid&&!FB.local){
+      var q=['alignLeft=1','hideTitle=1','transparentBackground=1'];
+      [['aba',c.aba],['passo',c.passo],['natureza',c.natureza],['pergunta',c.item],['painel',c.painel],['hermes',c.hermes],['navegador',navigator.userAgent.slice(0,160)]].forEach(function(x){ if(x[1]) q.push(x[0]+'='+encodeURIComponent(x[1])); });
+      var url='https://tally.so/embed/'+tid+'?'+q.join('&');
+      h.appendChild(el('div',{class:'ajBox fbBox fbTally',role:'dialog','aria-label':'Dar feedback'},[
+        el('div',{class:'row'},[el('h2',{class:'grow',text:'Dar feedback sobre o protótipo'}),el('button',{class:'btn sm',onclick:fechar},['Fechar ',el('kbd',{text:'Esc'})])]),
+        FB.enviadoTally?el('div',{class:'msg okm',role:'status',text:'Obrigado! Seu feedback foi enviado.'}):null,
+        el('p',{class:'muted',text:'Vai junto: '+([c.aba,c.passo,c.natureza,c.item].filter(Boolean).join(' · ')||'a tela atual')+'.'}),
+        el('iframe',{src:url,title:'Formulário de feedback',loading:'lazy'}),
+        el('div',{class:'row'},[el('a',{class:'lnk',href:url.replace('/embed/','/r/'),target:'_blank',rel:'noopener',text:'Abrir em outra aba'}),el('button',{class:'lnk',text:'Sem internet? Escrever aqui e guardar no navegador',onclick:function(){ FB.local=true; desenharFeedback(); }})])]));
+      return;
+    }
+    var tipos=['Problema','Sugestão','Dúvida','Elogio'];
+    var ta=el('textarea',{rows:'5',id:'fbTxt','aria-label':'Seu comentário',placeholder:'O que aconteceu, o que você esperava, o que mudaria…',value:FB.texto,oninput:function(e){ FB.texto=e.target.value; }});
+    h.appendChild(el('div',{class:'ajBox fbBox',role:'dialog','aria-label':'Dar feedback'},[
+      el('h2',{text:'Dar feedback sobre o protótipo'}),
+      el('div',{class:'row',role:'radiogroup','aria-label':'Tipo'},tipos.map(function(t){ return el('button',{class:'btn sm'+(FB.tipo===t?' pri':''),role:'radio','aria-checked':FB.tipo===t?'true':'false',text:t,onclick:function(){ FB.tipo=t; desenharFeedback(); var x=$('fbTxt'); if(x) x.focus(); }}); })),
+      ta,
+      el('input',{type:'text','aria-label':'Seu nome (opcional)',placeholder:'Seu nome (opcional)',value:FB.nome,oninput:function(e){ FB.nome=e.target.value; }}),
+      el('label',{class:'row',style:'gap:6px;font-size:13px'},[el('input',{type:'checkbox',checked:FB.ctx,onchange:function(e){ FB.ctx=e.target.checked; }}),'Incluir onde eu estava: '+[c.aba,c.passo,c.natureza,c.item].filter(Boolean).join(' · ')]),
+      el('p',{class:'muted',text:'Não escreva dados reais de ocorrência nem de pessoas.'+(feedbackRemoto()?'':' O feedback fica guardado neste navegador até os protocolos serem exportados.')}),
+      FB.msg?el('div',{class:'msg '+FB.msg.t,role:'status',text:FB.msg.m}):null,
+      el('div',{class:'row'},[el('button',{class:'btn ok',disabled:FB.enviando,text:FB.enviando?'Enviando…':'Enviar',onclick:enviarFeedback}),el('button',{class:'btn',onclick:fechar},['Fechar ',el('kbd',{text:'Esc'})])])]));
+    if(!FB.msg) ta.focus();
+  }
+  $('bFeedback').addEventListener('click',function(){ FB.aberto=true; FB.msg=null; FB.local=false; FB.enviadoTally=false; desenharFeedback(); });
 
   /* ---------- navegação entre as três áreas ---------- */
   function mostrar(v){

@@ -1,0 +1,376 @@
+{
+ "natureza": {
+  "id": "agressao_fisica",
+  "nome": "Agressão física"
+ },
+ "itens": [
+  {
+   "id": "despacho",
+   "tipo": "instrucao",
+   "texto": "O socorro já foi acionado e está a caminho. Vou fazer algumas perguntas rápidas para ajudar a equipe. Mantenha a calma e siga minhas orientações, por favor.",
+   "obrig": false,
+   "outro": false,
+   "mermaid": "",
+   "prox": "sexo_pessoa_agredida",
+   "opcoes": [],
+   "despacho": true
+  },
+  {
+   "id": "sexo_pessoa_agredida",
+   "tipo": "unica",
+   "texto": "Sexo da pessoa agredida",
+   "obrig": false,
+   "outro": false,
+   "mermaid": "",
+   "prox": "idade_pessoa_agredida",
+   "opcoes": [
+    {
+     "id": "feminino",
+     "rotulo": "Feminino",
+     "vai": "atencao_sinais_alerta"
+    },
+    {
+     "id": "masculino",
+     "rotulo": "Masculino",
+     "vai": ""
+    },
+    {
+     "id": "nao_sei",
+     "rotulo": "Não sei",
+     "vai": ""
+    }
+   ]
+  },
+  {
+   "id": "atencao_sinais_alerta",
+   "tipo": "informacao",
+   "texto": "Atenção para os sinais de alerta! * Pedidos incomuns (pizza ou remédio...), * Conversas truncadas (batendo papo com atendente de loja), * Não encerre a Ligação e prossiga com o registro.",
+   "obrig": false,
+   "outro": false,
+   "mermaid": "",
+   "prox": "idade_pessoa_agredida",
+   "opcoes": []
+  },
+  {
+   "id": "idade_pessoa_agredida",
+   "tipo": "unica",
+   "texto": "Idade da pessoa agredida",
+   "obrig": false,
+   "outro": false,
+   "mermaid": "",
+   "prox": "atencao_teleatendente_ba",
+   "opcoes": [
+    {
+     "id": "adulto_a",
+     "rotulo": "Adulto(a)",
+     "vai": "vitima_encontra_presa"
+    },
+    {
+     "id": "idoso_a",
+     "rotulo": "Idoso (a)",
+     "vai": "vitima_encontra_presa"
+    },
+    {
+     "id": "crianca",
+     "rotulo": "Criança",
+     "vai": "vitima_encontra_presa"
+    }
+   ]
+  },
+  {
+   "id": "vitima_encontra_presa",
+   "tipo": "unica",
+   "texto": "A vítima encontra-se presa ou confinada pelo agressor?",
+   "obrig": false,
+   "outro": false,
+   "mermaid": "",
+   "prox": "pessoa_agredida_respiran",
+   "opcoes": [
+    {
+     "id": "nao",
+     "rotulo": "Não",
+     "vai": ""
+    },
+    {
+     "id": "sim",
+     "rotulo": "Sim",
+     "vai": ""
+    }
+   ]
+  },
+  {
+   "id": "pessoa_agredida_respiran",
+   "tipo": "unica",
+   "texto": "A pessoa agredida está respirando?",
+   "obrig": false,
+   "outro": false,
+   "mermaid": "",
+   "prox": "pessoa_atingida_tiro",
+   "opcoes": [
+    {
+     "id": "sim",
+     "rotulo": "Sim",
+     "vai": ""
+    },
+    {
+     "id": "nao",
+     "rotulo": "Não",
+     "vai": "troca_parada_cardiorespi"
+    }
+   ]
+  },
+  {
+   "id": "pessoa_atingida_tiro",
+   "tipo": "unica",
+   "texto": "A pessoa foi atingida por tiro?",
+   "obrig": false,
+   "outro": false,
+   "mermaid": "",
+   "prox": "pessoa_ferida_faca",
+   "opcoes": [
+    {
+     "id": "sim",
+     "rotulo": "Sim",
+     "vai": "troca_ferimento_arma"
+    },
+    {
+     "id": "nao",
+     "rotulo": "Não",
+     "vai": ""
+    },
+    {
+     "id": "nao_sei",
+     "rotulo": "Não sei",
+     "vai": "",
+     "relato": false
+    }
+   ]
+  },
+  {
+   "id": "troca_ferimento_arma",
+   "tipo": "troca",
+   "texto": "Ferimento por arma de fogo",
+   "obrig": false,
+   "outro": false,
+   "mermaid": "",
+   "prox": "FIM",
+   "opcoes": []
+  },
+  {
+   "id": "pessoa_ferida_faca",
+   "tipo": "unica",
+   "texto": "A pessoa foi ferida com faca ou objeto cortante?",
+   "obrig": false,
+   "outro": false,
+   "mermaid": "",
+   "prox": "pessoa_agredida_conscien",
+   "opcoes": [
+    {
+     "id": "sim",
+     "rotulo": "Sim",
+     "vai": "troca_ferimento_arma_2"
+    },
+    {
+     "id": "nao",
+     "rotulo": "Não",
+     "vai": ""
+    },
+    {
+     "id": "nao_sei",
+     "rotulo": "Não sei",
+     "vai": "",
+     "relato": false
+    }
+   ]
+  },
+  {
+   "id": "troca_ferimento_arma_2",
+   "tipo": "troca",
+   "texto": "Ferimento por arma branca",
+   "obrig": false,
+   "outro": false,
+   "mermaid": "",
+   "prox": "FIM",
+   "opcoes": []
+  },
+  {
+   "id": "pessoa_agredida_conscien",
+   "tipo": "unica",
+   "texto": "A pessoa agredida está consciente?",
+   "obrig": false,
+   "outro": false,
+   "mermaid": "",
+   "prox": "risco_vida_pessoa",
+   "opcoes": [
+    {
+     "id": "sim",
+     "rotulo": "Sim",
+     "vai": ""
+    },
+    {
+     "id": "nao",
+     "rotulo": "Não",
+     "vai": ""
+    }
+   ]
+  },
+  {
+   "id": "risco_vida_pessoa",
+   "tipo": "unica",
+   "texto": "Há risco a vida da pessoa agredida?",
+   "obrig": false,
+   "outro": false,
+   "mermaid": "",
+   "prox": "agressor_local",
+   "opcoes": [
+    {
+     "id": "sim",
+     "rotulo": "Sim",
+     "vai": ""
+    },
+    {
+     "id": "nao",
+     "rotulo": "Não",
+     "vai": "",
+     "relato": false
+    }
+   ]
+  },
+  {
+   "id": "agressor_local",
+   "tipo": "unica",
+   "texto": "O agressor está no local?",
+   "obrig": false,
+   "outro": false,
+   "mermaid": "",
+   "prox": "acolhimento_orientacao_s",
+   "opcoes": [
+    {
+     "id": "sim",
+     "rotulo": "Sim",
+     "vai": "porta_arma"
+    },
+    {
+     "id": "nao",
+     "rotulo": "Não",
+     "vai": "FIM"
+    },
+    {
+     "id": "nao_sabe",
+     "rotulo": "Não sabe",
+     "vai": "FIM"
+    }
+   ]
+  },
+  {
+   "id": "porta_arma",
+   "tipo": "unica",
+   "texto": "Porta arma?",
+   "obrig": false,
+   "outro": false,
+   "mermaid": "",
+   "prox": "FIM",
+   "opcoes": [
+    {
+     "id": "sim",
+     "rotulo": "Sim",
+     "vai": "tipo"
+    },
+    {
+     "id": "nao",
+     "rotulo": "Não",
+     "vai": ""
+    },
+    {
+     "id": "nao_sabe",
+     "rotulo": "Não sabe",
+     "vai": ""
+    }
+   ]
+  },
+  {
+   "id": "tipo",
+   "tipo": "unica",
+   "texto": "que tipo?",
+   "obrig": false,
+   "outro": false,
+   "mermaid": "",
+   "prox": "FIM",
+   "opcoes": [
+    {
+     "id": "arma_branca",
+     "rotulo": "Arma Branca",
+     "vai": ""
+    },
+    {
+     "id": "arma_de_fogo",
+     "rotulo": "Arma de fogo",
+     "vai": ""
+    },
+    {
+     "id": "nao_sei",
+     "rotulo": "Não sei",
+     "vai": ""
+    }
+   ]
+  },
+  {
+   "id": "acolhimento_orientacao_s",
+   "tipo": "informacao",
+   "texto": "Acolhimento e Orientação. * Segurança: Orientar permanecer em local Seguro, trancar portas e janelas. * Acolhimento: Caso haja abertura e tempo hábil. prestar o acolhimento a vítima 'você não é culpada. Estamos aqui para te ouvir'",
+   "obrig": false,
+   "outro": false,
+   "mermaid": "",
+   "prox": "FIM",
+   "opcoes": []
+  },
+  {
+   "id": "troca_parada_cardiorespi",
+   "tipo": "troca",
+   "texto": "Parada cardiorrespiratória (PCR)",
+   "obrig": false,
+   "outro": false,
+   "mermaid": "",
+   "prox": "despacho_2",
+   "opcoes": []
+  },
+  {
+   "id": "despacho_2",
+   "tipo": "instrucao",
+   "texto": "O socorro já foi acionado e está a caminho. Iremos realizar uma vídeo chamada para orientá-lo(a).",
+   "obrig": false,
+   "outro": false,
+   "mermaid": "",
+   "prox": "realize_videochamada_fac",
+   "opcoes": [],
+   "despacho": true
+  },
+  {
+   "id": "realize_videochamada_fac",
+   "tipo": "informacao",
+   "texto": "Realize a videochamada e faça as orientações",
+   "obrig": false,
+   "outro": false,
+   "mermaid": "",
+   "prox": "FIM",
+   "opcoes": [],
+   "video": true
+  },
+  {
+   "id": "atencao_teleatendente_ba",
+   "tipo": "informacao",
+   "texto": "Atenção Teleatendente! Com base nas informações, esta ocorrência se enquadra no projeto CBMDF ACOLHE. Enviaremos uma viatura específica para este tipo de ocorrência.",
+   "obrig": false,
+   "outro": false,
+   "mermaid": "",
+   "prox": "FIM",
+   "opcoes": []
+  }
+ ],
+ "notas": [
+  "“A pessoa agredida está respirando?” / “Não”: a resposta leva a 2 caixas ao mesmo tempo; ficou só “🔁 Trocar natureza: Parada Cardiorespiratória (PCR)”.",
+  "Troca para “Parada Cardiorespiratória (PCR)” entendida como “Parada cardiorrespiratória (PCR)”.",
+  "“acolhimento_orientacao_s” está no formulário, mas nenhum caminho do fluxo chega até ele.",
+  "“atencao_teleatendente_ba” está no formulário, mas nenhum caminho do fluxo chega até ele."
+ ]
+}

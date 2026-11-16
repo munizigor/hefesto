@@ -1,0 +1,257 @@
+[
+ {
+  "id": "acidente_de_transito",
+  "nome": "Acidente de trânsito",
+  "fonte": "transcrição do quadro"
+ },
+ {
+  "id": "afogamento",
+  "nome": "Afogamento",
+  "fonte": "transcrição do quadro"
+ },
+ {
+  "id": "agressao_fisica",
+  "nome": "Agressão física",
+  "fonte": "transcrição do quadro"
+ },
+ {
+  "id": "amputacao_ou_esmagamento_de_membro",
+  "nome": "Amputação ou esmagamento de membro",
+  "fonte": "transcrição do quadro"
+ },
+ {
+  "id": "animal_domestico_em_situacao_de_risco",
+  "nome": "Animal doméstico em situação de risco",
+  "fonte": "fluxo novo"
+ },
+ {
+  "id": "apoio_a_outros_orgaos",
+  "nome": "Apoio a outros órgãos",
+  "fonte": "fluxo novo"
+ },
+ {
+  "id": "arvore_com_risco_de_queda",
+  "nome": "Árvore com risco de queda",
+  "fonte": "transcrição do quadro"
+ },
+ {
+  "id": "ataque_picada_de_animal",
+  "nome": "Ataque / picada de animal",
+  "fonte": "transcrição do quadro"
+ },
+ {
+  "id": "atividade_preventiva_palestra_demonstrac",
+  "nome": "Atividade preventiva / palestra / demonstração profissional",
+  "fonte": "fluxo novo"
+ },
+ {
+  "id": "choque_eletrico",
+  "nome": "Choque elétrico",
+  "fonte": "fluxo novo"
+ },
+ {
+  "id": "desabamento_desmoronamento",
+  "nome": "Desabamento / desmoronamento",
+  "fonte": "fluxo novo"
+ },
+ {
+  "id": "embarcacao_a_deriva",
+  "nome": "Embarcação à deriva",
+  "fonte": "fluxo novo"
+ },
+ {
+  "id": "emergencia_clinica",
+  "nome": "Emergência clínica",
+  "fonte": "transcrição do quadro"
+ },
+ {
+  "id": "emergencia_nuclear_radiologica",
+  "nome": "Emergência nuclear / radiológica",
+  "fonte": "fluxo novo"
+ },
+ {
+  "id": "explosao_ameaca_de_explosao",
+  "nome": "Explosão / ameaça de explosão",
+  "fonte": "fluxo novo"
+ },
+ {
+  "id": "ferimento_diverso",
+  "nome": "Ferimento diverso (exceto arma branca e de fogo)",
+  "fonte": "fluxo novo"
+ },
+ {
+  "id": "ferimento_por_arma_branca",
+  "nome": "Ferimento por arma branca",
+  "fonte": "fluxo novo"
+ },
+ {
+  "id": "ferimento_por_arma_de_fogo",
+  "nome": "Ferimento por arma de fogo",
+  "fonte": "fluxo novo"
+ },
+ {
+  "id": "fratura_luxacao_ou_entorse",
+  "nome": "Fratura, luxação ou entorse",
+  "fonte": "transcrição do quadro"
+ },
+ {
+  "id": "incendio_em_edificacao",
+  "nome": "Incêndio em edificação",
+  "fonte": "transcrição do quadro"
+ },
+ {
+  "id": "incendio_em_lixo_entulho",
+  "nome": "Incêndio em lixo / entulho",
+  "fonte": "fluxo novo"
+ },
+ {
+  "id": "incendio_em_meio_de_transporte",
+  "nome": "Incêndio em meio de transporte",
+  "fonte": "fluxo novo"
+ },
+ {
+  "id": "incendio_em_vegetacao",
+  "nome": "Incêndio em vegetação",
+  "fonte": "fluxo novo"
+ },
+ {
+  "id": "insetos_abelha_ou_similares_2",
+  "nome": "Insetos, abelha ou similares (versão 2)",
+  "fonte": "transcrição do quadro"
+ },
+ {
+  "id": "insetos_abelha_ou_similares",
+  "nome": "Insetos, abelha ou similares (versão do Quadro 2)",
+  "fonte": "transcrição do quadro"
+ },
+ {
+  "id": "inundacao_alagamento",
+  "nome": "Inundação / alagamento",
+  "fonte": "fluxo novo"
+ },
+ {
+  "id": "naufragio_acidente_nautico",
+  "nome": "Naufrágio / acidente náutico",
+  "fonte": "fluxo novo"
+ },
+ {
+  "id": "obstrucao_de_via_publica",
+  "nome": "Obstrução de via pública",
+  "fonte": "fluxo novo"
+ },
+ {
+  "id": "obstrucao_de_vias_aereas",
+  "nome": "Obstrução de vias aéreas (OVACE)",
+  "fonte": "fluxo novo"
+ },
+ {
+  "id": "oleo_substancia_na_via",
+  "nome": "Óleo / substância na via",
+  "fonte": "fluxo novo"
+ },
+ {
+  "id": "paciente_com_necessidade_de_transferenci",
+  "nome": "Paciente com necessidade de transferência entre unidades",
+  "fonte": "fluxo novo"
+ },
+ {
+  "id": "parada_cardiorrespiratoria",
+  "nome": "Parada cardiorrespiratória (PCR)",
+  "fonte": "transcrição do quadro"
+ },
+ {
+  "id": "parto_de_emergencia",
+  "nome": "Parto de emergência",
+  "fonte": "fluxo novo"
+ },
+ {
+  "id": "pessoa_arrastada_por_enxurrada",
+  "nome": "Pessoa arrastada por enxurrada",
+  "fonte": "fluxo novo"
+ },
+ {
+  "id": "pessoa_atropelada",
+  "nome": "Pessoa atropelada",
+  "fonte": "fluxo novo"
+ },
+ {
+  "id": "pessoa_com_necessidade_de_auxilio_para_m",
+  "nome": "Pessoa com necessidade de auxílio para movimentação",
+  "fonte": "fluxo novo"
+ },
+ {
+  "id": "pessoa_confinada",
+  "nome": "Pessoa confinada",
+  "fonte": "transcrição do quadro"
+ },
+ {
+  "id": "pessoa_em_obito_evidente",
+  "nome": "Pessoa em óbito evidente",
+  "fonte": "fluxo novo"
+ },
+ {
+  "id": "pessoa_em_profundidade",
+  "nome": "Pessoa em profundidade (desnível negativo)",
+  "fonte": "fluxo novo"
+ },
+ {
+  "id": "pessoa_em_risco_de_queda",
+  "nome": "Pessoa em risco de queda",
+  "fonte": "fluxo novo"
+ },
+ {
+  "id": "pessoa_prensada_por_estrutura_maquina_ou",
+  "nome": "Pessoa prensada por estrutura, máquina ou veículo",
+  "fonte": "fluxo novo"
+ },
+ {
+  "id": "pessoa_presa_ou_confinada",
+  "nome": "Pessoa presa ou confinada",
+  "fonte": "fluxo novo"
+ },
+ {
+  "id": "pessoa_trancada_acesso_bloqueado",
+  "nome": "Pessoa trancada / acesso bloqueado",
+  "fonte": "fluxo novo"
+ },
+ {
+  "id": "picada_de_abelha_marimbondo_inseto",
+  "nome": "Picada de abelha / marimbondo / inseto",
+  "fonte": "transcrição do quadro"
+ },
+ {
+  "id": "queda_da_propria_altura",
+  "nome": "Queda da própria altura",
+  "fonte": "transcrição do quadro"
+ },
+ {
+  "id": "queda_de_plano_elevado",
+  "nome": "Queda de plano elevado",
+  "fonte": "fluxo novo"
+ },
+ {
+  "id": "risco_de_choque_eletrico",
+  "nome": "Risco de choque elétrico",
+  "fonte": "fluxo novo"
+ },
+ {
+  "id": "risco_de_desabamento",
+  "nome": "Risco de desabamento",
+  "fonte": "fluxo novo"
+ },
+ {
+  "id": "simulado",
+  "nome": "Simulado",
+  "fonte": "fluxo novo"
+ },
+ {
+  "id": "tentativa_de_suicidio",
+  "nome": "Tentativa de suicídio",
+  "fonte": "transcrição do quadro"
+ },
+ {
+  "id": "vazamento_de_gas_glp",
+  "nome": "Vazamento de gás / GLP",
+  "fonte": "fluxo novo"
+ }
+]

@@ -1,0 +1,203 @@
+{
+ "natureza": {
+  "id": "vazamento_de_gas_glp",
+  "nome": "Vazamento de gás / GLP"
+ },
+ "itens": [
+  {
+   "id": "botijao_gas_encanado",
+   "tipo": "unica",
+   "texto": "É botijão, gás encanado ou cilindro industrial / hospitalar?",
+   "obrig": false,
+   "outro": false,
+   "mermaid": "",
+   "prox": "pegando_fogo",
+   "opcoes": [
+    {
+     "id": "botijao",
+     "rotulo": "Botijão",
+     "vai": ""
+    },
+    {
+     "id": "encanado",
+     "rotulo": "Encanado",
+     "vai": ""
+    },
+    {
+     "id": "cilindro_central_de_gas",
+     "rotulo": "Cilindro / central de gás",
+     "vai": ""
+    },
+    {
+     "id": "nao_sabe",
+     "rotulo": "Não sabe",
+     "vai": "",
+     "relato": false
+    }
+   ]
+  },
+  {
+   "id": "pegando_fogo",
+   "tipo": "unica",
+   "texto": "Está pegando fogo?",
+   "obrig": false,
+   "outro": false,
+   "mermaid": "",
+   "prox": "troca_incendio_edificaca",
+   "opcoes": [
+    {
+     "id": "sim",
+     "rotulo": "Sim",
+     "vai": ""
+    },
+    {
+     "id": "nao",
+     "rotulo": "Não",
+     "vai": "despacho"
+    }
+   ]
+  },
+  {
+   "id": "troca_incendio_edificaca",
+   "tipo": "troca",
+   "texto": "Incêndio em edificação",
+   "obrig": false,
+   "outro": false,
+   "mermaid": "",
+   "prox": "FIM",
+   "opcoes": []
+  },
+  {
+   "id": "despacho",
+   "tipo": "instrucao",
+   "texto": "O socorro já foi acionado e está a caminho. Vou fazer algumas perguntas rápidas para ajudar a equipe. Mantenha a calma e siga minhas orientações, por favor.",
+   "obrig": false,
+   "outro": false,
+   "mermaid": "",
+   "prox": "ja_houve_explosao",
+   "opcoes": [],
+   "despacho": true
+  },
+  {
+   "id": "ja_houve_explosao",
+   "tipo": "unica",
+   "texto": "Já houve explosão?",
+   "obrig": false,
+   "outro": false,
+   "mermaid": "",
+   "prox": "onde_vazamento",
+   "opcoes": [
+    {
+     "id": "sim",
+     "rotulo": "Sim",
+     "vai": "troca_explosao_ameaca"
+    },
+    {
+     "id": "nao",
+     "rotulo": "Não",
+     "vai": ""
+    },
+    {
+     "id": "nao_sei",
+     "rotulo": "Não sei",
+     "vai": "",
+     "relato": false
+    }
+   ]
+  },
+  {
+   "id": "troca_explosao_ameaca",
+   "tipo": "troca",
+   "texto": "Explosão / ameaça de explosão",
+   "obrig": false,
+   "outro": false,
+   "mermaid": "",
+   "prox": "FIM",
+   "opcoes": []
+  },
+  {
+   "id": "onde_vazamento",
+   "tipo": "unica",
+   "texto": "Onde está o vazamento?",
+   "obrig": false,
+   "outro": false,
+   "mermaid": "",
+   "prox": "ainda_gente_local",
+   "opcoes": [
+    {
+     "id": "cozinha_area_fechada",
+     "rotulo": "Cozinha / área fechada",
+     "vai": ""
+    },
+    {
+     "id": "area_aberta",
+     "rotulo": "Área aberta",
+     "vai": ""
+    },
+    {
+     "id": "comercio_industria",
+     "rotulo": "Comércio / indústria",
+     "vai": ""
+    },
+    {
+     "id": "via_publica",
+     "rotulo": "Via pública",
+     "vai": ""
+    }
+   ]
+  },
+  {
+   "id": "ainda_gente_local",
+   "tipo": "unica",
+   "texto": "Ainda tem gente no local? Alguém passando mal?",
+   "obrig": false,
+   "outro": false,
+   "mermaid": "",
+   "prox": "cheiro_forte_todo",
+   "opcoes": [
+    {
+     "id": "sim",
+     "rotulo": "Sim",
+     "vai": ""
+    },
+    {
+     "id": "nao",
+     "rotulo": "Não",
+     "vai": ""
+    }
+   ]
+  },
+  {
+   "id": "cheiro_forte_todo",
+   "tipo": "unica",
+   "texto": "O cheiro é forte em todo o ambiente ou só perto do botijão?",
+   "obrig": false,
+   "outro": false,
+   "mermaid": "",
+   "prox": "nao_acenda_luz",
+   "opcoes": [
+    {
+     "id": "todo_o_ambiente",
+     "rotulo": "Todo o ambiente",
+     "vai": ""
+    },
+    {
+     "id": "so_perto",
+     "rotulo": "Só perto",
+     "vai": ""
+    }
+   ]
+  },
+  {
+   "id": "nao_acenda_luz",
+   "tipo": "instrucao",
+   "texto": "Não acenda luz, não ligue nem desligue aparelhos, não use isqueiro. Feche o registro se for seguro. Abra portas e janelas e saia. Ligue de fora.",
+   "obrig": false,
+   "outro": false,
+   "mermaid": "",
+   "prox": "FIM",
+   "opcoes": []
+  }
+ ],
+ "notas": []
+}

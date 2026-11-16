@@ -1,0 +1,276 @@
+{
+ "natureza": {
+  "id": "pessoa_prensada_por_estrutura_maquina_ou",
+  "nome": "Pessoa prensada por estrutura, máquina ou veículo"
+ },
+ "itens": [
+  {
+   "id": "prendendo_pessoa",
+   "tipo": "unica",
+   "texto": "O que está prendendo a pessoa?",
+   "obrig": false,
+   "outro": true,
+   "mermaid": "",
+   "prox": "despacho",
+   "opcoes": [
+    {
+     "id": "maquina_equipamento",
+     "rotulo": "Máquina / equipamento",
+     "vai": ""
+    },
+    {
+     "id": "veiculo",
+     "rotulo": "Veículo",
+     "vai": ""
+    },
+    {
+     "id": "parede_estrutura_carga",
+     "rotulo": "Parede / estrutura / carga",
+     "vai": ""
+    }
+   ]
+  },
+  {
+   "id": "despacho",
+   "tipo": "instrucao",
+   "texto": "O socorro já foi acionado e está a caminho. Vou fazer algumas perguntas rápidas para ajudar a equipe. Mantenha a calma e siga minhas orientações, por favor.",
+   "obrig": false,
+   "outro": false,
+   "mermaid": "",
+   "prox": "vitima_acordada_responde",
+   "opcoes": [],
+   "despacho": true
+  },
+  {
+   "id": "vitima_acordada_responde",
+   "tipo": "unica",
+   "texto": "A vítima está acordada e responde quando você chama?",
+   "obrig": false,
+   "outro": false,
+   "mermaid": "",
+   "prox": "ela_respira_normalmente",
+   "opcoes": [
+    {
+     "id": "sim",
+     "rotulo": "Sim",
+     "vai": ""
+    },
+    {
+     "id": "nao",
+     "rotulo": "Não",
+     "vai": ""
+    },
+    {
+     "id": "nao_sabe",
+     "rotulo": "Não sabe",
+     "vai": "",
+     "relato": false
+    }
+   ]
+  },
+  {
+   "id": "ela_respira_normalmente",
+   "tipo": "unica",
+   "texto": "Ela respira normalmente?",
+   "obrig": false,
+   "outro": false,
+   "mermaid": "",
+   "prox": "pessoa_ficou_presa",
+   "opcoes": [
+    {
+     "id": "sim",
+     "rotulo": "Sim",
+     "vai": ""
+    },
+    {
+     "id": "nao",
+     "rotulo": "Não",
+     "vai": "realize_videochamada_fac"
+    },
+    {
+     "id": "nao_sabe",
+     "rotulo": "Não sabe",
+     "vai": "",
+     "relato": false
+    }
+   ]
+  },
+  {
+   "id": "pessoa_ficou_presa",
+   "tipo": "unica",
+   "texto": "A pessoa ficou presa por causa de um acidente de trânsito?",
+   "obrig": false,
+   "outro": false,
+   "mermaid": "",
+   "prox": "parte_corpo_presa",
+   "opcoes": [
+    {
+     "id": "sim",
+     "rotulo": "Sim",
+     "vai": "troca_acidente_transito"
+    },
+    {
+     "id": "nao",
+     "rotulo": "Não",
+     "vai": ""
+    },
+    {
+     "id": "nao_sei",
+     "rotulo": "Não sei",
+     "vai": "",
+     "relato": false
+    }
+   ]
+  },
+  {
+   "id": "troca_acidente_transito",
+   "tipo": "troca",
+   "texto": "Acidente de trânsito com vítima",
+   "obrig": false,
+   "outro": false,
+   "mermaid": "",
+   "prox": "FIM",
+   "opcoes": []
+  },
+  {
+   "id": "parte_corpo_presa",
+   "tipo": "unica",
+   "texto": "Qual parte do corpo está presa?",
+   "obrig": false,
+   "outro": false,
+   "mermaid": "",
+   "prox": "sangramento_grande",
+   "opcoes": [
+    {
+     "id": "braco_perna",
+     "rotulo": "Braço / perna",
+     "vai": ""
+    },
+    {
+     "id": "tronco_cabeca",
+     "rotulo": "Tronco / cabeça",
+     "vai": ""
+    },
+    {
+     "id": "nao_sabe",
+     "rotulo": "Não sabe",
+     "vai": "",
+     "relato": false
+    }
+   ]
+  },
+  {
+   "id": "sangramento_grande",
+   "tipo": "unica",
+   "texto": "Há sangramento grande?",
+   "obrig": false,
+   "outro": false,
+   "mermaid": "",
+   "prox": "orientar_compressao_loca",
+   "opcoes": [
+    {
+     "id": "sim",
+     "rotulo": "Sim",
+     "vai": ""
+    },
+    {
+     "id": "nao",
+     "rotulo": "Não",
+     "vai": "maquina_motor_ainda"
+    }
+   ]
+  },
+  {
+   "id": "orientar_compressao_loca",
+   "tipo": "informacao",
+   "texto": "Orientar compressão do local",
+   "obrig": false,
+   "outro": false,
+   "mermaid": "",
+   "prox": "maquina_motor_ainda",
+   "opcoes": []
+  },
+  {
+   "id": "maquina_motor_ainda",
+   "tipo": "unica",
+   "texto": "A máquina ou o motor ainda está ligado? Há vazamento de combustível?",
+   "obrig": false,
+   "outro": false,
+   "mermaid": "",
+   "prox": "vitimas",
+   "opcoes": [
+    {
+     "id": "sim",
+     "rotulo": "Sim",
+     "vai": ""
+    },
+    {
+     "id": "nao",
+     "rotulo": "Não",
+     "vai": ""
+    },
+    {
+     "id": "nao_sabe",
+     "rotulo": "Não sabe",
+     "vai": "",
+     "relato": false
+    }
+   ]
+  },
+  {
+   "id": "vitimas",
+   "tipo": "unica",
+   "texto": "Quantas vítimas?",
+   "obrig": false,
+   "outro": false,
+   "mermaid": "",
+   "prox": "desligue_maquina_motor",
+   "opcoes": [
+    {
+     "id": "1",
+     "rotulo": "1",
+     "vai": ""
+    },
+    {
+     "id": "mais_de_1",
+     "rotulo": "Mais de 1",
+     "vai": ""
+    }
+   ]
+  },
+  {
+   "id": "desligue_maquina_motor",
+   "tipo": "instrucao",
+   "texto": "Desligue a máquina ou o motor se for seguro. Não tente levantar a carga nem puxar a pessoa. Comprima com um pano o local que sangra.",
+   "obrig": false,
+   "outro": false,
+   "mermaid": "",
+   "prox": "FIM",
+   "opcoes": []
+  },
+  {
+   "id": "realize_videochamada_fac",
+   "tipo": "informacao",
+   "texto": "Realize a videochamada e faça as orientações de RCP",
+   "obrig": false,
+   "outro": false,
+   "mermaid": "",
+   "prox": "troca_parada_cardiorresp",
+   "opcoes": [],
+   "video": true
+  },
+  {
+   "id": "troca_parada_cardiorresp",
+   "tipo": "troca",
+   "texto": "Parada cardiorrespiratória (PCR)",
+   "obrig": false,
+   "outro": false,
+   "mermaid": "",
+   "prox": "FIM",
+   "opcoes": []
+  }
+ ],
+ "notas": [
+  "Troca para “Acidente de trânsito com vítima”: essa natureza não tem fluxo no quadro."
+ ]
+}

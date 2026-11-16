@@ -1,0 +1,190 @@
+{
+ "natureza": {
+  "id": "incendio_em_lixo_entulho",
+  "nome": "Incêndio em lixo / entulho"
+ },
+ "itens": [
+  {
+   "id": "onde_fogo",
+   "tipo": "unica",
+   "texto": "Onde está o fogo?",
+   "obrig": false,
+   "outro": true,
+   "mermaid": "",
+   "prox": "perto_casas_carros",
+   "opcoes": [
+    {
+     "id": "cacamba_lixeira",
+     "rotulo": "Caçamba / lixeira",
+     "vai": ""
+    },
+    {
+     "id": "lote_com_entulho",
+     "rotulo": "Lote com entulho",
+     "vai": ""
+    },
+    {
+     "id": "deposito_reciclagem",
+     "rotulo": "Depósito / reciclagem",
+     "vai": ""
+    }
+   ]
+  },
+  {
+   "id": "perto_casas_carros",
+   "tipo": "unica",
+   "texto": "Está perto de casas, carros, árvores ou fios?",
+   "obrig": false,
+   "outro": false,
+   "mermaid": "",
+   "prox": "despacho",
+   "opcoes": [
+    {
+     "id": "sim",
+     "rotulo": "Sim",
+     "vai": ""
+    },
+    {
+     "id": "nao",
+     "rotulo": "Não",
+     "vai": ""
+    }
+   ]
+  },
+  {
+   "id": "despacho",
+   "tipo": "instrucao",
+   "texto": "O socorro já foi acionado e está a caminho. Vou fazer algumas perguntas rápidas para ajudar a equipe. Mantenha a calma e siga minhas orientações, por favor.",
+   "obrig": false,
+   "outro": false,
+   "mermaid": "",
+   "prox": "fogo_atingiu_casa",
+   "opcoes": [],
+   "despacho": true
+  },
+  {
+   "id": "fogo_atingiu_casa",
+   "tipo": "unica",
+   "texto": "O fogo atingiu casa, veículo ou mato ao redor?",
+   "obrig": false,
+   "outro": false,
+   "mermaid": "",
+   "prox": "tamanho_fogo",
+   "opcoes": [
+    {
+     "id": "sim",
+     "rotulo": "Sim",
+     "vai": "troca_incendio_edificaca"
+    },
+    {
+     "id": "nao",
+     "rotulo": "Não",
+     "vai": ""
+    },
+    {
+     "id": "nao_sei",
+     "rotulo": "Não sei",
+     "vai": "",
+     "relato": false
+    }
+   ]
+  },
+  {
+   "id": "troca_incendio_edificaca",
+   "tipo": "troca",
+   "texto": "Incêndio em edificação, meio de transporte ou vegetação (conforme o que foi atingido)",
+   "obrig": false,
+   "outro": false,
+   "mermaid": "",
+   "prox": "FIM",
+   "opcoes": []
+  },
+  {
+   "id": "tamanho_fogo",
+   "tipo": "unica",
+   "texto": "Qual o tamanho do fogo?",
+   "obrig": false,
+   "outro": false,
+   "mermaid": "",
+   "prox": "sabe_pneus_produtos",
+   "opcoes": [
+    {
+     "id": "uma_lixeira_cacamba",
+     "rotulo": "Uma lixeira / caçamba",
+     "vai": ""
+    },
+    {
+     "id": "monte_grande",
+     "rotulo": "Monte grande",
+     "vai": ""
+    },
+    {
+     "id": "area_extensa",
+     "rotulo": "Área extensa",
+     "vai": ""
+    }
+   ]
+  },
+  {
+   "id": "sabe_pneus_produtos",
+   "tipo": "unica",
+   "texto": "Sabe se há pneus, produtos químicos ou botijões no meio?",
+   "obrig": false,
+   "outro": false,
+   "mermaid": "",
+   "prox": "ferido",
+   "opcoes": [
+    {
+     "id": "sim",
+     "rotulo": "Sim",
+     "vai": ""
+    },
+    {
+     "id": "nao",
+     "rotulo": "Não",
+     "vai": ""
+    },
+    {
+     "id": "nao_sabe",
+     "rotulo": "Não sabe",
+     "vai": "",
+     "relato": false
+    }
+   ]
+  },
+  {
+   "id": "ferido",
+   "tipo": "unica",
+   "texto": "Há alguém ferido?",
+   "obrig": false,
+   "outro": false,
+   "mermaid": "",
+   "prox": "afaste_fumaca_nao",
+   "opcoes": [
+    {
+     "id": "sim",
+     "rotulo": "Sim",
+     "vai": ""
+    },
+    {
+     "id": "nao",
+     "rotulo": "Não",
+     "vai": ""
+    }
+   ]
+  },
+  {
+   "id": "afaste_fumaca_nao",
+   "tipo": "instrucao",
+   "texto": "Afaste-se da fumaça e não mexa no material.",
+   "obrig": false,
+   "outro": false,
+   "mermaid": "",
+   "prox": "FIM",
+   "opcoes": []
+  }
+ ],
+ "notas": [
+  "Troca para “Incêndio em edificação, meio de transporte ou vegetação (conforme o que foi atingido)”: essa natureza não tem fluxo no quadro."
+ ]
+}

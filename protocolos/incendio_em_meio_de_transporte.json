@@ -1,0 +1,290 @@
+{
+ "natureza": {
+  "id": "incendio_em_meio_de_transporte",
+  "nome": "Incêndio em meio de transporte"
+ },
+ "itens": [
+  {
+   "id": "veiculo",
+   "tipo": "unica",
+   "texto": "Qual o veículo?",
+   "obrig": false,
+   "outro": true,
+   "mermaid": "",
+   "prox": "despacho",
+   "opcoes": [
+    {
+     "id": "carro",
+     "rotulo": "Carro",
+     "vai": ""
+    },
+    {
+     "id": "moto",
+     "rotulo": "Moto",
+     "vai": ""
+    },
+    {
+     "id": "onibus",
+     "rotulo": "Ônibus",
+     "vai": ""
+    },
+    {
+     "id": "caminhao",
+     "rotulo": "Caminhão",
+     "vai": "caminhao_placa_laranja"
+    }
+   ]
+  },
+  {
+   "id": "despacho",
+   "tipo": "instrucao",
+   "texto": "O socorro já foi acionado e está a caminho. Vou fazer algumas perguntas rápidas para ajudar a equipe. Mantenha a calma e siga minhas orientações, por favor.",
+   "obrig": false,
+   "outro": false,
+   "mermaid": "",
+   "prox": "dentro_preso_veiculo",
+   "opcoes": [],
+   "despacho": true
+  },
+  {
+   "id": "dentro_preso_veiculo",
+   "tipo": "unica",
+   "texto": "Tem alguém dentro ou preso no veículo?",
+   "obrig": false,
+   "outro": false,
+   "mermaid": "",
+   "prox": "houve_batida_antes",
+   "opcoes": [
+    {
+     "id": "sim",
+     "rotulo": "Sim",
+     "vai": ""
+    },
+    {
+     "id": "nao",
+     "rotulo": "Não",
+     "vai": ""
+    },
+    {
+     "id": "nao_sabe",
+     "rotulo": "Não sabe",
+     "vai": "",
+     "relato": false
+    }
+   ]
+  },
+  {
+   "id": "houve_batida_antes",
+   "tipo": "unica",
+   "texto": "Houve batida antes do fogo, com pessoa presa ou ferida?",
+   "obrig": false,
+   "outro": false,
+   "mermaid": "",
+   "prox": "feridos",
+   "opcoes": [
+    {
+     "id": "sim",
+     "rotulo": "Sim",
+     "vai": "manter_natureza_registra"
+    },
+    {
+     "id": "nao",
+     "rotulo": "Não",
+     "vai": ""
+    },
+    {
+     "id": "nao_sei",
+     "rotulo": "Não sei",
+     "vai": "",
+     "relato": false
+    }
+   ]
+  },
+  {
+   "id": "manter_natureza_registra",
+   "tipo": "informacao",
+   "texto": "Manter natureza e registrar no relato: Acidente de trânsito com vítima",
+   "obrig": false,
+   "outro": false,
+   "mermaid": "",
+   "prox": "feridos",
+   "opcoes": []
+  },
+  {
+   "id": "feridos",
+   "tipo": "unica",
+   "texto": "Há feridos? Quantos?",
+   "obrig": false,
+   "outro": false,
+   "mermaid": "",
+   "prox": "onde_veiculo",
+   "opcoes": [
+    {
+     "id": "sim",
+     "rotulo": "Sim",
+     "vai": ""
+    },
+    {
+     "id": "nao",
+     "rotulo": "Não",
+     "vai": ""
+    }
+   ]
+  },
+  {
+   "id": "onde_veiculo",
+   "tipo": "unica",
+   "texto": "Onde está o veículo?",
+   "obrig": false,
+   "outro": true,
+   "mermaid": "",
+   "prox": "fogo_passou_garagem",
+   "opcoes": [
+    {
+     "id": "via_publica",
+     "rotulo": "Via pública",
+     "vai": ""
+    },
+    {
+     "id": "garagem_subsolo",
+     "rotulo": "Garagem / subsolo",
+     "vai": ""
+    },
+    {
+     "id": "posto_de_combustivel",
+     "rotulo": "Posto de combustível",
+     "vai": ""
+    }
+   ]
+  },
+  {
+   "id": "fogo_passou_garagem",
+   "tipo": "unica",
+   "texto": "O fogo passou para a garagem, o prédio ou o posto?",
+   "obrig": false,
+   "outro": false,
+   "mermaid": "",
+   "prox": "veiculo_eletrico_movido",
+   "opcoes": [
+    {
+     "id": "sim",
+     "rotulo": "Sim",
+     "vai": "troca_incendio_edificaca"
+    },
+    {
+     "id": "nao",
+     "rotulo": "Não",
+     "vai": ""
+    },
+    {
+     "id": "nao_sei",
+     "rotulo": "Não sei",
+     "vai": "",
+     "relato": false
+    }
+   ]
+  },
+  {
+   "id": "troca_incendio_edificaca",
+   "tipo": "troca",
+   "texto": "Incêndio em edificação",
+   "obrig": false,
+   "outro": false,
+   "mermaid": "",
+   "prox": "FIM",
+   "opcoes": []
+  },
+  {
+   "id": "veiculo_eletrico_movido",
+   "tipo": "unica",
+   "texto": "O veículo é elétrico ou movido a gás (GNV)?",
+   "obrig": false,
+   "outro": false,
+   "mermaid": "",
+   "prox": "fogo_so_motor",
+   "opcoes": [
+    {
+     "id": "sim",
+     "rotulo": "Sim",
+     "vai": ""
+    },
+    {
+     "id": "nao",
+     "rotulo": "Não",
+     "vai": ""
+    },
+    {
+     "id": "nao_sabe",
+     "rotulo": "Não sabe",
+     "vai": "",
+     "relato": false
+    }
+   ]
+  },
+  {
+   "id": "fogo_so_motor",
+   "tipo": "unica",
+   "texto": "O fogo está só no motor ou no veículo inteiro?",
+   "obrig": false,
+   "outro": false,
+   "mermaid": "",
+   "prox": "fique_pelo_menos",
+   "opcoes": [
+    {
+     "id": "motor",
+     "rotulo": "Motor",
+     "vai": ""
+    },
+    {
+     "id": "veiculo_inteiro",
+     "rotulo": "Veículo inteiro",
+     "vai": ""
+    },
+    {
+     "id": "nao_sabe",
+     "rotulo": "Não sabe",
+     "vai": "",
+     "relato": false
+    }
+   ]
+  },
+  {
+   "id": "fique_pelo_menos",
+   "tipo": "instrucao",
+   "texto": "Fique a pelo menos 30 metros e não abra o capô. Afaste as pessoas e sinalize a via, se for seguro.",
+   "obrig": false,
+   "outro": false,
+   "mermaid": "",
+   "prox": "FIM",
+   "opcoes": []
+  },
+  {
+   "id": "caminhao_placa_laranja",
+   "tipo": "unica",
+   "texto": "O caminhão tem placa laranja ou transporta carga perigosa (combustível, gás ou produto químico)?",
+   "obrig": false,
+   "outro": false,
+   "mermaid": "",
+   "prox": "despacho",
+   "opcoes": [
+    {
+     "id": "sim",
+     "rotulo": "Sim",
+     "vai": ""
+    },
+    {
+     "id": "nao",
+     "rotulo": "Não",
+     "vai": ""
+    },
+    {
+     "id": "nao_sei",
+     "rotulo": "Não sei",
+     "vai": "",
+     "relato": false
+    }
+   ]
+  }
+ ],
+ "notas": []
+}

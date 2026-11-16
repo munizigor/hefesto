@@ -1,0 +1,98 @@
+{
+ "natureza": {
+  "id": "atividade_preventiva_palestra_demonstrac",
+  "nome": "Atividade preventiva / palestra / demonstração profissional"
+ },
+ "itens": [
+  {
+   "id": "acontecendo_emergencia_a",
+   "tipo": "unica",
+   "texto": "Está acontecendo alguma emergência agora?",
+   "obrig": false,
+   "outro": false,
+   "mermaid": "",
+   "prox": "troca_natureza_correspon",
+   "opcoes": [
+    {
+     "id": "sim",
+     "rotulo": "Sim",
+     "vai": ""
+    },
+    {
+     "id": "nao",
+     "rotulo": "Não",
+     "vai": "atividade_deseja"
+    }
+   ]
+  },
+  {
+   "id": "troca_natureza_correspon",
+   "tipo": "troca",
+   "texto": "natureza correspondente à emergência real",
+   "obrig": false,
+   "outro": false,
+   "mermaid": "",
+   "prox": "FIM",
+   "opcoes": []
+  },
+  {
+   "id": "atividade_deseja",
+   "tipo": "unica",
+   "texto": "Que atividade deseja?",
+   "obrig": false,
+   "outro": true,
+   "mermaid": "",
+   "prox": "instituicao_solicitante",
+   "opcoes": [
+    {
+     "id": "palestra",
+     "rotulo": "Palestra",
+     "vai": ""
+    },
+    {
+     "id": "demonstracao_visita_de_viatu",
+     "rotulo": "Demonstração / visita de viatura",
+     "vai": ""
+    },
+    {
+     "id": "prevencao_em_evento",
+     "rotulo": "Prevenção em evento",
+     "vai": ""
+    }
+   ]
+  },
+  {
+   "id": "instituicao_solicitante",
+   "tipo": "texto",
+   "texto": "Instituição solicitante, responsável e contato",
+   "obrig": false,
+   "outro": false,
+   "mermaid": "",
+   "prox": "data_horario_local",
+   "opcoes": []
+  },
+  {
+   "id": "data_horario_local",
+   "tipo": "texto",
+   "texto": "Data, horário, local e público estimado",
+   "obrig": false,
+   "outro": false,
+   "mermaid": "",
+   "prox": "orientar_canal_oficial",
+   "opcoes": []
+  },
+  {
+   "id": "orientar_canal_oficial",
+   "tipo": "informacao",
+   "texto": "Orientar o canal oficial de solicitação do CBMDF",
+   "obrig": false,
+   "outro": false,
+   "mermaid": "",
+   "prox": "FIM",
+   "opcoes": []
+  }
+ ],
+ "notas": [
+  "Troca para “natureza correspondente à emergência real”: essa natureza não tem fluxo no quadro."
+ ]
+}

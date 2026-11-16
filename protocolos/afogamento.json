@@ -1,0 +1,291 @@
+{
+ "natureza": {
+  "id": "afogamento",
+  "nome": "Afogamento"
+ },
+ "itens": [
+  {
+   "id": "onde_ocorreu_afogamento",
+   "tipo": "unica",
+   "texto": "onde ocorreu o afogamento?",
+   "obrig": false,
+   "outro": true,
+   "mermaid": "",
+   "prox": "despacho_4",
+   "opcoes": [
+    {
+     "id": "piscina",
+     "rotulo": "Piscina",
+     "vai": "situacao_pessoa_afogada"
+    },
+    {
+     "id": "caixa_d_agua",
+     "rotulo": "Caixa d´água",
+     "vai": "situacao_pessoa_afogada"
+    },
+    {
+     "id": "corrego",
+     "rotulo": "Córrego",
+     "vai": "situacao_pessoa_afogada"
+    },
+    {
+     "id": "rio",
+     "rotulo": "Rio",
+     "vai": "situacao_pessoa_afogada"
+    },
+    {
+     "id": "lago",
+     "rotulo": "Lago",
+     "vai": "situacao_pessoa_afogada"
+    }
+   ]
+  },
+  {
+   "id": "situacao_pessoa_afogada",
+   "tipo": "unica",
+   "texto": "Qual a situação da pessoa afogada?",
+   "obrig": false,
+   "outro": false,
+   "mermaid": "",
+   "prox": "pessoa_respirando",
+   "opcoes": [
+    {
+     "id": "fora_da_agua",
+     "rotulo": "Fora da água",
+     "vai": ""
+    },
+    {
+     "id": "afundou",
+     "rotulo": "Afundou",
+     "vai": "voce_presenciou_ocorrido"
+    },
+    {
+     "id": "esta_na_agua_se_debatendo",
+     "rotulo": "Esta na água se debatendo",
+     "vai": "voce_local"
+    },
+    {
+     "id": "esta_boiando",
+     "rotulo": "Está boiando",
+     "vai": "corpo_sinais_vida"
+    }
+   ]
+  },
+  {
+   "id": "pessoa_respirando",
+   "tipo": "unica",
+   "texto": "A pessoa está respirando?",
+   "obrig": false,
+   "outro": false,
+   "mermaid": "",
+   "prox": "realize_videochamada_fac",
+   "opcoes": [
+    {
+     "id": "nao",
+     "rotulo": "Não",
+     "vai": ""
+    },
+    {
+     "id": "sim",
+     "rotulo": "Sim",
+     "vai": "FIM"
+    }
+   ]
+  },
+  {
+   "id": "realize_videochamada_fac",
+   "tipo": "informacao",
+   "texto": "Realize a videochamada e faça as orientações",
+   "obrig": false,
+   "outro": false,
+   "mermaid": "",
+   "prox": "despacho",
+   "opcoes": [],
+   "video": true
+  },
+  {
+   "id": "despacho",
+   "tipo": "instrucao",
+   "texto": "Iremos realizar uma vídeo chamada para orientá-lo(a) até a chegada da guarnição! Mantenha a calma e siga as orientações.",
+   "obrig": false,
+   "outro": false,
+   "mermaid": "",
+   "prox": "troca_parada_cardiorresp",
+   "opcoes": [],
+   "despacho": true
+  },
+  {
+   "id": "troca_parada_cardiorresp",
+   "tipo": "troca",
+   "texto": "Parada cardiorrespiratória (PCR)",
+   "obrig": false,
+   "outro": false,
+   "mermaid": "",
+   "prox": "FIM",
+   "opcoes": []
+  },
+  {
+   "id": "voce_presenciou_ocorrido",
+   "tipo": "unica",
+   "texto": "Você presenciou o ocorrido?",
+   "obrig": false,
+   "outro": false,
+   "mermaid": "",
+   "prox": "despacho_2",
+   "opcoes": [
+    {
+     "id": "nao",
+     "rotulo": "Não",
+     "vai": ""
+    },
+    {
+     "id": "sim",
+     "rotulo": "Sim",
+     "vai": "despacho_3"
+    }
+   ]
+  },
+  {
+   "id": "despacho_2",
+   "tipo": "instrucao",
+   "texto": "Permaneça no local até a equipe chegar",
+   "obrig": false,
+   "outro": false,
+   "mermaid": "",
+   "prox": "FIM",
+   "opcoes": [],
+   "despacho": true
+  },
+  {
+   "id": "despacho_3",
+   "tipo": "instrucao",
+   "texto": "Permaneça no local exato de onde você viu a pessoa afundar para orientar a equipe que vai te atender.",
+   "obrig": false,
+   "outro": false,
+   "mermaid": "",
+   "prox": "quanto_tempo_ela",
+   "opcoes": [],
+   "despacho": true
+  },
+  {
+   "id": "quanto_tempo_ela",
+   "tipo": "unica",
+   "texto": "A quanto tempo ela está submerssa?",
+   "obrig": false,
+   "outro": false,
+   "mermaid": "",
+   "prox": "FIM",
+   "opcoes": [
+    {
+     "id": "ha_menos_de_1_minuto",
+     "rotulo": "Há menos de 1 minuto",
+     "vai": ""
+    },
+    {
+     "id": "ha_mais_de_10_minutos",
+     "rotulo": "Há mais de 10 minutos",
+     "vai": ""
+    },
+    {
+     "id": "entre_5_e_10_minutos",
+     "rotulo": "Entre 5 e 10 minutos",
+     "vai": ""
+    },
+    {
+     "id": "entre_1_e_5_minutos",
+     "rotulo": "Entre 1 e 5 minutos",
+     "vai": ""
+    }
+   ]
+  },
+  {
+   "id": "voce_local",
+   "tipo": "unica",
+   "texto": "Você está no local?",
+   "obrig": false,
+   "outro": false,
+   "mermaid": "",
+   "prox": "FIM",
+   "opcoes": [
+    {
+     "id": "nao",
+     "rotulo": "Não",
+     "vai": ""
+    },
+    {
+     "id": "sim",
+     "rotulo": "Sim",
+     "vai": "nao_entre_agua"
+    }
+   ]
+  },
+  {
+   "id": "nao_entre_agua",
+   "tipo": "instrucao",
+   "texto": "Não entre na água. Se possível forneça algum material flutunate para a vítima e se for seguro para você remova-a da água. Ex: isopor, corda, pranchas.",
+   "obrig": false,
+   "outro": false,
+   "mermaid": "",
+   "prox": "FIM",
+   "opcoes": []
+  },
+  {
+   "id": "corpo_sinais_vida",
+   "tipo": "unica",
+   "texto": "O corpo está sem sinais de vida há muito tempo (rígido, inchado)?",
+   "obrig": false,
+   "outro": false,
+   "mermaid": "",
+   "prox": "nao_sei",
+   "opcoes": [
+    {
+     "id": "sim",
+     "rotulo": "Sim",
+     "vai": "troca_pessoa_obito"
+    },
+    {
+     "id": "nao",
+     "rotulo": "Não",
+     "vai": "voce_local"
+    }
+   ]
+  },
+  {
+   "id": "troca_pessoa_obito",
+   "tipo": "troca",
+   "texto": "Pessoa em óbito evidente",
+   "obrig": false,
+   "outro": false,
+   "mermaid": "",
+   "prox": "FIM",
+   "opcoes": []
+  },
+  {
+   "id": "nao_sei",
+   "tipo": "instrucao",
+   "texto": "Não sei",
+   "obrig": false,
+   "outro": false,
+   "mermaid": "",
+   "prox": "voce_local",
+   "opcoes": []
+  },
+  {
+   "id": "despacho_4",
+   "tipo": "instrucao",
+   "texto": "O socorro já foi acionado e está a caminho. Vou fazer algumas perguntas rápidas para ajudar a equipe. Mantenha a calma e siga minhas orientações, por favor.",
+   "obrig": false,
+   "outro": false,
+   "mermaid": "",
+   "prox": "FIM",
+   "opcoes": [],
+   "despacho": true
+  }
+ ],
+ "notas": [
+  "“onde ocorreu o afogamento?”: a resposta aberta seguia para outro lugar; no protótipo ela segue o caminho padrão.",
+  "Troca para “Pessoa em óbito evidente (resgate de cadáver)” entendida como “Pessoa em óbito evidente”.",
+  "“nao_sei” está no formulário, mas nenhum caminho do fluxo chega até ele.",
+  "“despacho_4” está no formulário, mas nenhum caminho do fluxo chega até ele."
+ ]
+}

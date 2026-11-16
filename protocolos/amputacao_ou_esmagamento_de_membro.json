@@ -1,0 +1,220 @@
+{
+ "natureza": {
+  "id": "amputacao_ou_esmagamento_de_membro",
+  "nome": "Amputação ou esmagamento de membro"
+ },
+ "itens": [
+  {
+   "id": "despacho",
+   "tipo": "instrucao",
+   "texto": "O socorro já foi acionado e está a caminho. Vou fazer algumas perguntas rápidas para ajudar a equipe. Mantenha a calma e siga minhas orientações, por favor.",
+   "obrig": false,
+   "outro": false,
+   "mermaid": "",
+   "prox": "acidente_transito",
+   "opcoes": [],
+   "despacho": true
+  },
+  {
+   "id": "acidente_transito",
+   "tipo": "unica",
+   "texto": "Foi acidente de trânsito?",
+   "obrig": false,
+   "outro": false,
+   "mermaid": "",
+   "prox": "nao_sei",
+   "opcoes": [
+    {
+     "id": "sim",
+     "rotulo": "Sim",
+     "vai": "troca_acidente_transito"
+    },
+    {
+     "id": "nao",
+     "rotulo": "Não",
+     "vai": "aconteceu"
+    }
+   ]
+  },
+  {
+   "id": "troca_acidente_transito",
+   "tipo": "troca",
+   "texto": "Acidente de trânsito com vítima",
+   "obrig": false,
+   "outro": false,
+   "mermaid": "",
+   "prox": "FIM",
+   "opcoes": []
+  },
+  {
+   "id": "aconteceu",
+   "tipo": "unica",
+   "texto": "O que aconteceu?",
+   "obrig": false,
+   "outro": false,
+   "mermaid": "",
+   "prox": "amputacao_total_parcial",
+   "opcoes": [
+    {
+     "id": "amputacao",
+     "rotulo": "Amputação",
+     "vai": ""
+    },
+    {
+     "id": "esmagamento",
+     "rotulo": "Esmagamento",
+     "vai": "membro_atingido"
+    }
+   ]
+  },
+  {
+   "id": "amputacao_total_parcial",
+   "tipo": "unica",
+   "texto": "A amputação foi total ou parcial?",
+   "obrig": false,
+   "outro": false,
+   "mermaid": "",
+   "prox": "membro_atingido",
+   "opcoes": [
+    {
+     "id": "total",
+     "rotulo": "Total",
+     "vai": ""
+    },
+    {
+     "id": "parcial",
+     "rotulo": "Parcial",
+     "vai": ""
+    }
+   ]
+  },
+  {
+   "id": "membro_atingido",
+   "tipo": "texto",
+   "texto": "Qual foi o membro atingido?",
+   "obrig": false,
+   "outro": false,
+   "mermaid": "",
+   "prox": "sangramento_intenso",
+   "opcoes": []
+  },
+  {
+   "id": "sangramento_intenso",
+   "tipo": "unica",
+   "texto": "Há sangramento intenso?",
+   "obrig": false,
+   "outro": false,
+   "mermaid": "",
+   "prox": "controlado",
+   "opcoes": [
+    {
+     "id": "sim",
+     "rotulo": "Sim",
+     "vai": ""
+    },
+    {
+     "id": "nao",
+     "rotulo": "Não",
+     "vai": "membro_preso_retido"
+    }
+   ]
+  },
+  {
+   "id": "controlado",
+   "tipo": "unica",
+   "texto": "Está controlado?",
+   "obrig": false,
+   "outro": false,
+   "mermaid": "",
+   "prox": "membro_preso_retido",
+   "opcoes": [
+    {
+     "id": "sim",
+     "rotulo": "Sim",
+     "vai": ""
+    },
+    {
+     "id": "nao",
+     "rotulo": "Não",
+     "vai": ""
+    }
+   ]
+  },
+  {
+   "id": "membro_preso_retido",
+   "tipo": "unica",
+   "texto": "O membro está preso/retido em máquina, veículo, estrutura ou equipamento?",
+   "obrig": false,
+   "outro": false,
+   "mermaid": "",
+   "prox": "troca_pessoa_prensada",
+   "opcoes": [
+    {
+     "id": "sim",
+     "rotulo": "Sim",
+     "vai": ""
+    },
+    {
+     "id": "nao",
+     "rotulo": "Não",
+     "vai": "outras_lesoes_gravidade"
+    }
+   ]
+  },
+  {
+   "id": "troca_pessoa_prensada",
+   "tipo": "troca",
+   "texto": "Pessoa prensada por estrutura, máquina ou veículo",
+   "obrig": false,
+   "outro": false,
+   "mermaid": "",
+   "prox": "FIM",
+   "opcoes": []
+  },
+  {
+   "id": "outras_lesoes_gravidade",
+   "tipo": "unica",
+   "texto": "Há outras lesões com gravidade?",
+   "obrig": false,
+   "outro": false,
+   "mermaid": "",
+   "prox": "item",
+   "opcoes": [
+    {
+     "id": "sim",
+     "rotulo": "Sim",
+     "vai": ""
+    },
+    {
+     "id": "nao",
+     "rotulo": "Não",
+     "vai": "FIM"
+    }
+   ]
+  },
+  {
+   "id": "item",
+   "tipo": "texto",
+   "texto": "quais?",
+   "obrig": false,
+   "outro": false,
+   "mermaid": "",
+   "prox": "FIM",
+   "opcoes": []
+  },
+  {
+   "id": "nao_sei",
+   "tipo": "instrucao",
+   "texto": "Não sei",
+   "obrig": false,
+   "outro": false,
+   "mermaid": "",
+   "prox": "aconteceu",
+   "opcoes": []
+  }
+ ],
+ "notas": [
+  "Troca para “Acidente de trânsito com vítima”: essa natureza não tem fluxo no quadro.",
+  "“nao_sei” está no formulário, mas nenhum caminho do fluxo chega até ele."
+ ]
+}

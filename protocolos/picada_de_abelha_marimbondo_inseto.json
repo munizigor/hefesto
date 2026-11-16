@@ -1,0 +1,47 @@
+{
+ "natureza": {
+  "id": "picada_de_abelha_marimbondo_inseto",
+  "nome": "Picada de abelha / marimbondo / inseto"
+ },
+ "itens": [
+  {
+   "id": "picou_ferroou",
+   "tipo": "unica",
+   "texto": "O que picou/ferroou?",
+   "obrig": false,
+   "outro": false,
+   "mermaid": "",
+   "prox": "essa_natureza_nao",
+   "opcoes": [
+    {
+     "id": "abelha",
+     "rotulo": "Abelha",
+     "vai": ""
+    },
+    {
+     "id": "marimbondo",
+     "rotulo": "Marimbondo",
+     "vai": ""
+    },
+    {
+     "id": "outro",
+     "rotulo": "outro",
+     "vai": ""
+    }
+   ]
+  },
+  {
+   "id": "essa_natureza_nao",
+   "tipo": "informacao",
+   "texto": "Essa natureza não consta nas naturezas iniciais.",
+   "obrig": false,
+   "outro": false,
+   "mermaid": "",
+   "prox": "FIM",
+   "opcoes": []
+  }
+ ],
+ "notas": [
+  "No quadro, as respostas “Abelha”, “Marimbondo”, “Aberta:” não têm seta e “Essa natureza não consta nas naturezas iniciais.” está solto. Foram ligados aqui; confira no quadro."
+ ]
+}

@@ -1,0 +1,165 @@
+{
+ "natureza": {
+  "id": "pessoa_com_necessidade_de_auxilio_para_m",
+  "nome": "Pessoa com necessidade de auxílio para movimentação"
+ },
+ "itens": [
+  {
+   "id": "pessoa_caiu_agora",
+   "tipo": "unica",
+   "texto": "A pessoa caiu agora ou só precisa de ajuda para ser levantada / transportada?",
+   "obrig": false,
+   "outro": false,
+   "mermaid": "",
+   "prox": "troca_queda_propria",
+   "opcoes": [
+    {
+     "id": "caiu_agora",
+     "rotulo": "Caiu agora",
+     "vai": ""
+    },
+    {
+     "id": "so_precisa_de_ajuda",
+     "rotulo": "Só precisa de ajuda",
+     "vai": "pessoa_acordada_falando"
+    }
+   ]
+  },
+  {
+   "id": "troca_queda_propria",
+   "tipo": "troca",
+   "texto": "Queda da própria altura",
+   "obrig": false,
+   "outro": false,
+   "mermaid": "",
+   "prox": "FIM",
+   "opcoes": []
+  },
+  {
+   "id": "pessoa_acordada_falando",
+   "tipo": "unica",
+   "texto": "A pessoa está acordada e falando normalmente?",
+   "obrig": false,
+   "outro": false,
+   "mermaid": "",
+   "prox": "peso_aproximado",
+   "opcoes": [
+    {
+     "id": "sim",
+     "rotulo": "Sim",
+     "vai": ""
+    },
+    {
+     "id": "nao",
+     "rotulo": "Não",
+     "vai": "troca_emergencia_clinica"
+    }
+   ]
+  },
+  {
+   "id": "peso_aproximado",
+   "tipo": "unica",
+   "texto": "Qual o peso aproximado?",
+   "obrig": false,
+   "outro": false,
+   "mermaid": "",
+   "prox": "onde",
+   "opcoes": [
+    {
+     "id": "ate_100_kg",
+     "rotulo": "Até 100 kg",
+     "vai": ""
+    },
+    {
+     "id": "100_a_150_kg",
+     "rotulo": "100 a 150 kg",
+     "vai": ""
+    },
+    {
+     "id": "mais_de_150_kg",
+     "rotulo": "Mais de 150 kg",
+     "vai": ""
+    }
+   ]
+  },
+  {
+   "id": "onde",
+   "tipo": "unica",
+   "texto": "Onde está?",
+   "obrig": false,
+   "outro": true,
+   "mermaid": "",
+   "prox": "ela",
+   "opcoes": [
+    {
+     "id": "chao_cama",
+     "rotulo": "Chão / cama",
+     "vai": ""
+    },
+    {
+     "id": "banheiro",
+     "rotulo": "Banheiro",
+     "vai": ""
+    },
+    {
+     "id": "escada_andar_sem_elevador",
+     "rotulo": "Escada / andar sem elevador",
+     "vai": ""
+    }
+   ]
+  },
+  {
+   "id": "ela",
+   "tipo": "unica",
+   "texto": "Há alguém com ela?",
+   "obrig": false,
+   "outro": false,
+   "mermaid": "",
+   "prox": "despacho",
+   "opcoes": [
+    {
+     "id": "sim",
+     "rotulo": "Sim",
+     "vai": ""
+    },
+    {
+     "id": "nao",
+     "rotulo": "Não",
+     "vai": ""
+    }
+   ]
+  },
+  {
+   "id": "despacho",
+   "tipo": "instrucao",
+   "texto": "O socorro já foi acionado e está a caminho. Vou fazer algumas perguntas rápidas para ajudar a equipe. Mantenha a calma e siga minhas orientações, por favor.",
+   "obrig": false,
+   "outro": false,
+   "mermaid": "",
+   "prox": "nao_tente_levantar",
+   "opcoes": [],
+   "despacho": true
+  },
+  {
+   "id": "nao_tente_levantar",
+   "tipo": "instrucao",
+   "texto": "Não tente levantar sozinho. Cubra a pessoa para mantê-la aquecida.",
+   "obrig": false,
+   "outro": false,
+   "mermaid": "",
+   "prox": "FIM",
+   "opcoes": []
+  },
+  {
+   "id": "troca_emergencia_clinica",
+   "tipo": "troca",
+   "texto": "Emergência clínica",
+   "obrig": false,
+   "outro": false,
+   "mermaid": "",
+   "prox": "FIM",
+   "opcoes": []
+  }
+ ],
+ "notas": []
+}

@@ -1,0 +1,651 @@
+{
+ "natureza": {
+  "id": "ataque_picada_de_animal",
+  "nome": "Ataque / picada de animal"
+ },
+ "itens": [
+  {
+   "id": "animal_continua_local",
+   "tipo": "unica",
+   "texto": "O animal continua no local oferecendo risco?",
+   "obrig": false,
+   "outro": false,
+   "mermaid": "",
+   "prox": "tipo_animal",
+   "opcoes": [
+    {
+     "id": "sim",
+     "rotulo": "Sim",
+     "vai": "manter_natureza_registra"
+    },
+    {
+     "id": "nao",
+     "rotulo": "Não",
+     "vai": ""
+    },
+    {
+     "id": "nao_sei",
+     "rotulo": "Não sei",
+     "vai": "",
+     "relato": false
+    }
+   ]
+  },
+  {
+   "id": "manter_natureza_registra",
+   "tipo": "informacao",
+   "texto": "Manter natureza e registrar no relato: Animal doméstico ou silvestre em situação de risco",
+   "obrig": false,
+   "outro": false,
+   "mermaid": "",
+   "prox": "tipo_animal",
+   "opcoes": []
+  },
+  {
+   "id": "tipo_animal",
+   "tipo": "unica",
+   "texto": "Qual foi o tipo de animal?",
+   "obrig": false,
+   "outro": false,
+   "mermaid": "",
+   "prox": "animal_peconhento",
+   "opcoes": [
+    {
+     "id": "animal_peconhento",
+     "rotulo": "Animal peçonhento",
+     "vai": ""
+    },
+    {
+     "id": "animal_silvestre",
+     "rotulo": "Animal silvestre",
+     "vai": "animal_silvestre"
+    },
+    {
+     "id": "animal_domestico",
+     "rotulo": "Animal Doméstico",
+     "vai": "animal_domestico"
+    },
+    {
+     "id": "abelha_marimbondo_vespa",
+     "rotulo": "Abelha/Marimbondo/Vespa",
+     "vai": "pessoa_picada_possui"
+    }
+   ]
+  },
+  {
+   "id": "animal_peconhento",
+   "tipo": "unica",
+   "texto": "Animal peçonhento: qual?",
+   "obrig": false,
+   "outro": true,
+   "mermaid": "",
+   "prox": "pessoa_picada_respira",
+   "opcoes": [
+    {
+     "id": "aranha",
+     "rotulo": "Aranha",
+     "vai": ""
+    },
+    {
+     "id": "escorpiao",
+     "rotulo": "Escorpião",
+     "vai": ""
+    },
+    {
+     "id": "cobra",
+     "rotulo": "Cobra",
+     "vai": ""
+    }
+   ]
+  },
+  {
+   "id": "pessoa_picada_respira",
+   "tipo": "unica",
+   "texto": "A pessoa picada respira?",
+   "obrig": false,
+   "outro": false,
+   "mermaid": "",
+   "prox": "despacho",
+   "opcoes": [
+    {
+     "id": "sim",
+     "rotulo": "Sim",
+     "vai": ""
+    },
+    {
+     "id": "nao",
+     "rotulo": "Não",
+     "vai": "FIM"
+    }
+   ]
+  },
+  {
+   "id": "despacho",
+   "tipo": "instrucao",
+   "texto": "O socorro já foi acionado e está a caminho. Vou fazer mais algumas perguntas rápidas para ajudar a equipe. Mantenha a calma e siga minhas orientações, por favor.",
+   "obrig": false,
+   "outro": false,
+   "mermaid": "",
+   "prox": "pessoa_picada",
+   "opcoes": [],
+   "despacho": true
+  },
+  {
+   "id": "pessoa_picada",
+   "tipo": "unica",
+   "texto": "A pessoa picada é:",
+   "obrig": false,
+   "outro": false,
+   "mermaid": "",
+   "prox": "parte_corpo_atingida",
+   "opcoes": [
+    {
+     "id": "adulta",
+     "rotulo": "adulta",
+     "vai": ""
+    },
+    {
+     "id": "crianca",
+     "rotulo": "criança",
+     "vai": ""
+    },
+    {
+     "id": "idosa",
+     "rotulo": "idosa",
+     "vai": ""
+    }
+   ]
+  },
+  {
+   "id": "parte_corpo_atingida",
+   "tipo": "unica",
+   "texto": "Qual parte do corpo foi atingida?",
+   "obrig": false,
+   "outro": false,
+   "mermaid": "",
+   "prox": "ela_confusa_sonolenta",
+   "opcoes": [
+    {
+     "id": "cabeca",
+     "rotulo": "Cabeça",
+     "vai": ""
+    },
+    {
+     "id": "membros_superiores",
+     "rotulo": "Membros superiores",
+     "vai": ""
+    },
+    {
+     "id": "membros_inferiores",
+     "rotulo": "Membros inferiores",
+     "vai": ""
+    },
+    {
+     "id": "tronco",
+     "rotulo": "Tronco",
+     "vai": ""
+    }
+   ]
+  },
+  {
+   "id": "ela_confusa_sonolenta",
+   "tipo": "unica",
+   "texto": "Ela está confusa/ sonolenta?",
+   "obrig": false,
+   "outro": false,
+   "mermaid": "",
+   "prox": "FIM",
+   "opcoes": [
+    {
+     "id": "sim",
+     "rotulo": "Sim",
+     "vai": ""
+    },
+    {
+     "id": "nao",
+     "rotulo": "Não",
+     "vai": "",
+     "relato": false
+    }
+   ]
+  },
+  {
+   "id": "animal_silvestre",
+   "tipo": "unica",
+   "texto": "Animal silvestre: qual?",
+   "obrig": false,
+   "outro": true,
+   "mermaid": "",
+   "prox": "pessoa_atacada_respira",
+   "opcoes": [
+    {
+     "id": "morcego",
+     "rotulo": "Morcego",
+     "vai": ""
+    },
+    {
+     "id": "macaco",
+     "rotulo": "Macaco",
+     "vai": ""
+    },
+    {
+     "id": "capivara",
+     "rotulo": "Capivara",
+     "vai": ""
+    },
+    {
+     "id": "sarue",
+     "rotulo": "Saruê",
+     "vai": ""
+    }
+   ]
+  },
+  {
+   "id": "pessoa_atacada_respira",
+   "tipo": "unica",
+   "texto": "A pessoa atacada respira?",
+   "obrig": false,
+   "outro": false,
+   "mermaid": "",
+   "prox": "despacho_2",
+   "opcoes": [
+    {
+     "id": "sim",
+     "rotulo": "Sim",
+     "vai": ""
+    },
+    {
+     "id": "nao",
+     "rotulo": "Não",
+     "vai": "FIM"
+    }
+   ]
+  },
+  {
+   "id": "despacho_2",
+   "tipo": "instrucao",
+   "texto": "O socorro já foi acionado e está a caminho. Vou fazer mais algumas perguntas rápidas para ajudar a equipe. Mantenha a calma e siga minhas orientações, por favor.",
+   "obrig": false,
+   "outro": false,
+   "mermaid": "",
+   "prox": "pessoa_atacada",
+   "opcoes": [],
+   "despacho": true
+  },
+  {
+   "id": "pessoa_atacada",
+   "tipo": "unica",
+   "texto": "A pessoa atacada é:",
+   "obrig": false,
+   "outro": false,
+   "mermaid": "",
+   "prox": "parte_corpo_atingida_2",
+   "opcoes": [
+    {
+     "id": "adulta",
+     "rotulo": "adulta",
+     "vai": ""
+    },
+    {
+     "id": "crianca",
+     "rotulo": "criança",
+     "vai": ""
+    },
+    {
+     "id": "idosa",
+     "rotulo": "idosa",
+     "vai": ""
+    }
+   ]
+  },
+  {
+   "id": "parte_corpo_atingida_2",
+   "tipo": "texto",
+   "texto": "Qual parte do corpo foi atingida?",
+   "obrig": false,
+   "outro": false,
+   "mermaid": "",
+   "prox": "cabeca",
+   "opcoes": []
+  },
+  {
+   "id": "cabeca",
+   "tipo": "informacao",
+   "texto": "Cabeça",
+   "obrig": false,
+   "outro": false,
+   "mermaid": "",
+   "prox": "muito_sangue_visivel",
+   "opcoes": []
+  },
+  {
+   "id": "muito_sangue_visivel",
+   "tipo": "unica",
+   "texto": "Há muito sangue visível ou lesões graves?",
+   "obrig": false,
+   "outro": false,
+   "mermaid": "",
+   "prox": "ela_confusa_sonolenta_2",
+   "opcoes": [
+    {
+     "id": "nao",
+     "rotulo": "Não",
+     "vai": ""
+    },
+    {
+     "id": "sim",
+     "rotulo": "Sim",
+     "vai": ""
+    }
+   ]
+  },
+  {
+   "id": "ela_confusa_sonolenta_2",
+   "tipo": "unica",
+   "texto": "Ela está confusa/ sonolenta?",
+   "obrig": false,
+   "outro": false,
+   "mermaid": "",
+   "prox": "FIM",
+   "opcoes": [
+    {
+     "id": "nao",
+     "rotulo": "Não",
+     "vai": "",
+     "relato": false
+    },
+    {
+     "id": "sim",
+     "rotulo": "Sim",
+     "vai": ""
+    }
+   ]
+  },
+  {
+   "id": "membros_superiores",
+   "tipo": "informacao",
+   "texto": "Membros superiores",
+   "obrig": false,
+   "outro": false,
+   "mermaid": "",
+   "prox": "muito_sangue_visivel",
+   "opcoes": []
+  },
+  {
+   "id": "membros_inferiores",
+   "tipo": "informacao",
+   "texto": "Membros inferiores",
+   "obrig": false,
+   "outro": false,
+   "mermaid": "",
+   "prox": "muito_sangue_visivel",
+   "opcoes": []
+  },
+  {
+   "id": "tronco",
+   "tipo": "informacao",
+   "texto": "Tronco",
+   "obrig": false,
+   "outro": false,
+   "mermaid": "",
+   "prox": "muito_sangue_visivel",
+   "opcoes": []
+  },
+  {
+   "id": "animal_domestico",
+   "tipo": "unica",
+   "texto": "Animal Doméstico: qual?",
+   "obrig": false,
+   "outro": true,
+   "mermaid": "",
+   "prox": "pessoa_atacada_respira",
+   "opcoes": [
+    {
+     "id": "gato",
+     "rotulo": "Gato",
+     "vai": ""
+    },
+    {
+     "id": "cachorro",
+     "rotulo": "Cachorro",
+     "vai": ""
+    }
+   ]
+  },
+  {
+   "id": "pessoa_picada_possui",
+   "tipo": "unica",
+   "texto": "A pessoa picada possui alergia?",
+   "obrig": false,
+   "outro": false,
+   "mermaid": "",
+   "prox": "pessoa_picada_respira_2",
+   "opcoes": [
+    {
+     "id": "sim",
+     "rotulo": "Sim",
+     "vai": ""
+    },
+    {
+     "id": "nao_sei",
+     "rotulo": "Não sei",
+     "vai": ""
+    },
+    {
+     "id": "nao",
+     "rotulo": "Não",
+     "vai": ""
+    }
+   ]
+  },
+  {
+   "id": "pessoa_picada_respira_2",
+   "tipo": "unica",
+   "texto": "A pessoa picada respira?",
+   "obrig": false,
+   "outro": false,
+   "mermaid": "",
+   "prox": "despacho_3",
+   "opcoes": [
+    {
+     "id": "sim",
+     "rotulo": "Sim",
+     "vai": ""
+    },
+    {
+     "id": "nao",
+     "rotulo": "Não",
+     "vai": "FIM"
+    }
+   ]
+  },
+  {
+   "id": "despacho_3",
+   "tipo": "instrucao",
+   "texto": "O socorro já foi acionado e está a caminho. Vou fazer mais algumas perguntas rápidas para ajudar a equipe. Mantenha a calma e siga minhas orientações, por favor.",
+   "obrig": false,
+   "outro": false,
+   "mermaid": "",
+   "prox": "picadas_aconteceram",
+   "opcoes": [],
+   "despacho": true
+  },
+  {
+   "id": "picadas_aconteceram",
+   "tipo": "unica",
+   "texto": "Quantas picadas aconteceram?",
+   "obrig": false,
+   "outro": false,
+   "mermaid": "",
+   "prox": "pessoa_picada_2",
+   "opcoes": [
+    {
+     "id": "mais_de_3_houve_ataque_enxam",
+     "rotulo": "Mais de 3 - Houve ataque/ enxame",
+     "vai": ""
+    },
+    {
+     "id": "entre_1_e_3_picadas",
+     "rotulo": "entre 1 e 3 picadas",
+     "vai": ""
+    }
+   ]
+  },
+  {
+   "id": "pessoa_picada_2",
+   "tipo": "unica",
+   "texto": "A pessoa picada é :",
+   "obrig": false,
+   "outro": false,
+   "mermaid": "",
+   "prox": "FIM",
+   "opcoes": [
+    {
+     "id": "adulta",
+     "rotulo": "adulta",
+     "vai": ""
+    },
+    {
+     "id": "crianca",
+     "rotulo": "criança",
+     "vai": ""
+    },
+    {
+     "id": "idosa",
+     "rotulo": "idosa",
+     "vai": ""
+    }
+   ]
+  },
+  {
+   "id": "troca_parada_cardiorespi",
+   "tipo": "troca",
+   "texto": "Parada cardiorrespiratória (PCR)",
+   "obrig": false,
+   "outro": false,
+   "mermaid": "",
+   "prox": "realize_videochamada_fac",
+   "opcoes": []
+  },
+  {
+   "id": "realize_videochamada_fac",
+   "tipo": "informacao",
+   "texto": "Realize a videochamada e faça as orientações",
+   "obrig": false,
+   "outro": false,
+   "mermaid": "",
+   "prox": "despacho_4",
+   "opcoes": [],
+   "video": true
+  },
+  {
+   "id": "despacho_4",
+   "tipo": "instrucao",
+   "texto": "Iremos realizar uma vídeo chamada para orientá-lo(a) até a chegada da guarnição! Mantenha a calma e siga as orientações.",
+   "obrig": false,
+   "outro": false,
+   "mermaid": "",
+   "prox": "FIM",
+   "opcoes": [],
+   "despacho": true
+  },
+  {
+   "id": "troca_parada_cardiorespi_2",
+   "tipo": "troca",
+   "texto": "Parada cardiorrespiratória (PCR)",
+   "obrig": false,
+   "outro": false,
+   "mermaid": "",
+   "prox": "realize_videochamada_fac_2",
+   "opcoes": []
+  },
+  {
+   "id": "realize_videochamada_fac_2",
+   "tipo": "informacao",
+   "texto": "Realize a videochamada e faça as orientações",
+   "obrig": false,
+   "outro": false,
+   "mermaid": "",
+   "prox": "FIM",
+   "opcoes": [],
+   "video": true
+  },
+  {
+   "id": "troca_parada_cardiorespi_3",
+   "tipo": "troca",
+   "texto": "Parada cardiorrespiratória (PCR)",
+   "obrig": false,
+   "outro": false,
+   "mermaid": "",
+   "prox": "realize_videochamada_fac_3",
+   "opcoes": []
+  },
+  {
+   "id": "realize_videochamada_fac_3",
+   "tipo": "informacao",
+   "texto": "Realize a videochamada e faça as orientações",
+   "obrig": false,
+   "outro": false,
+   "mermaid": "",
+   "prox": "FIM",
+   "opcoes": [],
+   "video": true
+  },
+  {
+   "id": "despacho_5",
+   "tipo": "instrucao",
+   "texto": "Iremos realizar uma vídeo chamada para orientá-lo(a) até a chegada da guarnição! Mantenha a calma e siga as orientações.",
+   "obrig": false,
+   "outro": false,
+   "mermaid": "",
+   "prox": "FIM",
+   "opcoes": [],
+   "despacho": true
+  },
+  {
+   "id": "despacho_6",
+   "tipo": "instrucao",
+   "texto": "Iremos realizar uma vídeo chamada para orientá-lo(a) até a chegada da guarnição! Mantenha a calma e siga as orientações.",
+   "obrig": false,
+   "outro": false,
+   "mermaid": "",
+   "prox": "FIM",
+   "opcoes": [],
+   "despacho": true
+  },
+  {
+   "id": "possivel_seguranca_tire",
+   "tipo": "instrucao",
+   "texto": "Se possível e com segurança, tire uma foto do animal sem tentar capturá-lo ou se aproximar.",
+   "obrig": false,
+   "outro": false,
+   "mermaid": "",
+   "prox": "FIM",
+   "opcoes": []
+  }
+ ],
+ "notas": [
+  "“🔁 Trocar natureza: Parada Cárdiorespiratória (PCR)” não está ligado ao início do fluxo.",
+  "“🔁 Trocar natureza: Parada Cárdiorespiratória (PCR)” não está ligado ao início do fluxo.",
+  "“Iremos realizar uma vídeo chamada para orientá-lo(a) até a chegada da guarnição! Mantenha a calma e siga as orientações.” não está ligado ao início do fluxo.",
+  "“Iremos realizar uma vídeo chamada para orientá-lo(a) até a chegada da guarnição! Mantenha a calma e siga as orientações.” não está ligado ao início do fluxo.",
+  "“Se possível e com segurança, tire uma foto do animal sem tentar capturá-lo ou se aproximar.” não está ligado ao início do fluxo.",
+  "“A pessoa picada respira?” / “Não”: a resposta leva a 2 caixas ao mesmo tempo; ficou só “Relato final”.",
+  "Troca para “Parada Cárdiorespiratória (PCR)” entendida como “Parada cardiorrespiratória (PCR)”.",
+  "Troca para “Parada Cárdiorespiratória (PCR)” entendida como “Parada cardiorrespiratória (PCR)”.",
+  "Troca para “Parada Cárdiorespiratória (PCR)” entendida como “Parada cardiorrespiratória (PCR)”.",
+  "“membros_superiores” está no formulário, mas nenhum caminho do fluxo chega até ele.",
+  "“membros_inferiores” está no formulário, mas nenhum caminho do fluxo chega até ele.",
+  "“tronco” está no formulário, mas nenhum caminho do fluxo chega até ele.",
+  "“troca_parada_cardiorespi” está no formulário, mas nenhum caminho do fluxo chega até ele.",
+  "“realize_videochamada_fac” está no formulário, mas nenhum caminho do fluxo chega até ele.",
+  "“despacho_4” está no formulário, mas nenhum caminho do fluxo chega até ele.",
+  "“troca_parada_cardiorespi_2” está no formulário, mas nenhum caminho do fluxo chega até ele.",
+  "“realize_videochamada_fac_2” está no formulário, mas nenhum caminho do fluxo chega até ele.",
+  "“troca_parada_cardiorespi_3” está no formulário, mas nenhum caminho do fluxo chega até ele.",
+  "“realize_videochamada_fac_3” está no formulário, mas nenhum caminho do fluxo chega até ele.",
+  "“despacho_5” está no formulário, mas nenhum caminho do fluxo chega até ele.",
+  "“despacho_6” está no formulário, mas nenhum caminho do fluxo chega até ele.",
+  "“possivel_seguranca_tire” está no formulário, mas nenhum caminho do fluxo chega até ele."
+ ]
+}
