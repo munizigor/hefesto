@@ -269,7 +269,8 @@
    "outro": false,
    "mermaid": "",
    "prox": "houve_colisao_poste",
-   "opcoes": []
+   "opcoes": [],
+   "despacho": true
   },
   {
    "id": "houve_colisao_poste",
@@ -541,7 +542,8 @@
    "outro": false,
    "mermaid": "",
    "prox": "ela_dentro_veiculo",
-   "opcoes": []
+   "opcoes": [],
+   "despacho": true
   },
   {
    "id": "ela_dentro_veiculo",
@@ -790,7 +792,8 @@
    "outro": false,
    "mermaid": "",
    "prox": "ela_desacordada",
-   "opcoes": []
+   "opcoes": [],
+   "despacho": true
   },
   {
    "id": "vitima_atropelada_2",
@@ -822,7 +825,8 @@
    "outro": false,
    "mermaid": "",
    "prox": "ela_desacordada_2",
-   "opcoes": []
+   "opcoes": [],
+   "despacho": true
   },
   {
    "id": "ela_desacordada_2",
@@ -902,7 +906,8 @@
    "outro": false,
    "mermaid": "",
    "prox": "houve_colisao_poste_4",
-   "opcoes": []
+   "opcoes": [],
+   "despacho": true
   },
   {
    "id": "houve_colisao_poste_4",
@@ -1490,7 +1495,8 @@
    "outro": false,
    "mermaid": "",
    "prox": "veiculo_envolvido_eletri_8",
-   "opcoes": []
+   "opcoes": [],
+   "despacho": true
   },
   {
    "id": "veiculo_envolvido_eletri_8",
@@ -1672,7 +1678,8 @@
    "outro": false,
    "mermaid": "",
    "prox": "vitima_atropelada_3",
-   "opcoes": []
+   "opcoes": [],
+   "despacho": true
   },
   {
    "id": "vitima_atropelada_3",
@@ -1913,7 +1920,8 @@
    "outro": false,
    "mermaid": "",
    "prox": "vitima_atropelada_4",
-   "opcoes": []
+   "opcoes": [],
+   "despacho": true
   },
   {
    "id": "vitima_atropelada_4",
@@ -2020,7 +2028,8 @@
    "outro": false,
    "mermaid": "",
    "prox": "troca_acidente_transito_6",
-   "opcoes": []
+   "opcoes": [],
+   "despacho": true
   },
   {
    "id": "troca_acidente_transito_6",
@@ -2445,7 +2454,8 @@
    "outro": false,
    "mermaid": "",
    "prox": "FIM",
-   "opcoes": []
+   "opcoes": [],
+   "despacho": true
   },
   {
    "id": "socorro_ja_acionado_11",
@@ -2455,7 +2465,8 @@
    "outro": false,
    "mermaid": "",
    "prox": "FIM",
-   "opcoes": []
+   "opcoes": [],
+   "despacho": true
   },
   {
    "id": "troca_pessoa_atropelada_2",
@@ -2475,7 +2486,8 @@
    "outro": false,
    "mermaid": "",
    "prox": "FIM",
-   "opcoes": []
+   "opcoes": [],
+   "despacho": true
   },
   {
    "id": "vitima_dentro_veiculo_2",
@@ -2560,7 +2572,8 @@
    "outro": false,
    "mermaid": "",
    "prox": "FIM",
-   "opcoes": []
+   "opcoes": [],
+   "despacho": true
   },
   {
    "id": "troca_acidente_transito_7",
