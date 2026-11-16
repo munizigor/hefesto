@@ -1,7 +1,7 @@
 /* ===== LÓGICA PURA (sem DOM) =====
    Item: {id, tipo, texto, obrig, outro, mermaid, prox, opcoes:[{id, rotulo, vai}]}
    prox: '' = próximo da lista; id; 'FIM'.   vai: '' = segue o padrão do item; id; 'FIM'. */
-var TIPOS = [['unica','Pergunta · escolha única'],['multipla','Pergunta · múltipla escolha'],['lista','Pergunta · lista de seleção'],['numero','Pergunta · número'],['texto','Pergunta · texto curto'],['instrucao','Instrução ao solicitante'],['informacao','Informação ao atendente'],['diagrama','Fluxograma de consulta'],['troca','Troca de natureza']];
+var TIPOS = [['unica','Pergunta · escolha única'],['multipla','Pergunta · múltipla escolha'],['lista','Pergunta · lista de seleção'],['numero','Pergunta · número'],['texto','Pergunta · texto curto'],['instrucao','Instrução ao solicitante'],['informacao','Informação ao atendente'],['diagrama','Fluxograma de consulta'],['troca','Troca de natureza'],['bloco','Bloco reutilizável']];
 function temOpcoes(it){ return it.tipo==='unica'||it.tipo==='multipla'||it.tipo==='lista'; }
 function ehPergunta(it){ return temOpcoes(it)||it.tipo==='numero'||it.tipo==='texto'; }
 function slug(s){ return String(s||'').normalize('NFD').replace(/[̀-ͯ]/g,'').toLowerCase().replace(/[^a-z0-9]+/g,'_').replace(/^_+|_+$/g,'').slice(0,28)||'item'; }
@@ -236,6 +236,49 @@ function exemplos(){
     ]
   };
 }
+/* ===== BLOCOS REUTILIZÁVEIS =====
+   Item {tipo:'bloco', bloco:<id do bloco>, texto:<nome>, prox}. O bloco é uma lista de itens como a de uma natureza.
+   Dentro do bloco, o destino 'SAIDA' (e o fim da lista) continua para o "depois" do item que usa o bloco;
+   'FIM' encerra a entrevista. expandir() devolve a lista plana que o atendimento usa: os itens do bloco entram
+   no lugar, com identificadores <item do bloco na natureza>__<item dentro do bloco>. getBloco(id) -> {nome, itens}. */
+function expandir(itens,getBloco,_pref,_saida,_prof){
+  _pref=_pref||''; _prof=_prof||0; itens=itens||[];
+  var emBloco=_saida!=null,porId={},def={},exp={},emCurso={};
+  itens.forEach(function(x,i){ porId[x.id]=x; def[x.id]=x.prox||(i+1<itens.length?itens[i+1].id:(emBloco?'SAIDA':'FIM')); });
+  function alvo(t,guarda){
+    if(t==='FIM') return 'FIM';
+    if(t==='SAIDA') return emBloco?_saida:'FIM';
+    var x=porId[t]; if(!x) return _pref+t;
+    if(x.tipo!=='bloco') return _pref+t;
+    guarda=guarda||{}; if(guarda[t]) return 'FIM'; guarda[t]=1;
+    var e=expBloco(t); return e.length?e[0].id:alvo(def[t],guarda);
+  }
+  function expBloco(id){
+    if(exp[id]) return exp[id];
+    if(emCurso[id]) return [];
+    emCurso[id]=1;
+    var x=porId[id],B=getBloco?getBloco(x.bloco):null,saida=alvo(def[id]),r;
+    if(!B||_prof>6) r=[I(_pref+id,'informacao','Bloco “'+(x.texto||x.bloco||'?')+'” não encontrado na biblioteca de blocos.',{prox:saida})];
+    else { r=expandir(B.itens,getBloco,_pref+id+'__',saida,_prof+1); r.forEach(function(y){ if(!y._doBloco) y._doBloco=B.nome||x.texto; }); }
+    exp[id]=r; return r;
+  }
+  var out=[];
+  itens.forEach(function(x){
+    if(x.tipo==='bloco'){ out=out.concat(expBloco(x.id)); return; }
+    var y=JSON.parse(JSON.stringify(x)); y.id=_pref+x.id; y.prox=alvo(def[x.id]);
+    y.opcoes.forEach(function(o){ if(o.vai) o.vai=alvo(o.vai); });
+    out.push(y);
+  });
+  return out;
+}
+function temBlocos(itens){ return (itens||[]).some(function(x){ return x.tipo==='bloco'; }); }
+/* validação de um bloco: expande dentro de uma natureza fictícia e devolve as mensagens sem o prefixo */
+function validarBloco(itens,getBloco,id){
+  var lista=expandir([I('b','bloco','',{bloco:'__este',prox:'FIM'})],function(b){ return b==='__este'?{nome:'',itens:itens}:getBloco(b); });
+  var v=validar(lista),limpa=function(m){ return m.replace(/b__/g,'').replace(/__/g,' › '); };
+  (itens||[]).forEach(function(x){ if(x.tipo==='bloco'&&x.bloco===id) v.erros.push('O bloco usa a si mesmo em “'+x.id+'”.'); });
+  return {erros:v.erros.map(limpa),avisos:v.avisos.map(limpa)};
+}
 /* texto da resposta de um item, para ficha, relato e registro */
 function valorResposta(it,r){
   if(!ehPergunta(it)) return r===true?(it.tipo==='instrucao'?'dita':it.tipo==='troca'?'natureza mantida':'ciente'):'';
@@ -398,7 +441,7 @@ function importarMermaidLivre(src){
    troca (roxo, trocar natureza) · relato (verde claro, relato final). Nos diagramas "(original)" as classes têm o nome
    da cor (cfff6b6, cdedaff...), então o papel é lido pelo preenchimento declarado no classDef. */
 var MIRO_CORES={'ff9e9e':'desp','c6dcff':'azul','fe9f4d':'acao','af7e04':'titulo','fff6b6':'opc','dedaff':'ns','ff6464':'ab','ffc6c6':'desp','ffdc4a':'orient','adf0c7':'relato','d5f2e0':'relato','8f7fee':'troca','2dc75c':'video','f8d3af':'recl'};
-var MIRO_PAPEIS=['titulo','perg','opc','ns','ab','desp','acao','orient','relato','troca','video','recl','diag'];
+var MIRO_PAPEIS=['titulo','perg','opc','ns','ab','desp','acao','orient','relato','troca','video','recl','diag','bloco'];
 function ehConvencaoMiro(src){ return /classDef\s+(perg|opc|cfff6b6|cdedaff)\b/.test(String(src||'')); }
 function papeisMiro(src){
   var m={},re=/classDef\s+([\w-]+)\s+([^\n]*)/g,x;
@@ -544,13 +587,14 @@ function importarMiroHefesto(src,naturezas){
     if(p==='desp'){ var fala=(/fala\s*:\s*(.*)$/i.exec(txt)||[])[1]; it=I(nid[id],'instrucao',fala||txt,{prox:seg,despacho:true}); return it; }
     if(p==='orient') return I(nid[id],'instrucao',txt.replace(/^orienta[cç][aã]o ao solicitante\s*:\s*/i,''),{prox:seg});
     if(p==='video') return I(nid[id],'informacao',txt.replace(/^📞\s*/,''),{prox:seg,video:true});
+    if(p==='bloco') return I(nid[id],'bloco',txt.replace(/^🧩\s*/,'').replace(/^bloco\s*:\s*/i,''),{prox:seg});
     if(p==='diag') return I(nid[id],'diagrama',txt.replace(/^fluxograma\s*:\s*/i,''),{prox:seg,mermaid:'flowchart LR\n  A --> B'});
     return I(nid[id],'informacao',txt,{prox:seg});
   });
   return {titulo:titulo,itens:itens,avisos:avisos};
 }
 /* Desenho no padrão do quadro do Miro (cores por papel), para a aba Fluxo. Volta pelo mesmo conversor da importação. */
-var MIRO_CLASSES=['classDef titulo fill:#af7e04,stroke:#1a1a1a,color:#1a1a1a','classDef perg fill:#ffffff,stroke:#1a1a1a,color:#1a1a1a','classDef opc fill:#fff6b6,stroke:#af7e04,color:#1a1a1a','classDef ns fill:#dedaff,stroke:#6631d7,color:#1a1a1a','classDef ab fill:#ff6464,stroke:#bd0a0a,color:#1a1a1a','classDef desp fill:#ffc6c6,stroke:#bd0a0a,color:#1a1a1a','classDef acao fill:#ffffff,stroke:#757575,color:#1a1a1a','classDef orient fill:#ffdc4a,stroke:#af7e04,color:#1a1a1a','classDef video fill:#2dc75c,stroke:#067429,color:#1a1a1a','classDef troca fill:#8f7fee,stroke:#6631d7,color:#ffffff,stroke-width:3px','classDef diag fill:#f8f6ff,stroke:#5b3fc4,color:#1a1a1a','classDef relato fill:#adf0c7,stroke:#067429,color:#1a1a1a'];
+var MIRO_CLASSES=['classDef titulo fill:#af7e04,stroke:#1a1a1a,color:#1a1a1a','classDef perg fill:#ffffff,stroke:#1a1a1a,color:#1a1a1a','classDef opc fill:#fff6b6,stroke:#af7e04,color:#1a1a1a','classDef ns fill:#dedaff,stroke:#6631d7,color:#1a1a1a','classDef ab fill:#ff6464,stroke:#bd0a0a,color:#1a1a1a','classDef desp fill:#ffc6c6,stroke:#bd0a0a,color:#1a1a1a','classDef acao fill:#ffffff,stroke:#757575,color:#1a1a1a','classDef orient fill:#ffdc4a,stroke:#af7e04,color:#1a1a1a','classDef video fill:#2dc75c,stroke:#067429,color:#1a1a1a','classDef troca fill:#8f7fee,stroke:#6631d7,color:#ffffff,stroke-width:3px','classDef diag fill:#f8f6ff,stroke:#5b3fc4,color:#1a1a1a','classDef bloco fill:#e3f2fd,stroke:#1565c0,color:#1a1a1a,stroke-width:3px','classDef relato fill:#adf0c7,stroke:#067429,color:#1a1a1a'];
 function fluxoMiro(itens,natureza){
   var g=grafo(itens),L=['flowchart TD','  %% hefesto: desenho no padrão do quadro do Miro'].concat(MIRO_CLASSES.map(function(c){ return '  '+c; })),E=[];
   /* textos longos quebram em linhas (<br/>); na volta, o conversor junta com espaço */
@@ -574,6 +618,7 @@ function fluxoMiro(itens,natureza){
       else if(it.tipo==='informacao'&&it.video) L.push('  '+it.id+'>'+q('📞 '+it.texto)+']:::video');
       else if(it.tipo==='troca') L.push('  '+it.id+'{{'+q('🔁 Trocar natureza: '+it.texto)+'}}:::troca');
       else if(it.tipo==='diagrama') L.push('  '+it.id+'[['+q('Fluxograma: '+it.texto)+']]:::diag');
+      else if(it.tipo==='bloco') L.push('  '+it.id+'[['+q('🧩 Bloco: '+it.texto)+']]:::bloco');
       else L.push('  '+it.id+'['+q(it.texto)+']:::acao');
       E.push('  '+it.id+' --> '+d(prox));
     }
@@ -594,6 +639,7 @@ function aplicarFluxoMiro(itensAtuais,src,naturezas){
     else if(it.tipo==='informacao'&&a.tipo==='diagrama') it.tipo='diagrama';
     if(ehPergunta(it)&&a.obrig) it.obrig=true;
     if(it.tipo==='diagrama') it.mermaid=a.mermaid||it.mermaid;
+    if(it.tipo==='bloco'&&a.tipo==='bloco') it.bloco=a.bloco;
     if(a.relato===false&&!temOpcoes(it)) it.relato=false;
   });
   /* caminho padrão: mantém o anterior quando ele ainda é destino de alguma resposta */
@@ -729,4 +775,4 @@ function lerFormularioGoogle(link){
   if(!campos.COMENTARIO) return {erro:'O link não tem a resposta COMENTARIO. Gere de novo o link pré-preenchido respondendo cada pergunta com a palavra indicada em config.js.'};
   return {envio:'https://docs.google.com/forms/d/e/'+m[1]+'/formResponse',campos:campos};
 }
-if(typeof module!=='undefined') module.exports={exemplo:exemplo,exemplos:exemplos,NATUREZAS:NATUREZAS,grafo:grafo,validar:validar,caminhar:caminhar,previsao:previsao,valorResposta:valorResposta,valorRelato:valorRelato,respondido:respondido,fluxoMermaid:fluxoMermaid,aplicarFluxo:aplicarFluxo,formJSON:formJSON,lerFormularioGoogle:lerFormularioGoogle,zipCriar:zipCriar,zipLer:zipLer,aplicarForm:aplicarForm,I:I,O:O,importarMermaidLivre:importarMermaidLivre,importarMiroHefesto:importarMiroHefesto,fluxoMiro:fluxoMiro,aplicarFluxoMiro:aplicarFluxoMiro,ehConvencaoMiro:ehConvencaoMiro,slug:slug,lerRespostaIA:lerRespostaIA,promptMiro:promptMiro,ehPergunta:ehPergunta,temOpcoes:temOpcoes};
+if(typeof module!=='undefined') module.exports={exemplo:exemplo,exemplos:exemplos,NATUREZAS:NATUREZAS,grafo:grafo,validar:validar,caminhar:caminhar,previsao:previsao,valorResposta:valorResposta,valorRelato:valorRelato,respondido:respondido,fluxoMermaid:fluxoMermaid,aplicarFluxo:aplicarFluxo,formJSON:formJSON,idLivre:idLivre,usados:usados,expandir:expandir,temBlocos:temBlocos,validarBloco:validarBloco,lerFormularioGoogle:lerFormularioGoogle,zipCriar:zipCriar,zipLer:zipLer,aplicarForm:aplicarForm,I:I,O:O,importarMermaidLivre:importarMermaidLivre,importarMiroHefesto:importarMiroHefesto,fluxoMiro:fluxoMiro,aplicarFluxoMiro:aplicarFluxoMiro,ehConvencaoMiro:ehConvencaoMiro,slug:slug,lerRespostaIA:lerRespostaIA,promptMiro:promptMiro,ehPergunta:ehPergunta,temOpcoes:temOpcoes};

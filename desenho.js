@@ -10,12 +10,14 @@
      api.layout() / api.setLayout(mapa)   posições {id:{x,y}} desta natureza
      api.mudou()            salva e redesenha o resto da tela */
 var HefestoDesenho=(function(){
-  var API=null,R=null,V={tx:40,ty:40,k:1},sel=null,pilha=[],arraste=null,ligacao=null,raiz=null;
-  var PAPEL={titulo:['#af7e04','#1a1a1a'],perg:['#ffffff','#1a1a1a'],desp:['#ffc6c6','#bd0a0a'],orient:['#ffdc4a','#af7e04'],acao:['#ffffff','#757575'],video:['#2dc75c','#067429'],troca:['#8f7fee','#6631d7'],diag:['#f8f6ff','#5b3fc4'],fim:['#adf0c7','#067429']};
-  function papel(it){ if(ehPergunta(it)) return 'perg'; if(it.tipo==='instrucao') return it.despacho?'desp':'orient'; if(it.tipo==='informacao') return it.video?'video':'acao'; if(it.tipo==='troca') return 'troca'; if(it.tipo==='diagrama') return 'diag'; return 'acao'; }
-  function nomeTipo(it){ var p=papel(it); return {perg:it.tipo==='texto'||it.tipo==='numero'?'Pergunta aberta':it.tipo==='multipla'?'Pergunta · várias respostas':'Pergunta',desp:'🚒 Despacho imediato',orient:'Orientação ao solicitante',acao:'Informação ao atendente',video:'📞 Videochamada',troca:'🔁 Trocar natureza',diag:'Fluxograma de consulta'}[p]; }
+  var API=null,R=null,V={tx:40,ty:40,k:1},sel=null,multi={},ultimoClique={id:null,t:0},pilha=[],arraste=null,ligacao=null,raiz=null;
+  var PAPEL={titulo:['#af7e04','#1a1a1a'],perg:['#ffffff','#1a1a1a'],desp:['#ffc6c6','#bd0a0a'],orient:['#ffdc4a','#af7e04'],acao:['#ffffff','#757575'],video:['#2dc75c','#067429'],troca:['#8f7fee','#6631d7'],diag:['#f8f6ff','#5b3fc4'],fim:['#adf0c7','#067429'],bloco:['#e3f2fd','#1565c0'],saida:['#e3f2fd','#1565c0']};
+  function papel(it){ if(it.tipo==='bloco') return 'bloco'; if(ehPergunta(it)) return 'perg'; if(it.tipo==='instrucao') return it.despacho?'desp':'orient'; if(it.tipo==='informacao') return it.video?'video':'acao'; if(it.tipo==='troca') return 'troca'; if(it.tipo==='diagrama') return 'diag'; return 'acao'; }
+  function nomeTipo(it){ var p=papel(it); return {perg:it.tipo==='texto'||it.tipo==='numero'?'Pergunta aberta':it.tipo==='multipla'?'Pergunta · várias respostas':'Pergunta',desp:'🚒 Despacho imediato',orient:'Orientação ao solicitante',acao:'Informação ao atendente',video:'📞 Videochamada',troca:'🔁 Trocar natureza',diag:'Fluxograma de consulta',bloco:'🧩 Bloco reutilizável'}[p]; }
   function h(tag,attrs,kids){ var e=document.createElement(tag); for(var k in (attrs||{})){ var v=attrs[k]; if(k==='class') e.className=v; else if(k==='text') e.textContent=v; else if(k.slice(0,2)==='on') e.addEventListener(k.slice(2),v); else if(v===true) e.setAttribute(k,''); else if(v!==false&&v!=null) e.setAttribute(k,v); } (kids||[]).forEach(function(c){ if(c) e.appendChild(typeof c==='string'?document.createTextNode(c):c); }); return e; }
   function itens(){ return API.itens(); }
+  /* destinos resolvidos; dentro de um bloco, o fim da lista é a saída do bloco */
+  function gr(){ var g=grafo(itens()),l=itens(); if(API.emBloco&&l.length){ var u=l[l.length-1]; if(!u.prox) g.def[u.id]='SAIDA'; } return g; }
   function porId(id){ return itens().filter(function(x){ return x.id===id; })[0]||null; }
   function lay(){ return API.layout()||{}; }
   /* ---------- desfazer ---------- */
@@ -24,7 +26,7 @@ var HefestoDesenho=(function(){
   function mudou(){ API.mudou(); desenhar(); }
   /* ---------- organização automática em camadas ---------- */
   function organizar(tam){
-    var it=itens(),g=grafo(it),camada={},ordem=[];
+    var it=itens(),g=gr(),camada={},ordem=[];
     var viz=function(id){ var x=g.item[id]; if(!x) return []; var v=[]; if(temOpcoes(x)) x.opcoes.forEach(function(o){ v.push(o.vai||g.def[id]); }); v.push(g.def[id]); return v.filter(function(y,i,a){ return a.indexOf(y)===i; }); };
     /* caminho mais longo a partir do início (a entrevista não tem ciclo) */
     var prof={},visit=function(id,d){ if(id==='FIM'||!g.item[id]) return; if(prof[id]!=null&&prof[id]>=d) return; prof[id]=d; viz(id).forEach(function(y){ visit(y,d+1); }); };
@@ -42,14 +44,14 @@ var HefestoDesenho=(function(){
       linha.forEach(function(id,i){ pos[id]={x:Math.round(x0+i*LARG-((tam[id]||{w:240}).w/2)),y:y}; alt=Math.max(alt,(tam[id]||{h:80}).h); });
       y+=alt+70;
     }
-    pos.__fim={x:-60,y:y};
+    pos.__fim={x:-60,y:y}; if(API.emBloco) pos.__saida={x:-320,y:y};
     soltos.forEach(function(x,i){ pos[x.id]={x:Math.round(LARG*Math.ceil(((L[1]||[]).length+1)/2)+200),y:90+i*((tam[x.id]||{h:80}).h+40)}; });
     pos.__inicio.x=pos[it[0]&&it[0].id]?pos[it[0].id].x:0;
     return pos;
   }
   /* ---------- desenho ---------- */
   function abrir(api){
-    API=api; sel=null; pilha=[]; V={tx:60,ty:40,k:1};
+    API=api; sel=null; multi={}; pilha=[]; V={tx:60,ty:40,k:1};
     fechar();
     raiz=h('div',{class:'dz',role:'dialog','aria-label':'Editor visual do fluxo'});
     document.body.appendChild(raiz);
@@ -62,19 +64,23 @@ var HefestoDesenho=(function(){
     var emCampo=/INPUT|TEXTAREA|SELECT/.test((e.target&&e.target.tagName)||'');
     if(e.key==='Escape'&&!emCampo){ e.preventDefault(); e.stopPropagation(); if(sel){ sel=null; desenhar(); } else fechar(); return; }
     if((e.ctrlKey||e.metaKey)&&e.key.toLowerCase()==='z'&&!emCampo){ e.preventDefault(); e.stopPropagation(); desfazer(); return; }
+    if(e.key==='Escape'&&!emCampo&&Object.keys(multi).length){ multi={}; desenhar(); return; }
     if((e.key==='Delete'||e.key==='Backspace')&&!emCampo&&sel){ e.preventDefault(); e.stopPropagation(); excluir(sel); }
   }
   function desenhar(ajustar){
     if(!raiz) return;
     var foco=document.activeElement&&raiz.contains(document.activeElement)&&document.activeElement.getAttribute('data-k');
     raiz.textContent='';
-    var v=itens().length?validar(itens()):{erros:[],avisos:[]};
+    var v=itens().length?API.validar():{erros:[],avisos:[]},nMulti=Object.keys(multi).length,listaB=API.blocos?API.blocos():[];
     /* barra */
     var paleta=[['Pergunta','perg'],['Pergunta aberta','aberta'],['Orientação','orient'],['Despacho','desp'],['Informação','acao'],['Videochamada','video'],['Trocar natureza','troca']];
     raiz.appendChild(h('div',{class:'dzBarra'},[
-      h('b',{text:'Editor visual · '+API.natureza.nome}),
+      API.voltar?h('button',{class:'btn sm',text:'‹ Voltar para '+API.voltar.nome,onclick:API.voltar.fn}):null,
+      h('b',{text:(API.emBloco?'Bloco · ':'Editor visual · ')+API.natureza.nome}),
       h('span',{class:'dzSep'}),
       h('span',{class:'muted',text:'Adicionar:'})].concat(paleta.map(function(p){ return h('button',{class:'dzAdd dz-'+(p[1]==='aberta'?'perg':p[1]),text:'+ '+p[0],onclick:function(){ adicionar(p[1]); }}); })).concat([
+      listaB.length?h('select',{class:'dzAddB','aria-label':'Adicionar bloco',onchange:function(e){ if(e.target.value) adicionar('bloco',e.target.value); }},[h('option',{value:'',text:'+ Bloco…'})].concat(listaB.map(function(b){ return h('option',{value:b.id,text:b.nome+' ('+b.n+' itens)'}); }))):null,
+      nMulti>=2?h('button',{class:'btn sm ok',text:'🧩 Transformar em bloco ('+nMulti+')',title:'Junta as caixas selecionadas num bloco reutilizável',onclick:transformar}):null,
       h('span',{class:'grow'}),
       h('button',{class:'btn sm',text:'↶ Desfazer',disabled:!pilha.length,title:'Ctrl+Z',onclick:desfazer}),
       h('button',{class:'btn sm',text:'Reorganizar',title:'Refaz a disposição automática das caixas',onclick:function(){ guardar(); API.setLayout({}); desenhar(true); }}),
@@ -89,9 +95,10 @@ var HefestoDesenho=(function(){
     corpo.appendChild(painel()); raiz.appendChild(corpo);
     R={tela:tela,mundo:mundo,svg:svg,nos:{}};
     /* caixas */
-    R.nos.__inicio=caixaSimples('__inicio','titulo','Natureza: '+API.natureza.nome,'Início');
+    R.nos.__inicio=caixaSimples('__inicio','titulo',(API.emBloco?'Bloco: ':'Natureza: ')+API.natureza.nome,'Início');
     itens().forEach(function(it){ R.nos[it.id]=caixa(it); });
-    R.nos.__fim=caixaSimples('__fim','fim','Relato final','Fim');
+    R.nos.__fim=caixaSimples('__fim','fim','Relato final','Encerra a entrevista');
+    if(API.emBloco) R.nos.__saida=caixaSimples('__saida','saida','Saída do bloco','Continua o fluxo de quem usa o bloco');
     for(var k in R.nos) mundo.appendChild(R.nos[k]);
     /* posições */
     var L=lay(),faltam=!L.__inicio||itens().some(function(it){ return !L[it.id]; });
@@ -108,7 +115,15 @@ var HefestoDesenho=(function(){
     arrastavel(n,id); return n;
   }
   function caixa(it){
-    var p=papel(it),n=h('div',{class:'dzNo dz-'+p+(sel===it.id?' sel':''),'data-id':it.id});
+    var p=papel(it),n=h('div',{class:'dzNo dz-'+p+(sel===it.id?' sel':'')+(multi[it.id]?' multi':''),'data-id':it.id});
+    if(it.tipo==='bloco'){
+      var b=(API.blocos?API.blocos():[]).filter(function(x){ return x.id===it.bloco; })[0];
+      n.appendChild(h('div',{class:'dzTipo',text:'🧩 Bloco'+(b?' · '+b.n+' itens · usado em '+b.usos:' · não encontrado')}));
+      n.appendChild(h('div',{class:'dzTxt',text:it.texto||it.bloco}));
+      n.appendChild(h('div',{class:'dzDica',text:'Duplo clique para abrir'}));
+      n.appendChild(h('span',{class:'dzPorta dzPad','data-de':it.id,'data-o':'',title:'Depois do bloco'}));
+      arrastavel(n,it.id); return n;
+    }
     n.appendChild(h('div',{class:'dzTipo',text:nomeTipo(it)+(it.obrig?' · obrigatória':'')}));
     n.appendChild(h('div',{class:'dzTxt',text:it.texto||'(sem texto)'}));
     if(temOpcoes(it)){
@@ -129,7 +144,7 @@ var HefestoDesenho=(function(){
     var defs=document.createElementNS(svg.namespaceURI,'defs');
     defs.innerHTML='<marker id="dzSeta" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#555"/></marker><marker id="dzSetaF" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#bbb"/></marker>';
     svg.appendChild(defs);
-    var g=itens().length?grafo(itens()):{def:{}},dest=function(t){ return t==='FIM'||!t?'__fim':t; };
+    var g=itens().length?gr():{def:{}},dest=function(t){ return t==='SAIDA'?'__saida':t==='FIM'||!t?'__fim':t; };
     var linha=function(a,b,pad,fraca){ if(!a||!b) return; var p=document.createElementNS(svg.namespaceURI,'path'); p.setAttribute('d',curva(a,b,pad)); p.setAttribute('class','dzLinha'+(fraca?' fraca':'')); p.setAttribute('marker-end',fraca?'url(#dzSetaF)':'url(#dzSeta)'); svg.appendChild(p); };
     if(itens().length) linha(centro(R.nos.__inicio.querySelector('.dzPorta')),topo(itens()[0].id),true);
     itens().forEach(function(it){
@@ -172,7 +187,13 @@ var HefestoDesenho=(function(){
       var mv=function(ev){ var dx=(ev.clientX-x0)/V.k,dy=(ev.clientY-y0)/V.k; if(!moveu&&Math.abs(dx)+Math.abs(dy)<3) return; if(!moveu){ guardar(); moveu=true; } n.style.left=Math.round(l0+dx)+'px'; n.style.top=Math.round(t0+dy)+'px'; arestas(); };
       var up=function(){ n.removeEventListener('pointermove',mv); n.removeEventListener('pointerup',up);
         if(moveu){ var L=JSON.parse(JSON.stringify(lay())); L[id]={x:n.offsetLeft,y:n.offsetTop}; API.setLayout(L); API.mudou(); }
-        else { sel=id==='__fim'||id==='__inicio'?null:id; desenhar(); } };
+        else if(e.shiftKey&&id.indexOf('__')!==0){ if(multi[id]) delete multi[id]; else multi[id]=1; if(sel&&!multi[sel]&&Object.keys(multi).length===1&&sel!==id) multi[sel]=1; sel=null; desenhar(); }
+        else {
+          /* duplo clique feito aqui: o primeiro clique redesenha a tela e o navegador perderia o dblclick */
+          var agora=Date.now(),it=porId(id);
+          if(ultimoClique.id===id&&agora-ultimoClique.t<450&&it&&it.tipo==='bloco'&&API.abrirBloco){ ultimoClique={id:null,t:0}; API.abrirBloco(it.bloco); return; }
+          ultimoClique={id:id,t:agora}; multi={}; sel=id.indexOf('__')===0?null:id; desenhar();
+        } };
       n.addEventListener('pointermove',mv); n.addEventListener('pointerup',up);
     });
   }
@@ -192,7 +213,7 @@ var HefestoDesenho=(function(){
   }
   function ligar(de,o,para){
     if(para===de||para==='__inicio') return;
-    var alvo=para==='__fim'?'FIM':para;
+    var alvo=para==='__fim'?'FIM':para==='__saida'?'SAIDA':para;
     if(de==='__inicio'){ if(!alvo||alvo==='FIM') return; guardar(); var l=itens(),i=l.indexOf(porId(alvo)); if(i>0){ var x=l.splice(i,1)[0]; l.unshift(x); } mudou(); return; }
     var it=porId(de); if(!it) return;
     guardar();
@@ -201,10 +222,11 @@ var HefestoDesenho=(function(){
     mudou();
   }
   /* ---------- criar e excluir ---------- */
-  function adicionar(tipo){
+  function adicionar(tipo,bid){
     guardar();
-    var u=usados(itens()),base={perg:'pergunta',aberta:'pergunta_aberta',orient:'orientacao',desp:'despacho',acao:'informacao',video:'videochamada',troca:'troca'}[tipo],id=idLivre(base,u),it;
-    if(tipo==='perg') it=I(id,'unica','Nova pergunta?',{prox:'FIM',opcoes:[O('sim','Sim'),O('nao','Não'),{id:'nao_sabe',rotulo:'Não sabe',vai:'',relato:false}]});
+    var u=usados(itens()),base={perg:'pergunta',aberta:'pergunta_aberta',orient:'orientacao',desp:'despacho',acao:'informacao',video:'videochamada',troca:'troca',bloco:bid||'bloco'}[tipo],id=idLivre(base,u),it;
+    if(tipo==='bloco'){ var b=API.blocos().filter(function(x){ return x.id===bid; })[0]; it=I(id,'bloco',b?b.nome:bid,{prox:'FIM',bloco:bid}); }
+    else if(tipo==='perg') it=I(id,'unica','Nova pergunta?',{prox:'FIM',opcoes:[O('sim','Sim'),O('nao','Não'),{id:'nao_sabe',rotulo:'Não sabe',vai:'',relato:false}]});
     else if(tipo==='aberta') it=I(id,'texto','Nova pergunta aberta?',{prox:'FIM'});
     else if(tipo==='orient') it=I(id,'instrucao','Nova orientação ao solicitante.',{prox:'FIM'});
     else if(tipo==='desp') it=I(id,'instrucao','O socorro já foi acionado e está a caminho.',{prox:'FIM',despacho:true});
@@ -221,20 +243,52 @@ var HefestoDesenho=(function(){
   function excluir(id){
     var it=porId(id); if(!it) return;
     guardar();
-    var g=grafo(itens()),seg=g.def[id]==='FIM'?'FIM':g.def[id],l=itens();
+    var g=gr(),seg=g.def[id],l=itens();
     /* quem apontava para a caixa passa a apontar para o que vinha depois dela */
     l.forEach(function(x){ if(x.prox===id) x.prox=seg; x.opcoes.forEach(function(o){ if(o.vai===id) o.vai=seg===x.id?'':seg; }); });
     var i=l.indexOf(it),antes=i>0?l[i-1]:null;
     if(antes&&!antes.prox) antes.prox=seg; /* o anterior seguia "o próximo da lista" */
     l.splice(i,1); sel=null; mudou();
   }
+  /* ---------- transformar caixas selecionadas em bloco ---------- */
+  function transformar(){
+    var S_=multi,l=itens(),g=gr(),ids=l.filter(function(x){ return S_[x.id]; }).map(function(x){ return x.id; });
+    var alvos=function(x){ return x.opcoes.map(function(o){ return o.vai||g.def[x.id]; }).concat([g.def[x.id]]); };
+    var entradas={},saidas={};
+    l.forEach(function(x){ if(S_[x.id]) return; alvos(x).forEach(function(t){ if(S_[t]) entradas[t]=1; }); });
+    if(l.length&&S_[l[0].id]) entradas[l[0].id]=1;
+    ids.forEach(function(id){ alvos(g.item[id]).forEach(function(t){ if(!S_[t]&&t!=='FIM') saidas[t]=1; }); });
+    var en=Object.keys(entradas),sa=Object.keys(saidas);
+    if(!en.length){ alert('Nenhuma caixa de fora leva às caixas selecionadas. Selecione um trecho que esteja ligado ao fluxo.'); return; }
+    if(en.length>1){ alert('O trecho selecionado tem mais de uma entrada: '+en.join(', ')+'. Um bloco precisa começar por uma caixa só (as setas de fora devem chegar todas à mesma caixa).'); return; }
+    if(sa.length>1){ alert('O trecho selecionado sai para mais de um lugar: '+sa.map(function(t){ return t==='SAIDA'?'saída do bloco':t; }).join(', ')+'. Um bloco tem uma saída só; o Fechamento pode aparecer à vontade. Inclua ou tire caixas até sobrar uma saída.'); return; }
+    var nome=prompt('Nome do bloco (ex.: Riscos do acidente):'); if(!nome) return;
+    var e=en[0],ordem=[e].concat(ids.filter(function(id){ return id!==e; }));
+    var mapa=function(t){ return S_[t]?t:t==='FIM'?'FIM':'SAIDA'; };
+    var itensB=ordem.map(function(id){ var x=JSON.parse(JSON.stringify(g.item[id])); x.prox=mapa(g.def[id]); x.opcoes.forEach(function(o){ o.vai=mapa(o.vai||g.def[id]); if(o.vai===x.prox) o.vai=''; }); return x; });
+    var r=API.criarBloco(nome,itensB); if(r.erro){ alert(r.erro); return; }
+    guardar();
+    var ent=g.item[e],pos=l.indexOf(ent),novo=I(e,'bloco',nome.trim(),{bloco:r.id,prox:sa[0]||'FIM'});
+    var resto=l.filter(function(x){ return !S_[x.id]||x.id===e; }); resto[resto.indexOf(ent)]=novo;
+    API.setItens(resto); multi={}; sel=e; mudou();
+  }
   /* ---------- painel da caixa selecionada ---------- */
   function painel(){
     var p=h('aside',{class:'dzPainel'});
     var it=sel&&porId(sel);
+    if(it&&it.tipo==='bloco'){
+      var bs=API.blocos(),b=bs.filter(function(x){ return x.id===it.bloco; })[0];
+      p.appendChild(h('h3',{text:'🧩 Bloco reutilizável'}));
+      p.appendChild(h('label',{class:'dzRot',text:'Bloco'}));
+      p.appendChild(h('select',{'data-k':'bloco',onchange:function(e){ guardar(); it.bloco=e.target.value; var nb=bs.filter(function(x){ return x.id===it.bloco; })[0]; it.texto=nb?nb.nome:it.bloco; mudou(); }},(b?[]:[h('option',{value:it.bloco,text:'(não encontrado)',selected:true})]).concat(bs.map(function(x){ return h('option',{value:x.id,text:x.nome,selected:x.id===it.bloco}); }))));
+      if(b) p.appendChild(h('p',{class:'muted',text:b.n+' itens · usado em '+b.usos+(b.usos===1?' lugar':' lugares')+'. Mudanças no bloco valem em todos.'}));
+      p.appendChild(h('div',{class:'row',style:'margin-top:10px'},[b?h('button',{class:'btn sm pri',text:'Abrir o bloco',onclick:function(){ API.abrirBloco(it.bloco); }}):null,h('button',{class:'btn sm del',text:'Tirar daqui',onclick:function(){ excluir(it.id); }})]));
+      p.appendChild(h('p',{class:'muted',text:'O ponto embaixo da caixa diz para onde o fluxo vai quando o bloco termina.'}));
+      return p;
+    }
     if(!it){
       p.appendChild(h('h3',{text:'Como usar'}));
-      p.appendChild(h('ul',{},['Clique numa caixa para editar o texto, as respostas e o tipo.','Puxe do ponto ● ao lado de uma resposta até a caixa seguinte. O ponto embaixo da caixa é o caminho padrão.','Solte a seta no vazio para desfazer a ligação daquela resposta.','Puxe do ponto da caixa da natureza para escolher a primeira pergunta.','Arraste o fundo para mover a tela e use a roda do mouse para aproximar.','Resposta amarela vai para o relato; lilás fica fora (clique no rótulo no painel para trocar).','Delete apaga a caixa selecionada; Ctrl+Z desfaz.'].map(function(t){ return h('li',{text:t}); })));
+      p.appendChild(h('ul',{},['Clique numa caixa para editar o texto, as respostas e o tipo.','Puxe do ponto ● ao lado de uma resposta até a caixa seguinte. O ponto embaixo da caixa é o caminho padrão.','Solte a seta no vazio para desfazer a ligação daquela resposta.','Puxe do ponto da caixa da natureza para escolher a primeira pergunta.','Arraste o fundo para mover a tela e use a roda do mouse para aproximar.','Resposta amarela vai para o relato; lilás fica fora (clique no rótulo no painel para trocar).','Delete apaga a caixa selecionada; Ctrl+Z desfaz.','Shift+clique seleciona várias caixas; “Transformar em bloco” junta o trecho num bloco reutilizável.','Caixa azul é um bloco: duplo clique abre o bloco para editar.'].map(function(t){ return h('li',{text:t}); })));
       return p;
     }
     var ed=function(fn){ return function(e){ guardar(); fn(e); API.mudou(); atualizarCaixa(); }; };

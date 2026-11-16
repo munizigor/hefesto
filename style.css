@@ -284,3 +284,10 @@ code{font-family:'JetBrains Mono',monospace;font-size:12px;background:#F1F3F5;pa
 .dzOpEd{display:flex;gap:6px;align-items:center;margin-bottom:6px}
 .dzOpEd input{flex:1 1 auto;min-width:0;min-height:34px}
 @media(max-width:800px){.dzPainel{flex-basis:220px}}
+.dz-bloco{background:#e3f2fd;border-color:#1565c0;border-style:double;border-width:4px}
+.dz-saida{background:#e3f2fd;border-color:#1565c0;border-radius:24px;text-align:center;width:200px}
+.dzNo.multi{outline:3px dashed #2E7D32;outline-offset:3px}
+.dzDica{font-size:11px;color:#1565C0;margin-top:4px}
+.dzAddB{min-height:28px;padding:2px 6px;font-size:12px;width:auto;max-width:200px;border:1.5px solid #1565c0;color:#1565c0;font-weight:700}
+.natBtn.bloco{border-left-color:#90CAF9}
+.natBtn.bloco.on{border-left-color:#1565C0}
