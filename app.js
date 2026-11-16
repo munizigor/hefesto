@@ -10,13 +10,14 @@
 
   /* ---------- dados ---------- */
   var DB={protocolos:null,ocorrencias:[],seq:1};
-  try{ var salvo=JSON.parse(localStorage.getItem(KEY)||'null'); if(salvo&&salvo.protocolos){ DB.protocolos=salvo.protocolos; DB.ocorrencias=salvo.ocorrencias||[]; DB.seq=salvo.seq||1; DB.base=salvo.base||null; DB.ultimaExportacao=salvo.ultimaExportacao||null; DB.naturezas=salvo.naturezas||null; DB.pubNat=salvo.pubNat||null; DB.feedbacks=salvo.feedbacks||[]; } }catch(e){}
+  try{ var salvo=JSON.parse(localStorage.getItem(KEY)||'null'); if(salvo&&salvo.protocolos){ DB.protocolos=salvo.protocolos; DB.ocorrencias=salvo.ocorrencias||[]; DB.seq=salvo.seq||1; DB.base=salvo.base||null; DB.ultimaExportacao=salvo.ultimaExportacao||null; DB.naturezas=salvo.naturezas||null; DB.pubNat=salvo.pubNat||null; DB.feedbacks=salvo.feedbacks||[]; DB.layout=salvo.layout||{}; } }catch(e){}
   /* versão publicada (protocolos.js) x cópia deste navegador.
      DB.base guarda a impressão da versão publicada que este navegador recebeu. Natureza que a pessoa não editou
      acompanha a nova publicação; natureza editada fica como está até ser exportada e publicada. */
   var PUB=exemplos(),impr=function(itens){ var t=JSON.stringify(itens||[]),h=5381; for(var i=0;i<t.length;i++) h=((h<<5)+h+t.charCodeAt(i))|0; return (h>>>0).toString(36)+'.'+t.length; };
   if(!DB.protocolos) DB.protocolos={};
   if(!DB.base) DB.base={};
+  if(!DB.layout) DB.layout={};
   /* lista de naturezas: a publicada, mais o que a pessoa criou, renomeou ou excluiu neste navegador.
      Junta em três vias: publicada antiga (DB.pubNat), publicada nova e a deste navegador. */
   var PUB_NAT=JSON.parse(JSON.stringify(NATUREZAS)),natsMudaram=false;
@@ -564,6 +565,13 @@
   /* ---------- protocolos (editor do gestor) ---------- */
   var S={nat:NATUREZAS[0].id,aba:'teste',resp:{},fluxo:'',fluxoSujo:false,form:'',formSujo:false,msg:null};
   Object.defineProperty(S,'itens',{get:function(){ return DB.protocolos[S.nat]; },set:function(v){ DB.protocolos[S.nat]=v; }});
+  /* posições das caixas no editor visual: as deste navegador, senão as publicadas */
+  function layoutDe(id){ return DB.layout[id]||(typeof LAYOUTS_PUBLICADOS!=='undefined'&&LAYOUTS_PUBLICADOS[id])||{}; }
+  function abrirDesenho(){
+    var n=natPorId(S.nat);
+    HefestoDesenho.abrir({itens:function(){ return S.itens; },setItens:function(v){ S.itens=v; },natureza:n,naturezas:NATUREZAS,
+      layout:function(){ return layoutDe(S.nat); },setLayout:function(l){ DB.layout[S.nat]=l; },mudou:function(){ mudou(true); }});
+  }
   function mudou(estrutura){ S.resp={}; S.fluxoSujo=false; S.formSujo=false; salvar(); if(estrutura) desenharEditor(); desenharLado(); desenharNats(); }
   function desenharNats(){
     var n=$('pNats'); n.textContent='';
@@ -609,7 +617,7 @@
   }
   /* ---------- exportar e importar (.zip) ---------- */
   var IMP=null;
-  function arquivoProtocolo(n){ return JSON.stringify({natureza:{id:n.id,nome:n.nome},itens:DB.protocolos[n.id]||[],notas:(typeof NOTAS_PROTOCOLOS!=='undefined'&&NOTAS_PROTOCOLOS[n.id])||[]},null,1)+'\n'; }
+  function arquivoProtocolo(n){ var lay=layoutDe(n.id),o={natureza:{id:n.id,nome:n.nome},itens:DB.protocolos[n.id]||[],notas:(typeof NOTAS_PROTOCOLOS!=='undefined'&&NOTAS_PROTOCOLOS[n.id])||[]}; if(Object.keys(lay).length) o.layout=lay; return JSON.stringify(o,null,1)+'\n'; }
   function exportarZip(){
     var z={},d=new Date(),dd=function(x){ return ('0'+x).slice(-2); },carimbo=d.getFullYear()+'-'+dd(d.getMonth()+1)+'-'+dd(d.getDate())+'-'+dd(d.getHours())+'h'+dd(d.getMinutes()),alt=alteradas();
     z['naturezas.json']=(JSON.stringify(NATUREZAS,null,1)+'\n');
@@ -623,7 +631,7 @@
   }
   function lerArquivo(f){
     IMP=null;
-    var fim=function(mapa,natsZip){ /* mapa: {idNatureza: itens}; natsZip: lista de naturezas do arquivo, se houver */
+    var fim=function(mapa,natsZip,lays){ /* mapa: {idNatureza: itens}; natsZip: lista de naturezas do arquivo, se houver */
       var linhas=[],nz={}; (natsZip||[]).forEach(function(n){ nz[n.id]=n; });
       Object.keys(mapa).forEach(function(id){
         var n=natPorId(id),itens=mapa[id],z=nz[id];
@@ -633,16 +641,16 @@
         linhas.push({id:id,nome:z?z.nome:n.nome,antigo:renome?n.nome:'',nova:nova,nat:z||n,sit:igual&&!renome?'igual':'muda',itens:itens,antes:nova?0:(DB.protocolos[id]||[]).length,erros:itens.length?validar(itens).erros.length:0});
       });
       var fora=NATUREZAS.filter(function(n){ return natsZip&&!nz[n.id]; });
-      IMP={nome:f.name,linhas:linhas,fora:fora}; desenharNats();
+      IMP={nome:f.name,linhas:linhas,fora:fora,lays:lays||{}}; desenharNats();
     };
     var erro=function(e){ IMP={nome:f.name,erro:String(e&&e.message||e)}; desenharNats(); };
     if(/\.json$/i.test(f.name)){ f.text().then(function(t){ var o=JSON.parse(t); if(o&&o.itens&&o.natureza) { var m={}; m[o.natureza.id]=o.itens; fim(m); } else fim(o); }).catch(erro); return; }
     f.arrayBuffer().then(zipLer).then(function(z){
       var arqs=Object.keys(z).filter(function(k){ return /(^|\/)protocolos\/[a-z0-9_]+\.json$/.test(k); });
       if(!arqs.length) throw new Error('o arquivo não tem a pasta protocolos/. Use um zip exportado pelo site.');
-      var m={}; arqs.forEach(function(k){ m[k.replace(/^.*\//,'').replace(/\.json$/,'')]=JSON.parse(z[k]).itens; });
+      var m={},lays={}; arqs.forEach(function(k){ var o=JSON.parse(z[k]),id=k.replace(/^.*\//,'').replace(/\.json$/,''); m[id]=o.itens; if(o.layout) lays[id]=o.layout; });
       var nk=Object.keys(z).filter(function(k){ return /(^|\/)naturezas\.json$/.test(k); })[0];
-      fim(m,nk?JSON.parse(z[nk]):null);
+      fim(m,nk?JSON.parse(z[nk]):null,lays);
     }).catch(erro);
   }
   function desenharArquivo(n){
@@ -665,7 +673,7 @@
     if(IMP.fora&&IMP.fora.length) box.appendChild(el('div',{class:'muted',text:IMP.fora.length+' natureza'+(IMP.fora.length>1?'s existem':' existe')+' aqui e não no arquivo; '+(IMP.fora.length>1?'ficam':'fica')+' como '+(IMP.fora.length>1?'estão':'está')+': '+IMP.fora.map(function(n){ return n.nome; }).join(', ')+'.'}));
     if(outras.length) box.appendChild(el('div',{class:'msg inf',text:'Ignoradas, porque a natureza não existe neste site: '+outras.map(function(l){ return l.nome; }).join(', ')+'.'}));
     box.appendChild(el('div',{class:'row',style:'margin-top:6px'},[
-      muda.length?el('button',{class:'btn sm ok',text:'Aplicar',onclick:function(){ muda.forEach(function(l){ if(l.nova){ if(!nomeLivre(l.nome)) l.nat=Object.assign({},l.nat,{nome:l.nome+' (importada)'}); NATUREZAS.push({id:l.id,nome:l.nat.nome,fonte:l.nat.fonte||'criada no site'}); } else if(l.antigo){ trocarNomeEmTrocas(l.antigo,l.nome); natPorId(l.id).nome=l.nome; } DB.protocolos[l.id]=l.itens; }); ordenarNats(); IMP=null; salvar(); S.resp={}; status(muda.length+' natureza'+(muda.length>1?'s importadas':' importada')); desenharProt(); }}):null,
+      muda.length?el('button',{class:'btn sm ok',text:'Aplicar',onclick:function(){ muda.forEach(function(l){ if(l.nova){ if(!nomeLivre(l.nome)) l.nat=Object.assign({},l.nat,{nome:l.nome+' (importada)'}); NATUREZAS.push({id:l.id,nome:l.nat.nome,fonte:l.nat.fonte||'criada no site'}); } else if(l.antigo){ trocarNomeEmTrocas(l.antigo,l.nome); natPorId(l.id).nome=l.nome; } DB.protocolos[l.id]=l.itens; }); Object.keys(IMP.lays||{}).forEach(function(id){ if(natPorId(id)) DB.layout[id]=IMP.lays[id]; }); ordenarNats(); IMP=null; salvar(); S.resp={}; status(muda.length+' natureza'+(muda.length>1?'s importadas':' importada')); desenharProt(); }}):null,
       el('button',{class:'btn sm',text:muda.length?'Cancelar':'Fechar',onclick:function(){ IMP=null; desenharNats(); }})]));
     n.appendChild(box);
   }
@@ -774,8 +782,9 @@
     p.appendChild(el('div',{class:'row'},[el('span',{class:'lbl',text:'Notação:'}),
       el('button',{class:'btn sm'+(miro?' pri':''),'aria-pressed':miro?'true':'false',text:'Padrão do Miro (cores)',onclick:function(){ S.notacao='miro'; S.fluxoSujo=false; S.msg=null; desenharLado(); }}),
       el('button',{class:'btn sm'+(!miro?' pri':''),'aria-pressed':!miro?'true':'false',text:'Compacta',onclick:function(){ S.notacao='compacta'; S.fluxoSujo=false; S.msg=null; desenharLado(); }})]));
+    p.appendChild(el('button',{class:'btn ok grande',style:'margin-top:8px;width:100%',onclick:abrirDesenho},['✏️ Abrir o editor visual (arrastar e ligar caixas)']));
     if(miro){
-      p.appendChild(el('div',{class:'muted',style:'margin-top:6px',text:'Desenhe como no quadro do Miro: cada caixa tem uma classe de cor, e as respostas são caixas ligadas à pergunta. A classe da resposta diz se ela vai para o relato. Identificadores novos criam itens; os existentes guardam o que o desenho não mostra (obrigatória, múltipla escolha, lista, número).'}));
+      p.appendChild(el('div',{class:'muted',style:'margin-top:6px',text:'Ou edite o código: desenhe como no quadro do Miro: cada caixa tem uma classe de cor, e as respostas são caixas ligadas à pergunta. A classe da resposta diz se ela vai para o relato. Identificadores novos criam itens; os existentes guardam o que o desenho não mostra (obrigatória, múltipla escolha, lista, número).'}));
       p.appendChild(el('details',{class:'legenda'},[el('summary',{text:'Legenda das classes'}),el('table',{},LEGENDA.map(function(x){ return el('tr',{},[el('td',{},[el('span',{class:'cor',style:'background:'+x[1]+';color:'+x[2],text:x[0]})]),el('td',{text:x[3]}),el('td',{},[el('code',{text:x[4]})])]); }))]));
     } else p.appendChild(el('div',{class:'muted',style:'margin-top:6px'},['Só a ordem e as ramificações, ligando identificadores do formulário. O texto da seta é o identificador da opção. Um identificador novo cria o item: use ',el('code',{text:'id{"pergunta"}'}),', ',el('code',{text:'id["instrução"]'}),' ou ',el('code',{text:'id("informação")'}),'.']));
     var ta=el('textarea',{class:'code','aria-label':'Fluxo em Mermaid',spellcheck:'false',style:'margin-top:8px;min-height:'+(miro?'300px':'220px')}); ta.value=S.fluxo;
@@ -883,7 +892,9 @@
   + '<li><b>Múltipla escolha:</b> cada opção marcada abre um desvio, na ordem das opções. Cada desvio precisa voltar ao item indicado em “Depois dos desvios”.</li>'
   + '<li><b>Fechamento:</b> encerra a entrevista. Um caminho que chega ao fechamento dentro de um desvio encerra tudo.</li>'
   + '<li>O mesmo item pode ser destino de vários caminhos. Não é preciso copiar.</li></ul>'
-  + '<h3>4. Desenhar o fluxo em Mermaid</h3>'
+  + '<h3>4. Editor visual</h3>'
+  + '<p>O botão <b>✏️ Editor visual</b> (no topo da entrevista ou na aba Fluxo) abre o fluxo em tela cheia, com as cores do quadro do Miro. Arraste as caixas, puxe a seta do ponto ● de uma resposta até a caixa seguinte, crie caixas pela barra de cima e edite texto, tipo e respostas no painel da direita. O ponto embaixo da caixa é o caminho padrão. Ctrl+Z desfaz; Delete apaga a caixa selecionada e liga quem vinha antes ao que vinha depois. A posição das caixas vai junto no zip exportado.</p>'
+  + '<h3>5. Desenhar o fluxo em Mermaid</h3>'
   + '<p>Na aba <b>Fluxo</b>, a notação <b>Padrão do Miro</b> desenha a entrevista com as mesmas cores do quadro. Cada caixa tem uma classe, e as respostas são caixas ligadas à pergunta. Abra a <b>Legenda das classes</b> para ver todas.</p>'
   + '<pre>inicio(["Natureza: Vazamento de gás"]):::titulo --> tipo\ntipo["É botijão ou encanado?"]:::perg\ntipo --> tipo__botijao("Botijão"):::opc --> despacho\ntipo --> tipo__nao_sabe("Não sabe"):::ns --> despacho\ndespacho["Fala: O socorro já foi acionado."]:::desp --> afastar\nafastar("Saia do local e não acenda luz."):::orient --> fim(["Relato final"]):::relato</pre>'
   + '<ul><li>Resposta <code>:::opc</code> vai para o relato; <code>:::ns</code> não vai. <code>:::ab</code> é resposta aberta.</li>'
@@ -891,25 +902,25 @@
   + '<li>A caixa <code>:::desp</code> é o ponto do despacho imediato: no atendimento, o botão dela encaminha a ocorrência.</li>'
   + '<li><b>Ver rascunho</b> desenha sem aplicar. <b>Aplicar fluxo</b> confere tudo antes de mudar a entrevista.</li></ul>'
   + '<p>A notação <b>Compacta</b> continua disponível: cada linha é uma seta entre identificadores, e o texto da seta é a opção.</p>'
-  + '<h3>5. Escrever o formulário em JSON</h3>'
+  + '<h3>6. Escrever o formulário em JSON</h3>'
   + '<p>Na aba <b>Formulário</b>, cada identificador tem tipo, texto e, nas perguntas com opções, a lista de opções.</p>'
   + '<pre>{\n  "preso": {\n    "tipo": "unica",\n    "texto": "Tem alguém preso?",\n    "obrigatoria": true,\n    "opcoes": [\n      { "id": "sim", "rotulo": "Sim" },\n      { "id": "nao", "rotulo": "Não" }\n    ]\n  },\n  "vitimas": { "tipo": "numero", "texto": "Quantas vítimas?" }\n}</pre>'
   + '<p>Tipos aceitos: <code>unica</code>, <code>multipla</code>, <code>lista</code>, <code>numero</code>, <code>texto</code>, <code>instrucao</code>, <code>informacao</code>, <code>diagrama</code>.</p>'
-  + '<h3>6. Mensagens da validação</h3><table><tr><th>Mensagem</th><th>O que fazer</th></tr>'
+  + '<h3>7. Mensagens da validação</h3><table><tr><th>Mensagem</th><th>O que fazer</th></tr>'
   + '<tr><td>“aponta para …, que não existe”</td><td>O fluxo cita um identificador que não está no formulário. Crie o item ou corrija o nome.</td></tr>'
   + '<tr><td>“O fluxo tem um ciclo”</td><td>Algum caminho volta para um item anterior. Toda entrevista precisa chegar ao fechamento.</td></tr>'
   + '<tr><td>“nenhum caminho chega até ele”</td><td>O item existe, mas nada aponta para ele. Ligue-o a alguma opção ou exclua.</td></tr>'
   + '<tr><td>“o desvio não volta para …”</td><td>Em múltipla escolha, o ramo termina sem voltar ao tronco. Aponte o último item do ramo para o item de “Depois dos desvios”.</td></tr></table>'
-  + '<h3>7. Relato final e despacho</h3><ul>'
+  + '<h3>8. Relato final e despacho</h3><ul>'
   + '<li>Ao lado de cada resposta, o botão <b>no relato</b> / <b>fora do relato</b> diz se ela entra no texto do relato. Respostas que só descartam uma hipótese, como “Não” em “Há outras pessoas no local?”, ficam fora. Nas perguntas abertas e nas orientações, use a caixa <b>No relato</b>.</li>'
   + '<li>O encaminhamento ao despacho acontece no item de despacho imediato do fluxo. O atendente pode adiantar com <b>Adiantar despacho</b>, no topo da ligação.</li></ul>'
-  + '<h3>8. Boas práticas</h3><ul>'
+  + '<h3>9. Boas práticas</h3><ul>'
   + '<li>Pergunte primeiro o que muda o recurso enviado ou a instrução dada.</li>'
   + '<li>Uma pergunta por item, com texto curto, do jeito que o atendente fala.</li>'
   + '<li>Marque como obrigatória só a pergunta sem a qual não dá para registrar.</li>'
   + '<li>Inclua “Não sabe” quando o solicitante puder não ter a resposta.</li>'
   + '<li>O texto de instruções de primeiros socorros deve ser validado pela área técnica antes de publicar.</li></ul>'
-  + '<h3>9. Trazer um fluxograma do Miro</h3>'
+  + '<h3>10. Trazer um fluxograma do Miro</h3>'
   + '<p>O fluxograma do Miro desenha caixas e setas; a entrevista precisa saber o que é pergunta, o que é dito ao solicitante e o que é só para o atendente. Na aba <b>Importar do Miro</b>:</p><ol>'
   + '<li>No Miro, copie o código Mermaid do diagrama e cole no campo 1.</li>'
   + '<li><b>Converter automaticamente</b> lê o desenho: losango e caixa com setas rotuladas viram pergunta, o texto da seta vira a opção, início e fim somem, ações como “Acionar viatura” viram informação ao atendente, laços são retirados.</li>'
@@ -928,6 +939,7 @@
     var n=natPorId(S.nat),ex=exemplos()[S.nat];
     ed.appendChild(el('div',{class:'row'},[el('h2',{class:'grow',text:'Entrevista · '+n.nome}),
       ex&&alterada(S.nat)?el('button',{class:'btn sm',text:'Restaurar versão publicada',onclick:function(){ if(!confirm('Descartar as suas mudanças em '+n.nome+'?')) return; S.itens=ex; S.msg=null; mudou(true); }}):null,
+      el('button',{class:'btn sm ok',text:'✏️ Editor visual',onclick:abrirDesenho}),
       el('button',{class:'btn sm',text:'Renomear',onclick:function(){ var nv=prompt('Novo nome da natureza:',n.nome); if(nv==null) return; var r=renomearNatureza(n.id,nv); if(r) alert(r); }}),
       el('button',{class:'btn sm del',text:'Excluir natureza',onclick:function(){ excluirNatureza(n.id); }})]));
     var notas=(typeof NOTAS_PROTOCOLOS!=='undefined'&&NOTAS_PROTOCOLOS[S.nat])||[],alt=alterada(S.nat);

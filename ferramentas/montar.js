@@ -35,11 +35,11 @@ if(arg){
     lista.forEach(function(f){ console.log('  ['+f.tipo+'] '+f.texto.replace(/\s+/g,' ').slice(0,120)+(f.contexto&&f.contexto.natureza?' · '+f.contexto.natureza:'')); });
   }
 }
-var nats=JSON.parse(fs.readFileSync(path.join(dir,'naturezas.json'),'utf8')),prot={},notas={};
+var nats=JSON.parse(fs.readFileSync(path.join(dir,'naturezas.json'),'utf8')),prot={},notas={},lays={};
 var listados={'impressoes-publicadas.json':1}; nats.forEach(function(n){ listados[n.id+'.json']=1; });
 var orfaos=fs.readdirSync(dir).filter(function(f){ return /\.json$/.test(f)&&f!=='naturezas.json'&&!listados[f]; });
 if(orfaos.length) console.log('Atenção: estes arquivos não estão em naturezas.json (natureza excluída?) e ficaram fora do site: '+orfaos.join(', ')+'. Apague com git rm se for o caso.');
-nats.forEach(function(n){ var f=path.join(dir,n.id+'.json'); var o=fs.existsSync(f)?JSON.parse(fs.readFileSync(f,'utf8')):{itens:[]}; prot[n.id]=o.itens||[]; if(o.notas&&o.notas.length) notas[n.id]=o.notas; });
+nats.forEach(function(n){ var f=path.join(dir,n.id+'.json'); var o=fs.existsSync(f)?JSON.parse(fs.readFileSync(f,'utf8')):{itens:[]}; prot[n.id]=o.itens||[]; if(o.notas&&o.notas.length) notas[n.id]=o.notas; if(o.layout) lays[n.id]=o.layout; });
 /* impressão digital de cada versão publicada de cada natureza (mesma conta do site, em app.js).
    O site usa a lista para saber se a cópia do navegador é só uma versão publicada antiga, e então atualiza. */
 var impr=function(itens){ var t=JSON.stringify(itens||[]),h=5381; for(var i=0;i<t.length;i++) h=((h<<5)+h+t.charCodeAt(i))|0; return (h>>>0).toString(36)+'.'+t.length; };
@@ -50,6 +50,7 @@ var out='/* GERADO por ferramentas/montar.js a partir da pasta protocolos/. Não
  +'NATUREZAS = '+JSON.stringify(nats,null,0).replace(/\},\{/g,'},\n  {')+';\n'
  +'var PROTOCOLOS_PUBLICADOS = '+JSON.stringify(prot)+';\n'
  +'var NOTAS_PROTOCOLOS = '+JSON.stringify(notas)+';\n'
+ +'var LAYOUTS_PUBLICADOS = '+JSON.stringify(lays)+';\n'
  +'var IMPRESSOES_PUBLICADAS = '+JSON.stringify(imps)+';\n'
  +'exemplos = function(){ return JSON.parse(JSON.stringify(PROTOCOLOS_PUBLICADOS)); };\n'
  +"if(typeof module!=='undefined') module.exports={NATUREZAS:NATUREZAS,PROTOCOLOS_PUBLICADOS:PROTOCOLOS_PUBLICADOS,NOTAS_PROTOCOLOS:NOTAS_PROTOCOLOS};\n";
