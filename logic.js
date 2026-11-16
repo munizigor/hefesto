@@ -252,4 +252,180 @@ function previsao(itens,resp,pend){
   }
   return out;
 }
-if(typeof module!=='undefined') module.exports={exemplo:exemplo,exemplos:exemplos,NATUREZAS:NATUREZAS,grafo:grafo,validar:validar,caminhar:caminhar,previsao:previsao,valorResposta:valorResposta,respondido:respondido,fluxoMermaid:fluxoMermaid,aplicarFluxo:aplicarFluxo,formJSON:formJSON,aplicarForm:aplicarForm,I:I,O:O};
+/* ===== IMPORTAÇÃO DE FLUXOGRAMA LIVRE (Miro e similares) =====
+   O Mermaid do Miro desenha o protocolo com ids sem sentido (A, B, C), textos sem aspas, início e fim como nós
+   e às vezes laços ou ramos paralelos. Aqui ele vira um rascunho de entrevista, com um relatório do que revisar. */
+var PARADAS=' a o as os e de do da dos das em no na nos nas um uma uns umas que se ao aos à às para pra com por sem ou tem há ha existe está esta estão estao qual quais quantas quantos alguém alguem alguma algum é foi ser '.split(' ');
+function idTexto(txt,usadosMap){
+  var pal=String(txt||'').normalize('NFD').replace(/[̀-ͯ]/g,'').toLowerCase().replace(/[^a-z0-9 ]+/g,' ').split(/\s+/).filter(function(w){ return w&&PARADAS.indexOf(w)<0; });
+  var base=pal.slice(0,3).join('_').slice(0,24)||'item';
+  return idLivre(base,usadosMap);
+}
+function limparTexto(t){
+  return String(t==null?'':t).replace(/<br\s*\/?>/gi,' ').replace(/<[^>]+>/g,'').replace(/&quot;|&#34;/g,'"').replace(/&#39;|&apos;/g,"'").replace(/&lt;/g,'<').replace(/&gt;/g,'>').replace(/&nbsp;/g,' ').replace(/&amp;/g,'&').replace(/#quot;/g,'"').replace(/\\n/g,' ').replace(/\s+/g,' ').trim();
+}
+var FORMAS=[['([','])','terminal'],['((','))','terminal'],['[[',']]','sub'],['[(',')]','banco'],['{{','}}','decisao'],['[/','/]','para'],['[/','\\]','para'],['[\\','\\]','para'],['[\\','/]','para'],['{','}','decisao'],['[',']','ret'],['(',')','arred'],['>',']','bandeira']];
+function lerMermaidLivre(src){
+  var strs=[],avisos=[],nos={},ordem=[],arestas=[];
+  var txt=String(src||'').replace(/"([^"]*)"/g,function(_,x){ strs.push(x); return '\u0001'+(strs.length-1)+'\u0001'; });
+  var rest=function(x){ return limparTexto(String(x==null?'':x).replace(/\u0001(\d+)\u0001/g,function(_,i){ return strs[+i]; })); };
+  function lerNo(l,i){
+    var m=/^\s*([A-Za-z0-9_À-ſ][A-Za-z0-9_À-ſ.-]*)/.exec(l.slice(i)); if(!m) return null;
+    var id=m[1],j=i+m[0].length,forma=null,texto=null;
+    for(var k=0;k<FORMAS.length;k++){ var f=FORMAS[k]; if(l.substr(j,f[0].length)===f[0]){ var fim=l.indexOf(f[1],j+f[0].length); if(fim<0) continue; forma=f[2]; texto=rest(l.slice(j+f[0].length,fim)); j=fim+f[1].length; break; } }
+    var cl=/^:::[\w-]+/.exec(l.slice(j)); if(cl) j+=cl[0].length;
+    if(!nos[id]){ nos[id]={id:id,forma:null,texto:''}; ordem.push(id); }
+    if(forma){ nos[id].forma=forma; nos[id].texto=texto; }
+    return {id:id,j:j};
+  }
+  function lerGrupo(l,i){
+    var ids=[],r=lerNo(l,i); if(!r) return null; ids.push(r.id); i=r.j;
+    while(true){ var m=/^\s*&\s*/.exec(l.slice(i)); if(!m) break; r=lerNo(l,i+m[0].length); if(!r) return null; ids.push(r.id); i=r.j; }
+    return {ids:ids,j:i};
+  }
+  var SETA_MEIO=/^\s*(?:--|==|-\.)\s*([^\-=.>|\s][^|]*?)\s*(?:-{2,}>|={2,}>|\.-+>|-{3,}|={3,})\s*/;
+  var SETA=/^\s*<?(?:-{2,}>|-{3,}|={2,}>|={3,}|-\.+->|-\.+-|--[ox])(?:\s*\|([^|]*)\|)?\s*/;
+  txt.split(/\r?\n/).forEach(function(bruta,n){
+    bruta.split(';').forEach(function(linha){
+      var l=linha.replace(/%%.*$/,'').trim();
+      if(!l||/^(flowchart|graph|classDef|class\s|style\s|linkStyle|subgraph\b|end$|direction\s|click\s|accTitle|accDescr|---$|title:|config:)/i.test(l)) return;
+      var g=lerGrupo(l,0); if(!g){ avisos.push('Linha '+(n+1)+' ignorada: '+rest(l).slice(0,60)); return; }
+      var i=g.j,ant=g.ids;
+      while(i<l.length){
+        var resto=l.slice(i); if(!resto.trim()) break;
+        var m=SETA_MEIO.exec(resto),rot='';
+        if(m) rot=rest(m[1]); else { m=SETA.exec(resto); if(m) rot=rest(m[1]||''); }
+        if(!m){ avisos.push('Linha '+(n+1)+': trecho não reconhecido “'+rest(resto).slice(0,40)+'”.'); break; }
+        var g2=lerGrupo(l,i+m[0].length); if(!g2){ avisos.push('Linha '+(n+1)+': seta sem destino.'); break; }
+        ant.forEach(function(a){ g2.ids.forEach(function(b){ arestas.push({de:a,para:b,rot:rot}); }); });
+        ant=g2.ids; i=g2.j;
+      }
+    });
+  });
+  return {nos:nos,ordem:ordem,arestas:arestas,avisos:avisos};
+}
+function importarMermaidLivre(src){
+  var L=lerMermaidLivre(src),nos=L.nos,avisos=L.avisos.slice(),sai={},entra={};
+  if(!L.ordem.length) return {itens:[],avisos:avisos.length?avisos:['Nenhum nó encontrado. Cole o código que começa com “flowchart” ou “graph”.']};
+  L.ordem.forEach(function(id){ sai[id]=[]; entra[id]=[]; });
+  L.arestas.forEach(function(a){ sai[a.de].push(a); entra[a.para].push(a); });
+  var ehTerm=function(n){ return n.forma==='terminal'||/^(in[ií]cio|inicio|start|come[cç]o|fim|final|end|t[ée]rmino|encerra)/i.test(n.texto||n.id); };
+  /* início: nós sem entrada; nó terminal com uma saída é só o ponto de partida */
+  var raizes=L.ordem.filter(function(id){ return !entra[id].length; });
+  if(!raizes.length) raizes=[L.ordem[0]];
+  if(raizes.length>1) avisos.push('O fluxograma tem '+raizes.length+' pontos de partida ('+raizes.map(function(r){return nos[r].texto||r;}).join(', ')+'). A entrevista começa pelo primeiro; ligue os outros ou exclua.');
+  var pula={},FIMs={};
+  L.ordem.forEach(function(id){
+    var n=nos[id];
+    if(!sai[id].length&&(ehTerm(n)||!n.texto)) FIMs[id]=1;
+    else if(!entra[id].length&&ehTerm(n)&&sai[id].length===1&&!sai[id][0].rot) pula[id]=sai[id][0].para;
+  });
+  var destino=function(id){ var v={}; while(pula[id]&&!v[id]){ v[id]=1; id=pula[id]; } return FIMs[id]?'FIM':id; };
+  /* ordem de visita (pré-ordem) e retirada de laços */
+  var visto={},pilha={},seq=[],laco=[];
+  function dfs(id){
+    if(FIMs[id]||visto[id]) return; visto[id]=1; pilha[id]=1; if(!pula[id]) seq.push(id);
+    sai[id].forEach(function(a){ if(pilha[a.para]){ a.laco=true; laco.push(a); return; } dfs(a.para); });
+    pilha[id]=0;
+  }
+  raizes.forEach(dfs); L.ordem.forEach(function(id){ if(!visto[id]&&!FIMs[id]&&!pula[id]){ dfs(id); } });
+  laco.forEach(function(a){ avisos.push('Laço retirado: “'+(nos[a.de].texto||a.de)+'” voltava para “'+(nos[a.para].texto||a.para)+'”. A entrevista não repete itens: a resposta “'+(a.rot||'sem rótulo')+'” passou a encerrar a entrevista. Descreva a repetição no texto da instrução (ex.: “continue até a viatura chegar”).'); });
+  var u={},novoId={};
+  seq.forEach(function(id){ novoId[id]=idTexto(nos[id].texto||id,u); });
+  var alvoId=function(id){ var d=destino(id); return d==='FIM'?'FIM':(novoId[d]||'FIM'); };
+  var itens=seq.map(function(id){
+    var n=nos[id],ss=sai[id].filter(function(a){ return !a.laco; }),rot=sai[id].filter(function(a){ return a.rot; }),sem=ss.filter(function(a){ return !a.rot; });
+    var texto=n.texto||id,pergunta=n.forma==='decisao'||rot.length>0||/\?\s*$/.test(texto);
+    var it;
+    if(pergunta){
+      it=I(novoId[id],'unica',texto,{prox:'FIM'});
+      var ou={};
+      rot.forEach(function(a){ var ex=it.opcoes.filter(function(o){ return slug(o.rotulo)===slug(a.rot); })[0]; if(ex){ avisos.push('“'+texto+'”: duas setas com a resposta “'+a.rot+'”; ficou só a primeira.'); return; } it.opcoes.push(O(idLivre(a.rot,ou),a.rot,a.laco?'FIM':alvoId(a.para))); });
+      if(sem.length){ it.prox=alvoId(sem[0].para); if(sem.length>1) avisos.push('“'+texto+'”: '+sem.length+' setas sem resposta; só a primeira virou o caminho padrão.'); }
+      else if(it.opcoes.length) it.prox=it.opcoes[0].vai;
+      var tem=function(r){ return it.opcoes.some(function(o){ return slug(o.rotulo)===r; }); };
+      if(it.opcoes.length<2){
+        if(!it.opcoes.length&&n.forma!=='decisao'&&!/\?\s*$/.test(texto)){ it.tipo='instrucao'; }
+        else {
+          ['sim','nao','nao_sabe'].forEach(function(r,k){ if(it.opcoes.length<3&&!tem(r)) it.opcoes.push(O(idLivre(r,(function(){var x={};it.opcoes.forEach(function(o){x[o.id]=1;});return x;})()),['Sim','Não','Não sabe'][k],'')); });
+          avisos.push('“'+texto+'”: pergunta com menos de duas respostas no desenho; foram acrescentadas opções. Confira.');
+        }
+      }
+      if(it.tipo==='unica'&&it.opcoes.length&&it.opcoes.every(function(o){ return o.vai; })&&!sem.length) it.prox=it.opcoes[0].vai;
+    } else {
+      var info=/^(acionar|despachar|enviar|deslocar|empenhar|registrar|anotar|verificar|consultar|informar (ao|a|à) (despacho|guarni|equipe|central)|aten[cç][aã]o|obs|nota|alerta)/i.test(texto)||n.forma==='arred'||n.forma==='sub'||n.forma==='banco';
+      it=I(novoId[id],info?'informacao':'instrucao',texto,{prox:sem.length?alvoId(sem[0].para):'FIM'});
+      if(sem.length>1) avisos.push('“'+texto+'”: '+sem.length+' saídas em paralelo; ficou só a primeira (“'+(nos[sem[0].para].texto||sem[0].para)+'”). Coloque as outras em sequência.');
+      if(info) avisos.push('“'+texto+'” virou informação ao atendente (ação do sistema ou da central, não é lida ao solicitante). Confira.');
+    }
+    return it;
+  });
+  if(!itens.length) avisos.push('Depois de tirar início e fim, não sobrou nenhum item.');
+  return {itens:itens,avisos:avisos};
+}
+/* Resposta de uma IA: tolera texto em volta e cercas de código. Aceita {itens:[...], revisar:[...]} ou só a lista. */
+function lerRespostaIA(texto){
+  var t=String(texto||'').trim(),m=/```(?:json)?\s*([\s\S]*?)```/i.exec(t); if(m) t=m[1].trim();
+  var a=t.search(/[\[{]/); if(a<0) throw new Error('Não encontrei JSON na resposta.');
+  var b=Math.max(t.lastIndexOf('}'),t.lastIndexOf(']')); t=t.slice(a,b+1);
+  var o=JSON.parse(t),lista=Array.isArray(o)?o:(o.itens||o.items),revisar=Array.isArray(o)?[]:(o.revisar||[]);
+  if(!Array.isArray(lista)) throw new Error('O JSON precisa ter a lista "itens".');
+  var tipos=TIPOS.map(function(x){return x[0];});
+  var itens=lista.map(function(x,k){
+    if(!x||typeof x!=='object') throw new Error('Item '+(k+1)+' não é um objeto.');
+    if(tipos.indexOf(x.tipo)<0) throw new Error('“'+(x.id||k+1)+'”: tipo inválido “'+x.tipo+'”.');
+    var dest=function(v){ v=v==null?'':String(v); return /^fim$/i.test(v)?'FIM':v; };
+    var it=I(String(x.id||''),x.tipo,String(x.texto||x.titulo||''),{obrig:!!(x.obrig||x.obrigatoria),outro:!!(x.outro||x.permiteOutro),mermaid:String(x.mermaid||''),prox:dest(x.prox)});
+    if(temOpcoes(it)) it.opcoes=(x.opcoes||[]).map(function(p){ return O(String(p.id||slug(p.rotulo)),String(p.rotulo||p.id||''),dest(p.vai)); });
+    return it;
+  });
+  return {itens:itens,revisar:revisar.map(String)};
+}
+function promptMiro(natureza,codigo){
+  return [
+'Você vai converter um fluxograma de atendimento de emergência (193, Corpo de Bombeiros) em uma entrevista estruturada para o protótipo Hefesto.',
+'',
+'# Entrada',
+'Natureza da ocorrência: '+(natureza||'(informe a natureza)'),
+'Fluxograma em Mermaid, exportado do Miro. Os identificadores dos nós (A, B, C...) não têm significado; os losangos {} costumam ser perguntas e o texto das setas costuma ser a resposta.',
+'```mermaid',
+String(codigo||'').trim()||'(cole aqui o código do Miro)',
+'```',
+'',
+'# Saída',
+'Responda SOMENTE com um JSON válido, sem comentários, no formato:',
+'{"itens":[ ... ],"revisar":[ "ponto que o gestor precisa conferir", ... ]}',
+'',
+'Cada item da lista "itens":',
+'{"id":"preso","tipo":"unica","texto":"Tem alguém preso dentro do veículo?","obrig":true,"outro":false,"prox":"vitimas","opcoes":[{"id":"sim","rotulo":"Sim","vai":"nao_remover"},{"id":"nao","rotulo":"Não","vai":""},{"id":"nao_sabe","rotulo":"Não sabe","vai":""}]}',
+'',
+'Tipos (campo "tipo"):',
+'- "unica": pergunta de escolha única, poucas opções, uma resposta. É o tipo de quase todo losango.',
+'- "multipla": várias opções podem valer ao mesmo tempo (ex.: riscos no local). Pode ter "outro":true para resposta livre.',
+'- "lista": escolha única com muitas opções (mais de 6).',
+'- "numero": quantidade. "texto": resposta curta livre (placa, ponto de acesso). Sem "opcoes".',
+'- "instrucao": frase que o atendente LÊ para o solicitante (orientação, primeiros socorros).',
+'- "informacao": aviso só para o atendente, não é lido (ex.: "Acionar SAMU", "avisar a guarnição sobre gás").',
+'- "diagrama": fluxograma de consulta mostrado ao atendente; usa "texto" como título e "mermaid" com o código. Use só se o desenho tiver uma tabela ou árvore de consulta que não seja pergunta ao solicitante.',
+'',
+'Regras do fluxo:',
+'1. A lista está em ordem; o primeiro item inicia a entrevista.',
+'2. "prox" é para onde o item vai depois. "" significa o próximo da lista; "FIM" encerra a entrevista. Prefira escrever o id explícito.',
+'3. Em "unica" e "lista", cada opção tem "vai": o id do próximo item para aquela resposta, ou "" para seguir o "prox" do item.',
+'4. Em "multipla", cada opção marcada abre um desvio pelo "vai" dela; cada desvio precisa voltar ao "prox" da pergunta (o último item do desvio aponta para ele).',
+'5. Não pode haver ciclo: nenhum caminho volta a um item anterior. Se o desenho tem laço (ex.: "reavaliar respiração", "repetir compressões"), transforme a repetição no texto da instrução ("continue até a viatura chegar") e cite isso em "revisar".',
+'6. Ramos paralelos sem pergunta (uma caixa com duas setas sem texto) viram sequência.',
+'7. Nós de início e fim do desenho não viram itens. Ações do sistema ou do despacho (acionar viatura, empenhar, registrar) viram "informacao" ou somem, e isso vai para "revisar".',
+'8. Todo id e todo "vai"/"prox" precisa existir na lista (ou ser "FIM").',
+'',
+'Regras de conteúdo:',
+'- ids: letras minúsculas sem acento, números e _, curtos e com sentido (ex.: "preso", "cor_chamas"). Nunca "fim". Ids de opção também ("sim", "nao", "nao_sabe").',
+'- Uma pergunta por item, do jeito que o atendente fala. Se uma caixa tem duas perguntas, separe em dois itens.',
+'- Toda pergunta com opções tem pelo menos 2 opções. Inclua "Não sabe" quando o solicitante puder não saber, levando ao caminho mais seguro.',
+'- "obrig":true só nas perguntas sem as quais não dá para registrar a ocorrência.',
+'- Mantenha o sentido dos textos do desenho. NÃO invente orientação clínica ou operacional que não esteja no fluxograma; se faltar algo, aponte em "revisar".',
+'- Escreva em português do Brasil, frases curtas, sem travessão.',
+'- Em "revisar", liste em frases curtas tudo o que você interpretou, mudou ou não teve certeza.'
+  ].join('\n');
+}
+if(typeof module!=='undefined') module.exports={exemplo:exemplo,exemplos:exemplos,NATUREZAS:NATUREZAS,grafo:grafo,validar:validar,caminhar:caminhar,previsao:previsao,valorResposta:valorResposta,respondido:respondido,fluxoMermaid:fluxoMermaid,aplicarFluxo:aplicarFluxo,formJSON:formJSON,aplicarForm:aplicarForm,I:I,O:O,importarMermaidLivre:importarMermaidLivre,lerRespostaIA:lerRespostaIA,promptMiro:promptMiro,ehPergunta:ehPergunta,temOpcoes:temOpcoes};

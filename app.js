@@ -20,20 +20,168 @@
   var mmss=function(x){ x=Math.max(0,x|0); return (x<600?'0':'')+Math.floor(x/60)+':'+(x%60<10?'0':'')+(x%60); };
 
   var V={view:'atend',aviso:null,pausa:false,help:false};
-  var A=null,tick=null;
+  var A=null,tick=null,hTick=null;
 
   /* ---------- atendimento: estado ---------- */
   function seg(){ return A?Math.floor((Date.now()-A.t0)/1000):0; }
-  function novaLigacao(){
+  function novaLigacao(rot){
     var r=function(){ return String(1000+Math.floor(Math.random()*9000)); };
     var fone='(61) 9'+r()+'-'+r();
-    A={t0:Date.now(),fone:fone,passo:0,max:0,natTxt:'',nat:'',local:'',uf:'DF',ra:'',quartel:'',ref:'',resp:{},nome:'',nomeNI:false,tel:fone,relato:'',relManual:false,relEdit:false,obs:'',entOpen:false,encS:null,conf:null,erro:''};
+    A={t0:Date.now(),fone:fone,passo:0,max:0,natTxt:'',nat:'',local:'',uf:'DF',ra:'',quartel:'',ref:'',resp:{},nome:'',nomeNI:false,tel:fone,relato:'',relManual:false,relEdit:false,obs:'',entOpen:false,encS:null,conf:null,erro:'',hermes:null};
     V.aviso=null; V.pausa=false;
     if(tick) clearInterval(tick);
     tick=setInterval(relogio,1000);
+    if(hTick){ clearInterval(hTick); hTick=null; }
+    if(rot) hermesIniciar(rot);
     desenharAtend(); foco();
   }
-  function fimLigacao(){ A=null; if(tick){ clearInterval(tick); tick=null; } desenharAtend(); }
+  function fimLigacao(){ hermesParar(); A=null; if(tick){ clearInterval(tick); tick=null; } desenharAtend(); }
+
+  /* ---------- Hermes (demonstração roteirizada) ---------- */
+  function hermesIniciar(rot){
+    var H=A.hermes={rot:rot,ht:0,last:Date.now(),play:true,vel:1,idx:0,mostradas:0,est:{},audio:null,aviso:''};
+    if(rot.audio){
+      try{
+        H.audio=new Audio(rot.audio);
+        var semAudio=function(){ if(A&&A.hermes===H&&H.audio){ H.ht=H.audio.currentTime||0; H.audio=null; H.last=Date.now(); H.aviso='Áudio não encontrado ('+rot.audio+'). A transcrição segue pelo relógio da demonstração.'; hermesTopo(); } };
+        H.audio.addEventListener('error',semAudio);
+        var p=H.audio.play(); if(p&&p.catch) p.catch(function(e){ if(e&&e.name==='NotAllowedError'){ H.play=false; H.aviso='O navegador bloqueou o som. Clique em Continuar para ouvir.'; hermesTopo(); } else semAudio(); });
+      }catch(e){ H.audio=null; }
+    }
+    hTick=setInterval(hermesRelogio,250);
+  }
+  function hermesParar(){ if(hTick){ clearInterval(hTick); hTick=null; } if(A&&A.hermes&&A.hermes.audio){ try{ A.hermes.audio.pause(); }catch(e){} } }
+  function hermesRelogio(){
+    var H=A&&A.hermes; if(!H) return;
+    var now=Date.now();
+    if(H.audio) H.ht=H.audio.currentTime; else if(H.play) H.ht+=(now-H.last)/1000*H.vel;
+    H.last=now;
+    var n=H.rot.falas.filter(function(f){ return f.t<=H.ht; }).length;
+    if(n!==H.idx){ H.idx=n; hermesTrans(); hermesSugPainel(); hermesTopo(); pintarDicas(); }
+  }
+  function hermesTocar(){
+    var H=A.hermes; H.play=!H.play; H.last=Date.now(); H.aviso='';
+    if(H.audio){ try{ if(H.play) H.audio.play(); else H.audio.pause(); }catch(e){} }
+    hermesTopo();
+  }
+  function hermesVel(){ var H=A.hermes; H.vel=H.vel===1?2:1; if(H.audio) H.audio.playbackRate=H.vel; hermesTopo(); }
+  function hermesProxima(){
+    var H=A.hermes,f=H.rot.falas[H.idx]; if(!f) return;
+    H.ht=f.t; H.last=Date.now(); if(H.audio){ try{ H.audio.currentTime=f.t; }catch(e){} }
+    /* o relógio da ligação acompanha o salto, para os tempos da ficha baterem com a transcrição */
+    if(f.t>seg()){ A.t0=Date.now()-f.t*1000; relogio(); }
+    hermesRelogio();
+  }
+  function hermesCtx(){ return {A:A,ras:RAS,natureza:natPorId,item:hermesItem}; }
+  function hermesItem(id){ return ((A&&A.nat&&DB.protocolos[A.nat])||[]).filter(function(x){ return x.id===id; })[0]||null; }
+  function hermesSugs(){
+    var H=A.hermes,out=[],ctx=hermesCtx();
+    H.rot.falas.slice(0,H.idx).forEach(function(f,i){ (f.sug||[]).forEach(function(s,j){ var k=i+'.'+j; out.push({k:k,s:s,f:f,est:H.est[k]||'',sit:hermesSituacao(s,ctx)}); }); });
+    return out;
+  }
+  function hermesPendentes(){ return hermesSugs().filter(function(x){ return !x.est&&(x.sit==='nova'||x.sit==='espera'); }); }
+  function hermesContas(){ var c={ok:0,x:0,pend:0}; hermesSugs().forEach(function(x){ if(x.est==='ok') c.ok++; else if(x.est==='x') c.x++; else if(x.sit==='nova'||x.sit==='espera') c.pend++; }); return c; }
+  function hermesRotulo(s){
+    var nomes={local:'Local',ref:'Ponto de referência',ra:'Região administrativa',nome:'Nome do solicitante',tel:'Telefone',obs:'Observação para a equipe'};
+    if(s.c==='natureza'){ var n=natPorId(s.v); return ['Natureza',n?n.nome:s.v]; }
+    if(s.c!=='resp') return [nomes[s.c]||s.c,s.v];
+    var it=hermesItem(s.id)||(!A.nat&&(DB.protocolos[A.hermes.rot.natureza]||[]).filter(function(x){ return x.id===s.id; })[0]);
+    if(!it) return ['Entrevista',A.nat?'“'+s.id+'” não está no protocolo desta natureza':'aguardando a natureza'];
+    if(s.v===true) return [it.tipo==='instrucao'?'Instrução dita':'Ciente',it.texto];
+    if(s.v.ops) return [it.texto,it.opcoes.filter(function(o){ return s.v.ops.indexOf(o.id)>=0; }).map(function(o){ return o.rotulo; }).join(', ')];
+    return [it.texto,s.v.valor];
+  }
+  function hermesAplicar(x){
+    var s=x.s;
+    if(x.sit!=='nova') return;
+    if(s.c==='natureza'){ var n=natPorId(s.v); if(A.nat!==s.v){ A.nat=s.v; A.resp={}; } A.natTxt=n.nome; }
+    else if(s.c==='obs') A.obs=(String(A.obs).trim()?String(A.obs).trim()+' ':'')+s.v;
+    else if(s.c==='nome'){ A.nome=s.v; A.nomeNI=false; }
+    else if(s.c==='resp'){
+      var it=hermesItem(s.id);
+      if(s.v===true) A.resp[s.id]=true;
+      else if(s.v.ops&&it.tipo==='multipla'){ var r=A.resp[s.id]||{ops:[],outro:''},ops=(r.ops||[]).slice(); s.v.ops.forEach(function(o){ if(ops.indexOf(o)<0) ops.push(o); }); A.resp[s.id]={ops:ops,outro:r.outro||''}; }
+      else if(s.v.ops) A.resp[s.id]={ops:[s.v.ops[0]]};
+      else A.resp[s.id]={valor:String(s.v.valor)};
+    }
+    else A[s.c]=s.v;
+    A.hermes.est[x.k]='ok';
+  }
+  function hermesDepois(){ desenharCentro(); desenharFicha(); hermesSugPainel(); hermesTopo(); }
+  function hermesAceitar(x){ hermesAplicar(x); hermesDepois(); }
+  function hermesDescartar(x){ A.hermes.est[x.k]='x'; hermesDepois(); }
+  function hermesAceitarTodas(){
+    /* natureza primeiro: as respostas da entrevista dependem dela */
+    var todas=hermesPendentes(); todas.filter(function(x){ return x.s.c==='natureza'; }).forEach(hermesAplicar);
+    hermesPendentes().forEach(hermesAplicar);
+    hermesDepois();
+  }
+  function montarHermes(alvo){
+    var H=A.hermes; H.mostradas=0;
+    alvo.appendChild(el('section',{class:'hermes','aria-label':'Hermes, demonstração'},[
+      el('div',{class:'hTopo',id:'hTopo'}),
+      el('div',{class:'hCorpo'},[
+        el('div',{class:'hCol'},[el('div',{class:'hTit',text:'Transcrição'}),el('div',{class:'hTrans',id:'hTrans',role:'log','aria-live':'polite'})]),
+        el('div',{class:'hCol'},[el('div',{class:'hTit',id:'hSugTit'}),el('div',{class:'hSugL',id:'hSug'})])])]));
+  }
+  function hermesTopo(){
+    var t=$('hTopo'),H=A&&A.hermes; if(!t||!H) return; t.textContent='';
+    var fim=H.idx>=H.rot.falas.length,c=hermesContas();
+    t.appendChild(el('span',{class:'hMarca',text:'Hermes'}));
+    t.appendChild(el('span',{class:'hDemo',text:'demonstração · '+H.rot.titulo+(H.audio?' · com áudio':' · transcrição simulada')}));
+    t.appendChild(el('span',{class:'grow'}));
+    t.appendChild(el('span',{class:'muted',text:fim?'Fim da gravação':H.play?'Transcrevendo…':'Pausado'}));
+    if(!fim){
+      t.appendChild(el('button',{class:'btn sm',onclick:hermesTocar,'aria-label':H.play?'Pausar a transcrição':'Continuar a transcrição'},[H.play?'❚❚ Pausar':'▶ Continuar']));
+      t.appendChild(el('button',{class:'btn sm',onclick:hermesVel,'aria-label':'Velocidade da demonstração, agora '+H.vel+' vezes'},[H.vel+'×']));
+      t.appendChild(el('button',{class:'btn sm',onclick:hermesProxima,text:'Próxima fala ›'}));
+    }
+    t.appendChild(el('span',{class:'hConta',text:c.ok+' aplicada'+(c.ok===1?'':'s')+' · '+c.x+' descartada'+(c.x===1?'':'s')}));
+    if(H.aviso) t.appendChild(el('div',{class:'msg inf',style:'flex-basis:100%;margin:0',text:H.aviso}));
+  }
+  function hermesTrans(){
+    var b=$('hTrans'),H=A&&A.hermes; if(!b||!H) return;
+    if(!H.idx&&!H.mostradas){ b.textContent=''; b.appendChild(el('span',{class:'muted',text:'Aguardando a primeira fala…'})); return; }
+    if(H.mostradas===0) b.textContent='';
+    H.rot.falas.slice(H.mostradas,H.idx).forEach(function(f){
+      b.appendChild(el('div',{class:'hFala '+f.quem},[el('span',{class:'hT',text:mmss(f.t)}),el('span',{class:'hQuem',text:f.quem==='atendente'?'Atendente':'Solicitante'}),el('span',{class:'hTxt',text:f.txt})]));
+    });
+    H.mostradas=H.idx; b.scrollTop=b.scrollHeight;
+  }
+  function hermesSugPainel(){
+    var b=$('hSug'),tt=$('hSugTit'),H=A&&A.hermes; if(!b||!H) return; b.textContent='';
+    var p=hermesPendentes();
+    tt.textContent=''; tt.appendChild(el('span',{class:'grow',text:'Sugestões'+(p.length?' ('+p.length+')':'')}));
+    if(p.filter(function(x){ return x.sit==='nova'; }).length>1) tt.appendChild(el('button',{class:'btn sm hBtn',text:'Aplicar todas',onclick:hermesAceitarTodas}));
+    if(!p.length){ b.appendChild(el('span',{class:'muted',text:H.idx?'Nenhuma sugestão pendente. O que o Hermes entender da conversa aparece aqui.':'As sugestões aparecem conforme a conversa.'})); return; }
+    p.slice().reverse().forEach(function(x){
+      var r=hermesRotulo(x.s),espera=x.sit==='espera';
+      b.appendChild(el('div',{class:'hSugItem'+(espera?' esp':'')},[
+        el('div',{class:'grow'},[el('span',{class:'fr',text:r[0]}),el('span',{class:'hVal',text:r[1]}),el('span',{class:'hEvid',text:'ouvido em '+mmss(x.f.t)+(espera?' · escolha a natureza para aplicar':'')})]),
+        el('button',{class:'btn sm hBtn',disabled:espera,text:'Aplicar',onclick:function(){ hermesAceitar(x); }}),
+        el('button',{class:'btn ic','aria-label':'Descartar sugestão: '+r[0],text:'✕',onclick:function(){ hermesDescartar(x); }})]));
+    });
+  }
+  function desenharHermes(){ hermesTopo(); hermesTrans(); hermesSugPainel(); }
+  /* destaque das sugestões junto dos campos e perguntas, sem redesenhar o que o atendente está digitando */
+  function pintarDicas(){
+    var c=$('centro'); if(!c) return;
+    Array.prototype.forEach.call(c.querySelectorAll('.hdica'),function(d){ d.textContent=''; });
+    Array.prototype.forEach.call(c.querySelectorAll('.op.sug'),function(b){ b.classList.remove('sug'); });
+    if(!A||!A.hermes) return;
+    hermesPendentes().forEach(function(x){
+      if(x.sit!=='nova') return;
+      var s=x.s,alvo=s.c==='resp'?c.querySelector('.hdica[data-hid="'+s.id+'"]'):c.querySelector('.hdica[data-hc="'+s.c+'"]');
+      if(!alvo) return;
+      var r=hermesRotulo(s); alvo.textContent='';
+      alvo.appendChild(el('span',{class:'hTag',text:'Hermes'}));
+      alvo.appendChild(el('span',{class:'grow'},[s.c==='resp'&&s.v===true?'Ouviu você dizer esta instrução.':'Entendeu: ',s.c==='resp'&&s.v===true?null:el('b',{text:r[1]}),el('span',{class:'hEvid',text:' “'+x.f.txt+'”'})]));
+      alvo.appendChild(el('button',{class:'btn sm hBtn',text:s.c==='resp'&&s.v===true?'Marcar como dita':'Usar',onclick:function(){ hermesAceitar(x); }}));
+      alvo.appendChild(el('button',{class:'btn ic','aria-label':'Descartar sugestão do Hermes',text:'✕',onclick:function(){ hermesDescartar(x); }}));
+      if(s.c==='resp'&&s.v.ops){ var row=c.querySelector('.qrow[data-qid="'+s.id+'"]'); if(row) s.v.ops.forEach(function(o){ var bt=row.querySelector('.op[data-op="'+o+'"]'); if(bt) bt.classList.add('sug'); }); }
+    });
+  }
+  function dica(campo){ return el('div',{class:'hdica','data-hc':campo}); }
   function protocolo(){
     var itens=(A&&A.nat&&DB.protocolos[A.nat])||[];
     if(!itens.length) return {vazio:true,lista:[],itens:[]};
@@ -89,6 +237,7 @@
     var P=protocolo(),n=natPorId(A.nat),ent=[];
     if(P.est) P.est.path.forEach(function(id){ var it=P.g.item[id],r=A.resp[id]; if(respondido(it,r)) ent.push({id:id,tipo:it.tipo,texto:it.texto,resposta:valorResposta(it,r)}); });
     var o={numero:DB.seq++,ts:Date.now(),natureza:A.nat,naturezaNome:n?n.nome:'',local:A.local,uf:A.uf,ra:A.ra,quartel:quartelAtual(),referencia:A.ref,solicitante:A.nomeNI?'Não informado':A.nome,telefone:A.tel,entrevista:ent,relato:relatoAtual(),observacoes:A.obs,segEncaminhar:A.encS,segTotal:seg(),pendencias:f};
+    if(A.hermes){ var hc=hermesContas(); o.hermes={roteiro:A.hermes.rot.titulo,aplicadas:hc.ok,descartadas:hc.x,semResposta:hc.pend}; }
     DB.ocorrencias.unshift(o); salvar();
     V.aviso={t:'okm',m:'Ocorrência nº '+o.numero+' registrada. Encaminhada em '+mmss(o.segEncaminhar)+', ligação de '+mmss(o.segTotal)+'.'};
     V.pausa=depois==='pausa';
@@ -122,9 +271,14 @@
         el('h1',{text:V.pausa?'Em pausa':'Aguardando ligação'}),
         V.aviso?el('div',{class:'msg '+V.aviso.t,role:'status',text:V.aviso.m}):null,
         el('p',{class:'muted',text:'Protótipo para validar o fluxo de atendimento e a entrevista por natureza. Use dados fictícios: o que for registrado fica guardado só neste navegador.'}),
-        el('button',{class:'btn ok grande',id:'bNova',text:V.pausa?'Sair da pausa e simular nova ligação':'Simular nova ligação',onclick:novaLigacao}),
+        el('button',{class:'btn ok grande',id:'bNova',text:V.pausa?'Sair da pausa e simular nova ligação':'Simular nova ligação',onclick:function(){ novaLigacao(null); }}),
         el('p',{class:'muted',text:'O Hermes não está ligado neste protótipo. A tela funciona inteira sem ele, como deve funcionar no sistema.'})]);
-      r.appendChild(box); return;
+      r.appendChild(box);
+      r.appendChild(el('div',{class:'ocioso hDemoBox'},[
+        el('h2',{text:'Demonstração com o Hermes'}),
+        el('p',{class:'muted',text:'Ligações roteirizadas para mostrar o Hermes ao lado do atendente: ele transcreve a conversa e sugere natureza, local, respostas da entrevista e observações. Nada entra na ficha sem o atendente aplicar.'}),
+        el('div',{class:'hRots'},ROTEIROS.map(function(rot){ var n=natPorId(rot.natureza); return el('button',{class:'hRot',onclick:function(){ novaLigacao(rot); }},[el('b',{text:rot.titulo}),el('span',{class:'muted',text:rot.resumo}),el('span',{class:'tag',text:(n?n.nome:'')+(rot.audio?' · com áudio':' · transcrição simulada')})]); }))]));
+      return;
     }
     r.appendChild(el('div',{class:'chamada'},[
       el('div',{class:'chLinha'},[
@@ -132,16 +286,17 @@
         el('span',{class:'chFone',text:A.fone}),
         el('span',{class:'chTimer',id:'timer',role:'timer','aria-label':'Tempo de ligação',text:'00:00'}),
         el('span',{class:'chip verde',id:'chipEnc',style:'display:none'}),
-        el('span',{class:'chip cinza',text:'Hermes desligado'}),
+        A.hermes?el('span',{class:'chip roxo',text:'Hermes · demonstração'}):el('span',{class:'chip cinza',text:'Hermes desligado'}),
         el('span',{class:'grow'}),
         el('button',{class:'btn laranja',text:'Transferir',onclick:function(){ A.erro='Transferência não faz parte deste protótipo.'; desenharCentro(); }}),
         el('button',{class:'btn verm',onclick:function(){ pedirEncerrar('enc'); }},['Encerrar']),
         el('button',{class:'btn vermv',onclick:function(){ pedirEncerrar('pausa'); }},['Encerrar e pausar'])]),
       el('div',{class:'chBarra','aria-hidden':'true'},[el('div',{id:'barra'}),el('span',{class:'marca',title:'60 s'})])]));
+    if(A.hermes) montarHermes(r);
     r.appendChild(el('div',{id:'conf'}));
     r.appendChild(el('nav',{id:'passos','aria-label':'Passos do atendimento'}));
     r.appendChild(el('div',{class:'grade'},[el('main',{id:'centro'}),el('aside',{id:'ficha','aria-label':'Ficha da ocorrência'})]));
-    relogio(); desenharConf(); desenharPassos(); desenharCentro(); desenharFicha();
+    relogio(); desenharConf(); desenharPassos(); desenharCentro(); desenharFicha(); if(A.hermes) desenharHermes();
   }
   function desenharConf(){
     var c=$('conf'); if(!c) return; c.textContent=''; if(!A||!A.conf) return;
@@ -188,6 +343,7 @@
     if(A.erro) c.appendChild(el('div',{class:'msg err',role:'alert',text:A.erro}));
     if(A.passo===0) passoLocal(c); else if(A.passo===1) passoEntrevista(c); else if(A.passo===2) passoSolicitante(c); else passoFechamento(c);
     c.appendChild(navBotoes());
+    pintarDicas();
   }
   function passoLocal(c){
     c.appendChild(el('h1',{class:'tit',text:'O que aconteceu e onde?'}));
@@ -197,19 +353,22 @@
     var iNat=el('input',{type:'text',id:'fNat',list:'dlNat',value:A.natTxt,autocomplete:'off','data-foco':A.natTxt?null:'1',placeholder:'Ex.: capotamento, incêndio',oninput:function(e){
       A.natTxt=e.target.value; var alvo=norm(A.natTxt),ach=NATUREZAS.filter(function(n){ return norm(n.nome)===alvo; })[0];
       var novo=ach?ach.id:''; if(novo!==A.nat){ A.nat=novo; A.resp={}; } pintaNat(); pintaDup(); atualizarEnc(); desenharFicha(); }});
-    c.appendChild(campo('Natureza',iNat,[obrig()])); c.appendChild(dl); c.appendChild(infoNat); pintaNat();
+    c.appendChild(campo('Natureza',iNat,[obrig()])); c.appendChild(dl); c.appendChild(infoNat); c.appendChild(dica('natureza')); pintaNat();
     c.appendChild(campo('Local',el('input',{type:'text',id:'fLocal',value:A.local,autocomplete:'off',placeholder:'Via, número, quadra, sentido',oninput:function(e){ A.local=e.target.value; atualizarEnc(); desenharFicha(); }}),[obrig()]));
+    c.appendChild(dica('local'));
     var qt=el('input',{type:'text',id:'fQt',value:quartelAtual(),placeholder:'Preenchido pela região',oninput:function(e){ A.quartel=e.target.value; desenharFicha(); }});
     c.appendChild(el('div',{class:'tres'},[
       campo('UF',el('select',{id:'fUf',value:A.uf,onchange:function(e){ A.uf=e.target.value; desenharFicha(); }},UFS.map(function(u){ return el('option',{value:u,text:u}); })),[obrig()]),
       campo('Região administrativa',el('select',{id:'fRa',value:A.ra,onchange:function(e){ A.ra=e.target.value; if(!A.quartel) qt.value=quartelAuto(); pintaDup(); atualizarEnc(); desenharFicha(); }},[el('option',{value:'',text:'Selecione…'})].concat(RAS.map(function(x){ return el('option',{value:x,text:x}); }))),[obrig()]),
       el('div',{class:'campo'},[el('label',{class:'rot',for:'fQt',text:'Quartel'}),qt,el('span',{class:'apoio',text:'Preenchido pelo local. Altere só se precisar.'})])]));
+    c.appendChild(dica('ra'));
     c.appendChild(campo('Ponto de referência',el('input',{type:'text',id:'fRef',value:A.ref,autocomplete:'off',placeholder:'Opcional',oninput:function(e){ A.ref=e.target.value; desenharFicha(); }})));
+    c.appendChild(dica('ref'));
     var dup=el('div',{id:'dup'}); c.appendChild(dup);
     function pintaDup(){ dup.textContent=''; var o=duplicada(); if(o) dup.appendChild(el('div',{class:'msg inf',role:'status',text:'Possível mesma ocorrência: nº '+o.numero+', '+o.naturezaNome+', em '+o.local+' ('+o.ra+'), registrada há '+Math.max(1,Math.round((Date.now()-o.ts)/60000))+' min.'})); }
     pintaDup();
   }
-  function opBtn(rot,on,fut,fn,tecla){ return el('button',{class:'op'+(on?' on':''),'aria-pressed':on?'true':'false',onclick:fn},[(on?'✓ ':'')+rot,tecla?el('span',{class:'tk',text:tecla}):null]); }
+  function opBtn(rot,on,fut,fn,tecla,opId){ return el('button',{class:'op'+(on?' on':''),'data-op':opId||null,'aria-pressed':on?'true':'false',onclick:fn},[(on?'✓ ':'')+rot,tecla?el('span',{class:'tk',text:tecla}):null]); }
   function passoEntrevista(c){
     var P=protocolo(),n=natPorId(A.nat),ct=contagem(P);
     c.appendChild(el('div',{class:'titLinha'},[el('h1',{class:'tit semb',text:'Entrevista · '+(n?n.nome:'')}),P.est?el('span',{class:'muted',text:ct.n+' de '+ct.t+' perguntas respondidas'}):null]));
@@ -218,7 +377,7 @@
     var lista=el('div',{class:'qlista'});
     P.lista.forEach(function(id){
       var it=P.g.item[id],r=A.resp[id],ans=respondido(it,r),cur=id===P.est.pendente,fut=P.est.path.indexOf(id)<0;
-      var row=el('div',{class:'qrow'+(cur?' cur':'')+(fut?' fut':'')+' t-'+it.tipo});
+      var row=el('div',{class:'qrow'+(cur?' cur':'')+(fut?' fut':'')+' t-'+it.tipo,'data-qid':id});
       if(it.tipo==='instrucao'||it.tipo==='informacao'||it.tipo==='diagrama'){
         var bloco=el('div',{class:'bloco '+it.tipo},[
           el('span',{class:'bTag',text:it.tipo==='instrucao'?'Diga ao solicitante':it.tipo==='informacao'?'Para você, não ler ao solicitante':'Fluxograma de consulta'}),
@@ -229,9 +388,9 @@
         row.appendChild(bloco);
       } else {
         var ctl=el('div',{class:'qctl'}),sel=(r&&r.ops)||[];
-        if(it.tipo==='unica') it.opcoes.forEach(function(o,k){ var on=sel.indexOf(o.id)>=0; ctl.appendChild(opBtn(o.rotulo,on,fut,function(){ responder(id,on?null:{ops:[o.id]}); },cur&&k<9?String(k+1):'')); });
+        if(it.tipo==='unica') it.opcoes.forEach(function(o,k){ var on=sel.indexOf(o.id)>=0; ctl.appendChild(opBtn(o.rotulo,on,fut,function(){ responder(id,on?null:{ops:[o.id]}); },cur&&k<9?String(k+1):'',o.id)); });
         else if(it.tipo==='multipla'){
-          it.opcoes.forEach(function(o){ var on=sel.indexOf(o.id)>=0; ctl.appendChild(opBtn(o.rotulo,on,fut,function(){ var ops=sel.filter(function(x){return x!==o.id;}); if(!on) ops.push(o.id); var out=(r&&r.outro)||''; responder(id,(ops.length||out)?{ops:ops,outro:out}:null); })); });
+          it.opcoes.forEach(function(o){ var on=sel.indexOf(o.id)>=0; ctl.appendChild(opBtn(o.rotulo,on,fut,function(){ var ops=sel.filter(function(x){return x!==o.id;}); if(!on) ops.push(o.id); var out=(r&&r.outro)||''; responder(id,(ops.length||out)?{ops:ops,outro:out}:null); },'',o.id)); });
           if(it.outro) ctl.appendChild(el('input',{type:'text',class:'curto',value:(r&&r.outro)||'',placeholder:'Outro: descreva','aria-label':'Outro, em '+it.texto,onchange:function(e){ var t=e.target.value.trim(); responder(id,(sel.length||t)?{ops:sel,outro:t}:null); }}));
         }
         else if(it.tipo==='lista') ctl.appendChild(el('select',{'aria-label':it.texto,value:sel[0]||'',onchange:function(e){ responder(id,e.target.value?{ops:[e.target.value]}:null); }},[el('option',{value:'',text:'Selecione…'})].concat(it.opcoes.map(function(o){ return el('option',{value:o.id,text:o.rotulo}); }))));
@@ -242,6 +401,7 @@
         if(r&&r.pulada) ctl.appendChild(el('span',{class:'muted',text:'pulada'}));
         row.appendChild(el('div',{class:'qlinha'},[el('span',{class:'qtxt'},[it.texto,it.obrig?obrig():null]),ctl]));
       }
+      if(A.hermes) row.appendChild(el('div',{class:'hdica','data-hid':id}));
       lista.appendChild(row);
     });
     c.appendChild(lista);
@@ -251,6 +411,7 @@
     c.appendChild(el('h1',{class:'tit',text:'Quem está ligando?'}));
     var iNome=el('input',{type:'text',id:'fNome',value:A.nomeNI?'':A.nome,disabled:A.nomeNI,autocomplete:'off','data-foco':'1',placeholder:A.nomeNI?'Não informado':'Nome do solicitante',oninput:function(e){ A.nome=e.target.value; desenharFicha(); }});
     c.appendChild(el('div',{class:'campo'},[el('label',{class:'rot',for:'fNome',text:'Nome do solicitante'}),el('div',{class:'linhaBtn'},[iNome,el('button',{class:'btn '+(A.nomeNI?'pri':'azulv'),'aria-pressed':A.nomeNI?'true':'false',text:(A.nomeNI?'✓ ':'')+'Não informado',onclick:function(){ A.nomeNI=!A.nomeNI; desenharCentro(); desenharFicha(); foco(); }})])]));
+    c.appendChild(dica('nome'));
     c.appendChild(campo('Telefone para retorno',el('input',{type:'text',id:'fTel',value:A.tel,autocomplete:'off',oninput:function(e){ A.tel=e.target.value; desenharFicha(); }})));
     c.appendChild(el('span',{class:'apoio',text:'O telefone veio da origem da chamada. Se o solicitante não disser o nome, marque “Não informado”.'}));
   }
@@ -326,8 +487,9 @@
         o.entrevista.length?el('div',{},[el('span',{class:'fr',text:'Entrevista'}),el('ul',{class:'ocEnt'},o.entrevista.map(function(x){ return el('li',{},[x.texto+' ',el('b',{text:'→ '+x.resposta})]); }))]):null,
         el('div',{},[el('span',{class:'fr',text:'Relato'}),el('span',{class:'fv',text:o.relato||'—'})]),
         o.observacoes?el('div',{},[el('span',{class:'fr',text:'Observações do atendente'}),el('span',{class:'fv',text:o.observacoes})]):null,
-        o.pendencias&&o.pendencias.length?el('div',{class:'msg inf',text:'Registrada com pendências: '+o.pendencias.join('; ')+'.'}):null]);
-      r.appendChild(el('details',{class:'oc'},[el('summary',{},[el('b',{text:'Nº '+o.numero}),' · '+hora+' · '+o.naturezaNome+' · '+o.local+' ('+o.ra+')']),corpo]));
+        o.pendencias&&o.pendencias.length?el('div',{class:'msg inf',text:'Registrada com pendências: '+o.pendencias.join('; ')+'.'}):null,
+        o.hermes?el('div',{},[el('span',{class:'fr',text:'Hermes (demonstração)'}),el('span',{class:'fv',text:o.hermes.roteiro+': '+o.hermes.aplicadas+' sugestões aplicadas, '+o.hermes.descartadas+' descartadas, '+o.hermes.semResposta+' sem resposta.'})]):null]);
+      r.appendChild(el('details',{class:'oc'},[el('summary',{},[el('b',{text:'Nº '+o.numero}),' · '+hora+' · '+o.naturezaNome+' · '+o.local+' ('+o.ra+')'+(o.hermes?' · com Hermes':'')]),corpo]));
     });
   }
   function copiar(t){ try{ navigator.clipboard.writeText(t).then(function(){ status('Copiado'); },function(){ status('Não foi possível copiar; selecione o texto e copie.'); }); }catch(e){ status('Não foi possível copiar; selecione o texto e copie.'); } }
@@ -474,6 +636,40 @@
       el('button',{class:'btn',text:'Copiar',onclick:function(){ copiar(ta.value); }})]));
     if(S.msg) p.appendChild(el('div',{class:'msg '+S.msg.t,text:S.msg.m}));
   }
+  /* ---------- importar fluxograma do Miro ---------- */
+  function painelImport(p){
+    var I_=S.imp=S.imp||{src:'',ia:'',res:null,msg:null},nat=natPorId(S.nat);
+    p.appendChild(el('div',{class:'muted',text:'Traga o fluxograma desenhado no Miro. Cole abaixo o código Mermaid do diagrama e escolha um caminho: a conversão automática monta um rascunho na hora; o prompt para IA pede a um assistente (Claude, ChatGPT ou outro) que interprete os textos e devolva a entrevista pronta para conferir. Nos dois casos nada muda até você clicar em “Usar”.'}));
+    var src=el('textarea',{class:'code','aria-label':'Código Mermaid do Miro',spellcheck:'false',placeholder:'flowchart TD\n  A([Início]) --> B{Tem alguém preso?}\n  B -->|Sim| C[Não remova a vítima]\n  B -->|Não| D[...]',style:'margin-top:8px;min-height:160px'}); src.value=I_.src;
+    src.addEventListener('input',function(){ I_.src=src.value; });
+    p.appendChild(el('label',{class:'rot',style:'display:block;margin-top:10px',text:'1. Código Mermaid do Miro'})); p.appendChild(src);
+    p.appendChild(el('div',{class:'row',style:'margin-top:8px'},[
+      el('button',{class:'btn pri',text:'Converter automaticamente',onclick:function(){ var r=importarMermaidLivre(I_.src); I_.res={origem:'automática',itens:r.itens,notas:r.avisos}; I_.msg=null; desenharLado(); }}),
+      el('button',{class:'btn',text:'Copiar prompt para IA',onclick:function(){ if(!I_.src.trim()){ I_.msg={t:'inf',m:'Cole primeiro o código do Miro: ele vai dentro do prompt.'}; desenharLado(); return; } copiar(promptMiro(nat.nome,I_.src)); I_.msg={t:'okm',m:'Prompt copiado. Cole no assistente de IA, depois traga a resposta para o campo 2.'}; desenharLado(); }})]));
+    if(I_.msg) p.appendChild(el('div',{class:'msg '+I_.msg.t,text:I_.msg.m}));
+    var ver=el('details',{style:'margin-top:8px'},[el('summary',{class:'muted',text:'Ver o prompt'}),el('textarea',{class:'code',readonly:true,'aria-label':'Prompt para IA',style:'min-height:200px;margin-top:6px',value:promptMiro(nat.nome,I_.src)})]);
+    p.appendChild(ver);
+    var ia=el('textarea',{class:'code','aria-label':'Resposta da IA',spellcheck:'false',placeholder:'{"itens":[...],"revisar":[...]}',style:'min-height:110px'}); ia.value=I_.ia;
+    ia.addEventListener('input',function(){ I_.ia=ia.value; });
+    p.appendChild(el('label',{class:'rot',style:'display:block;margin-top:12px',text:'2. Resposta da IA (opcional)'})); p.appendChild(ia);
+    p.appendChild(el('div',{class:'row',style:'margin-top:8px'},[el('button',{class:'btn pri',text:'Conferir resposta da IA',onclick:function(){ try{ var r=lerRespostaIA(I_.ia); I_.res={origem:'da IA',itens:r.itens,notas:r.revisar}; I_.msg=null; }catch(e){ I_.res=null; I_.msg={t:'err',m:'Não consegui ler a resposta: '+e.message}; } desenharLado(); }})]));
+    if(!I_.res) return;
+    var R=I_.res,v=R.itens.length?validar(R.itens):{erros:['Nenhum item.'],avisos:[]};
+    var box=el('div',{class:'impRes'});
+    box.appendChild(el('h3',{text:'Rascunho '+R.origem+': '+R.itens.length+' itens'}));
+    if(R.notas.length) box.appendChild(el('div',{class:'msg inf'},[el('b',{text:R.origem==='da IA'?'A IA pede para revisar':'Para revisar'}),el('ul',{},R.notas.map(function(x){ return el('li',{text:x}); }))]));
+    if(v.erros.length) box.appendChild(el('div',{class:'msg err'},[el('b',{text:'Erros no rascunho (dá para usar e corrigir no editor)'}),el('ul',{},v.erros.map(function(x){ return el('li',{text:x}); }))]));
+    if(v.avisos.length) box.appendChild(el('div',{class:'msg inf'},[el('b',{text:'Avisos da validação'}),el('ul',{},v.avisos.map(function(x){ return el('li',{text:x}); }))]));
+    box.appendChild(el('ul',{class:'hist'},R.itens.map(function(it){ return el('li',{},[el('code',{text:it.id}),' ',el('span',{class:'tag',text:(TIPOS.filter(function(t){return t[0]===it.tipo;})[0]||[,it.tipo])[1]}),' '+it.texto+(temOpcoes(it)?' ('+it.opcoes.map(function(o){return o.rotulo;}).join(' / ')+')':'')]); })));
+    var d=el('div',{class:'diag',style:'margin-top:8px'}); box.appendChild(d);
+    if(!v.erros.length) desenhar(fluxoMermaid(R.itens,true),d); else d.appendChild(el('span',{class:'muted',text:'O desenho aparece quando não houver erros.'}));
+    var q=S.itens.length;
+    box.appendChild(el('div',{class:'row',style:'margin-top:10px'},[
+      el('button',{class:'btn ok',text:'Usar em '+nat.nome,disabled:!R.itens.length,onclick:function(){ S.itens=JSON.parse(JSON.stringify(R.itens)); I_.res=null; S.aba='teste'; S.msg=null; mudou(true); status('Rascunho importado para '+nat.nome); }}),
+      el('button',{class:'btn',text:'Descartar rascunho',onclick:function(){ I_.res=null; desenharLado(); }}),
+      el('span',{class:'apoio',text:q?'Substitui os '+q+' itens atuais desta natureza.':'Esta natureza está sem entrevista.'})]));
+    p.appendChild(box);
+  }
   var MANUAL = '<div class="man">'
   + '<p><b>Neste protótipo:</b> escolha a natureza na coluna da esquerda. O que você editar vale na próxima ligação simulada na aba Atendimento, onde os itens aparecem juntos em uma página.</p>'
   + '<p>Uma entrevista tem duas partes. O <b>formulário</b> diz quais são os itens. O <b>fluxo</b> diz em que ordem eles aparecem e para onde cada resposta leva. O editor visual grava as duas.</p>'
@@ -520,13 +716,20 @@
   + '<li>Marque como obrigatória só a pergunta sem a qual não dá para registrar.</li>'
   + '<li>Inclua “Não sabe” quando o solicitante puder não ter a resposta.</li>'
   + '<li>O texto de instruções de primeiros socorros deve ser validado pela área técnica antes de publicar.</li></ul>'
+  + '<h3>8. Trazer um fluxograma do Miro</h3>'
+  + '<p>O fluxograma do Miro desenha caixas e setas; a entrevista precisa saber o que é pergunta, o que é dito ao solicitante e o que é só para o atendente. Na aba <b>Importar do Miro</b>:</p><ol>'
+  + '<li>No Miro, copie o código Mermaid do diagrama e cole no campo 1.</li>'
+  + '<li><b>Converter automaticamente</b> lê o desenho: losango e caixa com setas rotuladas viram pergunta, o texto da seta vira a opção, início e fim somem, ações como “Acionar viatura” viram informação ao atendente, laços são retirados.</li>'
+  + '<li>Ou <b>Copiar prompt para IA</b>: cole num assistente de IA, que separa perguntas compostas, escolhe tipos e identificadores melhores e lista o que ficou em dúvida. Cole a resposta no campo 2 e clique em <b>Conferir</b>.</li>'
+  + '<li>Leia a lista “Para revisar”, confira o desenho e clique em <b>Usar</b>. Depois ajuste no editor e teste.</li></ol>'
+  + '<p>Não cole dados de ocorrências reais no assistente de IA. O fluxograma de protocolo não tem dados pessoais, mas confira antes.</p>'
   + '</div>';
   function desenharLado(){
     Array.prototype.forEach.call(document.querySelectorAll('#pTabs button'),function(b){ var on=b.getAttribute('data-tab')===S.aba; b.className=on?'on':''; b.setAttribute('aria-selected',on?'true':'false'); });
     var p=$('pPanel'); p.textContent='';
-    if(!S.itens.length&&S.aba!=='manual'&&S.aba!=='fluxo'&&S.aba!=='form'){ $('pValid').textContent=''; p.appendChild(el('div',{class:'muted',text:'Sem itens para testar. Crie o primeiro item no editor, ou escreva o fluxo na aba Fluxo.'})); return; }
+    if(!S.itens.length&&S.aba!=='manual'&&S.aba!=='fluxo'&&S.aba!=='form'&&S.aba!=='importar'){ $('pValid').textContent=''; p.appendChild(el('div',{class:'muted',text:'Sem itens para testar. Crie o primeiro item no editor, ou escreva o fluxo na aba Fluxo.'})); return; }
     var v=S.itens.length?validar(S.itens):{erros:[],avisos:[]}; if(S.itens.length) desenharValidacao(v); else $('pValid').textContent='';
-    if(S.aba==='teste') painelTeste(p,v); else if(S.aba==='fluxo') painelFluxo(p,v); else if(S.aba==='manual') p.innerHTML=MANUAL; else painelForm(p);
+    if(S.aba==='teste') painelTeste(p,v); else if(S.aba==='fluxo') painelFluxo(p,v); else if(S.aba==='manual') p.innerHTML=MANUAL; else if(S.aba==='importar') painelImport(p); else painelForm(p);
   }
   function desenharEditorTopo(ed){
     var n=natPorId(S.nat),ex=exemplos()[S.nat];
