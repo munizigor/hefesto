@@ -1,0 +1,78 @@
+flowchart TD
+    classDef troca fill:#8f7fee,stroke:#6631d7,color:#ffffff,stroke-width:3px
+    classDef titulo fill:#af7e04,stroke:#1a1a1a,color:#1a1a1a
+    classDef perg fill:#ffffff,stroke:#1a1a1a,color:#1a1a1a
+    classDef opc fill:#fff6b6,stroke:#af7e04,color:#1a1a1a
+    classDef ns fill:#dedaff,stroke:#6631d7,color:#1a1a1a
+    classDef desp fill:#ffc6c6,stroke:#bd0a0a,color:#1a1a1a
+    classDef recl fill:#f8d3af,stroke:#9b4a08,color:#1a1a1a
+    classDef acao fill:#ffffff,stroke:#757575,color:#1a1a1a
+    classDef orient fill:#ffdc4a,stroke:#af7e04,color:#1a1a1a
+    classDef relato fill:#adf0c7,stroke:#067429,color:#1a1a1a
+    n1["<b>Natureza: Vazamento de gás / GLP</b>"]:::titulo
+    n2["É botijão, gás encanado ou cilindro industrial / hospitalar?"]:::perg
+    n3("Botijão"):::opc
+    n4("Encanado"):::opc
+    n5("Cilindro / central de gás"):::opc
+    n6("Não sabe"):::ns
+    n7["Está pegando fogo?"]:::perg
+    n8("Sim"):::opc
+    n9{{"🔁 Trocar natureza: Incêndio em edificação"}}:::troca
+    n10("Não"):::opc
+    n11["🚒 <b>Despacho imediato</b><br/>Fala: O socorro já foi acionado e está a caminho. Vou fazer algumas perguntas rápidas para ajudar a equipe. Mantenha a calma e siga minhas orientações, por favor."]:::desp
+    n12["Onde está o vazamento?"]:::perg
+    n13("Cozinha / área fechada"):::opc
+    n14("Área aberta"):::opc
+    n15("Comércio / indústria"):::opc
+    n16(Via pública):::opc
+    n17["Ainda tem gente no local? Alguém passando mal?"]:::perg
+    n18("Sim"):::opc
+
+    n20("Não"):::opc
+    n21["O cheiro é forte em todo o ambiente ou só perto do botijão?"]:::perg
+    n22("Todo o ambiente"):::opc
+    n23("Só perto"):::opc
+    n24("<b>Orientação ao solicitante:</b> Não acenda luz, não ligue nem desligue aparelhos, não use isqueiro. Feche o registro se for seguro. Abra portas e janelas e saia. Ligue de fora."):::orient
+    n25(["Relato Final"]):::relato
+    x1["Já houve explosão?"]:::perg
+    x2["Sim"]:::opc
+    x3["Não"]:::opc
+    x4["Não sei"]:::ns
+    x5{{"🔁 Trocar natureza: Explosão / ameaça de explosão"}}:::troca
+    n1 --> n2
+    n2 --> n3
+    n2 --> n4
+    n2 --> n5
+    n2 --> n6
+    n3 --> n7
+    n4 --> n7
+    n5 --> n7
+    n6 --> n7
+    n7 --> n8
+    n8 --> n9
+    n7 --> n10
+    n10 --> n11
+    n11 --> x1
+    n12 --> n13
+    n12 --> n14
+    n12 --> n15
+    n12 --> n16
+    n13 --> n17
+    n14 --> n17
+    n15 --> n17
+    n16 --> n17
+    n17 --> n18
+    n17 --> n20
+    n20 --> n21
+    n21 --> n22
+    n21 --> n23
+    n22 -.-> n24
+    n23 -.-> n24
+    n24 --> n25
+    x1 --> x2
+    x1 --> x3
+    x1 --> x4
+    x2 --> x5
+    x3 --> n12
+    x4 --> n12
+    n18 --> n21

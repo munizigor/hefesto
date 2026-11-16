@@ -1,0 +1,164 @@
+flowchart TD
+    classDef troca fill:#8f7fee,stroke:#6631d7,color:#ffffff,stroke-width:3px
+    classDef ctitulo fill:#af7e04,stroke:#1a1a1a,color:#1a1a1a
+    classDef cnone fill:#ffffff,stroke:#1a1a1a,color:#1a1a1a
+    classDef cfff6b6 fill:#fff6b6,stroke:#af7e04,color:#1a1a1a
+    classDef cffc6c6 fill:#ffc6c6,stroke:#bd0a0a,color:#1a1a1a,stroke-dasharray:5 5
+    classDef cdedaff fill:#dedaff,stroke:#6631d7,color:#1a1a1a
+    classDef cc6dcff fill:#c6dcff,stroke:#305bab,color:#1a1a1a
+    classDef caf7e04 fill:#af7e04,stroke:#1a1a1a,color:#1a1a1a
+    classDef cadf0c7 fill:#adf0c7,stroke:#067429,color:#1a1a1a
+    classDef cvideo fill:#2dc75c,stroke:#067429,color:#1a1a1a
+    classDef cffdc4a fill:#ffdc4a,stroke:#af7e04,color:#1a1a1a,stroke-dasharray:5 5
+    subgraph s4619222["🚒 Despacho imediato"]
+        n0205846["Sim"]:::cfff6b6
+    end
+    style s4619222 fill:#ffc6c6,stroke:#bd0a0a,stroke-dasharray:5 5
+    subgraph s0205844["🚒 Despacho imediato"]
+        n0205845["Não"]:::cfff6b6
+    end
+    style s0205844 fill:#ffc6c6,stroke:#bd0a0a,stroke-dasharray:5 5
+    n4102121["<b>Natureza: Insetos, abelha ou similares oferecendo riscos</b>"]:::ctitulo
+    n4102298["Alguém foi picado?"]:::cnone
+    n4102299["Sim"]:::cfff6b6
+    n2097555["Tem formação de colméia?"]:::cnone
+    n4204878["Não"]:::cfff6b6
+    n4619475("Iremos realizar uma vídeo chamada para orientá-lo(a) até a chegada da guarnição! Mantenha a calma e siga as orientações."):::cffc6c6
+    n0205838["Quem foi picado possui alergia?"]:::cnone
+    n2097736["Sim"]:::cfff6b6
+    n2097895["Não"]:::cfff6b6
+    n2268035["Não sabe"]:::cdedaff
+    n0205840["Sim"]:::cfff6b6
+    n0205839["Não"]:::cc6dcff
+    n0205871["Não sei"]:::cc6dcff
+    n0683901("O socorro já foi acionado e está a caminho. Vou fazer algumas perguntas rápidas para ajudar a equipe. Mantenha a calma e siga minhas orientações, por favor."):::cffc6c6
+    n1728323["Ha quantos dias os insetos estão no local?"]:::cnone
+    n0205847["A pessoa picada respira?"]:::cnone
+    n1845678["1 a 3 dias"]:::cfff6b6
+    n1845809["Mais de 3 dias"]:::cfff6b6
+    n1897931["Não sabe"]:::cdedaff
+    n0205850{{"🔁 Trocar natureza: Parada Cárdiorespiratória (PCR)"}}:::troca
+    n4469264{{"🔁 Trocar natureza: Ataque / Picada de animal"}}:::troca
+    n4734065["Os insetos estão agitados?"]:::cnone
+    n0010523["Realto final"]:::cadf0c7
+    n0205861["Quantas picadas aconteceram?"]:::cnone
+    n2660496["Muito agitados"]:::cfff6b6
+    n2660497["Pouco agitados"]:::cfff6b6
+    n2660498["Sem agitação"]:::cfff6b6
+    n0205849>"📞 Realize a videochamada e faça as orientações"]:::cvideo
+    n0205862["entre 1 e 3 picadas"]:::cfff6b6
+    n0205863["Houve ataque/ enxame"]:::cfff6b6
+    n2659946["Qual a localização dos insetos?"]:::cnone
+    n0205856["A pessoa picada é :"]:::cnone
+    n0205857["criança"]:::cfff6b6
+    n0205858["adulta"]:::cfff6b6
+    n0205869["idosa"]:::cfff6b6
+    n4734408["Edificação"]:::cfff6b6
+    n4787066["Muro/Cerca"]:::cfff6b6
+    n4953094["Telhado / Forro"]:::cfff6b6
+    n4734854["Árvore"]:::cfff6b6
+    n4953136["Caixa d´água"]:::cfff6b6
+    n4953884["Outro"]:::cdedaff
+    n4953348["Solo"]:::cfff6b6
+    n5069410["Veículo"]:::cfff6b6
+    n1051687["Realto final"]:::cadf0c7
+    n4953639["Via pública (calçada, canteiro central, meio-fio)"]:::cfff6b6
+    n5069026["Estrutura metálica (torre, antena, passarela, outdoor etc.)"]:::cfff6b6
+    n4787029["Poste"]:::cfff6b6
+    n4836797["Bueiro"]:::cfff6b6
+    n5195499["Estão em altura?"]:::cnone
+    n1568543["Aproximadamente a quantos metros?"]:::cnone
+    n1450619["Sim"]:::cfff6b6
+    n1450694["Não"]:::cfff6b6
+    n1568913["Até 2m"]:::cfff6b6
+    n1716072["Entre 2 e 5 m"]:::cfff6b6
+    n1716263["Entre 5 e 10m"]:::cfff6b6
+    n1716441["Acima de 10m"]:::cfff6b6
+    n1716659["Acima de 15m"]:::cfff6b6
+    n5195826["O acesso ao local dos insetos é fácil?"]:::cnone
+    n5283293["Sim"]:::cfff6b6
+    n5283294["Não"]:::cfff6b6
+    n1094901("• Isole a área onde se encontra o enxame (mín. 5 metros); • Mantenha fechadas as portas e janelas, para evitar a entrada dos insetos; • O quartel mais próximo irá entrar em contao para realizar a averiguação"):::cffdc4a
+    n6053307["Realto final"]:::cadf0c7
+    n6053424{{"🔁 Trocar natureza: Insetos Oferecendo Risco"}}:::troca
+    n4102298 --> n4102299
+    n4102121 --> n4102298
+    n4102298 --> n4204878
+    n1845809 --> n4734065
+    n5195826 --> n5283294
+    n5195826 --> n5283293
+    n5283293 -.-> n1094901
+    n5283294 --> n6053307
+    n5283293 --> n6053307
+    n6053307 -.-> n6053424
+    n1450694 --> n5195826
+    n5195499 --> n1450694
+    n5195499 --> n1450619
+    n1450619 --> n1568543
+    n1568543 --> n1716659
+    n1716659 --> n5195826
+    n1568543 --> n1716441
+    n1716441 --> n5195826
+    n1568543 --> n1716263
+    n1716263 --> n5195826
+    n1568543 --> n1716072
+    n1716072 --> n5195826
+    n1568543 --> n1568913
+    n1568913 --> n5195826
+    n0205838 --> n0205840
+    n0205838 --> n0205839
+    n0205840 --> n0205847
+    n0205839 --> n0205847
+    n0205850 -.-> n0205849
+    n0205845 --> n0205850
+    n0205847 --> n0205846
+    n0205847 --> n0205845
+    n0205856 --> n0205858
+    n0205856 --> n0205857
+    n0205861 --> n0205863
+    n0205863 --> n0205856
+    n0205861 --> n0205862
+    n0205862 --> n0205856
+    n0205846 --> n0205861
+    n0205856 --> n0205869
+    n0205871 --> n0205847
+    n0205838 --> n0205871
+    n4102299 --> n0205838
+    n0205858 --> n1051687
+    n0205857 --> n1051687
+    n0205869 --> n1051687
+    n0205845 --> n1051687
+    n1728323 --> n1897931
+    n1897931 --> n4734065
+    n1728323 --> n1845809
+    n1728323 --> n1845678
+    n2097555 --> n2268035
+    n2268035 --> n1728323
+    n2097555 --> n2097895
+    n2097895 --> n1728323
+    n2097555 --> n2097736
+    n2097736 --> n1728323
+    n4204878 --> n2097555
+    n1845678 --> n4734065
+    n2660498 --> n2659946
+    n4734065 --> n2660498
+    n2660497 --> n2659946
+    n4734065 --> n2660497
+    n2660496 --> n2659946
+    n4734065 --> n2660496
+    n0205845 --> n0010523
+    n0205850 -.-> n4619475
+    n4469264 -.-> n0683901
+    n0205846 --> n4469264
+    n2659946 --> n4953884
+    n2659946 --> n4836797
+    n2659946 --> n4953094
+    n2659946 --> n4787029
+    n2659946 --> n4953348
+    n2659946 --> n4953639
+    n2659946 --> n4734408
+    n2659946 --> n4787066
+    n2659946 --> n4953136
+    n2659946 --> n4734854
+    n2659946 --> n5069410
+    n2659946 --> n5069026

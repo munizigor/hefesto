@@ -210,3 +210,7 @@ code{font-family:'JetBrains Mono',monospace;font-size:12px;background:#F1F3F5;pa
 .impRes{margin-top:14px;border-top:2px solid #34495E;padding-top:10px}
 .impRes h3{margin:0 0 4px;font-size:15px;color:#1565C0}
 .ocioso+.hDemoBox{margin-top:-36px}
+.bloco.troca{background:#F1EDFF;border:2px solid #8F7FEE}
+.bloco.desp{background:#FFF0F0;border:1px solid #F3A5A5}
+.btn.roxo{background:#5B3FC4;border-color:#5B3FC4;color:#fff}
+.item.troca{border-left-color:#8F7FEE;background:#F6F3FF}

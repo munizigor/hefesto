@@ -1,0 +1,142 @@
+flowchart TD
+    classDef cvideo fill:#2dc75c,stroke:#067429,color:#1a1a1a
+    classDef troca fill:#8f7fee,stroke:#6631d7,color:#ffffff,stroke-width:3px
+    classDef cffc6c6 fill:#ffc6c6,stroke:#bd0a0a,color:#1a1a1a,stroke-dasharray:5 5
+    classDef ctitulo fill:#af7e04,stroke:#1a1a1a,color:#1a1a1a
+    classDef cnone fill:#ffffff,stroke:#1a1a1a,color:#1a1a1a
+    classDef cfff6b6 fill:#fff6b6,stroke:#af7e04,color:#1a1a1a
+    classDef cdedaff fill:#dedaff,stroke:#6631d7,color:#1a1a1a
+    classDef cff6464 fill:#ff6464,stroke:#bd0a0a,color:#1a1a1a
+    classDef cffdc4a fill:#ffdc4a,stroke:#af7e04,color:#1a1a1a,stroke-dasharray:5 5
+    classDef cadf0c7 fill:#adf0c7,stroke:#067429,color:#1a1a1a
+    subgraph s7009858["🚒 Despacho imediato"]
+        n7009071["<b>Natureza: Incêndio em edificação</b>"]:::ctitulo
+    end
+    style s7009858 fill:#ffc6c6,stroke:#bd0a0a,stroke-dasharray:5 5
+    n6062586("O socorro já foi acionado e está a caminho. Vou fazer algumas perguntas rápidas para ajudar a equipe. Mantenha a calma e siga minhas orientações, por favor."):::cffc6c6
+    n7658075["Tem pessoas no local do incêndio?"]:::cnone
+    n7658200["Sim"]:::cfff6b6
+    n7658199["Não"]:::cfff6b6
+    n7658218["Não sei"]:::cdedaff
+    n6164318["Quantas?"]:::cnone
+    n7119176["A edificação é térrea ou prédio"]:::cnone
+    n6164647["Aberta:"]:::cff6464
+    n7179616["Térrea"]:::cfff6b6
+    n7179728["Prédio"]:::cfff6b6
+    n7459833["Há pessoas feridas ou perdidas?"]:::cnone
+    n7179800["De qual andar está vindo o incêndio?"]:::cnone
+    n6602538["O prédio já foi evacuado?"]:::cnone
+    n7591060["Sim"]:::cfff6b6
+    n7591086["Não"]:::cfff6b6
+    n7591111["Não sei"]:::cdedaff
+    n7260290["Aberta:"]:::cff6464
+    n6732947["Sim"]:::cfff6b6
+    n6733012["Não"]:::cfff6b6
+    n6733145["Não sei"]:::cdedaff
+    n7260626["Qual o tipo da edificação?"]:::cnone
+    n7423436["Depósito"]:::cfff6b6
+    n7212609["Casa"]:::cfff6b6
+    n7260879["Prédio Residencial"]:::cfff6b6
+    n7360115["Comercial"]:::cfff6b6
+    n7360301["Indústria"]:::cfff6b6
+    n7360346["Escola"]:::cfff6b6
+    n7360375["Unidade hospitalar"]:::cfff6b6
+    n7360810["Terminal de Passageiros"]:::cfff6b6
+    n5935040["Instalação Energizada"]:::cfff6b6
+    n5935386["Instalação com risco de explosão"]:::cfff6b6
+    n6331443["O incêndio está dentro ou fora da edificação?"]:::cnone
+    n6464388["Dentro"]:::cfff6b6
+    n6464408["Fora"]:::cfff6b6
+    n6822347["Há materiais inflamáveis, gás ou produtos químicos?"]:::cnone
+    n6822909["Sim"]:::cfff6b6
+    n6822913["Não"]:::cfff6b6
+    n6998723("Atenção ao risco de choque elétrico: não se aproxime e mantenha todos afastados. Caso tenha alguém próximo ao incêndio, grite de uma distância segura para que se afastem."):::cffdc4a
+    n6916292["Há rede elétrica no local?"]:::cnone
+    n6916516["Sim"]:::cfff6b6
+    n6916517["Não"]:::cfff6b6
+    n8127165["O incêndio está se propagando para estabelecimentos vizinhos?"]:::cnone
+    n8399289["Sim"]:::cfff6b6
+    n8399290["Não"]:::cdedaff
+    n7947679(["Relato final"]):::cadf0c7
+    x1["Há alguém que não respira?"]:::cnone
+    x2["Sim"]:::cfff6b6
+    x3["Não"]:::cfff6b6
+    x4["Não sei"]:::cdedaff
+    x5{{"⚠️ Manter natureza e registrar no relato: Parada cardiorrespiratória (PCR) (manter Incêndio em edificação)"}}:::troca
+    x6{{"🔁 Trocar natureza: Incêndio em vegetação ou Incêndio em lixo (se o fogo não atingiu a edificação)"}}:::troca
+    x7("Iremos realizar uma vídeo chamada para orientá-lo(a) até a chegada da guarnição! Mantenha a calma e siga as orientações."):::cffc6c6
+    x8>"📞 Realize a videochamada e faça as orientações"]:::cvideo
+    n7009071 --> x1
+    n7179728 --> n7179800
+    n7179800 --> n7260290
+    n7119176 --> n7179728
+    n7119176 --> n7179616
+    n7179616 --> n7260626
+    n7658075 --> n7658200
+    n7658075 --> n7658199
+    n7658075 --> n7658218
+    n7658199 --> n7119176
+    n7658218 --> n7119176
+    n7260626 --> n7423436
+    n7260626 --> n7260879
+    n7260626 --> n7360115
+    n7260626 --> n7360301
+    n7260626 --> n7360346
+    n7260626 --> n7360375
+    n7260626 --> n7360810
+    n7260626 --> n5935040
+    n7260626 --> n5935386
+    s7009858 -.-> n6062586
+    n7658200 --> n6164318
+    n6164318 --> n6164647
+    n7423436 --> n6331443
+    n7260879 --> n6331443
+    n7360115 --> n6331443
+    n7360301 --> n6331443
+    n7360346 --> n6331443
+    n7360375 --> n6331443
+    n7360810 --> n6331443
+    n5935040 --> n6331443
+    n5935386 --> n6331443
+    n6331443 --> n6464388
+    n6331443 --> n6464408
+    n6602538 --> n6732947
+    n6602538 --> n6733012
+    n6602538 --> n6733145
+    n6732947 --> n7260626
+    n6733012 --> n7260626
+    n6733145 --> n7260626
+    n6822347 --> n6822909
+    n6822347 --> n6822913
+    n6822909 --> n6916292
+    n6822913 --> n6916292
+    n6916292 --> n6916516
+    n6916292 --> n6916517
+    n6998723 --> n6916516
+    n7260626 --> n7212609
+    n7459833 --> n7591060
+    n7459833 --> n7591086
+    n7459833 --> n7591111
+    n6164647 --> n7459833
+    n7591060 --> n7119176
+    n7591086 --> n7119176
+    n7591111 --> n7119176
+    n6464388 --> n6822347
+    n6464408 --> n6822347
+    n6916516 --> n8127165
+    n6916517 --> n8127165
+    n8127165 --> n8399289
+    n8127165 --> n8399290
+    n8399289 --> n7947679
+    n8399290 --> n7947679
+    n7260290 --> n6602538
+    x1 --> x2
+    x1 --> x3
+    x1 --> x4
+    x2 -.-> x5
+    x2 --> n7658075
+    x3 --> n7658075
+    x4 --> n7658075
+    n6464408 --> x6
+    x5 -.-> x7
+    x5 -.-> x8

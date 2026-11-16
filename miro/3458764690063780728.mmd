@@ -1,0 +1,84 @@
+flowchart TD
+    classDef troca fill:#8f7fee,stroke:#6631d7,color:#ffffff,stroke-width:3px
+    classDef titulo fill:#af7e04,stroke:#1a1a1a,color:#1a1a1a
+    classDef perg fill:#ffffff,stroke:#1a1a1a,color:#1a1a1a
+    classDef opc fill:#fff6b6,stroke:#af7e04,color:#1a1a1a
+    classDef ns fill:#dedaff,stroke:#6631d7,color:#1a1a1a
+    classDef ab fill:#ff6464,stroke:#bd0a0a,color:#1a1a1a
+    classDef desp fill:#ffc6c6,stroke:#bd0a0a,color:#1a1a1a
+    classDef video fill:#2dc75c,stroke:#067429,color:#1a1a1a
+    classDef acao fill:#ffffff,stroke:#757575,color:#1a1a1a
+    classDef orient fill:#ffdc4a,stroke:#af7e04,color:#1a1a1a
+    classDef relato fill:#adf0c7,stroke:#067429,color:#1a1a1a
+    n1["<b>Natureza: Choque elétrico</b>"]:::titulo
+    n2["A pessoa ainda está em contato com o fio ou o equipamento?"]:::perg
+    n3("Sim"):::opc
+    n4["Orientar imediatamente: não tocar na vítima, desligar a energia"]:::acao
+    n5("Não"):::opc
+    n6("Não sabe"):::ns
+    n7["Qual a origem?"]:::perg
+    n8("Rede de rua / poste"):::opc
+    n9["Acionar concessionária de energia"]:::acao
+    n10("Tomada / equipamento"):::opc
+    n11("Raio"):::opc
+    n12("Aberta"):::ab
+    n13["🚒 <b>Despacho imediato</b><br/>Fala: O socorro já foi acionado e está a caminho. Vou fazer algumas perguntas rápidas para ajudar a equipe. Mantenha a calma e siga minhas orientações, por favor."]:::desp
+    n14["A vítima está acordada e responde quando você chama?"]:::perg
+    n15("Sim"):::opc
+    n16("Não"):::opc
+    n17("Não sabe"):::ns
+    n18["Ela respira normalmente?"]:::perg
+    n19("Sim"):::opc
+    n20("Não"):::opc
+    n21>"📞 Realize a videochamada e faça as orientações de RCP"]:::video
+    n22("Não sabe"):::ns
+    n23["Há queimaduras visíveis?"]:::perg
+    n24("Sim"):::opc
+    n25("Não"):::opc
+    n26["A pessoa caiu de algum lugar com o choque?"]:::perg
+    n27("Sim"):::opc
+
+    n29("Não"):::opc
+    n30("`**Orientação ao solicitante:** Não toque na pessoa enquanto ela estiver em contato com a energia. Em casa, desligue o disjuntor geral. Fio de rua: fique a pelo menos 10 metros de distância.`"):::orient
+    n31(["Relato Final"]):::relato
+    x1{{"🔁 Trocar natureza: Parada cardiorrespiratória (PCR)"}}:::troca
+    n1 --> n2
+    n2 --> n3
+    n3 --> n4
+    n2 --> n5
+    n2 --> n6
+    n4 --> n7
+    n5 --> n7
+    n6 --> n7
+    n7 --> n8
+    n8 --> n9
+    n7 --> n10
+    n7 --> n11
+    n7 --> n12
+    n9 --> n13
+    n10 --> n13
+    n11 --> n13
+    n12 --> n13
+    n13 --> n14
+    n14 --> n15
+    n14 --> n16
+    n14 --> n17
+    n15 --> n18
+    n16 --> n18
+    n17 --> n18
+    n18 --> n19
+    n18 --> n20
+    n20 --> n21
+    n18 --> n22
+    n19 --> n23
+    n22 --> n23
+    n23 --> n24
+    n23 --> n25
+    n24 --> n26
+    n25 --> n26
+    n26 --> n27
+    n26 --> n29
+    n29 -.-> n30
+    n30 --> n31
+    n20 --> x1
+    n27 --> n30

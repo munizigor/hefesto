@@ -1,0 +1,85 @@
+flowchart TD
+    classDef troca fill:#8f7fee,stroke:#6631d7,color:#ffffff,stroke-width:3px
+    classDef titulo fill:#af7e04,stroke:#1a1a1a,color:#1a1a1a
+    classDef perg fill:#ffffff,stroke:#1a1a1a,color:#1a1a1a
+    classDef opc fill:#fff6b6,stroke:#af7e04,color:#1a1a1a
+    classDef ns fill:#dedaff,stroke:#6631d7,color:#1a1a1a
+    classDef ab fill:#ff6464,stroke:#bd0a0a,color:#1a1a1a
+    classDef desp fill:#ffc6c6,stroke:#bd0a0a,color:#1a1a1a
+    classDef acao fill:#ffffff,stroke:#757575,color:#1a1a1a
+    classDef orient fill:#ffdc4a,stroke:#af7e04,color:#1a1a1a
+    classDef relato fill:#adf0c7,stroke:#067429,color:#1a1a1a
+    n1["<b>Natureza: Pessoa em risco de queda</b>"]:::titulo
+    n2["Onde a pessoa está?"]:::perg
+    n3("Janela / sacada"):::opc
+    n4("Telhado / laje"):::opc
+    n5("Viaduto / ponte"):::opc
+    n6("Torre / andaime"):::opc
+    n7("Aberta"):::ab
+    n8["A que altura, mais ou menos?"]:::perg
+    n9("Até 2 andares"):::opc
+    n10("3 a 10 andares"):::opc
+    n11("Mais de 10 andares"):::opc
+    n12("Não sabe"):::ns
+    n13["🚒 <b>Despacho imediato</b><br/>Fala: O socorro já foi acionado e está a caminho. Vou fazer algumas perguntas rápidas para ajudar a equipe. Mantenha a calma e siga minhas orientações, por favor."]:::desp
+    n14["A pessoa está ali porque quer se jogar?"]:::perg
+    n15("Não"):::opc
+    n16("Sim"):::opc
+    n18("Não sabe"):::ns
+    n19["A pessoa está consciente e se segurando?"]:::perg
+    n20("Sim"):::opc
+    n21("Não"):::opc
+    n22["É criança?"]:::perg
+    n23("Sim"):::opc
+    n24("Não"):::opc
+    n25("<b>Orientação ao solicitante:</b> Não se aproxime de forma brusca nem grite com a pessoa. Afaste curiosos. Se for criança, retire objetos que ela use para subir."):::orient
+    n26(["Relato Final"]):::relato
+    x1{{"🔁 Trocar natureza: Tentativa de suicídio"}}:::troca
+    x2["A pessoa já caiu?"]:::perg
+    x3["Sim"]:::opc
+    x4["Não"]:::opc
+    x5["Não sei"]:::ns
+    x6{{"🔁 Trocar natureza: Queda de plano elevado"}}:::troca
+    n1 --> x2
+    n2 --> n3
+    n2 --> n4
+    n2 --> n5
+    n2 --> n6
+    n2 --> n7
+    n3 --> n8
+    n4 --> n8
+    n5 --> n8
+    n6 --> n8
+    n7 --> n8
+    n8 --> n9
+    n8 --> n10
+    n8 --> n11
+    n8 --> n12
+    n9 --> n13
+    n10 --> n13
+    n11 --> n13
+    n12 --> n13
+    n13 --> n14
+    n14 --> n15
+    n14 --> n16
+
+    n14 --> n18
+    n15 --> n19
+
+    n18 --> n19
+    n19 --> n20
+    n19 --> n21
+    n20 --> n22
+    n21 --> n22
+    n22 --> n23
+    n22 --> n24
+    n23 -.-> n25
+    n24 -.-> n25
+    n25 --> n26
+    n16 --> x1
+    x2 --> x3
+    x2 --> x4
+    x2 --> x5
+    x3 --> x6
+    x4 --> n2
+    x5 --> n2

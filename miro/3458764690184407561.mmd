@@ -1,0 +1,79 @@
+flowchart TD
+    classDef troca fill:#8f7fee,stroke:#6631d7,color:#ffffff,stroke-width:3px
+    classDef cffc6c6 fill:#ffc6c6,stroke:#bd0a0a,color:#1a1a1a,stroke-dasharray:5 5
+    classDef ctitulo fill:#af7e04,stroke:#1a1a1a,color:#1a1a1a
+    classDef cnone fill:#ffffff,stroke:#1a1a1a,color:#1a1a1a
+    classDef cfff6b6 fill:#fff6b6,stroke:#af7e04,color:#1a1a1a
+    classDef cff6464 fill:#ff6464,stroke:#bd0a0a,color:#1a1a1a
+    classDef cadf0c7 fill:#adf0c7,stroke:#067429,color:#1a1a1a
+    subgraph s5144907["🚒 Despacho imediato"]
+        n5144778["<b>Natureza: Amputação ou esmagamento de membro</b>"]:::ctitulo
+    end
+    style s5144907 fill:#ffc6c6,stroke:#bd0a0a,stroke-dasharray:5 5
+    n5232061("O socorro já foi acionado e está a caminho. Vou fazer algumas perguntas rápidas para ajudar a equipe. Mantenha a calma e siga minhas orientações, por favor."):::cffc6c6
+    n5232614["O que aconteceu?"]:::cnone
+    n7754620["A amputação foi total ou parcial?"]:::cnone
+    n5232899["Amputação"]:::cfff6b6
+    n5232906["Esmagamento"]:::cfff6b6
+    n7927029["Total"]:::cfff6b6
+    n7927030["Parcial"]:::cfff6b6
+    n7360099["Qual foi o membro atingido?"]:::cnone
+    n7360297["Aberta:"]:::cff6464
+    n7360469["Há sangramento intenso?"]:::cnone
+    n7508949["Está controlado?"]:::cnone
+    n7360815["Sim"]:::cfff6b6
+    n7360816["Não"]:::cfff6b6
+    n7509079["Sim"]:::cfff6b6
+    n7509080["Não"]:::cfff6b6
+    n7566213["O membro está preso/retido em máquina, veículo, estrutura ou equipamento?"]:::cnone
+    n7642540["Sim"]:::cfff6b6
+    n7642541["Não"]:::cfff6b6
+    n7927627["Há outras lesões com gravidade?"]:::cnone
+    n7927858["Sim"]:::cfff6b6
+    n7927928["Não"]:::cfff6b6
+    n8099062["quais?"]:::cnone
+    n8099238["Aberta:"]:::cff6464
+    n8099621["Realto final"]:::cadf0c7
+    x1{{"🔁 Trocar natureza: Pessoa prensada por estrutura, máquina ou veículo"}}:::troca
+    x2["Foi acidente de trânsito?"]:::cnone
+    x3["Sim"]:::cfff6b6
+    x4["Não"]:::cfff6b6
+    x5["Não sei"]:::cdedaff
+    x6{{"🔁 Trocar natureza: Acidente de trânsito com vítima"}}:::troca
+    n5232061 -.-> s5144907
+    n5144778 --> x2
+    n5232614 --> n5232899
+    n5232614 --> n5232906
+    n5232906 --> n7360099
+    n7360099 --> n7360297
+    n7360297 --> n7360469
+    n7360469 --> n7360815
+    n7360469 --> n7360816
+    n7360815 --> n7508949
+    n7508949 --> n7509079
+    n7508949 --> n7509080
+    n7509080 --> n7566213
+    n7509079 --> n7566213
+    n7566213 --> n7642540
+    n7566213 --> n7642541
+    n7754620 --> n7927029
+    n7754620 --> n7927030
+    n5232899 --> n7754620
+    n7927030 --> n7360099
+    n7927029 --> n7360099
+
+    n7642541 --> n7927627
+    n7927627 --> n7927858
+    n7927627 --> n7927928
+    n7927858 --> n8099062
+    n8099062 --> n8099238
+    n8099238 --> n8099621
+    n7927928 --> n8099621
+    n7360816 --> n7566213
+    n7642540 --> x1
+    x2 --> x3
+    x2 --> x4
+    x2 --> x5
+    x3 --> x6
+    x4 --> n5232614
+    x5 --> n5232614

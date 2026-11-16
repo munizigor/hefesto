@@ -1,0 +1,69 @@
+flowchart TD
+    classDef troca fill:#8f7fee,stroke:#6631d7,color:#ffffff,stroke-width:3px
+    classDef titulo fill:#af7e04,stroke:#1a1a1a,color:#1a1a1a
+    classDef perg fill:#ffffff,stroke:#1a1a1a,color:#1a1a1a
+    classDef opc fill:#fff6b6,stroke:#af7e04,color:#1a1a1a
+    classDef ab fill:#ff6464,stroke:#bd0a0a,color:#1a1a1a
+    classDef desp fill:#ffc6c6,stroke:#bd0a0a,color:#1a1a1a
+    classDef acao fill:#ffffff,stroke:#757575,color:#1a1a1a
+    classDef orient fill:#ffdc4a,stroke:#af7e04,color:#1a1a1a
+    classDef relato fill:#adf0c7,stroke:#067429,color:#1a1a1a
+    n1["<b>Natureza: Pessoa arrastada por enxurrada</b>"]:::titulo
+    n2["Você ainda está vendo a pessoa?"]:::perg
+    n3("Sim"):::opc
+    n4("Não"):::opc
+    n5["Para qual lado a água está levando a pessoa? Tem alguma referência (rua, córrego, ponte)?"]:::perg
+    n6["🚒 <b>Despacho imediato</b><br/>Fala: O socorro já foi acionado e está a caminho. Vou fazer algumas perguntas rápidas para ajudar a equipe. Mantenha a calma e siga minhas orientações, por favor."]:::desp
+    n7["A pessoa está agarrada em algo ou sendo levada?"]:::perg
+    n8("Agarrada (poste, árvore, veículo)"):::opc
+    n9("Sendo levada"):::opc
+    n10("Entrou em bueiro / galeria"):::opc
+    n11["Está dentro de um veículo?"]:::perg
+    n12("Sim"):::opc
+    n13("Não"):::opc
+    n14["Quantas pessoas?"]:::perg
+    n15("1"):::opc
+    n16("Mais de 1"):::opc
+    n17["Ponto de referência de onde foi vista por último e para que lado a água vai"]:::perg
+    n18("Aberta"):::ab
+    n19("<b>Orientação ao solicitante:</b> Não entre na água. Se puder, jogue uma corda ou objeto que flutue. Acompanhe a pessoa pela margem, sem se arriscar."):::orient
+    n20(["Relato Final"]):::relato
+    x1["A pessoa afundou e não voltou?"]:::perg
+    x2["Sim"]:::opc
+    x3["Não"]:::opc
+    x4["Não sei"]:::ns
+    x5{{"🔁 Trocar natureza: Afogamento"}}:::troca
+    x6{{"🔁 Trocar natureza: Afogamento"}}:::troca
+    x7("Aberta"):::ab
+    n1 --> n2
+    n2 --> n3
+    n2 --> n4
+    n4 --> n5
+    n3 --> n6
+
+    n6 --> n7
+    n7 --> n8
+    n7 --> n9
+    n7 --> n10
+    n8 --> x1
+    n9 --> x1
+    n10 --> x1
+    n11 --> n12
+    n11 --> n13
+    n12 --> n14
+    n13 --> n14
+    n14 --> n15
+    n14 --> n16
+    n15 --> n17
+    n16 --> n17
+    n17 --> n18
+    n18 -.-> n19
+    n19 --> n20
+    x1 --> x2
+    x1 --> x3
+    x1 --> x4
+    x2 --> x5
+    x3 --> n11
+    x4 --> x6
+    n5 --> x7
+    x7 --> n6

@@ -1,7 +1,7 @@
 /* ===== INTERFACE ===== */
 (function(){
   if(typeof document==='undefined') return;
-  var KEY='hefesto-prototipo-v1';
+  var KEY='hefesto-prototipo-v2';
   var $=function(id){return document.getElementById(id);};
   function el(tag,attrs,kids){ var e=document.createElement(tag); for(var k in (attrs||{})){ var v=attrs[k]; if(k==='class') e.className=v; else if(k==='text') e.textContent=v; else if(k==='value'&&(tag==='textarea'||tag==='select')) e._v=v; else if(k.slice(0,2)==='on') e.addEventListener(k.slice(2),v); else if(v===true) e.setAttribute(k,''); else if(v!==false&&v!=null) e.setAttribute(k,v); } (kids||[]).forEach(function(c){ if(c) e.appendChild(typeof c==='string'?document.createTextNode(c):c); }); if(e._v!==undefined){ e.value=e._v; } return e; }
   var RAS=['Plano Piloto','Gama','Taguatinga','Brazlândia','Sobradinho','Planaltina','Paranoá','Núcleo Bandeirante','Ceilândia','Guará','Cruzeiro','Samambaia','Santa Maria','São Sebastião','Recanto das Emas','Lago Sul','Riacho Fundo','Lago Norte','Candangolândia','Águas Claras','Riacho Fundo II','Sudoeste/Octogonal','Varjão','Park Way','SCIA/Estrutural','Sobradinho II','Jardim Botânico','Itapoã','SIA','Vicente Pires','Fercal','Sol Nascente/Pôr do Sol','Arniqueira','Arapoanga','Água Quente'];
@@ -190,18 +190,24 @@
     if(est.pendente) previsao(itens,A.resp,est.pendente).forEach(function(id){ if(lista.indexOf(id)<0) lista.push(id); });
     return {itens:itens,g:g,est:est,lista:lista};
   }
+  function natPorNome(nome){ var a=norm(nome); return NATUREZAS.filter(function(n){ return norm(n.nome)===a; })[0]||null; }
+  function trocarNatureza(n){
+    var de=natPorId(A.nat); A.trocas=(A.trocas||[]).concat([{de:de?de.nome:'',para:n.nome}]);
+    A.nat=n.id; A.natTxt=n.nome; A.resp={}; desenharCentro(); desenharFicha(); if(A.hermes){ hermesSugPainel(); } foco();
+  }
   function quartelAuto(){ return A.ra?'[GBM da área de '+A.ra+']':''; }
   function quartelAtual(){ return A.quartel||quartelAuto(); }
   function relatoAuto(){
     if(!A) return '';
     var n=natPorId(A.nat),p=[];
     if(n) p.push(n.nome+'.');
+    (A.trocas||[]).forEach(function(t){ p.push('Natureza alterada de '+t.de+' para '+t.para+' durante a entrevista.'); });
     if(A.local) p.push('Local: '+A.local+(A.ra?', '+A.ra:'')+'/'+A.uf+'.');
     if(A.ref) p.push('Referência: '+A.ref+'.');
     var P=protocolo();
     if(P.est) P.est.path.forEach(function(id){ var it=P.g.item[id],r=A.resp[id]; if(!respondido(it,r)) return;
       if(ehPergunta(it)){ if(!r.pulada) p.push(it.texto.replace(/\?\s*$/,'')+': '+valorResposta(it,r)+'.'); }
-      else if(it.tipo==='instrucao') p.push('Orientado: '+it.texto); });
+      else if(it.tipo==='instrucao'&&!it.despacho) p.push('Orientado: '+it.texto); });
     return p.join(' ');
   }
   function relatoAtual(){ return A.relManual?A.relato:relatoAuto(); }
@@ -378,9 +384,16 @@
     P.lista.forEach(function(id){
       var it=P.g.item[id],r=A.resp[id],ans=respondido(it,r),cur=id===P.est.pendente,fut=P.est.path.indexOf(id)<0;
       var row=el('div',{class:'qrow'+(cur?' cur':'')+(fut?' fut':'')+' t-'+it.tipo,'data-qid':id});
-      if(it.tipo==='instrucao'||it.tipo==='informacao'||it.tipo==='diagrama'){
-        var bloco=el('div',{class:'bloco '+it.tipo},[
-          el('span',{class:'bTag',text:it.tipo==='instrucao'?'Diga ao solicitante':it.tipo==='informacao'?'Para você, não ler ao solicitante':'Fluxograma de consulta'}),
+      if(it.tipo==='troca'){
+        var nt=natPorNome(it.texto),bt=el('div',{class:'bloco troca'},[el('span',{class:'bTag',text:'🔁 Trocar natureza'}),el('span',{class:'bTxt',text:'Pelas respostas, a natureza indicada é: '+it.texto+'.'})]);
+        if(ans) bt.appendChild(el('span',{class:'feito',text:'✓ Natureza mantida'}));
+        else if(!fut) bt.appendChild(el('div',{class:'linhaBtn'},[
+          nt?el('button',{class:'btn roxo',text:'Trocar para '+nt.nome,onclick:function(){ trocarNatureza(nt); }}):el('span',{class:'apoio',text:'Essa natureza ainda não tem entrevista no protótipo.'}),
+          el('button',{class:'btn',text:'Manter a natureza atual',onclick:function(){ responder(id,true); }})]));
+        row.appendChild(bt);
+      } else if(it.tipo==='instrucao'||it.tipo==='informacao'||it.tipo==='diagrama'){
+        var bloco=el('div',{class:'bloco '+it.tipo+(it.despacho?' desp':'')},[
+          el('span',{class:'bTag',text:it.despacho?'🚒 Despacho imediato · diga ao solicitante':it.video?'📞 Videochamada':it.tipo==='instrucao'?'Diga ao solicitante':it.tipo==='informacao'?'Para você, não ler ao solicitante':'Fluxograma de consulta'}),
           el('span',{class:'bTxt',text:it.texto})]);
         if(it.tipo==='diagrama'){ var d=el('div',{class:'diag'}); bloco.appendChild(d); if(!fut) desenhar(it.mermaid,d); }
         if(ans) bloco.appendChild(el('span',{class:'feito',text:it.tipo==='instrucao'?'✓ Dita':'✓ Ciente'}));
@@ -397,6 +410,7 @@
         else ctl.appendChild(el('input',{type:'text',class:'curto',inputmode:it.tipo==='numero'?'numeric':'text',value:(r&&r.valor)||'',placeholder:it.tipo==='numero'?'0':'Digite','aria-label':it.texto,
           onkeydown:function(e){ if(e.key==='Enter'){ e.preventDefault(); e.target.blur(); } },
           onchange:function(e){ var x=e.target.value.trim(); if(it.tipo==='numero'&&x&&!/^\d+([.,]\d+)?$/.test(x)){ e.target.value=''; return; } responder(id,x?{valor:x}:null); }}));
+        if(it.outro&&(it.tipo==='unica'||it.tipo==='lista')) ctl.appendChild(el('input',{type:'text',class:'curto',value:(r&&!sel.length&&r.outro)||'',placeholder:'Outra resposta','aria-label':'Outra resposta, em '+it.texto,onchange:function(e){ var t=e.target.value.trim(); responder(id,t?{ops:[],outro:t}:null); }}));
         if(cur&&!it.obrig) ctl.appendChild(el('button',{class:'lnk',text:'Pular',onclick:function(){ responder(id,{pulada:true,ops:[]}); }}));
         if(r&&r.pulada) ctl.appendChild(el('span',{class:'muted',text:'pulada'}));
         row.appendChild(el('div',{class:'qlinha'},[el('span',{class:'qtxt'},[it.texto,it.obrig?obrig():null]),ctl]));
@@ -435,7 +449,7 @@
     else if(P.vazio||P.erro) f.appendChild(el('div',{class:'fgrupo',text:'Entrevista'})),f.appendChild(el('div',{class:'fnota',text:P.vazio?'Natureza sem entrevista cadastrada.':'Protocolo com erros.'}));
     else {
       f.appendChild(el('button',{class:'ftoggle','aria-expanded':A.entOpen?'true':'false',onclick:function(){ A.entOpen=!A.entOpen; desenharFicha(); }},[el('span',{'aria-hidden':'true',text:A.entOpen?'▾':'▸'}),el('span',{class:'ftl',text:'Entrevista'}),el('span',{class:'fts',text:ct.n+' de '+ct.t+' respondidas'})]));
-      if(A.entOpen) P.lista.forEach(function(id){ var it=P.g.item[id]; if(P.est.path.indexOf(id)<0&&!respondido(it,A.resp[id])) { if(ehPergunta(it)) f.appendChild(linha(it.texto,'',1)); return; } if(it.tipo==='informacao'||it.tipo==='diagrama') return; f.appendChild(linha(it.tipo==='instrucao'?'Instrução: '+it.texto:it.texto,valorResposta(it,A.resp[id]),1)); });
+      if(A.entOpen) P.lista.forEach(function(id){ var it=P.g.item[id]; if(P.est.path.indexOf(id)<0&&!respondido(it,A.resp[id])) { if(ehPergunta(it)) f.appendChild(linha(it.texto,'',1)); return; } if(it.tipo==='informacao'||it.tipo==='diagrama'||it.tipo==='troca') return; f.appendChild(linha(it.tipo==='instrucao'?'Instrução: '+it.texto:it.texto,valorResposta(it,A.resp[id]),1)); });
     }
     f.appendChild(el('div',{class:'fgrupo',text:'Solicitante'}));
     f.appendChild(linha('Nome do solicitante',A.nomeNI?'Não informado':A.nome,2)); f.appendChild(linha('Telefone para retorno',A.tel,2));
@@ -532,7 +546,7 @@
     if(it.tipo==='diagrama'){ var ta=el('textarea',{class:'code',style:'min-height:110px;margin-top:8px','aria-label':'Código Mermaid do fluxograma de consulta',spellcheck:'false'}); ta.value=it.mermaid||''; ta.addEventListener('input',function(){ it.mermaid=ta.value; mudou(false); }); box.appendChild(ta); }
     var linha=el('div',{class:'row',style:'margin-top:8px'});
     if(ehPergunta(it)) linha.appendChild(el('label',{class:'row',style:'gap:6px'},[el('input',{type:'checkbox',checked:!!it.obrig,onchange:function(e){ it.obrig=e.target.checked; mudou(false); }}),'Obrigatória']));
-    if(it.tipo==='multipla') linha.appendChild(el('label',{class:'row',style:'gap:6px'},[el('input',{type:'checkbox',checked:!!it.outro,onchange:function(e){ it.outro=e.target.checked; mudou(false); }}),'Incluir “Outro”']));
+    if(temOpcoes(it)) linha.appendChild(el('label',{class:'row',style:'gap:6px'},[el('input',{type:'checkbox',checked:!!it.outro,onchange:function(e){ it.outro=e.target.checked; mudou(false); }}),'Incluir “Outro”']));
     linha.appendChild(el('span',{class:'lbl',text:it.tipo==='multipla'?'Depois dos desvios:':temOpcoes(it)?'Depois (padrão):':'Depois:'}));
     linha.appendChild(seletorDestino(it.prox,it.id,'próximo da lista','Depois de '+it.id,function(v){ it.prox=v; }));
     box.appendChild(linha);
@@ -581,11 +595,12 @@
     if(!it) p.appendChild(el('div',{class:'msg okm',style:'font-size:16px;font-weight:700',text:'Entrevista concluída. Segue para o fechamento.'}));
     else if(it.tipo==='instrucao'){ p.appendChild(el('div',{class:'muted',style:'margin-top:10px',text:'Diga ao solicitante'})); p.appendChild(el('div',{class:'instr',text:it.texto})); p.appendChild(el('button',{class:'btn ok',text:'✓ Dito, continuar',onclick:function(){ responder(true); }})); }
     else if(it.tipo==='informacao'){ p.appendChild(el('div',{class:'muted',style:'margin-top:10px',text:'Informação para você (não ler ao solicitante)'})); p.appendChild(el('div',{class:'info',text:it.texto})); p.appendChild(el('button',{class:'btn pri',text:'Ciente, continuar',onclick:function(){ responder(true); }})); }
+    else if(it.tipo==='troca'){ p.appendChild(el('div',{class:'muted',style:'margin-top:10px',text:'Troca de natureza'})); p.appendChild(el('div',{class:'info',text:'No atendimento, o atendente pode trocar a natureza para: '+it.texto+'. A entrevista recomeça com o protocolo dela.'})); p.appendChild(el('button',{class:'btn pri',text:'Ciente, continuar',onclick:function(){ responder(true); }})); }
     else if(it.tipo==='diagrama'){ p.appendChild(el('div',{class:'muted',style:'margin-top:10px',text:'Fluxograma de consulta'})); p.appendChild(el('div',{style:'font-weight:700;font-size:17px;margin:4px 0',text:it.texto})); var d=el('div',{class:'diag'}); p.appendChild(d); desenhar(it.mermaid,d); p.appendChild(el('button',{class:'btn pri',style:'margin-top:10px',text:'Ciente, continuar',onclick:function(){ responder(true); }})); }
     else {
       p.appendChild(el('div',{class:'q',text:it.texto+(it.obrig?' *':'')}));
       var a=el('div',{class:'ans'});
-      if(it.tipo==='unica') it.opcoes.forEach(function(o){ a.appendChild(el('button',{class:'op',text:o.rotulo,onclick:function(){ responder({ops:[o.id]}); }})); });
+      if(it.tipo==='unica'){ it.opcoes.forEach(function(o){ a.appendChild(el('button',{class:'op',text:o.rotulo,onclick:function(){ responder({ops:[o.id]}); }})); }); if(it.outro){ var ou=el('input',{type:'text',placeholder:'Outra resposta','aria-label':'Outra resposta'}); a.appendChild(ou); a.appendChild(el('button',{class:'btn',text:'Confirmar outra resposta',onclick:function(){ if(ou.value.trim()) responder({ops:[],outro:ou.value.trim()}); }})); } }
       else if(it.tipo==='lista'){ var s=el('select',{'aria-label':it.texto},[el('option',{value:'',text:'Selecione…'})].concat(it.opcoes.map(function(o){ return el('option',{value:o.id,text:o.rotulo}); }))); a.appendChild(s); a.appendChild(el('button',{class:'btn pri',text:'Confirmar',onclick:function(){ if(s.value) responder({ops:[s.value]}); }})); }
       else if(it.tipo==='multipla'){
         var cs=it.opcoes.map(function(o){ var c=el('input',{type:'checkbox',value:o.id}); a.appendChild(el('label',{},[c,o.rotulo])); return c; });
@@ -599,7 +614,7 @@
     if(feitos.length){
       var h=el('ul',{class:'hist','aria-label':'Caminho percorrido'});
       feitos.forEach(function(id){ var x=g.item[id],r=S.resp[id],val;
-        if(!ehPergunta(x)) val=x.tipo==='instrucao'?'dito':'ciente'; else if(r.pulada) val='pulada'; else if(temOpcoes(x)) val=x.opcoes.filter(function(o){return r.ops.indexOf(o.id)>=0;}).map(function(o){return o.rotulo;}).concat(r.outro?[r.outro]:[]).join(', '); else val=r.valor;
+        if(!ehPergunta(x)) val=x.tipo==='instrucao'?'dito':x.tipo==='troca'?'natureza mantida':'ciente'; else if(r.pulada) val='pulada'; else if(temOpcoes(x)) val=x.opcoes.filter(function(o){return r.ops.indexOf(o.id)>=0;}).map(function(o){return o.rotulo;}).concat(r.outro?[r.outro]:[]).join(', '); else val=r.valor;
         h.appendChild(el('li',{},[el('code',{text:id}),' '+(x.texto||'')+' ',el('b',{text:'→ '+val})])); });
       p.appendChild(h);
     }
@@ -644,7 +659,7 @@
     src.addEventListener('input',function(){ I_.src=src.value; });
     p.appendChild(el('label',{class:'rot',style:'display:block;margin-top:10px',text:'1. Código Mermaid do Miro'})); p.appendChild(src);
     p.appendChild(el('div',{class:'row',style:'margin-top:8px'},[
-      el('button',{class:'btn pri',text:'Converter automaticamente',onclick:function(){ var r=importarMermaidLivre(I_.src); I_.res={origem:'automática',itens:r.itens,notas:r.avisos}; I_.msg=null; desenharLado(); }}),
+      el('button',{class:'btn pri',text:'Converter automaticamente',onclick:function(){ var miro=ehConvencaoMiro(I_.src),r=miro?importarMiroHefesto(I_.src,NATUREZAS):importarMermaidLivre(I_.src); I_.res={origem:miro?'automática (convenção de cores do quadro)':'automática',itens:r.itens,notas:r.avisos}; I_.msg=null; desenharLado(); }}),
       el('button',{class:'btn',text:'Copiar prompt para IA',onclick:function(){ if(!I_.src.trim()){ I_.msg={t:'inf',m:'Cole primeiro o código do Miro: ele vai dentro do prompt.'}; desenharLado(); return; } copiar(promptMiro(nat.nome,I_.src)); I_.msg={t:'okm',m:'Prompt copiado. Cole no assistente de IA, depois traga a resposta para o campo 2.'}; desenharLado(); }})]));
     if(I_.msg) p.appendChild(el('div',{class:'msg '+I_.msg.t,text:I_.msg.m}));
     var ver=el('details',{style:'margin-top:8px'},[el('summary',{class:'muted',text:'Ver o prompt'}),el('textarea',{class:'code',readonly:true,'aria-label':'Prompt para IA',style:'min-height:200px;margin-top:6px',value:promptMiro(nat.nome,I_.src)})]);
@@ -734,8 +749,11 @@
   function desenharEditorTopo(ed){
     var n=natPorId(S.nat),ex=exemplos()[S.nat];
     ed.appendChild(el('div',{class:'row'},[el('h2',{class:'grow',text:'Entrevista · '+n.nome}),
-      ex?el('button',{class:'btn sm',text:'Restaurar exemplo',onclick:function(){ S.itens=ex; S.msg=null; mudou(true); }}):null,
+      ex?el('button',{class:'btn sm',text:n.fonte?'Restaurar do Miro':'Restaurar exemplo',onclick:function(){ S.itens=ex; S.msg=null; mudou(true); }}):null,
       el('button',{class:'btn sm del',text:'Remover entrevista',onclick:function(){ S.itens=[]; S.msg=null; mudou(true); }})]));
+    var notas=(typeof NOTAS_MIRO!=='undefined'&&NOTAS_MIRO[S.nat])||[];
+    if(n.fonte) ed.appendChild(el('div',{class:'muted',style:'margin-top:6px',text:'Origem: quadro do Miro, '+n.fonte+'. “Restaurar do Miro” volta ao fluxo importado.'}));
+    if(notas.length) ed.appendChild(el('details',{class:'msg inf'},[el('summary',{text:'Notas da importação do Miro ('+notas.length+')'}),el('ul',{},notas.map(function(x){ return el('li',{text:x}); }))]));
     ed.appendChild(el('div',{class:'muted',style:'margin-top:6px',text:'Cada item tem um identificador. O primeiro da lista inicia a entrevista. Em “Depois” e em cada opção você escolhe para onde o fluxo vai. O que você muda aqui vale na próxima ligação da aba Atendimento.'}));
     if(!S.itens.length) ed.appendChild(el('div',{class:'msg inf',text:'Esta natureza está sem entrevista: no atendimento, o passo Entrevista avisa e segue direto para o solicitante. Use os botões abaixo para criar o primeiro item.'}));
   }

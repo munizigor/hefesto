@@ -1,0 +1,83 @@
+flowchart TD
+    classDef troca fill:#8f7fee,stroke:#6631d7,color:#ffffff,stroke-width:3px
+    classDef titulo fill:#af7e04,stroke:#1a1a1a,color:#1a1a1a
+    classDef perg fill:#ffffff,stroke:#1a1a1a,color:#1a1a1a
+    classDef opc fill:#fff6b6,stroke:#af7e04,color:#1a1a1a
+    classDef ns fill:#dedaff,stroke:#6631d7,color:#1a1a1a
+    classDef ab fill:#ff6464,stroke:#bd0a0a,color:#1a1a1a
+    classDef desp fill:#ffc6c6,stroke:#bd0a0a,color:#1a1a1a
+    classDef acao fill:#ffffff,stroke:#757575,color:#1a1a1a
+    classDef orient fill:#ffdc4a,stroke:#af7e04,color:#1a1a1a
+    classDef relato fill:#adf0c7,stroke:#067429,color:#1a1a1a
+    n1["<b>Natureza: Explosão / ameaça de explosão</b>"]:::titulo
+    n2["Já houve explosão ou é uma ameaça / objeto suspeito?"]:::perg
+    n3("Já explodiu"):::opc
+    n4("Ameaça / objeto suspeito"):::opc
+    n5["Acionar PMDF (esquadrão antibombas) conforme protocolo"]:::acao
+    n6["🚒 <b>Despacho imediato</b><br/>Fala: O socorro já foi acionado e está a caminho. Vou fazer algumas perguntas rápidas para ajudar a equipe. Mantenha a calma e siga minhas orientações, por favor."]:::desp
+    n7["O que explodiu ou pode explodir?"]:::perg
+    n8("Botijão / gás"):::opc
+    n9("Caldeira / tanque"):::opc
+    n10("Fogos de artifício"):::opc
+    n11("Artefato / objeto suspeito"):::opc
+    n12("Aberta"):::ab
+    n13["Há feridos? Quantos?"]:::perg
+    n14("Nenhum"):::opc
+    n15("1 a 3"):::opc
+    n16("Mais de 3"):::opc
+
+    n18["Há fogo ou estrutura caída?"]:::perg
+    n19("Fogo"):::opc
+    n20("Estrutura caída / rachada"):::opc
+    n21("Ambos"):::opc
+    n22("Nenhum"):::opc
+    n23["Há pessoas presas?"]:::perg
+    n24("Sim"):::opc
+    n25("Não"):::opc
+    n26("Não sabe"):::ns
+    n27("<b>Orientação ao solicitante:</b> Objeto suspeito: afaste-se pelo menos 300 metros, não toque nele e não use o celular perto. Após explosão, saia e não volte para buscar objetos."):::orient
+    n28(["Relato Final"]):::relato
+    x1{{"⚠️ Manter natureza e registrar no relato: Incêndio (manter Explosão)"}}:::troca
+    x2{{"⚠️ Manter natureza e registrar no relato: Incêndio (manter Explosão)"}}:::troca
+    n1 --> n2
+    n2 --> n3
+    n2 --> n4
+    n4 --> n5
+    n3 --> n6
+    n5 --> n6
+    n6 --> n7
+    n7 --> n8
+    n7 --> n9
+    n7 --> n10
+    n7 --> n11
+    n7 --> n12
+    n8 --> n13
+    n9 --> n13
+    n10 --> n13
+    n11 --> n13
+    n12 --> n13
+    n13 --> n14
+    n13 --> n15
+    n13 --> n16
+
+    n14 --> n18
+    n15 --> n18
+
+    n18 --> n19
+    n18 --> n20
+    n18 --> n21
+    n18 --> n22
+    n19 --> n23
+    n20 --> n23
+    n21 --> n23
+    n22 --> n23
+    n23 --> n24
+    n23 --> n25
+    n23 --> n26
+    n24 -.-> n27
+    n25 -.-> n27
+    n26 -.-> n27
+    n27 --> n28
+    n19 -.-> x1
+    n21 -.-> x2
+    n16 --> n18

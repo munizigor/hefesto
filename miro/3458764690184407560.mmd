@@ -1,0 +1,127 @@
+flowchart TD
+    classDef troca fill:#8f7fee,stroke:#6631d7,color:#ffffff,stroke-width:3px
+    classDef cffc6c6 fill:#ffc6c6,stroke:#bd0a0a,color:#1a1a1a,stroke-dasharray:5 5
+    classDef ctitulo fill:#af7e04,stroke:#1a1a1a,color:#1a1a1a
+    classDef cnone fill:#ffffff,stroke:#1a1a1a,color:#1a1a1a
+    classDef cfff6b6 fill:#fff6b6,stroke:#af7e04,color:#1a1a1a
+    classDef caf7e04 fill:#af7e04,stroke:#1a1a1a,color:#1a1a1a
+    classDef cadf0c7 fill:#adf0c7,stroke:#067429,color:#1a1a1a
+    classDef cvideo fill:#2dc75c,stroke:#067429,color:#1a1a1a
+    classDef cdedaff fill:#dedaff,stroke:#6631d7,color:#1a1a1a
+    subgraph s5287652["🚒 Despacho imediato"]
+        n5287659["Não"]:::cfff6b6
+    end
+    style s5287652 fill:#ffc6c6,stroke:#bd0a0a,stroke-dasharray:5 5
+    subgraph s4357703["🚒 Despacho imediato"]
+        n4449654["Não"]:::cfff6b6
+        n4449653["Sim"]:::cfff6b6
+        n4449655["Não sei"]:::cdedaff
+    end
+    style s4357703 fill:#ffc6c6,stroke:#bd0a0a,stroke-dasharray:5 5
+    n3816849("Iremos realizar uma vídeo chamada para orientá-lo(a) até a chegada da guarnição! Mantenha a calma e siga as orientações."):::cffc6c6
+    n4357614["<b>Natureza: Queda da própria altura</b>"]:::ctitulo
+    n5287653["A pessoa está respirando?"]:::cnone
+    n5287654["Sim"]:::cfff6b6
+    n4205122["Idade aproximada da pessoa"]:::cnone
+    n5287657{{"🔁 Trocar natureza: Parada Cárdiorespiratória (PCR)"}}:::troca
+    n5798104("O socorro já foi acionado e está a caminho. Vou fazer algumas perguntas rápidas para ajudar a equipe. Mantenha a calma e siga minhas orientações, por favor."):::cffc6c6
+    n4205348["Criança"]:::cfff6b6
+    n4449379["Houve desmaio antes da queda?"]:::cnone
+    n4205349["Adulto"]:::cfff6b6
+    n4205350["Idoso"]:::cfff6b6
+    n5287662(["Relato final"]):::cadf0c7
+    n5287656>"📞 Realize a videochamada e faça as orientações"]:::cvideo
+    n7708431["Como aconteceu a queda?"]:::cnone
+    n7810367["Escorregou/tropeçou"]:::cfff6b6
+    n7810569["Perdeu o equilíbrio"]:::cfff6b6
+    n7921501["Outro"]:::cdedaff
+    n4545967["Bateu a cabeça quando caiu?"]:::cnone
+    n4546153["Sim"]:::cfff6b6
+    n6655095["Houe alguma crise convulsiva?"]:::cnone
+    n4546154["Não"]:::cdedaff
+    n4718052["Não sei"]:::cdedaff
+    n6655645["Sim"]:::cfff6b6
+    n6655646["Não"]:::cdedaff
+    n6655647["Não sei"]:::cdedaff
+    n4995658["Teve vômito após a queda?"]:::cnone
+    n7038421["Teve vômito após a queda?"]:::cnone
+    n5154759["Não sabe"]:::cdedaff
+    n5154613["Sim"]:::cfff6b6
+    n7140987["Está consciente e conversando normalmente?"]:::cnone
+    n5154685["Não"]:::cdedaff
+    n7140988["Sim"]:::cfff6b6
+    n7140989["Não"]:::cfff6b6
+    n7141090["A pessoal relata dor?"]:::cnone
+    n7141091["Sim"]:::cfff6b6
+    n7141076["Onde a vítima relata mais dor?"]:::cnone
+    n7141092["Não"]:::cdedaff
+    n7141077["Cabeça/pescoço"]:::cfff6b6
+    n7141078["Costas"]:::cfff6b6
+    n7141079["Tórax / abdômem"]:::cfff6b6
+    n7141080["Membros"]:::cfff6b6
+    n7141085["Realto final"]:::cadf0c7
+    x1{{"🔁 Trocar natureza: Emergência clínica"}}:::troca
+    x2{{"🔁 Trocar natureza: Convulsão / crise convulsiva"}}:::troca
+    n4449379 --> n4449655
+    n4449379 --> n4449654
+    n4449379 --> n4449653
+    n4545967 --> n4546154
+    n4545967 --> n4546153
+
+    n4545967 --> n4718052
+    n4205122 --> n4205350
+    n4205350 --> n4449379
+    n4205122 --> n4205349
+    n4205349 --> n4449379
+    n4205122 --> n4205348
+    n4205348 --> n4449379
+    n5287653 --> n5287654
+    n5287659 -.-> n5287657
+    n5287653 --> n5287659
+    n5287654 --> n4205122
+    n4357614 --> n5287653
+    s4357703 --> n5798104
+    n4995658 --> n5154759
+    n4995658 --> n5154685
+    n4995658 --> n5154613
+    n6655095 --> n6655647
+    n6655095 --> n6655646
+    n6655646 --> n4995658
+    n6655095 --> n6655645
+    n4546154 --> n6655095
+    n4546153 --> n6655095
+    n4718052 --> n6655095
+    n6655647 --> n7038421
+
+    n7140987 --> n7140989
+    n7140987 --> n7140988
+    n7141076 --> n7141080
+    n7141076 --> n7141079
+    n7141076 --> n7141078
+    n7141076 --> n7141077
+    n7140989 --> n7141085
+    n7141080 --> n7141085
+    n7141079 --> n7141085
+    n7141078 --> n7141085
+    n7141077 --> n7141085
+    n7141092 --> n7141085
+    n7141090 --> n7141092
+    n7141090 --> n7141091
+    n7141091 --> n7141076
+    n7140988 --> n7141090
+    n5154759 --> n7140987
+    n5154685 --> n7140987
+    n5154613 --> n7140987
+    n4449654 --> n7708431
+    n4449655 --> n7708431
+    n7708431 --> n7810367
+    n7708431 --> n7810569
+    n7810367 --> n4545967
+    n7810569 --> n4545967
+    n7708431 --> n7921501
+    n7921501 --> n4545967
+    n5287659 --> n5287662
+    n5287657 -.-> n5287656
+    n5287657 -.-> n3816849
+    n4449653 --> x1
+    n6655645 --> x2

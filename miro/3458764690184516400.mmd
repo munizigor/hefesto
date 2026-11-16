@@ -1,0 +1,236 @@
+flowchart TD
+    classDef troca fill:#8f7fee,stroke:#6631d7,color:#ffffff,stroke-width:3px
+    classDef ctitulo fill:#af7e04,stroke:#1a1a1a,color:#1a1a1a
+    classDef cnone fill:#ffffff,stroke:#1a1a1a,color:#1a1a1a
+    classDef cffc6c6 fill:#ffc6c6,stroke:#bd0a0a,color:#1a1a1a,stroke-dasharray:5 5
+    classDef cfff6b6 fill:#fff6b6,stroke:#af7e04,color:#1a1a1a
+    classDef cff6464 fill:#ff6464,stroke:#bd0a0a,color:#1a1a1a
+    classDef caf7e04 fill:#af7e04,stroke:#1a1a1a,color:#1a1a1a
+    classDef cvideo fill:#2dc75c,stroke:#067429,color:#1a1a1a
+    classDef cadf0c7 fill:#adf0c7,stroke:#067429,color:#1a1a1a
+    classDef cf8d3af fill:#f8d3af,stroke:#9b4a08,color:#1a1a1a
+    classDef cdedaff fill:#dedaff,stroke:#6631d7,color:#1a1a1a
+    classDef cffdc4a fill:#ffdc4a,stroke:#af7e04,color:#1a1a1a,stroke-dasharray:5 5
+    subgraph s0526739["🚒 Despacho imediato"]
+        n7797669["Sim"]:::cfff6b6
+    end
+    style s0526739 fill:#ffc6c6,stroke:#bd0a0a,stroke-dasharray:5 5
+    subgraph s3019102["🚒 Despacho imediato"]
+        n0896747["Sim"]:::cfff6b6
+    end
+    style s3019102 fill:#ffc6c6,stroke:#bd0a0a,stroke-dasharray:5 5
+    subgraph s0896745["🚒 Despacho imediato"]
+        n0896750{{"🔁 Trocar natureza: Parada Cárdiorespiratória (PCR)"}}:::troca
+    end
+    style s0896745 fill:#ffc6c6,stroke:#bd0a0a,stroke-dasharray:5 5
+    subgraph s7496792["🚒 Despacho imediato"]
+        n7496795["Não"]:::cfff6b6
+    end
+    style s7496792 fill:#ffc6c6,stroke:#bd0a0a,stroke-dasharray:5 5
+    subgraph s7195484["🚒 Despacho imediato"]
+        n7195302{{"🔁 Trocar natureza: Parada Cárdiorespiratória (PCR)"}}:::troca
+    end
+    style s7195484 fill:#ffc6c6,stroke:#bd0a0a,stroke-dasharray:5 5
+    subgraph s7496791["🚒 Despacho imediato"]
+        n7496796["Sim"]:::cfff6b6
+    end
+    style s7496791 fill:#ffc6c6,stroke:#bd0a0a,stroke-dasharray:5 5
+    n0526740["<b>Natureza: Ataque / Picada de animal</b>"]:::ctitulo
+    n1951019["Qual foi o tipo de animal?"]:::cnone
+    n3476396("O socorro já foi acionado e está a caminho. Vou fazer mais algumas perguntas rápidas para ajudar a equipe. Mantenha a calma e siga minhas orientações, por favor."):::cffc6c6
+    n5614786["Animal Doméstico"]:::cfff6b6
+    n5614789["Animal silvestre"]:::cfff6b6
+    n5614790["Animal peçonhento"]:::cfff6b6
+    n9249906["Abelha/Marimbondo/Vespa"]:::cfff6b6
+    n2168470["Cachorro"]:::cfff6b6
+    n2168471["Gato"]:::cfff6b6
+    n2168472["Aberta"]:::cff6464
+    n1950006["Morcego"]:::cfff6b6
+    n1950278["Macaco"]:::cfff6b6
+    n1950924["Capivara"]:::cfff6b6
+    n2229464["Saruê"]:::cfff6b6
+    n1703741["Aberta"]:::cff6464
+    n4471675("Iremos realizar uma vídeo chamada para orientá-lo(a) até a chegada da guarnição! Mantenha a calma e siga as orientações."):::cffc6c6
+    n9707023["Cobra"]:::cfff6b6
+    n9707076["Escorpião"]:::cfff6b6
+    n9707157["Aranha"]:::cfff6b6
+    n9707421["Aberta"]:::cff6464
+    n0606583["A pessoa picada possui alergia?"]:::cnone
+    n0606901["Sim"]:::cfff6b6
+    n0606900["Não sei"]:::cfff6b6
+    n0043029["Não"]:::cfff6b6
+    n3149737["A pessoa picada respira?"]:::cnone
+    n0896748["A pessoa picada respira?"]:::cnone
+    n0575215("O socorro já foi acionado e está a caminho. Vou fazer mais algumas perguntas rápidas para ajudar a equipe. Mantenha a calma e siga minhas orientações, por favor."):::cffc6c6
+    n8032922["A pessoa atacada respira?"]:::cnone
+    n7603148("O socorro já foi acionado e está a caminho. Vou fazer mais algumas perguntas rápidas para ajudar a equipe. Mantenha a calma e siga minhas orientações, por favor."):::cffc6c6
+    n7496806{{"🔁 Trocar natureza: Parada Cárdiorespiratória (PCR)"}}:::troca
+    n0896746["Não"]:::cfff6b6
+    n7797668["Não"]:::cfff6b6
+    n7496805>"📞 Realize a videochamada e faça as orientações"]:::cvideo
+    n2733731(["Relato final"]):::cadf0c7
+    n0896749>"📞 Realize a videochamada e faça as orientações"]:::cvideo
+    n9151511["A pessoa atacada é:"]:::cnone
+    n0955149(["Relato"]):::cadf0c7
+    n7496815["A pessoa picada é:"]:::cnone
+    n2733230(["Relato final"]):::cadf0c7
+    n8699766["Quantas picadas aconteceram?"]:::cnone
+    n9151512["criança"]:::cfff6b6
+    n9151513["adulta"]:::cfff6b6
+    n9151516["idosa"]:::cfff6b6
+    n7195301>"📞 Realize a videochamada e faça as orientações"]:::cvideo
+    n4470971("Iremos realizar uma vídeo chamada para orientá-lo(a) até a chegada da guarnição! Mantenha a calma e siga as orientações."):::cffc6c6
+    n7496816["criança"]:::cfff6b6
+    n7496811["Qual parte do corpo foi atingida?"]:::cnone
+    n7496817["adulta"]:::cfff6b6
+    n7496820["idosa"]:::cfff6b6
+    n4471243("Iremos realizar uma vídeo chamada para orientá-lo(a) até a chegada da guarnição! Mantenha a calma e siga as orientações."):::cffc6c6
+    n8699767["entre 1 e 3 picadas"]:::cfff6b6
+    n8699768["Mais de 3 - Houve ataque/ enxame"]:::cfff6b6
+    n1341166["Qual parte do corpo foi atingida?"]:::cnone
+    n2955002["Cabeça"]:::cfff6b6
+    n2955003["Membros superiores"]:::cfff6b6
+    n2955004["Membros inferiores"]:::cfff6b6
+    n2955005["Tronco"]:::cfff6b6
+    n8699761["A pessoa picada é :"]:::cnone
+    n8347928["Cabeça"]:::cf8d3af
+    n8512929["Membros superiores"]:::cf8d3af
+    n8512930["Membros inferiores"]:::cf8d3af
+    n8513201["Tronco"]:::cf8d3af
+    n8699762["criança"]:::cfff6b6
+    n8699763["adulta"]:::cfff6b6
+    n8862256["idosa"]:::cfff6b6
+    n8160772["Há muito sangue visível ou lesões graves?"]:::cnone
+    n7496802["Ela está confusa/ sonolenta?"]:::cnone
+    n8228134["Sim"]:::cfff6b6
+    n8228135["Não"]:::cfff6b6
+    n3149119["Sim"]:::cfff6b6
+    n3149120["Não"]:::cdedaff
+    n6965261("Se possível e com segurança, tire uma foto do animal sem tentar capturá-lo ou se aproximar."):::cffdc4a
+    n2789049(["Relato final"]):::cadf0c7
+    n8228559["Ela está confusa/ sonolenta?"]:::cnone
+    n7603837(["Relato final"]):::cadf0c7
+    n8228652["Sim"]:::cfff6b6
+    n8228653["Não"]:::cdedaff
+    n8389707(["Relato final"]):::cadf0c7
+    x1["O animal continua no local oferecendo risco?"]:::cnone
+    x2["Sim"]:::cfff6b6
+    x3["Não"]:::cfff6b6
+    x4["Não sei"]:::cdedaff
+    x5{{"⚠️ Manter natureza e registrar no relato: Animal doméstico ou silvestre em situação de risco"}}:::troca
+    s0526739 -.-> n0575215
+    n8160772 --> n8228135
+    n8160772 --> n8228134
+    n8228135 --> n8228559
+    n8228134 --> n8228559
+    n8228559 --> n8228653
+    n8228559 --> n8228652
+    n8228653 --> n8389707
+    n8228652 --> n8389707
+    n2168470 --> n8032922
+    n8032922 --> n7797669
+    n8032922 --> n7797668
+    n1703741 --> n8032922
+    n1951019 --> n5614790
+    n1951019 --> n5614789
+    n1951019 --> n5614786
+    n7195302 -.-> n7797668
+    n7195302 -.-> n7195301
+    n5614790 --> n9707421
+    n5614790 --> n9707157
+    n5614790 --> n9707076
+    n5614790 --> n9707023
+    n1951019 --> n9249906
+    n0606583 --> n0606901
+    n0606900 --> n0896748
+    n0606583 --> n0606900
+    n9249906 --> n0606583
+    n0896750 -.-> n0896749
+    n0606901 --> n0896748
+    n0896748 --> n0896747
+    n0896748 --> n0896746
+    n0526740 -.-> x1
+    n2168472 --> n8032922
+    n5614786 --> n2168472
+    n2168471 --> n8032922
+    n5614786 --> n2168471
+    n5614786 --> n2168470
+    n8699763 --> n2789049
+    n8699761 --> n8699763
+    n8699762 --> n2789049
+    n8699761 --> n8699762
+    n8699766 --> n8699768
+    n8699768 --> n8699761
+    n8699766 --> n8699767
+    n8699767 --> n8699761
+    n0896747 --> n8699766
+    n8862256 --> n2789049
+    n8699761 --> n8862256
+    n9151511 --> n9151513
+    n9151513 --> n1341166
+    n9151511 --> n9151512
+    n9151511 --> n9151516
+    n9151516 --> n1341166
+    n9151512 --> n1341166
+    n7797669 --> n9151511
+    n0606583 --> n0043029
+    n0043029 --> n0896748
+    n7496806 -.-> n7496805
+    n7496806 -.-> n7496795
+    n7496815 --> n7496817
+    n7496817 --> n7496811
+    n7496815 --> n7496816
+    n7496815 --> n7496820
+    n7496820 --> n7496811
+    n7496816 --> n7496811
+    n7496796 --> n7496815
+    s7496791 -.-> n7603148
+    n7603837 -.-> n6965261
+    n1341166 --> n8347928
+    n1341166 --> n8512929
+    n1341166 --> n8512930
+    n1341166 --> n8513201
+    n8347928 --> n8160772
+    n8512929 --> n8160772
+    n8512930 --> n8160772
+    n8513201 --> n8160772
+    s0896745 -.-> n4471675
+    n7496811 --> n2955002
+    n7496811 --> n2955003
+    n7496811 --> n2955004
+    n7496811 --> n2955005
+    n2955002 --> n7496802
+    n2955003 --> n7496802
+    n2955004 --> n7496802
+    n2955005 --> n7496802
+    n7496802 --> n3149119
+    n7496802 --> n3149120
+    n3149119 --> n7603837
+    n3149120 --> n7603837
+    n9707023 --> n3149737
+    n9707076 --> n3149737
+    n9707157 --> n3149737
+    n9707421 --> n3149737
+    n3149737 --> n7496796
+    n3149737 --> n7496795
+    n7797668 --> n0955149
+    n5614789 --> n1950006
+    n5614789 --> n1950278
+    n5614789 --> n1950924
+    n5614789 --> n1703741
+    n1950006 --> n8032922
+    n1950278 --> n8032922
+    n1950924 --> n8032922
+    n5614789 --> n2229464
+    n2229464 --> n8032922
+    n7496795 --> n2733230
+    n0896746 --> n2733731
+    s3019102 -.-> n3476396
+    n0896746 -.-> n0896750
+    x1 --> x2
+    x1 --> x3
+    x1 --> x4
+    x2 -.-> x5
+    x2 --> n1951019
+    x3 --> n1951019
+    x4 --> n1951019

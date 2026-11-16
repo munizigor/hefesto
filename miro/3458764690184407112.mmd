@@ -1,0 +1,109 @@
+flowchart TD
+    classDef troca fill:#8f7fee,stroke:#6631d7,color:#ffffff,stroke-width:3px
+    classDef ctitulo fill:#af7e04,stroke:#1a1a1a,color:#1a1a1a
+    classDef cnone fill:#ffffff,stroke:#1a1a1a,color:#1a1a1a
+    classDef cfff6b6 fill:#fff6b6,stroke:#af7e04,color:#1a1a1a
+    classDef cdedaff fill:#dedaff,stroke:#6631d7,color:#1a1a1a
+    classDef cffdc4a fill:#ffdc4a,stroke:#af7e04,color:#1a1a1a,stroke-dasharray:5 5
+    classDef cd5f2e0 fill:#d5f2e0,stroke:#067429,color:#1a1a1a
+    n8682189["<b>Natureza: Árvore com risco de queda</b>"]:::ctitulo
+    n8682344["A árvore apresenta rachaduras"]:::cnone
+    n8682662["A árvore esta consumida/deteriorada por inseto, fogo, fungos ou outros?"]:::cnone
+    n8682345["Sim"]:::cfff6b6
+    n8932604["Não"]:::cfff6b6
+    n8932683["Não sabe"]:::cdedaff
+    n9116647["Sim"]:::cfff6b6
+    n9116649["Não"]:::cfff6b6
+    n9116650["Não sabe"]:::cdedaff
+    n8810289["A árvore apresenta uma inclinação do troco?"]:::cnone
+    n9116885["Sim"]:::cfff6b6
+    n9116886["Não"]:::cfff6b6
+    n9116887["Não sabe"]:::cdedaff
+    n8810604["Existem raizes romidas?"]:::cnone
+    n9316173["Sim"]:::cfff6b6
+    n9316174["Não"]:::cfff6b6
+    n9316175["Não sabe"]:::cdedaff
+    n8810831["O troco ou galhos da árvore se apresentam secos ou mortos?"]:::cnone
+    n9044757["Tem raíz sob estrutura de edificações ou casas?"]:::cnone
+    n9316605["Sim"]:::cfff6b6
+    n9316606["Não"]:::cfff6b6
+    n9316607["Não sabe"]:::cdedaff
+    n4148864["Sim"]:::cfff6b6
+    n4148865["Não"]:::cfff6b6
+    n4148866["Não sabe"]:::cdedaff
+    n9367488("Atenção ao risco de choque elétrico: não se aproxime e mantenha todos afastados. Caso tenha alguém próximo ao incêndio, grite de uma distância segura para que se afastem."):::cffdc4a
+    n9192526["A árvore está em contato com poste ou rede elétrica?"]:::cnone
+    n9192757["Sim"]:::cfff6b6
+    n9192758["Não"]:::cfff6b6
+    n9192759["Não sabe"]:::cdedaff
+    n9503416("ORIENTAÇÃO AO SOLICITANTE: Mantenha distância da árvore e não tente cortá-la, removê-la ou subir nela. Afaste pessoas e veículos da área de risco e, se houver proximidade com rede elétrica, não toque na árvore ou em objetos que estejam em contato com ela."):::cffdc4a
+    n9409218(["Relato final"]):::cd5f2e0
+    x1["A árvore atingiu alguma pessoa?"]:::cnone
+    x2["Sim"]:::cfff6b6
+    x3["Não"]:::cfff6b6
+    x4["Não sei"]:::cdedaff
+    x5{{"🔁 Trocar natureza: Pessoa prensada por estrutura, máquina ou veículo"}}:::troca
+    x6["A árvore já caiu?"]:::cnone
+    x7["Sim"]:::cfff6b6
+    x8["Não"]:::cfff6b6
+    x9["Não sei"]:::cdedaff
+    x10{{"🔁 Trocar natureza: Obstrução de via pública (caiu na via) ou Desabamento (caiu sobre imóvel)"}}:::troca
+    x11{{"🔁 Trocar natureza: Risco de choque elétrico"}}:::troca
+    n8682344 --> n8682345
+    n8682344 --> n8932604
+    n8682344 --> n8932683
+    n8682662 --> n9116647
+    n8682662 --> n9116649
+    n8682662 --> n9116650
+    n8682345 --> n8682662
+    n8932604 --> n8682662
+    n8932683 --> n8682662
+    n9116647 --> n8810289
+    n9116649 --> n8810289
+    n9116650 --> n8810289
+    n8810289 --> n9116885
+    n8810289 --> n9116886
+    n8810289 --> n9116887
+    n9116885 --> n8810604
+    n9116886 --> n8810604
+    n9116887 --> n8810604
+    n8810604 --> n9316173
+    n8810604 --> n9316174
+    n8810604 --> n9316175
+    n9316173 --> n8810831
+    n9316174 --> n8810831
+    n9316175 --> n8810831
+    n8810831 --> n9316605
+    n8810831 --> n9316606
+    n8810831 --> n9316607
+    n9316605 --> n9044757
+    n9316606 --> n9044757
+    n9316607 --> n9044757
+    n8682189 --> x1
+    n9044757 --> n4148864
+    n9044757 --> n4148865
+    n9044757 --> n4148866
+    n9192526 --> n9192757
+    n9192526 --> n9192758
+    n9192526 --> n9192759
+    n9192757 -.-> n9367488
+    n4148864 --> n9192526
+    n4148865 --> n9192526
+    n4148866 --> n9192526
+
+    n9192758 --> n9409218
+    n9192759 --> n9409218
+    n9409218 -.-> n9503416
+    x1 --> x2
+    x1 --> x3
+    x1 --> x4
+    x2 --> x5
+    x3 --> x6
+    x4 --> x6
+    x6 --> x7
+    x6 --> x8
+    x6 --> x9
+    x7 --> x10
+    x8 --> n8682344
+    x9 --> n8682344
+    n9192757 --> x11

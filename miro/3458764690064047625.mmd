@@ -1,0 +1,37 @@
+flowchart TD
+    classDef troca fill:#8f7fee,stroke:#6631d7,color:#ffffff,stroke-width:3px
+    classDef titulo fill:#af7e04,stroke:#1a1a1a,color:#1a1a1a
+    classDef perg fill:#ffffff,stroke:#1a1a1a,color:#1a1a1a
+    classDef opc fill:#fff6b6,stroke:#af7e04,color:#1a1a1a
+    classDef ab fill:#ff6464,stroke:#bd0a0a,color:#1a1a1a
+    classDef recl fill:#f8d3af,stroke:#9b4a08,color:#1a1a1a
+    classDef relato fill:#adf0c7,stroke:#067429,color:#1a1a1a
+    n1["<b>Natureza: Simulado</b>"]:::titulo
+    n2["É um aviso de simulado ou um simulado em andamento?"]:::perg
+    n3("Aviso prévio"):::opc
+    n4("Em andamento"):::opc
+    n5["Instituição, endereço, data / horário e responsável"]:::perg
+    n6("Aberta"):::ab
+    n7["O simulado tem participação do CBMDF autorizada?"]:::perg
+    n8("Sim (referência)"):::opc
+    n9("Não"):::opc
+    n10["Há alguma vítima real ou situação fora do roteiro?"]:::perg
+    n11("Sim"):::opc
+    n12{{"🔁 Trocar natureza: natureza correspondente à emergência real"}}:::troca
+    n13("Não"):::opc
+    n14(["Relato Final"]):::relato
+    n1 --> n2
+    n2 --> n3
+    n2 --> n4
+    n3 --> n5
+    n4 --> n5
+    n5 --> n6
+    n6 --> n7
+    n7 --> n8
+    n7 --> n9
+    n8 --> n10
+    n9 --> n10
+    n10 --> n11
+    n11 --> n12
+    n10 --> n13
+    n13 --> n14

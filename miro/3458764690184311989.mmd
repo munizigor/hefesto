@@ -1,0 +1,113 @@
+flowchart TD
+    classDef troca fill:#8f7fee,stroke:#6631d7,color:#ffffff,stroke-width:3px
+    classDef cffc6c6 fill:#ffc6c6,stroke:#bd0a0a,color:#1a1a1a,stroke-dasharray:5 5
+    classDef ctitulo fill:#af7e04,stroke:#1a1a1a,color:#1a1a1a
+    classDef cnone fill:#ffffff,stroke:#1a1a1a,color:#1a1a1a
+    classDef cfff6b6 fill:#fff6b6,stroke:#af7e04,color:#1a1a1a
+    classDef cff6464 fill:#ff6464,stroke:#bd0a0a,color:#1a1a1a
+    classDef cvideo fill:#2dc75c,stroke:#067429,color:#1a1a1a
+    classDef cffdc4a fill:#ffdc4a,stroke:#af7e04,color:#1a1a1a,stroke-dasharray:5 5
+    classDef cadf0c7 fill:#adf0c7,stroke:#067429,color:#1a1a1a
+    subgraph s7846000["🚒 Despacho imediato"]
+        n8110471["onde ocorreu o afogamento?"]:::cnone
+    end
+    style s7846000 fill:#ffc6c6,stroke:#bd0a0a,stroke-dasharray:5 5
+    subgraph s4947190["🚒 Despacho imediato"]
+        n8305625["Não"]:::cfff6b6
+    end
+    style s4947190 fill:#ffc6c6,stroke:#bd0a0a,stroke-dasharray:5 5
+    n7764470("O socorro já foi acionado e está a caminho. Vou fazer algumas perguntas rápidas para ajudar a equipe. Mantenha a calma e siga minhas orientações, por favor."):::cffc6c6
+    n7770749["<b>Natureza: Afogamento</b>"]:::ctitulo
+    n8110472["Lago"]:::cfff6b6
+    n8110473["Rio"]:::cfff6b6
+    n8110474["Córrego"]:::cfff6b6
+    n8110475["Caixa d´água"]:::cfff6b6
+    n8110476["Piscina"]:::cfff6b6
+    n8666851["Aberta"]:::cff6464
+    n8013299["Qual a situação da pessoa afogada?"]:::cnone
+    n8013581["Afundou"]:::cfff6b6
+    n9408265["Esta na água se debatendo"]:::cfff6b6
+    n1098007["Está boiando"]:::cfff6b6
+    n8013582["Fora da água"]:::cfff6b6
+    n8305457["A pessoa está respirando?"]:::cnone
+    n7911605["Você está no local?"]:::cnone
+    n8428696>"📞 Realize a videochamada e faça as orientações"]:::cvideo
+    n7339423("Não entre na água. Se possível forneça algum material flutunate para a vítima e se for seguro para você remova-a da água. Ex: isopor, corda, pranchas."):::cffdc4a
+    n7911732["Sim"]:::cfff6b6
+    n7911733["Não"]:::cfff6b6
+    n8305611["Sim"]:::cfff6b6
+    n1434716("Permaneça no local exato de onde você viu a pessoa afundar para orientar a equipe que vai te atender."):::cffc6c6
+    n1434713["Você presenciou o ocorrido?"]:::cnone
+    n8240806["Realto final"]:::cadf0c7
+    n4741714("Iremos realizar uma vídeo chamada para orientá-lo(a) até a chegada da guarnição! Mantenha a calma e siga as orientações."):::cffc6c6
+    n8429030["Realto final"]:::cadf0c7
+    n1434714["Sim"]:::cfff6b6
+    n1434715["Não"]:::cfff6b6
+    n2192941("Permaneça no local até a equipe chegar"):::cffc6c6
+    n1434720["A quanto tempo ela está submerssa?"]:::cnone
+    n1434722["Há menos de 1 minuto"]:::cfff6b6
+    n1434726["Entre 1 e 5 minutos"]:::cfff6b6
+    n1434727["Entre 5 e 10 minutos"]:::cfff6b6
+    n1434728["Há mais de 10 minutos"]:::cfff6b6
+    n1434724["Realto final"]:::cadf0c7
+    x1["O corpo está sem sinais de vida há muito tempo (rígido, inchado)?"]:::cnone
+    x2["Sim"]:::cfff6b6
+    x3["Não"]:::cfff6b6
+    x4["Não sei"]:::cdedaff
+    x5{{"🔁 Trocar natureza: Pessoa em óbito evidente (resgate de cadáver)"}}:::troca
+    x6{{"🔁 Trocar natureza: Parada cardiorrespiratória (PCR)"}}:::troca
+    n8013299 --> n8013582
+    n8013299 --> n8013581
+    n8110471 --> n8110476
+    n8110476 --> n8013299
+    n8110471 --> n8110475
+    n8110475 --> n8013299
+    n8110471 --> n8110474
+    n8110474 --> n8013299
+    n8110471 --> n8110473
+    n8110473 --> n8013299
+    n8110471 --> n8110472
+    n7911732 -.-> n7339423
+    n8110472 --> n8013299
+    n7770749 --> n8110471
+    n7911605 --> n7911733
+    n7911605 --> n7911732
+    n8305457 --> n8305625
+    n8305457 --> n8305611
+    n8305625 --> n8429030
+    n8305611 --> n8429030
+    n7764470 -.-> s7846000
+    n8305625 -.-> n8428696
+    n8110471 --> n8666851
+    n8013299 --> n9408265
+    n9408265 --> n7911605
+    n8666851 --> n8013299
+    n8013582 --> n8305457
+    n8013299 --> n1098007
+
+    n1434714 -.-> n1434716
+    n1434713 --> n1434715
+    n1434713 --> n1434714
+    n1434714 --> n1434720
+    n1434720 --> n1434722
+    n1434720 --> n1434728
+    n1434728 --> n1434724
+    n1434720 --> n1434727
+    n1434727 --> n1434724
+    n1434720 --> n1434726
+    n1434726 --> n1434724
+    n1434715 --> n1434724
+    n1434722 --> n1434724
+    n8013581 --> n1434713
+    n7911733 --> n8240806
+    n7911732 --> n8240806
+    n1434715 -.-> n2192941
+    n8305625 -.-> n4741714
+    n1098007 --> x1
+    x1 --> x2
+    x1 --> x3
+    x1 --> x4
+    x2 --> x5
+    x3 --> n7911605
+    x4 --> n7911605
+    n8305625 --> x6

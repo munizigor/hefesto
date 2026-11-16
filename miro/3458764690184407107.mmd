@@ -1,0 +1,59 @@
+flowchart TD
+    classDef troca fill:#8f7fee,stroke:#6631d7,color:#ffffff,stroke-width:3px
+    classDef cfe9f4d fill:#fe9f4d,stroke:#9b4a08,color:#1a1a1a,stroke-dasharray:5 5
+    classDef cffc6c6 fill:#ffc6c6,stroke:#bd0a0a,color:#1a1a1a,stroke-dasharray:5 5
+    classDef ctitulo fill:#af7e04,stroke:#1a1a1a,color:#1a1a1a
+    classDef cnone fill:#ffffff,stroke:#1a1a1a,color:#1a1a1a
+    classDef cfff6b6 fill:#fff6b6,stroke:#af7e04,color:#1a1a1a
+    classDef cdedaff fill:#dedaff,stroke:#6631d7,color:#1a1a1a
+    classDef cvideo fill:#2dc75c,stroke:#067429,color:#1a1a1a
+    classDef cf8d3af fill:#f8d3af,stroke:#9b4a08,color:#1a1a1a
+    classDef cd5f2e0 fill:#d5f2e0,stroke:#067429,color:#1a1a1a
+    subgraph s7609091["🚒 Despacho imediato"]
+        n7608990["<b>Natureza: Parada cardiorrespiratória (PCR)</b>"]:::ctitulo
+    end
+    style s7609091 fill:#ffc6c6,stroke:#bd0a0a,stroke-dasharray:5 5
+    subgraph s3488603["🚒 Despacho imediato"]
+        n7419066["Não"]:::cfff6b6
+        n3609556["Não sei"]:::cdedaff
+    end
+    style s3488603 fill:#ffc6c6,stroke:#bd0a0a,stroke-dasharray:5 5
+    n0355693("ORIENTAÇÃO AO ATENDENTE: AVALIAÇÃO INICIAL Verifique responsividade e respiração normal. Ausência de resposta + ausência de respiração normal = suspeita de PCR. -> Não respira, parou de respirar, faltou ar ->Deitada, caída, caído no chão -> Parada, infarto, ataque cardíaco"):::cfe9f4d
+    n7609475("O socorro já foi acionado e está a caminho. Vou fazer algumas perguntas rápidas para ajudar a equipe. Mantenha a calma e siga minhas orientações, por favor."):::cffc6c6
+    n0674984["Ela está acordada?"]:::cnone
+    n0811182["Sim"]:::cfff6b6
+    n0811183["Não"]:::cfff6b6
+    n3957867["não é uma PCR presumida; realizar a avaliação de emergência clínica/alteração de consciência conforme o protocolo"]:::cnone
+    n4532002["Ela responde quando você chama ou toca nela?"]:::cnone
+    n0960867["O que aconteceu?"]:::cnone
+    n4532257["Sim"]:::cdedaff
+    n4532258["Não"]:::cfff6b6
+    n3488604>"📞 Realize a videochamada e faça as orientações"]:::cvideo
+    n7316981{{"🔁 Trocar natureza: Emergência clínica"}}:::troca
+    n3609169["Respira normalmente?"]:::cnone
+    n3609555["Sim"]:::cdedaff
+    n3488605("Iremos realizar uma vídeo chamada para orientá-lo(a) até a chegada da guarnição! Mantenha a calma e siga as orientações."):::cffc6c6
+    n4409589(["Relato final"]):::cd5f2e0
+    s3488603 -.-> n3488605
+    n7608990 -.-> n0355693
+    n0674984 --> n0811182
+    n0811182 --> n0960867
+    n0674984 --> n0811183
+    n3609169 --> n3609555
+    n3609169 --> n3609556
+    n3609555 -.-> n3957867
+    n3609555 --> n0960867
+    n3609556 --> n4409589
+    n3609556 -.-> n3488604
+    s7609091 -.-> n7609475
+    n7608990 --> n0674984
+    n4532002 --> n4532257
+    n4532002 --> n4532258
+    n4532258 --> n3609169
+    n0811183 --> n4532002
+    n0960867 --> n7316981
+    n7419066 --> n4409589
+    n4532257 --> n0960867
+    n4532257 -.-> n3957867
+    n0811182 -.-> n3957867
+    n3609169 --> n7419066
