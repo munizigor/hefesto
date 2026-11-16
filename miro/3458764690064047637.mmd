@@ -1,0 +1,71 @@
+flowchart TD
+    classDef troca fill:#8f7fee,stroke:#6631d7,color:#ffffff,stroke-width:3px
+    classDef titulo fill:#af7e04,stroke:#1a1a1a,color:#1a1a1a
+    classDef perg fill:#ffffff,stroke:#1a1a1a,color:#1a1a1a
+    classDef opc fill:#fff6b6,stroke:#af7e04,color:#1a1a1a
+    classDef ab fill:#ff6464,stroke:#bd0a0a,color:#1a1a1a
+    classDef desp fill:#ffc6c6,stroke:#bd0a0a,color:#1a1a1a
+    classDef recl fill:#f8d3af,stroke:#9b4a08,color:#1a1a1a
+    classDef relato fill:#adf0c7,stroke:#067429,color:#1a1a1a
+    n1["<b>Natureza: Apoio a outros órgãos</b>"]:::titulo
+    n2["Qual órgão solicita?"]:::perg
+    n3("PMDF"):::opc
+    n4("PCDF"):::opc
+    n5("SAMU"):::opc
+    n6("Defesa Civil"):::opc
+    n7("Concessionária"):::opc
+    n8("Aberta"):::ab
+    n9["Nome, posto / cargo e contato de quem solicita"]:::perg
+    n10("Aberta"):::ab
+    n11["Que apoio é necessário?"]:::perg
+    n12("Iluminação"):::opc
+    n13("Acesso / arrombamento"):::opc
+    n14("Salvamento"):::opc
+    n15("Combate a fogo"):::opc
+    n16("Apoio logístico"):::opc
+    n17("Aberta"):::ab
+    n18["Há vítima ou risco imediato?"]:::perg
+    n19("Sim"):::opc
+    n20{{"🔁 Trocar natureza: natureza correspondente à vítima ou ao risco (despacho imediato)"}}:::troca
+    n21("Não"):::opc
+    n22["Há riscos para a guarnição (área conflagrada, produto perigoso)?"]:::perg
+    n23("Sim"):::opc
+    n24("Não"):::opc
+    n25["🚒 <b>Despacho conforme critério da COCB</b><br/>Fala: O socorro já foi acionado e está a caminho. Vou fazer algumas perguntas rápidas para ajudar a equipe. Mantenha a calma e siga minhas orientações, por favor."]:::desp
+    n26(["Relato Final"]):::relato
+    n1 --> n2
+    n2 --> n3
+    n2 --> n4
+    n2 --> n5
+    n2 --> n6
+    n2 --> n7
+    n2 --> n8
+    n3 --> n9
+    n4 --> n9
+    n5 --> n9
+    n6 --> n9
+    n7 --> n9
+    n8 --> n9
+    n9 --> n10
+    n10 --> n11
+    n11 --> n12
+    n11 --> n13
+    n11 --> n14
+    n11 --> n15
+    n11 --> n16
+    n11 --> n17
+    n12 --> n18
+    n13 --> n18
+    n14 --> n18
+    n15 --> n18
+    n16 --> n18
+    n17 --> n18
+    n18 --> n19
+    n19 --> n20
+    n18 --> n21
+    n21 --> n22
+    n22 --> n23
+    n22 --> n24
+    n23 --> n25
+    n24 --> n25
+    n25 --> n26

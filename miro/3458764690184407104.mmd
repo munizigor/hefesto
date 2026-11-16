@@ -1,0 +1,95 @@
+flowchart TD
+    classDef troca fill:#8f7fee,stroke:#6631d7,color:#ffffff,stroke-width:3px
+    classDef cffc6c6 fill:#ffc6c6,stroke:#bd0a0a,color:#1a1a1a,stroke-dasharray:5 5
+    classDef ctitulo fill:#af7e04,stroke:#1a1a1a,color:#1a1a1a
+    classDef cnone fill:#ffffff,stroke:#1a1a1a,color:#1a1a1a
+    classDef cfff6b6 fill:#fff6b6,stroke:#af7e04,color:#1a1a1a
+    classDef cvideo fill:#2dc75c,stroke:#067429,color:#1a1a1a
+    classDef caf7e04 fill:#af7e04,stroke:#1a1a1a,color:#1a1a1a
+    classDef cd5f2e0 fill:#d5f2e0,stroke:#067429,color:#1a1a1a
+    classDef cdedaff fill:#dedaff,stroke:#6631d7,color:#1a1a1a
+    subgraph s5561902["🚒 Despacho imediato"]
+        n5463866["Não"]:::cfff6b6
+    end
+    style s5561902 fill:#ffc6c6,stroke:#bd0a0a,stroke-dasharray:5 5
+    subgraph s4841125["🚒 Despacho imediato"]
+        n1466212["<b>Natureza: Obstrução de vias aéreas (OVACE)</b>"]:::ctitulo
+    end
+    style s4841125 fill:#ffc6c6,stroke:#bd0a0a,stroke-dasharray:5 5
+    subgraph s8341552["🚒 Despacho imediato"]
+        n8341555["Não"]:::cfff6b6
+    end
+    style s8341552 fill:#ffc6c6,stroke:#bd0a0a,stroke-dasharray:5 5
+    n6423514("O socorro já foi acionado e está a caminho. Vou fazer algumas perguntas rápidas para ajudar a equipe. Mantenha a calma e siga minhas orientações, por favor."):::cffc6c6
+    n4841638["A vítima é:"]:::cnone
+    n5038085["Lactente"]:::cfff6b6
+    n5038259["Criança"]:::cfff6b6
+    n5038086["Adulto"]:::cfff6b6
+    n5038087["Idoso"]:::cfff6b6
+    n8235606["Ela está acordada?"]:::cnone
+    n7024274("Iremos realizar uma vídeo chamada para orientá-lo(a) até a chegada da guarnição! Mantenha a calma e siga as orientações."):::cffc6c6
+    n8341249["Sim"]:::cfff6b6
+    n8341250["Não"]:::cfff6b6
+    n5684928["Vítima consegue chorar, tossir ou emitir sons?"]:::cnone
+    n5128304["Vítima consegue falar, tossir ou emitir sons?"]:::cnone
+    n8341553["Vítima respira?"]:::cnone
+    n5823168["Sim"]:::cfff6b6
+    n5823169["Não"]:::cfff6b6
+    n5561044>"📞 Realize a videochamada e faça as orientações"]:::cvideo
+    n5214363["Sim"]:::cfff6b6
+    n5214364["Não"]:::cfff6b6
+    n8341554["Sim"]:::cfff6b6
+    n8341558{{"🔁 Trocar natureza: Parada cardiorrespiratória (PCR)"}}:::troca
+    n5823248["Está com a face e os lábios arroxeados?"]:::cnone
+    n7024033(["Relato final"]):::cd5f2e0
+    n5823596["Sim"]:::cfff6b6
+    n5823597["Não"]:::cdedaff
+    n5561507("Iremos realizar uma vídeo chamada para orientá-lo(a) até a chegada da guarnição! Mantenha a calma e siga as orientações."):::cffc6c6
+    n8341561>"📞 Realize a videochamada e faça as orientações"]:::cvideo
+    n6270887>"📞 Realize a videochamada e faça as orientações"]:::cvideo
+    n5327654["Vítima respira?"]:::cnone
+    n5463865["Sim"]:::cfff6b6
+    n5561739{{"🔁 Trocar natureza: Parada cardiorrespiratória (PCR)"}}:::troca
+    n5684202(["Relato final"]):::cd5f2e0
+    n1466212 --> n4841638
+    n4841638 --> n5038085
+    n4841638 --> n5038259
+    n4841638 --> n5038086
+    n4841638 --> n5038087
+    n5038259 --> n8235606
+    n5038086 --> n8235606
+    n5038087 --> n8235606
+    n5128304 --> n5214363
+    n5128304 --> n5214364
+    n5214364 --> n5327654
+    n5327654 --> n5463865
+    n5327654 --> n5463866
+    n5463866 --> n5561739
+    n5463865 --> n5684202
+    n5463866 --> n5684202
+    n5038085 --> n5684928
+    n5684928 --> n5823168
+    n5684928 --> n5823169
+    n5823168 --> n5823248
+    n5823169 --> n5823248
+    n5823248 --> n5823596
+    n5823248 --> n5823597
+    n5823597 --> n5327654
+    n5823596 --> n5327654
+    n5128304 -.-> n5561044
+    n5684928 -.-> n5561044
+    n5561044 -.-> n5561507
+    s4841125 -.-> n6423514
+    n5463866 -.-> n6270887
+    n5214363 --> n5327654
+    n8235606 --> n8341249
+    n8235606 --> n8341250
+    n8341553 --> n8341554
+    n8341553 --> n8341555
+    n8341555 --> n8341558
+    n8341555 --> n7024033
+    n8341558 -.-> n8341561
+    n8341250 --> n8341553
+    n8341249 --> n5128304
+    n8341554 --> n7024033
+    n8341558 -.-> n7024274

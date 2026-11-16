@@ -1,0 +1,112 @@
+flowchart TD
+    classDef troca fill:#8f7fee,stroke:#6631d7,color:#ffffff,stroke-width:3px
+    classDef titulo fill:#af7e04,stroke:#1a1a1a,color:#1a1a1a
+    classDef perg fill:#ffffff,stroke:#1a1a1a,color:#1a1a1a
+    classDef opc fill:#fff6b6,stroke:#af7e04,color:#1a1a1a
+    classDef ns fill:#dedaff,stroke:#6631d7,color:#1a1a1a
+    classDef ab fill:#ff6464,stroke:#bd0a0a,color:#1a1a1a
+    classDef desp fill:#ffc6c6,stroke:#bd0a0a,color:#1a1a1a
+    classDef acao fill:#ffffff,stroke:#757575,color:#1a1a1a
+    classDef orient fill:#ffdc4a,stroke:#af7e04,color:#1a1a1a
+    classDef relato fill:#adf0c7,stroke:#067429,color:#1a1a1a
+    n1["<b>Natureza: Incêndio em vegetação</b>"]:::titulo
+    n2["O fogo está em qual tipo de área?"]:::perg
+    n3("Lote / terreno urbano"):::opc
+    n4("Área rural / chácara"):::opc
+    n5("Parque / reserva"):::opc
+    n6("Margem de rodovia"):::opc
+    n7("Aberta"):::ab
+    n8["🚒 <b>Despacho imediato</b><br/>Fala: O socorro já foi acionado e está a caminho. Vou fazer algumas perguntas rápidas para ajudar a equipe. Mantenha a calma e siga minhas orientações, por favor."]:::desp
+    n9["O fogo está perto de casas, pessoas, animais ou rede elétrica?"]:::perg
+    n10("Sim"):::opc
+    n11["A que distância o fogo está das casas?"]:::perg
+    n12("Não"):::opc
+    n13("Não sabe"):::ns
+    n14["Qual o tamanho aproximado da área queimando?"]:::perg
+    n15("Pequena (até um lote)"):::opc
+    n16("Média (vários lotes)"):::opc
+    n17("Grande (não dá para ver o fim)"):::opc
+    n18["O fogo está se espalhando rápido?"]:::perg
+    n19("Sim"):::opc
+    n20("Não"):::opc
+    n21("Não sabe"):::ns
+    n22["Há alguém ferido ou cercado pelo fogo?"]:::perg
+    n23("Sim"):::opc
+
+    n25("Não"):::opc
+    n26["Por onde a viatura consegue chegar? (portão, estrada de terra, referência)"]:::perg
+    n27("Aberta"):::ab
+    n28("<b>Orientação ao solicitante:</b> Afaste-se do fogo e da fumaça, fique contra o vento. Não tente apagar se o fogo estiver grande."):::orient
+    n29(["Relato Final"]):::relato
+    x1["O fogo já atingiu alguma casa ou construção?"]:::perg
+    x2["Sim"]:::opc
+    x3["Não"]:::opc
+    x4["Não sei"]:::ns
+    x5{{"🔁 Trocar natureza: Incêndio em edificação"}}:::troca
+    x6["O fogo atingiu algum veículo?"]:::perg
+    x7["Sim"]:::opc
+    x8["Não"]:::opc
+    x9["Não sei"]:::ns
+    x10{{"🔁 Trocar natureza: Incêndio em meio de transporte"}}:::troca
+    x11["Encostando"]:::opc
+    x12["Menos de 50 metros"]:::opc
+    x13["Mais de 50 metros"]:::opc
+    x14["Não sei"]:::ns
+    n1 --> n2
+    n2 --> n3
+    n2 --> n4
+    n2 --> n5
+    n2 --> n6
+    n2 --> n7
+    n3 --> n8
+    n4 --> n8
+    n5 --> n8
+    n6 --> n8
+    n7 --> n8
+    n8 --> x1
+    n9 --> n10
+    n10 --> n11
+    n9 --> n12
+    n9 --> n13
+
+    n12 --> n14
+    n13 --> n14
+    n14 --> n15
+    n14 --> n16
+    n14 --> n17
+    n15 --> n18
+    n16 --> n18
+    n17 --> n18
+    n18 --> n19
+    n18 --> n20
+    n18 --> n21
+    n19 --> n22
+    n20 --> n22
+    n21 --> n22
+    n22 --> n23
+    n22 --> n25
+    n25 --> n26
+    n26 --> n27
+    n27 -.-> n28
+    n28 --> n29
+    x1 --> x2
+    x1 --> x3
+    x1 --> x4
+    x2 --> x5
+    x3 --> x6
+    x4 --> x6
+    x6 --> x7
+    x6 --> x8
+    x6 --> x9
+    x7 --> x10
+    x8 --> n9
+    x9 --> n9
+    n23 --> n26
+    n11 --> x11
+    n11 --> x12
+    n11 --> x13
+    n11 --> x14
+    x11 --> n14
+    x12 --> n14
+    x13 --> n14
+    x14 --> n14

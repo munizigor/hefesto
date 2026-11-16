@@ -1,0 +1,136 @@
+flowchart TD
+    classDef troca fill:#8f7fee,stroke:#6631d7,color:#ffffff,stroke-width:3px
+    classDef ctitulo fill:#af7e04,stroke:#1a1a1a,color:#1a1a1a
+    classDef cffc6c6 fill:#ffc6c6,stroke:#bd0a0a,color:#1a1a1a,stroke-dasharray:5 5
+    classDef cnone fill:#ffffff,stroke:#1a1a1a,color:#1a1a1a
+    classDef cfff6b6 fill:#fff6b6,stroke:#af7e04,color:#1a1a1a
+    classDef cdedaff fill:#dedaff,stroke:#6631d7,color:#1a1a1a
+    classDef cadf0c7 fill:#adf0c7,stroke:#067429,color:#1a1a1a
+    classDef caf7e04 fill:#af7e04,stroke:#1a1a1a,color:#1a1a1a
+    classDef cvideo fill:#2dc75c,stroke:#067429,color:#1a1a1a
+    subgraph s2180184["🚒 Despacho imediato"]
+        n3097156["Sim"]:::cdedaff
+    end
+    style s2180184 fill:#ffc6c6,stroke:#bd0a0a,stroke-dasharray:5 5
+    subgraph s3097632["🚒 Despacho imediato"]
+        n3097157["Não"]:::cfff6b6
+    end
+    style s3097632 fill:#ffc6c6,stroke:#bd0a0a,stroke-dasharray:5 5
+    n1689594["<b>Natureza: Fratura, luxação ou entorse</b>"]:::ctitulo
+    n2180540("O socorro já foi acionado e está a caminho. Vou fazer algumas perguntas rápidas para ajudar a equipe. Mantenha a calma e siga minhas orientações, por favor."):::cffc6c6
+    n2593130["Qual parte do corpo está machucada?"]:::cnone
+    n2593611["Braço/mão"]:::cfff6b6
+    n2593612["Perna/pé"]:::cfff6b6
+    n2593613["Ombro"]:::cfff6b6
+    n2593614["Quadril"]:::cfff6b6
+    n2593915["Coluna/pescoço"]:::cfff6b6
+    n2593578["Tronco/Abdômem"]:::cfff6b6
+    n2702148["Outra"]:::cdedaff
+    n5093655("Iremos realizar uma vídeo chamada para orientá-lo(a) até a chegada da guarnição! Mantenha a calma e siga as orientações."):::cffc6c6
+    n3008171["Vítima respira?"]:::cnone
+    n2275699["Realto final"]:::cadf0c7
+    n2702778["Há deformidade?"]:::cnone
+    n3097437{{"🔁 Trocar natureza: Parada Cárdiorespiratória (PCR)"}}:::troca
+    n3097436>"📞 Realize a videochamada e faça as orientações"]:::cvideo
+    n2802141["Sim"]:::cfff6b6
+    n2802282["Há osso exposto?"]:::cnone
+    n2802142["Não"]:::cfff6b6
+    n2802771["Não sei"]:::cdedaff
+    n2887174["Sim"]:::cfff6b6
+    n2887175["Não"]:::cfff6b6
+    n2887176["Não sei"]:::cdedaff
+    n2887315["Há sangramento?"]:::cnone
+    n2887601["Intenso ou controlado?"]:::cnone
+    n2887496["Sim"]:::cfff6b6
+    n2887497["Não"]:::cfff6b6
+    n2887498["Não sei"]:::cdedaff
+    n2887781["Intenso"]:::cfff6b6
+    n2887782["Controlado"]:::cfff6b6
+    n3220258["Há outras lesões?"]:::cnone
+    n3220539["Sim"]:::cfff6b6
+    n3220540["Não"]:::cfff6b6
+    n3220915["Não sei"]:::cfff6b6
+    n3097441(["Relato final"]):::cadf0c7
+    x1["Outra pessoa causou a lesão?"]:::cnone
+    x2["Sim"]:::cfff6b6
+    x3["Não"]:::cfff6b6
+    x4["Não sei"]:::cdedaff
+    x5{{"🔁 Trocar natureza: Agressão física"}}:::troca
+    x6["Foi acidente de trânsito?"]:::cnone
+    x7["Sim"]:::cfff6b6
+    x8["Não"]:::cfff6b6
+    x9["Não sei"]:::cdedaff
+    x10{{"🔁 Trocar natureza: Acidente de trânsito com vítima"}}:::troca
+    x11["A lesão foi causada por queda de altura?"]:::cnone
+    x12["Sim"]:::cfff6b6
+    x13["Não"]:::cfff6b6
+    x14["Não sei"]:::cdedaff
+    x15{{"🔁 Trocar natureza: Queda de plano elevado"}}:::troca
+    n2180540 -.-> s2180184
+    n2593130 --> n2702148
+    n2593130 --> n2593915
+    n2593130 --> n2593614
+    n2593130 --> n2593613
+    n2593130 --> n2593612
+    n2593130 --> n2593611
+    n2593915 --> n3008171
+    n2593614 --> n3008171
+    n2593613 --> n3008171
+    n2593612 --> n3008171
+    n2593611 --> n3008171
+    n2702778 --> n2802142
+    n2702778 --> n2802141
+    n2802142 --> n2802282
+    n2802141 --> n2802282
+    n2702778 --> n2802771
+    n2802771 --> n2802282
+    n2802282 --> n2887176
+    n2802282 --> n2887175
+    n2802282 --> n2887174
+    n2887315 --> n2887498
+    n2887315 --> n2887497
+    n2887315 --> n2887496
+    n2887496 --> n2887601
+    n2887601 --> n2887782
+    n2887601 --> n2887781
+    n2887498 --> n3220258
+    n2887497 --> n3220258
+    n2887781 --> n3220258
+    n3008171 --> n3097157
+    n3008171 --> n3097156
+    n3097157 -.-> n3097437
+    n2593130 --> n2593578
+    n2887176 --> n2887315
+    n2887175 --> n2887315
+    n2887174 --> n2887315
+    n1689594 --> x1
+    s3097632 -.-> n5093655
+    s3097632 -.-> n3097436
+    n3097156 --> n2702778
+    n2887782 --> n3220258
+    n3220540 --> n3097441
+    n3220258 --> n3220540
+    n3220539 --> n3097441
+    n3220258 --> n3220539
+    n3220915 --> n3097441
+    n3220258 --> n3220915
+    n3097436 --> n3097441
+    n3097157 --> n2275699
+    x1 --> x2
+    x1 --> x3
+    x1 --> x4
+    x2 --> x5
+    x3 --> x6
+    x4 --> x6
+    x6 --> x7
+    x6 --> x8
+    x6 --> x9
+    x7 --> x10
+    x8 --> x11
+    x9 --> x11
+    x11 --> x12
+    x11 --> x13
+    x11 --> x14
+    x12 --> x15
+    x13 --> n2593130
+    x14 --> n2593130

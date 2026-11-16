@@ -1,0 +1,64 @@
+flowchart TD
+    classDef troca fill:#8f7fee,stroke:#6631d7,color:#ffffff,stroke-width:3px
+    classDef titulo fill:#af7e04,stroke:#1a1a1a,color:#1a1a1a
+    classDef perg fill:#ffffff,stroke:#1a1a1a,color:#1a1a1a
+    classDef opc fill:#fff6b6,stroke:#af7e04,color:#1a1a1a
+    classDef ab fill:#ff6464,stroke:#bd0a0a,color:#1a1a1a
+    classDef desp fill:#ffc6c6,stroke:#bd0a0a,color:#1a1a1a
+    classDef recl fill:#f8d3af,stroke:#9b4a08,color:#1a1a1a
+    classDef orient fill:#ffdc4a,stroke:#af7e04,color:#1a1a1a
+    classDef relato fill:#adf0c7,stroke:#067429,color:#1a1a1a
+    n1["<b>Natureza: Pessoa com necessidade de auxílio para movimentação</b>"]:::titulo
+    n2["A pessoa caiu agora ou só precisa de ajuda para ser levantada / transportada?"]:::perg
+    n3("Caiu agora"):::opc
+    n4{{"🔁 Trocar natureza: Queda da própria altura"}}:::troca
+    n5("Só precisa de ajuda"):::opc
+    n6["A pessoa está acordada e falando normalmente?"]:::perg
+    n7("Sim"):::opc
+    n8("Não"):::opc
+    n9{{"🔁 Trocar natureza: Emergência clínica"}}:::troca
+    n10["Qual o peso aproximado?"]:::perg
+    n11("Até 100 kg"):::opc
+    n12("100 a 150 kg"):::opc
+    n13("Mais de 150 kg"):::opc
+    n14["Onde está?"]:::perg
+    n15("Chão / cama"):::opc
+    n16("Banheiro"):::opc
+    n17("Escada / andar sem elevador"):::opc
+    n18("Aberta"):::ab
+    n19["Há alguém com ela?"]:::perg
+    n20("Sim"):::opc
+    n21("Não"):::opc
+    n22["🚒 <b>Despacho conforme critério da COCB</b><br/>Fala: O socorro já foi acionado e está a caminho. Vou fazer algumas perguntas rápidas para ajudar a equipe. Mantenha a calma e siga minhas orientações, por favor."]:::desp
+    n23("<b>Orientação ao solicitante:</b> Não tente levantar sozinho. Cubra a pessoa para mantê-la aquecida."):::orient
+    n24(["Relato Final"]):::relato
+    n1 --> n2
+    n2 --> n3
+    n3 --> n4
+    n2 --> n5
+
+    n5 --> n6
+    n6 --> n7
+    n6 --> n8
+    n8 --> n9
+    n7 --> n10
+    n10 --> n11
+    n10 --> n12
+    n10 --> n13
+    n11 --> n14
+    n12 --> n14
+    n13 --> n14
+    n14 --> n15
+    n14 --> n16
+    n14 --> n17
+    n14 --> n18
+    n15 --> n19
+    n16 --> n19
+    n17 --> n19
+    n18 --> n19
+    n19 --> n20
+    n19 --> n21
+    n20 --> n22
+    n21 --> n22
+    n22 -.-> n23
+    n23 --> n24

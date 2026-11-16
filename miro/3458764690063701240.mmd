@@ -1,0 +1,81 @@
+flowchart TD
+    classDef troca fill:#8f7fee,stroke:#6631d7,color:#ffffff,stroke-width:3px
+    classDef titulo fill:#af7e04,stroke:#1a1a1a,color:#1a1a1a
+    classDef perg fill:#ffffff,stroke:#1a1a1a,color:#1a1a1a
+    classDef opc fill:#fff6b6,stroke:#af7e04,color:#1a1a1a
+    classDef ab fill:#ff6464,stroke:#bd0a0a,color:#1a1a1a
+    classDef desp fill:#ffc6c6,stroke:#bd0a0a,color:#1a1a1a
+    classDef acao fill:#ffffff,stroke:#757575,color:#1a1a1a
+    classDef orient fill:#ffdc4a,stroke:#af7e04,color:#1a1a1a
+    classDef relato fill:#adf0c7,stroke:#067429,color:#1a1a1a
+    n1["<b>Natureza: Pessoa trancada / acesso bloqueado</b>"]:::titulo
+    n2["Quem está trancado?"]:::perg
+    n3("Criança"):::opc
+    n4("Idoso / pessoa doente"):::opc
+    n5("Adulto"):::opc
+    n6("Animal"):::opc
+    n7("Aberta"):::ab
+    n8["Onde?"]:::perg
+    n9("Casa / apartamento"):::opc
+    n10("Veículo"):::opc
+    n11("Banheiro / cômodo"):::opc
+    n12("Aberta"):::ab
+    n13["A pessoa está em risco agora?"]:::perg
+    n14("Sem resposta / passando mal"):::opc
+    n16("Fogo ou gás ligado"):::opc
+    n18("Criança ou animal em carro fechado"):::opc
+    n19["🚒 Despacho imediato"]:::desp
+    n20("Não há risco"):::opc
+    n21["Orientar chaveiro. Despacho conforme critério da COCB"]:::acao
+    n22["Há quanto tempo?"]:::perg
+    n23("Menos de 15 min"):::opc
+    n24("15 a 60 min"):::opc
+    n25("Mais de 1 h"):::opc
+    n26["Existe chave reserva, porteiro ou síndico no local?"]:::perg
+    n27("Sim"):::opc
+    n28("Não"):::opc
+    n29("<b>Orientação ao solicitante:</b> Converse com a pessoa e mantenha-a calma. Em carro ao sol, faça sombra no vidro."):::orient
+    n30(["Relato Final"]):::relato
+    x1{{"🔁 Trocar natureza: Incêndio em edificação (fogo) ou Vazamento de gás / GLP (gás)"}}:::troca
+    x2{{"🔁 Trocar natureza: Emergência clínica (se não respira: Parada cardiorrespiratória (PCR))"}}:::troca
+    n1 --> n2
+    n2 --> n3
+    n2 --> n4
+    n2 --> n5
+    n2 --> n6
+    n2 --> n7
+    n3 --> n8
+    n4 --> n8
+    n5 --> n8
+    n6 --> n8
+    n7 --> n8
+    n8 --> n9
+    n8 --> n10
+    n8 --> n11
+    n8 --> n12
+    n9 --> n13
+    n10 --> n13
+    n11 --> n13
+    n12 --> n13
+    n13 --> n14
+    n13 --> n16
+    n13 --> n18
+    n18 --> n19
+    n13 --> n20
+    n20 --> n21
+
+    n19 --> n22
+    n21 --> n22
+    n22 --> n23
+    n22 --> n24
+    n22 --> n25
+    n23 --> n26
+    n24 --> n26
+    n25 --> n26
+    n26 --> n27
+    n26 --> n28
+    n27 -.-> n29
+    n28 -.-> n29
+    n29 --> n30
+    n16 --> x1
+    n14 --> x2

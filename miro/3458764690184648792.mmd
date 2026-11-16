@@ -1,0 +1,881 @@
+flowchart TD
+    classDef troca fill:#8f7fee,stroke:#6631d7,color:#ffffff,stroke-width:3px
+    classDef ctitulo fill:#af7e04,stroke:#1a1a1a,color:#1a1a1a
+    classDef cnone fill:#ffffff,stroke:#1a1a1a,color:#1a1a1a
+    classDef cfff6b6 fill:#fff6b6,stroke:#af7e04,color:#1a1a1a
+    classDef cbd0a0a fill:#bd0a0a,stroke:#760000,color:#ffffff
+    classDef cff9e9e fill:#ff9e9e,stroke:#bd0a0a,color:#1a1a1a,stroke-dasharray:5 5
+    classDef caf7e04 fill:#af7e04,stroke:#1a1a1a,color:#1a1a1a
+    classDef cdedaff fill:#dedaff,stroke:#6631d7,color:#1a1a1a
+    classDef cffdc4a fill:#ffdc4a,stroke:#af7e04,color:#1a1a1a,stroke-dasharray:5 5
+    classDef c9b4a08 fill:#9b4a08,stroke:#1a1a1a,color:#ffffff
+    classDef cadf0c7 fill:#adf0c7,stroke:#067429,color:#1a1a1a
+    classDef cc6dcff fill:#c6dcff,stroke:#305bab,color:#1a1a1a
+    classDef c659df2 fill:#659df2,stroke:#305bab,color:#ffffff
+    subgraph s1392817["🚒 Despacho imediato"]
+        n8494237["Não sei"]:::cfff6b6
+    end
+    style s1392817 fill:#ffc6c6,stroke:#bd0a0a,stroke-dasharray:5 5
+    subgraph s8494211["🚒 Despacho imediato"]
+        n8494221["Sim"]:::cfff6b6
+    end
+    style s8494211 fill:#ffc6c6,stroke:#bd0a0a,stroke-dasharray:5 5
+    subgraph s8494236["🚒 Despacho imediato"]
+        n8494256["3 ou mais"]:::cfff6b6
+        n8494253["1"]:::cfff6b6
+        n8494255["2"]:::cfff6b6
+    end
+    style s8494236 fill:#ffc6c6,stroke:#bd0a0a,stroke-dasharray:5 5
+    subgraph s3264865["🚒 Despacho imediato"]
+        n3264878["Sim"]:::cfff6b6
+    end
+    style s3264865 fill:#ffc6c6,stroke:#bd0a0a,stroke-dasharray:5 5
+    subgraph s3264034["🚒 Despacho imediato"]
+        n3190974["Sim"]:::cfff6b6
+    end
+    style s3264034 fill:#ffc6c6,stroke:#bd0a0a,stroke-dasharray:5 5
+    subgraph s4597824["🚒 Despacho imediato"]
+        n4597825["Sim"]:::cfff6b6
+    end
+    style s4597824 fill:#ffc6c6,stroke:#bd0a0a,stroke-dasharray:5 5
+    subgraph s0218989["🚒 Despacho imediato"]
+        n4305011["Não"]:::cdedaff
+        n4467331["Não"]:::cdedaff
+        n4305012["Sim"]:::cfff6b6
+        n4467330["Sim"]:::cfff6b6
+    end
+    style s0218989 fill:#ffc6c6,stroke:#bd0a0a,stroke-dasharray:5 5
+    subgraph s9913807["🚒 Despacho imediato"]
+        n9759001["Sim"]:::cfff6b6
+    end
+    style s9913807 fill:#ffc6c6,stroke:#bd0a0a,stroke-dasharray:5 5
+    n8942959["<b>Natureza: Acidente de trânsito</b>"]:::ctitulo
+    n9057427["Quais tipos de veículos estão envolvidos?"]:::cnone
+    n9057714["Carro"]:::cfff6b6
+    n9141989["Moto"]:::cfff6b6
+    n1030028["Ônibus"]:::cfff6b6
+    n1030079["Bicicleta"]:::cfff6b6
+    n9141938["Metrô"]:::cfff6b6
+    n9142093["Trem"]:::cfff6b6
+    n2751055["Patinete"]:::cfff6b6
+    n9142192["Caminhão*"]:::cfff6b6
+    n8606270["Quando selecionado Caminhão e outros veículos seguir fluxo do caminhão"]:::cbd0a0a
+    n9142720["Tem vítimas precisando de atendimento?"]:::cnone
+    n8494216["Tem vítimas precisando de atendimento?"]:::cnone
+    n7383222("O socorro já foi acionado e está a caminho. Vou fazer algumas perguntas rápidas para ajudar a equipe. Mantenha a calma e siga minhas orientações, por favor."):::cff9e9e
+    n5597661["Há fumaça, princípio de incêndio ou fogo?"]:::cnone
+    n8943651["Não"]:::cfff6b6
+    n4503447["Há fumaça, princípio de incêndio ou fogo?"]:::cnone
+    n0325606["Não sei"]:::cfff6b6
+    n6105468("O socorro já foi acionado e está a caminho. Vou fazer algumas perguntas rápidas para ajudar a equipe. Mantenha a calma e siga minhas orientações, por favor."):::cff9e9e
+    n8494212["Sim"]:::cfff6b6
+    n8494213["Não"]:::cfff6b6
+    n1501932{{"🔁 Trocar natureza: Acidente de Trânsito"}}:::troca
+    n5597663["Sim"]:::cfff6b6
+    n5597665["Não"]:::cdedaff
+    n5597708["Houve colisão com poste de energia ou há risco de choque elétrico?"]:::cnone
+    n8943401["Sim"]:::cfff6b6
+    n4417609("O socorro já foi acionado e está a caminho. Vou fazer algumas perguntas rápidas para ajudar a equipe. Mantenha a calma e siga minhas orientações, por favor."):::cff9e9e
+    n5597694["Houve colisão com poste de energia ou há risco de choque elétrico?"]:::cnone
+    n1684759("Atenção ao risco de choque elétrico: não se aproxime e mantenha todos afastados. Caso tenha alguém no veículo, grite de uma distância segura para que permaneçam no interior, sem abrir as portas. Aguarde o socorro no local."):::cffdc4a
+    n5597707["Sim"]:::cfff6b6
+    n5597711["Não"]:::cdedaff
+    n4417252("O socorro já foi acionado e está a caminho. Vou fazer algumas perguntas rápidas para ajudar a equipe. Mantenha a calma e siga minhas orientações, por favor."):::cff9e9e
+    n8943761["Quantas pessoas precisam de atendimento?"]:::cnone
+    n9640723["Há fumaça, princípio de incêndio ou fogo?"]:::cnone
+    n4597826["Não"]:::cdedaff
+    n4597827{{"🔁 Trocar natureza: Incêndio em veículo"}}:::troca
+    n8494214["Quantas pessoas precisam de atendimento?"]:::cnone
+    n5597749("O socorro já foi acionado e está a caminho. Vou fazer algumas perguntas rápidas para ajudar a equipe. Mantenha a calma e siga minhas orientações, por favor."):::cff9e9e
+    n5597693["Sim"]:::cfff6b6
+    n5597697["Não"]:::cdedaff
+    n5597757["Visualiza vazamento ou derramamento de combustível ou outro produto químico do caminhão?"]:::cnone
+    n1439390["1"]:::cfff6b6
+    n1439423["2"]:::cfff6b6
+    n1439492["3"]:::cfff6b6
+    n2258748["4"]:::cfff6b6
+    n2258805["5ou mais"]:::cfff6b6
+    n9759041["Não"]:::cdedaff
+    n4117377["Algum veículo está capotado?"]:::cnone
+    n3338525["Houve colisão com poste de energia ou há risco de choque elétrico?"]:::cnone
+    n8494329{{"🔁 Trocar natureza: Acidente de trânsito com vítima"}}:::troca
+    n5597699["Algum veículo envolvido é elétrico?"]:::cnone
+    n5597737["Algum veículo envolvido é elétrico?"]:::cnone
+    n0219699{{"🔁 Trocar natureza: Pessoa atropelada"}}:::troca
+    n4467093["A vítima foi atropelada?"]:::cnone
+    n4158335["Alguma vítima foi atropelada?"]:::cnone
+    n0219891{{"🔁 Trocar natureza: Pessoa atropelada"}}:::troca
+    n7129061{{"🔁 Trocar natureza: Incêndio em meio de transporte"}}:::troca
+    n1443795["Houve colisão com poste de energia ou há risco de choque elétrico?"]:::cnone
+    n3085716["Houve colisão com poste de energia ou há risco de choque elétrico?"]:::cnone
+    n4117378["Sim"]:::cfff6b6
+    n4117379["Não"]:::cdedaff
+    n3338527["Não"]:::cdedaff
+    n3338530["Algum veículo envolvido é elétrico?"]:::cnone
+    n3338524["Sim"]:::cfff6b6
+    n8494348["A vítima foi atropelada?"]:::cnone
+    n5597702["Sim"]:::cfff6b6
+    n5597703["Não"]:::cdedaff
+    n5597745["Não Sei"]:::cdedaff
+    n5597738["Sim"]:::cfff6b6
+    n5597739["Não"]:::cdedaff
+    n5597747["Não sei"]:::cdedaff
+    n6853366{{"🔁 Trocar natureza: Acidente de trânsito com vítima"}}:::troca
+    n3824378["Ela está desacordada?"]:::cnone
+    n1443794["Sim"]:::cfff6b6
+    n1443844["Não"]:::cdedaff
+    n3085718["Não"]:::cdedaff
+    n3085747["Sim"]:::cfff6b6
+    n3338531["Sim"]:::cfff6b6
+    n3338532["Não"]:::cdedaff
+    n3338539["Não sei"]:::cdedaff
+    n8494350["Sim"]:::cfff6b6
+    n8494351["Não"]:::cdedaff
+    n8494341["Alguma vítima foi atropelada?"]:::cnone
+    n6105801("O socorro já foi acionado e está a caminho. Vou fazer algumas perguntas rápidas para ajudar a equipe. Mantenha a calma e siga minhas orientações, por favor."):::cff9e9e
+    n5597688["Visualiza derramamento ou vazamento de combustível ou outro produto químico do caminhão??"]:::cnone
+    n5597667["Visualiza vazamento ou derramamento de combustível ou outro produto químico do caminhão?"]:::cnone
+    n9844749["Sim"]:::cfff6b6
+    n9533698["Ela está dentro do veículo?"]:::cnone
+    n9964007["Não"]:::cfff6b6
+    n9533697["Alguma vítima está dentro do veículo?"]:::cnone
+    n3824449["Sim"]:::cfff6b6
+    n3824450["Não"]:::cdedaff
+    n3824451["Não sei"]:::cdedaff
+    n2118577["Algum veículo envolvido é elétrico?"]:::cnone
+    n4708827["Realto final"]:::cadf0c7
+    n4751903["O acidente envolveu algum animal"]:::cnone
+    n8494263["Ela está dentro do veículo?"]:::cnone
+    n8494344["Sim"]:::cfff6b6
+    n8494345["Não"]:::cdedaff
+    n4724472("O socorro já foi acionado e está a caminho. Vou fazer algumas perguntas rápidas para ajudar a equipe. Mantenha a calma e siga minhas orientações, por favor."):::cff9e9e
+    n5597690["Sim"]:::cfff6b6
+    n5597689["Não"]:::cdedaff
+    n5597716["Sim"]:::cfff6b6
+    n5369294["O acidente envolveu algum animal"]:::cnone
+    n5597760["Não"]:::cdedaff
+    n9533694["Ela está presa no veículo?"]:::cnone
+    n0753492["Sim"]:::cfff6b6
+    n0753493["Não"]:::cfff6b6
+    n2118578["Sim"]:::cfff6b6
+    n2118579["Não"]:::cdedaff
+    n5651206["Não sei"]:::cdedaff
+    n4708908{{"🔁 Trocar natureza: Acidente de trânsito"}}:::troca
+    n3219627["Algum veículo envolvido é elétrico?"]:::cnone
+    n4751904["Sim"]:::cfff6b6
+    n4751902(["Relato final"]):::cadf0c7
+    n4751905["Não"]:::cdedaff
+    n8494260["Ela está presa no veículo?"]:::cnone
+    n8494269["Sim"]:::cfff6b6
+    n8494272["Não"]:::cfff6b6
+    n8494262["Alguma vítima está dentro do veículo?"]:::cnone
+    n8494219["Há fumaça, princípio de incêndio ou fogo?"]:::cnone
+    n5252374["O acidente envolveu algum animal"]:::cnone
+    n5597677["O vazamento/derramamento é da carga do caminhão?"]:::cnone
+    n5597668["Sim"]:::cfff6b6
+    n5597669["Não"]:::cdedaff
+    n5597720["O vazamento/derramamento é da carga do caminhão?"]:::cnone
+    n5369295["Sim"]:::cfff6b6
+    n5369296["Não"]:::cdedaff
+    n9964569["Sim"]:::cfff6b6
+    n9964801["Não"]:::cfff6b6
+    n9964887["Não sei"]:::cfff6b6
+    n9533701["Alguma vítima está presa no veículo?"]:::cnone
+    n4094374["O acidente envolveu algum animal?"]:::cnone
+    n3219634("Atenção ao risco de choque elétrico: não se aproxime e mantenha todos afastados. Caso tenha alguém no veículo, grite de uma distância segura para que permaneçam no interior, sem abrir as portas. Aguarde o socorro no local."):::cffdc4a
+    n8494274["Sim"]:::cfff6b6
+    n8494276["Não"]:::cfff6b6
+    n8494278["Não sei"]:::cfff6b6
+    n8494294["Sim"]:::cfff6b6
+    n8494223["Não"]:::cdedaff
+    n5252375["Sim"]:::cfff6b6
+    n5252373(["Relato final"]):::cadf0c7
+    n5252376["Não"]:::cdedaff
+    n1027267["O vazamento/derramamento é de grande quantidade?"]:::cnone
+    n1027231["Não sei"]:::cdedaff
+    n5369293(["Relato final"]):::cadf0c7
+    n9533695["Ela está desacordada?"]:::cnone
+    n0919089["Sim"]:::cfff6b6
+    n0919090["Não"]:::cfff6b6
+    n0919091["Não sei"]:::cfff6b6
+    n4094375["Sim"]:::cfff6b6
+    n4094376["Não"]:::cdedaff
+    n1581309["Houve colisão com poste de energia ou há risco de choque elétrico?"]:::cnone
+    n4751187["O acidente envolveu algum animal?"]:::cnone
+    n3219628["Sim"]:::cfff6b6
+    n3219629["Não"]:::cdedaff
+    n5850226["Não sei"]:::cdedaff
+    n8494264["Alguma vítima está presano veículo?"]:::cnone
+    n8494295["Não"]:::cfff6b6
+    n8494331{{"🔁 Trocar natureza: Incêndio em veículo"}}:::troca
+    n2849109["Houve colisão com poste de energia ou há risco de choque elétrico?"]:::cnone
+    n3190975["Houve colisão com poste de energia ou há risco de choque elétrico?"]:::cnone
+    n5252572["O acidente envolveu algum animal"]:::cnone
+    n5597678["Sim"]:::cfff6b6
+    n5597679["Não sei"]:::cdedaff
+    n5597685["Não"]:::cfff6b6
+    n1027230["Sim"]:::cfff6b6
+    n1027242["Não"]:::cfff6b6
+    n4094373(["Relato final"]):::cadf0c7
+    n1581308["Sim"]:::cfff6b6
+    n1581311["Não"]:::cdedaff
+    n4751188["Sim"]:::cfff6b6
+    n4751189["Não"]:::cdedaff
+    n8494261["Ela está desacordada?"]:::cnone
+    n8494300["Sim"]:::cfff6b6
+    n8494301["Não"]:::cfff6b6
+    n8494302["Não sei"]:::cfff6b6
+    n0104637("Atenção ao risco de choque elétrico: não se aproxime e mantenha todos afastados. Caso tenha alguém no veículo, grite de uma distância segura para que permaneçam no interior, sem abrir as portas. Aguarde o socorro no local."):::cffdc4a
+    n2849108["Sim"]:::cfff6b6
+    n2849111["Não"]:::cdedaff
+    n3264035{{"🔁 Trocar natureza: Risco de Choque elétrico"}}:::troca
+    n3190977["Não"]:::cdedaff
+    n3264866["Visualiza vazamento ou derramamento de combustível ou outro produto químico do caminhão?"]:::cnone
+    n5252573["Sim"]:::cfff6b6
+    n5252574["Não"]:::cdedaff
+    n5369109["O acidente envolveu algum animal"]:::cnone
+    n0753194["Sim"]:::cfff6b6
+    n0753195["Não"]:::cdedaff
+    n0753196["Não sei"]:::cdedaff
+    n9533703["Alguma vítima está desacordada?"]:::cnone
+    n4751186(["Relato final"]):::cadf0c7
+    n8494287["Sim"]:::cfff6b6
+    n8494288["Não"]:::cdedaff
+    n8494289["Não sei"]:::cdedaff
+    n8494265["Alguma vítima está desacordada?"]:::cnone
+    n2849115["Algum veículo envolvido é elétrico?"]:::cnone
+    n3909003("Atenção ao risco de choque: afaste todos e grite de longe para quem estiver no carro não sair. Nossas viaturas já estão a caminho. Por favor, mantenha a calma e responda algumas perguntas rápidas para ajudar a equipe que está indo até você!"):::cffdc4a
+    n3979233["Algum veículo envolvido é elétrico?"]:::cnone
+    n5252571(["Relato final"]):::cadf0c7
+    n1027235["Algum veículo envolvido é elétrico?"]:::cnone
+    n5369110["Sim"]:::cfff6b6
+    n5369108(["Relato final"]):::cadf0c7
+    n5369111["Não"]:::cdedaff
+    n6520329["Sim"]:::cfff6b6
+    n6520330["Não"]:::cdedaff
+    n6520331["Não sei"]:::cdedaff
+    n3219624{{"🔁 Trocar natureza: Risco de Choque Elétrico"}}:::troca
+    n8494266["Há muito sangue visível ou lesões graves?"]:::cnone
+    n8494324["Sim"]:::cfff6b6
+    n8494325["Não"]:::cdedaff
+    n8494326["Não sei"]:::cdedaff
+    n2849116["Sim"]:::cfff6b6
+    n2849117["Não"]:::cdedaff
+    n5984006["Não Sei"]:::cdedaff
+    n6227068("O socorro já foi acionado e está a caminho. Vou fazer algumas perguntas rápidas para ajudar a equipe. Mantenha a calma e siga minhas orientações, por favor."):::cff9e9e
+    n1027236["Sim"]:::cfff6b6
+    n1027237["Não"]:::cdedaff
+    n9533704["Há muito sangue visível ou lesões graves?"]:::cnone
+    n2118791["Algum veículo envolvido é elétrico?"]:::cnone
+    n3511642["Qual é a emergência e por qual motivo o senhor(a) necessita do atendimento do CBMDF, considerando que não há vítimas e não há risco aparente?"]:::cnone
+    n8494281["Sim"]:::cfff6b6
+    n8494315["Há fumaça, princípio de incêndio ou fogo?"]:::cnone
+    n8494282["Não"]:::cdedaff
+    n8494283["Não sei"]:::cdedaff
+    n2849101["Visualiza derramamento ou vazamento de combustível ou outro produto químico do caminhão??"]:::cnone
+    n8494239["Visualiza vazamento ou derramamento de combustível ou outro produto químico do caminhão?"]:::cnone
+    n3979236["Sim"]:::cfff6b6
+    n3979237["Não"]:::cdedaff
+    n5984361["Não sei"]:::cdedaff
+    n3264867["Sim"]:::cfff6b6
+    n5252907["O acidente envolveu algum animal"]:::cnone
+    n5252908["Sim"]:::cfff6b6
+    n5252909["Não"]:::cdedaff
+    n0397694["Sim"]:::cfff6b6
+    n0397695["Não"]:::cdedaff
+    n0397696["Não sei"]:::cdedaff
+    n2935986("Atenção ao risco de choque elétrico: não se aproxime e mantenha todos afastados. Caso tenha alguém no veículo, grite de uma distância segura para que permaneçam no interior, sem abrir as portas. Aguarde o socorro no local."):::cffdc4a
+    n2118792["Sim"]:::cfff6b6
+    n2118793["Não"]:::cdedaff
+    n5741325["Não sei"]:::cdedaff
+    n5257073["Atenção Teleatendente! Com base nas informações, esta ocorrência aparenta não ser de competência do CBMDF. Entre em contato com o Chefe de Teleatendimento para confirmar a necessidade de envio de recursos."]:::cc6dcff
+    n2849103["Sim"]:::cfff6b6
+    n2849102["Não"]:::cdedaff
+    n3264877["O vazamento/derramamento é da carga do caminhão?"]:::cnone
+    n3264868["Não"]:::cdedaff
+    n5252906(["Relato final"]):::cadf0c7
+    n4276044["Algum veículo está capotado?"]:::cnone
+    n4276302["Sim"]:::cfff6b6
+    n4276303["Não"]:::cdedaff
+    n4625937["O acidente envolveu algum animal?"]:::cnone
+    n3460131["Algum veículo está capotado?"]:::cnone
+    n8494306["Sim"]:::cfff6b6
+    n8494307["Não"]:::cdedaff
+    n5023001["O acidente envolveu algum animal"]:::cnone
+    n8494240["Sim"]:::cfff6b6
+    n8494241["Não"]:::cdedaff
+    n3264879["Não sei"]:::cfff6b6
+    n5257382["Qual é a emergência e por qual motivo o senhor(a) necessita do atendimento do CBMDF, considerando que não há vítimas e não há risco aparente?"]:::cnone
+    n1932796["Há fumaça, princípio de incêndio ou fogo?"]:::cnone
+    n4625938["Sim"]:::cfff6b6
+    n4625939["Não"]:::cdedaff
+    n2142547["Despachar para CBMDF"]:::cfff6b6
+    n2142560["Encaminhar para outro órgão"]:::c659df2
+    n3460132["Sim"]:::cfff6b6
+    n3460133["Não"]:::cdedaff
+    n5023002["Sim"]:::cfff6b6
+    n5023003["Não"]:::cdedaff
+    n8733592["O vazamento/derramamento é da carga do caminhão?"]:::cnone
+    n3264875{{"🔁 Trocar natureza: Vazamento/Derramamento de combustível/ Produto Perigoso"}}:::troca
+    n0342931["O vazamento/derramamento é de grande quantidade?"]:::cnone
+    n3264896["Não"]:::cfff6b6
+    n3264871["Atenção Teleatendente! Com base nas informações, esta ocorrência aparenta não ser de competência do CBMDF. Entre em contato com o Chefe de Teleatendimento para confirmar a necessidade de envio de recursos."]:::cdedaff
+    n1932488["Sim"]:::cfff6b6
+    n1932490["Não"]:::cdedaff
+    n4625936(["Relato final"]):::cadf0c7
+    n1699682{{"🔁 Trocar natureza: Acidente de trânsito sem vítima"}}:::troca
+    n4597063["Realto final"]:::cadf0c7
+    n3555056("Atenção ao risco de choque elétrico: não se aproxime e mantenha todos afastados. Caso tenha alguém no veículo, grite de uma distância segura para que permaneçam no interior, sem abrir as portas. Aguarde o socorro no local."):::cffdc4a
+    n2370502["Houve colisão com poste de energia ou há risco de choque elétrico?"]:::cnone
+    n5023000(["Relato final"]):::cadf0c7
+    n8826888["Sim"]:::cfff6b6
+    n8826889["Não sei"]:::cdedaff
+    n4131301["Não"]:::cfff6b6
+    n6601225["O vazamento está sobre a pista?"]:::cnone
+    n4984520["Despachar para CBMDF"]:::cfff6b6
+    n4984522["Encaminhar para outro órgão"]:::c659df2
+    n5899414("Atenção ao risco de choque elétrico: não se aproxime e mantenha todos afastados. Caso tenha alguém no veículo, grite de uma distância segura para que permaneçam no interior, sem abrir as portas. Aguarde o socorro no local."):::cffdc4a
+    n0915745["Houve colisão com poste de energia ou há risco de choque elétrico?"]:::cnone
+    n1688478{{"🔁 Trocar natureza: Risco de Choque Elétrico"}}:::troca
+    n2370501["Sim"]:::cfff6b6
+    n2370504["Não"]:::cdedaff
+    n5023479["O acidente envolveu algum animal"]:::cnone
+    n5023480["Sim"]:::cfff6b6
+    n5023481["Não"]:::cdedaff
+    n3516737["Algum veículo envolvido é elétrico?"]:::cnone
+    n6601453["Sim"]:::cfff6b6
+    n6601454["Não"]:::cdedaff
+    n3264872["Realto final * Incluir texto: Ordem do Coordenador/Subcoordenador de Operações"]:::cadf0c7
+    n1636553{{"🔁 Trocar natureza: Fora de competência do CBMDF"}}:::troca
+    n0915744["Sim"]:::cfff6b6
+    n1076435["Não"]:::cdedaff
+    n2370508["Algum veículo envolvido é elétrico?"]:::cnone
+    n5023478(["Relato final"]):::cadf0c7
+    n3516738["Sim"]:::cfff6b6
+    n3516739["Não"]:::cdedaff
+    n3264904{{"🔁 Trocar natureza: Óleo ou Produto na Via"}}:::troca
+    n3264908["Realto final"]:::cadf0c7
+    n7228855["Qual é a emergência e por qual motivo o senhor(a) necessita do atendimento do CBMDF, considerando que não há vítimas e não há risco aparente?"]:::cnone
+    n3264911{{"🔁 Trocar natureza: Acidente de Trênsito sem vítima"}}:::troca
+    n2023010["Algum veículo envolvido é elétrico?"]:::cnone
+    n2370509["Sim"]:::cfff6b6
+    n2370510["Não"]:::cdedaff
+    n5850728["Não sei"]:::cdedaff
+    n5023903["O acidente envolveu algum animal?"]:::cnone
+    n7228852["Atenção Teleatendente! Com base nas informações, esta ocorrência aparenta não ser de competência do CBMDF. Entre em contato com o Chefe de Teleatendimento para confirmar a necessidade de envio de recursos."]:::cdedaff
+    n2023601["Sim"]:::cfff6b6
+    n2023602["Não"]:::cdedaff
+    n5740988["Não sei"]:::cdedaff
+    n8494308["Visualiza derramamento ou vazamento de combustível ou outro produto químico do caminhão?"]:::cnone
+    n5023904["Sim"]:::cfff6b6
+    n5023902(["Relato final"]):::cadf0c7
+    n5023905["Não"]:::cdedaff
+    n3657352["O acidente envolveu algum animal?"]:::cnone
+    n8494318["Sim"]:::cfff6b6
+    n8494319["Não"]:::cdedaff
+    n7228850["Despachar para CBMDF"]:::cfff6b6
+    n7228858["Encaminhar para outro órgão"]:::c659df2
+    n3935218["Sim"]:::cfff6b6
+    n3657311(["Relato final"]):::cadf0c7
+    n3935219["Não"]:::cdedaff
+    n4881317["O acidente envolveu algum animal"]:::cnone
+    n4881318["Sim"]:::cfff6b6
+    n4881319["Não"]:::cdedaff
+    n7228848["Relato final * Incluir texto: Ordem do Coordenador/Subcoordenador de Operações"]:::cadf0c7
+    n4881316(["Relato final"]):::cadf0c7
+    n7228849{{"🔁 Trocar natureza: Acidente de Trênsito sem vítima"}}:::troca
+    n8494322{{"🔁 Trocar natureza: Acidente de trânsito com vítima"}}:::troca
+    x1["O motorista passou mal antes de bater?"]:::cnone
+    x2["Sim"]:::cfff6b6
+    x3["Não"]:::cfff6b6
+    x4["Não sei"]:::cdedaff
+    x5{{"⚠️ Manter natureza e registrar no relato: Emergência clínica"}}:::troca
+    x6["Algum veículo caiu na água?"]:::cnone
+    x7["Sim"]:::cfff6b6
+    x8["Não"]:::cfff6b6
+    x9["Não sei"]:::cdedaff
+    x10{{"🔁 Trocar natureza: Afogamento"}}:::troca
+    x11{{"🔁 Trocar natureza: Afogamento"}}:::troca
+    x12["Foi só bicicleta ou patinete que caiu, sem colisão?"]:::cnone
+    x13["Sim"]:::cfff6b6
+    x14["Não"]:::cfff6b6
+    x15["Não sei"]:::cdedaff
+    x16{{"🔁 Trocar natureza: Queda de bicicleta ou patinete (natureza a aprovar)"}}:::troca
+    x17["Foi só uma moto que caiu, sem colisão?"]:::cnone
+    x18["Sim"]:::cfff6b6
+    x19["Não"]:::cfff6b6
+    x20["Não sei"]:::cdedaff
+    x21{{"🔁 Trocar natureza: Queda de motocicleta (natureza a aprovar)"}}:::troca
+    n8942959 --> n9057427
+    n0325606 --> n4503447
+    s4597824 -.-> n4597827
+    n4503447 --> n4597825
+    n1581309 --> n1581308
+    n1581309 --> n1581311
+    n8943761 --> n1439390
+    n8943401 --> n8943761
+    n9142720 --> n8943651
+    n9142720 --> n8943401
+    n9142720 --> n0325606
+    n8943651 --> n9640723
+    n9640723 --> n9759001
+    n9759041 --> n1581309
+    n9640723 --> n9759041
+    n9533698 --> n9844749
+    n9844749 --> n9533694
+    n9533698 --> n9964007
+    n9964569 --> n9533695
+    n9533694 --> n9964569
+    n9964801 --> n9533695
+    n9533694 --> n9964801
+    n9964887 --> n9533695
+    n9533694 --> n9964887
+    n9964007 --> n9533695
+    n9533697 --> n0753493
+    n0753492 --> n9533701
+    n9533697 --> n0753492
+    n9533701 --> n0919091
+    n9533701 --> n0919090
+    n9533701 --> n0919089
+    s9913807 -.-> n7129061
+    n4158335 --> n4305012
+    n4305011 --> n9533697
+    n4158335 --> n4305011
+    n4467331 --> n9533698
+    n4467093 --> n4467331
+    n4467331 -.-> n6853366
+    n4467093 --> n4467330
+    n4467330 --> n9533695
+    n4305011 -.-> n6853366
+    n8943761 --> n1439492
+    n1439492 --> n4158335
+    n8943761 --> n1439423
+    n1439423 --> n4158335
+    n1439390 --> n4467093
+    n4467330 -.-> n0219699
+    n0219891 -.-> n4305012
+    n9759001 --> n1443795
+    n1443795 --> n1443794
+    n1443795 --> n1443844
+    n2118577 --> n2118579
+    n2118577 --> n2118578
+    n1443844 --> n2118577
+    n1443794 --> n2118577
+    s0218989 -.-> n4417252
+    s9913807 -.-> n4417609
+    s4597824 -.-> n7383222
+    n2118577 --> n5651206
+    n4597825 --> n3338525
+    n3338525 --> n3338524
+    n3338525 --> n3338527
+    n3338530 --> n3338532
+    n3338530 --> n3338531
+    n3338527 --> n3338530
+    n3338524 --> n3338530
+    n4305012 --> n3824378
+    s3264034 -.-> n3264035
+    n8494212 --> n8494214
+    n8494216 --> n8494213
+    n8494216 --> n8494212
+    n8494213 --> n8494219
+    n8494219 --> n8494221
+    n8494223 --> n3190975
+    n8494219 --> n8494223
+    n8494216 --> n8494237
+    n8494239 --> n8494241
+    n8494239 --> n8494240
+    n8494214 --> n8494253
+    n8494214 --> n8494256
+    n8494214 --> n8494255
+    n8494263 --> n8494269
+    n8494269 --> n8494260
+    n8494263 --> n8494272
+    n8494274 --> n8494261
+    n8494260 --> n8494274
+    n8494276 --> n8494261
+    n8494260 --> n8494276
+    n8494278 --> n8494261
+    n8494260 --> n8494278
+    n8494272 --> n8494261
+    n8494266 --> n8494283
+    n8494266 --> n8494282
+    n8494266 --> n8494281
+    n8494289 --> n8494266
+    n8494261 --> n8494289
+    n8494288 --> n8494266
+    n8494261 --> n8494288
+    n8494287 --> n8494266
+    n8494261 --> n8494287
+    n8494295 --> n8494265
+    n8494262 --> n8494295
+    n8494294 --> n8494264
+    n8494262 --> n8494294
+    n8494302 --> n8494265
+    n8494264 --> n8494302
+    n8494301 --> n8494265
+    n8494264 --> n8494301
+    n8494300 --> n8494265
+    n8494264 --> n8494300
+    n8494283 --> n8494315
+    n8494282 --> n8494315
+    n8494281 --> n8494315
+    n8494315 --> n8494307
+    n8494315 --> n8494306
+    n8494326 --> n8494266
+    n8494265 --> n8494326
+    n8494325 --> n8494266
+    n8494265 --> n8494325
+    n8494324 --> n8494266
+    n8494265 --> n8494324
+    s8494236 -.-> n8494329
+    s8494211 -.-> n8494331
+    n8494256 --> n8494341
+    n8494255 --> n8494341
+    n8494341 --> n8494345
+    n8494345 --> n8494262
+    n8494341 --> n8494344
+    n8494253 --> n8494348
+    n8494348 --> n8494351
+    n8494351 --> n8494263
+    n8494348 --> n8494350
+    n8494350 --> n8494261
+    n8494344 --> n8494262
+    n8494241 --> n5023479
+    n8494307 --> n3460131
+    n8494306 --> n3460131
+    n8733592 --> n8826889
+    n8733592 --> n8826888
+    n8494240 --> n8733592
+    n8733592 --> n4131301
+    n2142547 --> n4597063
+    n4597826 --> n4117377
+    n4708827 -.-> n4708908
+    n4625936 -.-> n1688478
+    n2118791 --> n2118793
+    n2118791 --> n2118792
+    n2370502 --> n2370501
+    n2370502 --> n2370504
+    n2370510 --> n8494308
+    n2370508 --> n2370510
+    n2370509 --> n8494308
+    n2370508 --> n2370509
+    n2849101 --> n2849103
+    n2849101 --> n2849102
+    n8494221 --> n2849109
+    n2849109 --> n2849108
+    n2849111 --> n2849115
+    n2849109 --> n2849111
+    n2849108 --> n2849115
+    n2849115 --> n2849117
+    n2849117 --> n2849101
+    n2849115 --> n2849116
+    n3190975 --> n3190974
+    n3190975 --> n3190977
+    s3264865 -.-> n3264875
+    n3264877 --> n3264879
+    n3264877 --> n3264878
+    n3264877 --> n3264896
+    n3264867 --> n3264877
+    n3516737 --> n3516739
+    n3516737 --> n3516738
+    n3264878 --> n3516737
+    n4597063 -.-> n1699682
+    n1581311 --> n3511642
+    n5257073 --> n2142560
+    n4117377 --> n4117379
+    n4117377 --> n4117378
+    n5257073 --> n2142547
+    n3085716 --> n3085747
+    n3085716 --> n3085718
+    n3085718 --> n4708827
+    n4117379 --> n3085716
+    n4117378 --> n3085716
+    n4751186 -.-> n3219624
+    n3219629 --> n4751187
+    n3219627 --> n3219629
+    n3219628 --> n4751187
+    n3219627 --> n3219628
+    n3338524 -.-> n3219634
+    n3085747 -.-> n3219634
+    n3085747 --> n3219627
+    n3460133 --> n2370502
+    n3460131 --> n3460133
+    n3460132 --> n2370502
+    n3460131 --> n3460132
+    n2370501 -.-> n3555056
+    n3979233 --> n3979237
+    n3979237 --> n8494239
+    n3979233 --> n3979236
+    n3979236 --> n8494239
+    n3190974 --> n3979233
+    n3511642 --> n5257073
+    n2118791 --> n5741325
+    n5850226 --> n4751187
+    n3219627 --> n5850226
+    n5850728 --> n8494308
+    n2370508 --> n5850728
+    n2849115 --> n5984006
+    n3979233 --> n5984361
+    s8494236 -.-> n6105468
+    s3264865 -.-> n6227068
+    n0397696 --> n4276044
+    n9533704 --> n0397696
+    n0397695 --> n4276044
+    n9533704 --> n0397695
+    n9533704 --> n0397694
+    n9533695 --> n0753196
+    n0753196 --> n9533704
+    n9533695 --> n0753195
+    n0753195 --> n9533704
+    n9533695 --> n0753194
+    n0753194 --> n9533704
+    n1932796 --> n1932488
+    n1932796 --> n1932490
+    n6520331 --> n9533704
+    n9533703 --> n6520331
+    n6520330 --> n9533704
+    n9533703 --> n6520330
+    n6520329 --> n9533704
+    n9533703 --> n6520329
+    n1932490 --> n0915745
+    n1932488 --> n0915745
+    n4881316 -.-> n8494322
+    n8494308 --> n8494319
+    n8494319 --> n4881317
+    n8494308 --> n8494318
+    n0915745 --> n0915744
+    n1076435 --> n2023010
+    n0915745 --> n1076435
+    n2023010 --> n2023602
+    n2023010 --> n2023601
+    n0397694 --> n4276044
+    n4276303 --> n1932796
+    n4276044 --> n4276303
+    n4276302 --> n1932796
+    n4276044 --> n4276302
+    n1581308 --> n2118791
+    n0915744 --> n2023010
+    n0915744 -.-> n5899414
+    n2023010 --> n5740988
+    n9057714 --> x1
+    n9057427 --> n9057714
+    n9141938 --> x1
+    n9057427 --> n9141938
+    n9141989 --> x1
+    n9057427 --> n9141989
+    n9142093 --> x1
+    n9057427 --> n9142093
+    n9142192 --> n8494216
+    n9057427 --> n9142192
+    n1030079 --> x1
+    n9057427 --> n1030079
+    n1030028 --> x1
+    n9057427 --> n1030028
+    n3190977 --> n3264866
+    n3264866 --> n3264867
+    n3264866 --> n3264868
+    n3264908 -.-> n3264904
+    n4984520 --> n3264872
+    n3264871 --> n4984520
+    n3264868 --> n5257382
+    n5257382 --> n3264871
+    n6601225 --> n6601454
+    n6601225 --> n6601453
+    n3264871 --> n4984522
+    n6601453 --> n3264908
+    n3264896 --> n6601225
+    n3264872 -.-> n3264911
+    n3338530 --> n3338539
+    n1443794 -.-> n2935986
+    n2118792 -.-> n2935986
+    n8494318 --> n4881317
+    n3190974 -.-> n3909003
+    n3824451 --> n9533704
+    n3824450 --> n9533704
+    n3824449 --> n9533704
+    n0753493 --> n9533703
+    n0919091 --> n9533703
+    n0919090 --> n9533703
+    n0919089 --> n9533703
+    n5984361 --> n8494239
+    n5984006 --> n2849101
+    n2849116 --> n2849101
+    n5597661 --> n5597663
+    n5597661 --> n5597665
+    n5597667 --> n5597669
+    n5597667 --> n5597668
+    n5597669 --> n5252572
+    n5597677 --> n5597679
+    n5597677 --> n5597678
+    n5597668 --> n5597677
+    n5597677 --> n5597685
+    n5597688 --> n5597690
+    n5597688 --> n5597689
+    n5597663 --> n5597694
+    n5597694 --> n5597693
+    n5597694 --> n5597697
+    n5597697 --> n5597699
+    n5597693 --> n5597699
+    n5597699 --> n5597703
+    n5597703 --> n5597688
+    n5597699 --> n5597702
+    n5597665 --> n5597708
+    n5597708 --> n5597707
+    n5597708 --> n5597711
+    n5597716 --> n5597720
+    n5597737 --> n5597739
+    n5597739 --> n5597667
+    n5597737 --> n5597738
+    n5597738 --> n5597667
+    n5597707 --> n5597737
+    n5597699 --> n5597745
+    n5597737 --> n5597747
+    s1392817 -.-> n5597749
+    n5597711 --> n5597757
+    n5597757 --> n5597716
+    n5597757 --> n5597760
+    n5597747 --> n5597667
+    n5597745 --> n5597688
+    n5597702 --> n5597688
+    n8494237 --> n5597661
+    n7228850 --> n7228848
+    n7228852 --> n7228850
+    n6601454 --> n7228855
+    n7228855 --> n7228852
+    n7228852 --> n7228858
+    n7228848 -.-> n7228849
+    n2849108 -.-> n0104637
+    n3264879 --> n0342931
+    n0342931 --> n3264878
+    n0342931 --> n3264896
+    n5597720 --> n1027231
+    n5597720 --> n1027230
+    n1027235 --> n1027237
+    n1027235 --> n1027236
+    n1027230 --> n1027235
+    n5597720 --> n1027242
+    n1027231 --> n1027267
+    n1027267 --> n1027230
+    n1027267 --> n1027242
+    s1392817 -.-> n1501932
+    n5597707 -.-> n1684759
+    n2751055 --> x1
+    n9057427 --> n2751055
+    n4503447 --> n4597826
+    n4984522 -.-> n1636553
+    n8943761 --> n2258748
+    n8943761 --> n2258805
+    n2258748 --> n4158335
+    n2258805 --> n4158335
+    n2023601 --> n3657352
+    n2023602 --> n3657352
+    n5740988 --> n3657352
+    n3657352 --> n3935218
+    n3657352 --> n3935219
+    n3935218 --> n3657311
+    n3935219 --> n3657311
+    n4094374 --> n4094375
+    n4094374 --> n4094376
+    n4094375 --> n4094373
+    n4094376 --> n4094373
+    n2118578 --> n4094374
+    n2118579 --> n4094374
+    n5651206 --> n4094374
+    n4625937 --> n4625938
+    n4625937 --> n4625939
+    n4625938 --> n4625936
+    n4625939 --> n4625936
+    n2118792 --> n4625937
+    n2118793 --> n4625937
+    n5741325 --> n4625937
+    n4751187 --> n4751188
+    n4751187 --> n4751189
+    n4751188 --> n4751186
+    n4751189 --> n4751186
+    n4751903 --> n4751904
+    n4751903 --> n4751905
+    n4751904 --> n4751902
+    n4751905 --> n4751902
+    n3338531 --> n4751903
+    n3338532 --> n4751903
+    n3338539 --> n4751903
+    n4881317 --> n4881318
+    n4881317 --> n4881319
+    n4881318 --> n4881316
+    n4881319 --> n4881316
+    n5023001 --> n5023002
+    n5023001 --> n5023003
+    n5023002 --> n5023000
+    n5023003 --> n5023000
+    n2849103 --> n5023001
+    n2849102 --> n5023001
+    n5023479 --> n5023480
+    n5023479 --> n5023481
+    n5023480 --> n5023478
+    n5023481 --> n5023478
+    n8826888 --> n5023479
+    n8826889 --> n5023479
+    n4131301 --> n5023479
+    n5023903 --> n5023904
+    n5023903 --> n5023905
+    n5023904 --> n5023902
+    n5023905 --> n5023902
+    n3516738 --> n5023903
+    n3516739 --> n5023903
+    n5252374 --> n5252375
+    n5252374 --> n5252376
+    n5252375 --> n5252373
+    n5252376 --> n5252373
+    n5597690 --> n5252374
+    n5597689 --> n5252374
+    n5252572 --> n5252573
+    n5252572 --> n5252574
+    n5252573 --> n5252571
+    n5252574 --> n5252571
+    n5597678 --> n5252572
+    n5597679 --> n5252572
+    n5597685 --> n5252572
+    n5252907 --> n5252908
+    n5252907 --> n5252909
+    n5252908 --> n5252906
+    n5252909 --> n5252906
+    n1027236 --> n5252907
+    n1027237 --> n5252907
+    n5369109 --> n5369110
+    n5369109 --> n5369111
+    n5369110 --> n5369108
+    n5369111 --> n5369108
+    n1027242 --> n5369109
+    n5369294 --> n5369295
+    n5369294 --> n5369296
+    n5369295 --> n5369293
+    n5369296 --> n5369293
+    n5597760 --> n5369294
+    n3824378 --> n3824450
+    n3824378 --> n3824449
+    n3824378 --> n3824451
+    x1 --> x2
+    x1 --> x3
+    x1 --> x4
+    x2 -.-> x5
+    x2 --> x6
+    x3 --> x6
+    x4 --> x6
+    x6 --> x7
+    x6 --> x8
+    x6 --> x9
+    x7 --> x10
+    x8 --> x12
+    x9 --> x11
+    x12 --> x13
+    x12 --> x14
+    x12 --> x15
+    x13 --> x16
+    x14 --> x17
+    x15 --> x17
+    x17 --> x18
+    x17 --> x19
+    x17 --> x20
+    x18 --> x21
+    x19 --> n9142720
+    x20 --> n9142720

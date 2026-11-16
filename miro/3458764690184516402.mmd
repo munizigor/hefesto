@@ -1,0 +1,132 @@
+flowchart TD
+    classDef troca fill:#8f7fee,stroke:#6631d7,color:#ffffff,stroke-width:3px
+    classDef cffc6c6 fill:#ffc6c6,stroke:#bd0a0a,color:#1a1a1a,stroke-dasharray:5 5
+    classDef cfe9f4d fill:#fe9f4d,stroke:#9b4a08,color:#1a1a1a,stroke-dasharray:5 5
+    classDef ctitulo fill:#af7e04,stroke:#1a1a1a,color:#1a1a1a
+    classDef cnone fill:#ffffff,stroke:#1a1a1a,color:#1a1a1a
+    classDef cfff6b6 fill:#fff6b6,stroke:#af7e04,color:#1a1a1a
+    classDef cdedaff fill:#dedaff,stroke:#6631d7,color:#1a1a1a
+    classDef cvideo fill:#2dc75c,stroke:#067429,color:#1a1a1a
+    classDef caf7e04 fill:#af7e04,stroke:#1a1a1a,color:#1a1a1a
+    classDef cadf0c7 fill:#adf0c7,stroke:#067429,color:#1a1a1a
+    subgraph s3145004["🚒 Despacho imediato"]
+        n3145005["<b>Natureza: Agressão Física</b>"]:::ctitulo
+    end
+    style s3145004 fill:#ffc6c6,stroke:#bd0a0a,stroke-dasharray:5 5
+    n3145020("O socorro já foi acionado e está a caminho. Vou fazer algumas perguntas rápidas para ajudar a equipe. Mantenha a calma e siga minhas orientações, por favor."):::cffc6c6
+    n3145018("Atenção para os sinais de alerta! * Pedidos incomuns (pizza ou remédio...), * Conversas truncadas (batendo papo com atendente de loja), * Não encerre a Ligação e prossiga com o registro."):::cfe9f4d
+    n3145006["Sexo da pessoa agredida"]:::cnone
+    n3145007["Feminino"]:::cfff6b6
+    n3145008["Masculino"]:::cfff6b6
+    n3145011["Não sei"]:::cfff6b6
+    n3145095["Idade da pessoa agredida"]:::cnone
+    n3145101["Criança"]:::cfff6b6
+    n3145097["Adulto(a)"]:::cfff6b6
+    n3145098["Idoso (a)"]:::cfff6b6
+    n3145014["Atenção Teleatendente! Com base nas informações, esta ocorrência se enquadra no projeto CBMDF ACOLHE. Enviaremos uma viatura específica para este tipo de ocorrência."]:::cdedaff
+    n3145084["A vítima encontra-se presa ou confinada pelo agressor?"]:::cnone
+    n3145051("O socorro já foi acionado e está a caminho. Iremos realizar uma vídeo chamada para orientá-lo(a)."):::cffc6c6
+    n3145085["Sim"]:::cfff6b6
+    n3145087["Não"]:::cfff6b6
+    n3145039>"📞 Realize a videochamada e faça as orientações"]:::cvideo
+    n3145035["Sim"]:::cfff6b6
+    n3145034["A pessoa agredida está respirando?"]:::cnone
+    n3145036["Não"]:::cfff6b6
+    n3145049{{"🔁 Trocar natureza: Parada Cardiorespiratória (PCR)"}}:::troca
+    n3145055["Realto final"]:::cadf0c7
+    n3145023["A pessoa agredida está consciente?"]:::cnone
+    n3145092("Acolhimento e Orientação. * Segurança: Orientar permanecer em local Seguro, trancar portas e janelas. * Acolhimento: Caso haja abertura e tempo hábil. prestar o acolhimento a vítima 'você não é culpada. Estamos aqui para te ouvir'"):::cfe9f4d
+    n3145024["Sim"]:::cfff6b6
+    n3145025["Não"]:::cfff6b6
+    n3145026["Há risco a vida da pessoa agredida?"]:::cnone
+    n3145032["Sim"]:::cfff6b6
+    n3145033["Não"]:::cdedaff
+    n3145031["O agressor está no local?"]:::cnone
+    n3145044["Sim"]:::cfff6b6
+    n3145045["Não"]:::cfff6b6
+    n3145054["Não sabe"]:::cfff6b6
+    n3145060["Porta arma?"]:::cnone
+    n3145061["Sim"]:::cfff6b6
+    n3145062["Não"]:::cfff6b6
+    n3145073["Não sabe"]:::cfff6b6
+    n3145066["que tipo?"]:::cnone
+    n3145067["Arma Branca"]:::cfff6b6
+    n3145068["Arma de fogo"]:::cfff6b6
+    n3145069["Não sei"]:::cfff6b6
+    n3145065["Realto final"]:::cadf0c7
+    x1["A pessoa foi atingida por tiro?"]:::cnone
+    x2["Sim"]:::cfff6b6
+    x3["Não"]:::cfff6b6
+    x4["Não sei"]:::cdedaff
+    x5{{"🔁 Trocar natureza: Ferimento por arma de fogo"}}:::troca
+    x6["A pessoa foi ferida com faca ou objeto cortante?"]:::cnone
+    x7["Sim"]:::cfff6b6
+    x8["Não"]:::cfff6b6
+    x9["Não sei"]:::cdedaff
+    x10{{"🔁 Trocar natureza: Ferimento por arma branca"}}:::troca
+    n3145006 --> n3145007
+    n3145006 --> n3145008
+    n3145006 --> n3145011
+    n3145005 --> n3145006
+    n3145007 -.-> n3145018
+    s3145004 -.-> n3145020
+    n3145023 --> n3145024
+    n3145023 --> n3145025
+    n3145024 --> n3145026
+    n3145025 --> n3145026
+    n3145034 --> n3145035
+    n3145034 --> n3145036
+    n3145026 --> n3145032
+    n3145026 --> n3145033
+    n3145032 --> n3145031
+    n3145033 --> n3145031
+    n3145031 --> n3145044
+    n3145031 --> n3145045
+    n3145036 -.-> n3145049
+    n3145049 -.-> n3145051
+    n3145036 --> n3145055
+    n3145035 --> x1
+    n3145031 --> n3145054
+    n3145049 -.-> n3145039
+    n3145060 --> n3145061
+    n3145060 --> n3145062
+    n3145066 --> n3145067
+    n3145066 --> n3145068
+    n3145066 --> n3145069
+    n3145060 --> n3145073
+    n3145045 --> n3145065
+    n3145054 --> n3145065
+    n3145061 --> n3145066
+    n3145062 --> n3145065
+    n3145073 --> n3145065
+    n3145069 --> n3145065
+    n3145068 --> n3145065
+    n3145067 --> n3145065
+    n3145044 --> n3145060
+    n3145085 --> n3145034
+    n3145087 --> n3145034
+    n3145084 --> n3145087
+    n3145084 --> n3145085
+    n3145031 --> n3145092
+    n3145007 --> n3145095
+    n3145095 --> n3145097
+    n3145095 --> n3145098
+    n3145095 --> n3145101
+    n3145101 --> n3145084
+    n3145097 --> n3145084
+    n3145098 --> n3145084
+    n3145008 --> n3145095
+    n3145011 --> n3145095
+    n3145095 --> n3145014
+    x1 --> x2
+    x1 --> x3
+    x1 --> x4
+    x2 --> x5
+    x3 --> x6
+    x4 --> x6
+    x6 --> x7
+    x6 --> x8
+    x6 --> x9
+    x7 --> x10
+    x8 --> n3145023
+    x9 --> n3145023

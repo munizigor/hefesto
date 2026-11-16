@@ -1,0 +1,84 @@
+flowchart TD
+    classDef troca fill:#8f7fee,stroke:#6631d7,color:#ffffff,stroke-width:3px
+    classDef titulo fill:#af7e04,stroke:#1a1a1a,color:#1a1a1a
+    classDef perg fill:#ffffff,stroke:#1a1a1a,color:#1a1a1a
+    classDef opc fill:#fff6b6,stroke:#af7e04,color:#1a1a1a
+    classDef ns fill:#dedaff,stroke:#6631d7,color:#1a1a1a
+    classDef ab fill:#ff6464,stroke:#bd0a0a,color:#1a1a1a
+    classDef desp fill:#ffc6c6,stroke:#bd0a0a,color:#1a1a1a
+    classDef acao fill:#ffffff,stroke:#757575,color:#1a1a1a
+    classDef orient fill:#ffdc4a,stroke:#af7e04,color:#1a1a1a
+    classDef relato fill:#adf0c7,stroke:#067429,color:#1a1a1a
+    n1["<b>Natureza: Pessoa em profundidade (desnível negativo)</b>"]:::titulo
+    n2["Onde a pessoa caiu?"]:::perg
+    n3("Poço / cisterna"):::opc
+    n4("Buraco / vala / bueiro"):::opc
+    n5("Barranco / ribanceira"):::opc
+    n6("Fosso de elevador"):::opc
+    n7("Aberta"):::ab
+    n8["Qual a profundidade, mais ou menos?"]:::perg
+    n9("Até 3 m"):::opc
+    n10("3 a 10 m"):::opc
+    n11("Mais de 10 m"):::opc
+    n12("Não sabe"):::ns
+    n13["🚒 <b>Despacho imediato</b><br/>Fala: O socorro já foi acionado e está a caminho. Vou fazer algumas perguntas rápidas para ajudar a equipe. Mantenha a calma e siga minhas orientações, por favor."]:::desp
+    n14["A pessoa responde quando você chama?"]:::perg
+    n15("Sim"):::opc
+    n16("Não"):::opc
+    n17["Tem água, lama ou cheiro forte no local?"]:::perg
+    n18("Sim"):::opc
+
+    n20("Não"):::opc
+    n21["A beirada está firme ou desmoronando?"]:::perg
+    n22("Firme"):::opc
+    n23("Desmoronando"):::opc
+    n24("Não sabe"):::ns
+    n25("<b>Orientação ao solicitante:</b> Não desça para ajudar. Afaste-se da borda. Se a pessoa estiver consciente, converse com ela e peça que não se mexa."):::orient
+    n26(["Relato Final"]):::relato
+    x1["A pessoa está submersa na água?"]:::perg
+    x2["Sim"]:::opc
+    x3["Não"]:::opc
+    x4["Não sei"]:::ns
+    x5{{"🔁 Trocar natureza: Afogamento"}}:::troca
+    x6{{"🔁 Trocar natureza: Afogamento"}}:::troca
+    n1 --> n2
+    n2 --> n3
+    n2 --> n4
+    n2 --> n5
+    n2 --> n6
+    n2 --> n7
+    n3 --> n8
+    n4 --> n8
+    n5 --> n8
+    n6 --> n8
+    n7 --> n8
+    n8 --> n9
+    n8 --> n10
+    n8 --> n11
+    n8 --> n12
+    n9 --> n13
+    n10 --> n13
+    n11 --> n13
+    n12 --> n13
+    n13 --> n14
+    n14 --> n15
+    n14 --> n16
+    n15 --> n17
+    n16 --> n17
+    n17 --> n18
+    n17 --> n20
+    n20 --> x1
+    n21 --> n22
+    n21 --> n23
+    n21 --> n24
+    n22 -.-> n25
+    n23 -.-> n25
+    n24 -.-> n25
+    n25 --> n26
+    x1 --> x2
+    x1 --> x3
+    x1 --> x4
+    x2 --> x5
+    x3 --> n21
+    x4 --> x6
+    n18 --> x1

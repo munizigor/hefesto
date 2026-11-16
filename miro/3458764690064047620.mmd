@@ -1,0 +1,43 @@
+flowchart TD
+    classDef troca fill:#8f7fee,stroke:#6631d7,color:#ffffff,stroke-width:3px
+    classDef titulo fill:#af7e04,stroke:#1a1a1a,color:#1a1a1a
+    classDef perg fill:#ffffff,stroke:#1a1a1a,color:#1a1a1a
+    classDef opc fill:#fff6b6,stroke:#af7e04,color:#1a1a1a
+    classDef ab fill:#ff6464,stroke:#bd0a0a,color:#1a1a1a
+    classDef recl fill:#f8d3af,stroke:#9b4a08,color:#1a1a1a
+    classDef acao fill:#ffffff,stroke:#757575,color:#1a1a1a
+    classDef relato fill:#adf0c7,stroke:#067429,color:#1a1a1a
+    n1["<b>Natureza: Atividade preventiva / palestra / demonstração profissional</b>"]:::titulo
+    n2["Está acontecendo alguma emergência agora?"]:::perg
+    n3("Sim"):::opc
+    n4{{"🔁 Trocar natureza: natureza correspondente à emergência real"}}:::troca
+    n5("Não"):::opc
+    n6["Que atividade deseja?"]:::perg
+    n7("Palestra"):::opc
+    n8("Demonstração / visita de viatura"):::opc
+    n9("Prevenção em evento"):::opc
+    n10("Aberta"):::ab
+    n11["Instituição solicitante, responsável e contato"]:::perg
+    n12("Aberta"):::ab
+    n13["Data, horário, local e público estimado"]:::perg
+    n14("Aberta"):::ab
+    n15["Orientar o canal oficial de solicitação do CBMDF"]:::acao
+    n16(["Relato Final"]):::relato
+    n1 --> n2
+    n2 --> n3
+    n3 --> n4
+    n2 --> n5
+    n5 --> n6
+    n6 --> n7
+    n6 --> n8
+    n6 --> n9
+    n6 --> n10
+    n7 --> n11
+    n8 --> n11
+    n9 --> n11
+    n10 --> n11
+    n11 --> n12
+    n12 --> n13
+    n13 --> n14
+    n14 --> n15
+    n15 --> n16

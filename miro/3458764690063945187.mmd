@@ -1,0 +1,61 @@
+flowchart TD
+    classDef troca fill:#8f7fee,stroke:#6631d7,color:#ffffff,stroke-width:3px
+    classDef titulo fill:#af7e04,stroke:#1a1a1a,color:#1a1a1a
+    classDef perg fill:#ffffff,stroke:#1a1a1a,color:#1a1a1a
+    classDef opc fill:#fff6b6,stroke:#af7e04,color:#1a1a1a
+    classDef ab fill:#ff6464,stroke:#bd0a0a,color:#1a1a1a
+    classDef desp fill:#ffc6c6,stroke:#bd0a0a,color:#1a1a1a
+    classDef recl fill:#f8d3af,stroke:#9b4a08,color:#1a1a1a
+    classDef acao fill:#ffffff,stroke:#757575,color:#1a1a1a
+    classDef orient fill:#ffdc4a,stroke:#af7e04,color:#1a1a1a
+    classDef relato fill:#adf0c7,stroke:#067429,color:#1a1a1a
+    n1["<b>Natureza: Risco de choque elétrico</b>"]:::titulo
+    n2["Qual a situação?"]:::perg
+    n3("Fio partido no chão / pendurado"):::opc
+    n4("Fio encostando em árvore / telhado / grade"):::opc
+    n5("Poste danificado"):::opc
+    n6("Equipamento / estrutura dando choque"):::opc
+    n7("Aberta"):::ab
+    n8["Alguém levou choque?"]:::perg
+    n9("Sim"):::opc
+    n10{{"🔁 Trocar natureza: Choque elétrico"}}:::troca
+    n11("Não"):::opc
+    n12["Há fogo ou faísca?"]:::perg
+    n13("Sim"):::opc
+
+    n15("Não"):::opc
+    n16["É em local com circulação de pessoas (escola, calçada, parada de ônibus)?"]:::perg
+    n17("Sim"):::opc
+
+    n19("Não"):::opc
+    n20["Acionar concessionária de energia"]:::acao
+    n21["🚒 Despacho conforme critério da COCB"]:::desp
+    n22("<b>Orientação ao solicitante:</b> Fique a pelo menos 10 metros do fio, mesmo que pareça desligado. Se houver água no chão perto, afaste-se mais."):::orient
+    n23(["Relato Final"]):::relato
+    x1{{"🔁 Trocar natureza: Incêndio em objeto / equipamento"}}:::troca
+    n1 --> n2
+    n2 --> n3
+    n2 --> n4
+    n2 --> n5
+    n2 --> n6
+    n2 --> n7
+    n3 --> n8
+    n4 --> n8
+    n5 --> n8
+    n6 --> n8
+    n7 --> n8
+    n8 --> n9
+    n9 --> n10
+    n8 --> n11
+    n11 --> n12
+    n12 --> n13
+    n12 --> n15
+    n15 --> n16
+    n16 --> n17
+    n16 --> n19
+    n19 --> n20
+    n20 --> n21
+    n21 -.-> n22
+    n22 --> n23
+    n13 --> x1
+    n17 --> n20

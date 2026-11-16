@@ -1,0 +1,54 @@
+flowchart TD
+    classDef troca fill:#8f7fee,stroke:#6631d7,color:#ffffff,stroke-width:3px
+    classDef titulo fill:#af7e04,stroke:#1a1a1a,color:#1a1a1a
+    classDef perg fill:#ffffff,stroke:#1a1a1a,color:#1a1a1a
+    classDef opc fill:#fff6b6,stroke:#af7e04,color:#1a1a1a
+    classDef ab fill:#ff6464,stroke:#bd0a0a,color:#1a1a1a
+    classDef desp fill:#ffc6c6,stroke:#bd0a0a,color:#1a1a1a
+    classDef recl fill:#f8d3af,stroke:#9b4a08,color:#1a1a1a
+    classDef relato fill:#adf0c7,stroke:#067429,color:#1a1a1a
+    n1["<b>Natureza: Paciente com necessidade de transferência entre unidades</b>"]:::titulo
+    n2["Quem está solicitando?"]:::perg
+    n3("Unidade de saúde"):::opc
+    n4("Familiar"):::opc
+    n5{{"🔁 Trocar natureza: Fora de competência do CBMDF (orientar a regulação)"}}:::troca
+    n6["Unidade de origem e de destino"]:::perg
+    n7("Aberta"):::ab
+    n8["A vaga ou a transferência já está regulada / autorizada?"]:::perg
+    n9("Sim (número / responsável)"):::opc
+    n10("Não"):::opc
+    n11["Qual a condição do paciente?"]:::perg
+    n12("Estável"):::opc
+    n13("Instável"):::opc
+    n14("Precisa de oxigênio ou ventilação"):::opc
+    n15["Peso aproximado e se precisa de maca especial"]:::perg
+    n16("Aberta"):::ab
+    n17["Haverá profissional de saúde acompanhando?"]:::perg
+    n18("Sim"):::opc
+    n19("Não"):::opc
+    n20["🚒 <b>Despacho conforme critério da COCB</b><br/>Fala: O socorro já foi acionado e está a caminho. Vou fazer algumas perguntas rápidas para ajudar a equipe. Mantenha a calma e siga minhas orientações, por favor."]:::desp
+    n21(["Relato Final"]):::relato
+    n1 --> n2
+    n2 --> n3
+    n2 --> n4
+    n4 --> n5
+    n3 --> n6
+    n6 --> n7
+    n7 --> n8
+    n8 --> n9
+    n8 --> n10
+    n9 --> n11
+    n10 --> n11
+    n11 --> n12
+    n11 --> n13
+    n11 --> n14
+    n12 --> n15
+    n13 --> n15
+    n14 --> n15
+    n15 --> n16
+    n16 --> n17
+    n17 --> n18
+    n17 --> n19
+    n18 --> n20
+    n19 --> n20
+    n20 --> n21

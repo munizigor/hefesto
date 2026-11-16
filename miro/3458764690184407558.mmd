@@ -1,0 +1,34 @@
+flowchart TD
+    classDef troca fill:#8f7fee,stroke:#6631d7,color:#ffffff,stroke-width:3px
+    classDef cffc6c6 fill:#ffc6c6,stroke:#bd0a0a,color:#1a1a1a,stroke-dasharray:5 5
+    classDef caf7e04 fill:#af7e04,stroke:#1a1a1a,color:#1a1a1a
+    classDef cnone fill:#ffffff,stroke:#1a1a1a,color:#1a1a1a
+    classDef cfff6b6 fill:#fff6b6,stroke:#af7e04,color:#1a1a1a
+    classDef ctitulo fill:#af7e04,stroke:#1a1a1a,color:#1a1a1a
+    classDef cdedaff fill:#dedaff,stroke:#6631d7,color:#1a1a1a
+    classDef cadf0c7 fill:#adf0c7,stroke:#067429,color:#1a1a1a
+    subgraph s8815736["🚒 Despacho imediato"]
+        n8815737{{"🔁 Trocar natureza: Apoio Institucional ao BM"}}:::troca
+    end
+    style s8815736 fill:#ffc6c6,stroke:#bd0a0a,stroke-dasharray:5 5
+    n9217848("O socorro já foi acionado e está a caminho. Vou fazer algumas perguntas rápidas para ajudar a equipe. Mantenha a calma e siga minhas orientações, por favor."):::cffc6c6
+    n9954997["Quem precisa de apoio?"]:::cnone
+    n9955221["Bombeiro militar"]:::cfff6b6
+    n9955222["Familiar do Bombeiro Militar"]:::cfff6b6
+    n0027091["É uma emergência clínica?"]:::cnone
+    n0119095["<b>Natureza: Emergência clínica</b>"]:::ctitulo
+    n0027677["Sim"]:::cfff6b6
+    n0027678["Não"]:::cdedaff
+    n9284344["Realto final * Informar no relato que trata-se de Apoio Institucional a BM e relatar o posto/graduação e o nome de guerra do bombeiro."]:::cadf0c7
+    n6175080["Realto final"]:::cadf0c7
+    s8815736 -.-> n9217848
+    s8815736 --> n9954997
+    n9954997 --> n9955221
+    n9955221 --> n0027091
+    n0027091 --> n0027677
+    n0027677 -.-> n0119095
+    n0027677 --> n9284344
+    n9954997 --> n9955222
+    n9955222 --> n0027091
+    n0027091 --> n0027678
+    n0027678 --> n6175080

@@ -1,0 +1,90 @@
+flowchart TD
+    classDef troca fill:#8f7fee,stroke:#6631d7,color:#ffffff,stroke-width:3px
+    classDef titulo fill:#af7e04,stroke:#1a1a1a,color:#1a1a1a
+    classDef perg fill:#ffffff,stroke:#1a1a1a,color:#1a1a1a
+    classDef opc fill:#fff6b6,stroke:#af7e04,color:#1a1a1a
+    classDef ns fill:#dedaff,stroke:#6631d7,color:#1a1a1a
+    classDef ab fill:#ff6464,stroke:#bd0a0a,color:#1a1a1a
+    classDef desp fill:#ffc6c6,stroke:#bd0a0a,color:#1a1a1a
+    classDef video fill:#2dc75c,stroke:#067429,color:#1a1a1a
+    classDef acao fill:#ffffff,stroke:#757575,color:#1a1a1a
+    classDef orient fill:#ffdc4a,stroke:#af7e04,color:#1a1a1a
+    classDef relato fill:#adf0c7,stroke:#067429,color:#1a1a1a
+    n1["<b>Natureza: Parto de emergência</b>"]:::titulo
+    n2["Já dá para ver a cabeça do bebê ou o bebê já nasceu?"]:::perg
+    n3("Cabeça visível"):::opc
+    n4>"📞 Despacho imediato e videochamada de orientação"]:::video
+    n5("Já nasceu"):::opc
+    n6>"📞 Despacho imediato e videochamada de orientação"]:::video
+    n7("Não"):::opc
+    n8["🚒 <b>Despacho imediato</b><br/>Fala: O socorro já foi acionado e está a caminho. Vou fazer algumas perguntas rápidas para ajudar a equipe. Mantenha a calma e siga minhas orientações, por favor."]:::desp
+    n9["De quantas semanas ou meses é a gestação?"]:::perg
+    n10("Menos de 37 semanas"):::opc
+    n11("37 semanas ou mais"):::opc
+    n12("Não sabe"):::ns
+    n13["A bolsa rompeu? Qual a cor do líquido?"]:::perg
+    n14("Sim, clara"):::opc
+    n15("Sim, escura / esverdeada"):::opc
+    n16("Não"):::opc
+    n17["As contrações vêm de quanto em quanto tempo?"]:::perg
+    n18("Menos de 2 min"):::opc
+    n19("2 a 5 min"):::opc
+    n20("Mais de 5 min"):::opc
+    n21["É o primeiro filho? Gestação de gêmeos?"]:::perg
+    n22("Aberta"):::ab
+    n23["Há sangramento forte ou aparece cordão, pé ou braço antes da cabeça?"]:::perg
+    n24("Sim"):::opc
+
+    n26("Não"):::opc
+    n27("<b>Orientação ao solicitante:</b> Deite a gestante de lado esquerdo ou recostada. Separe toalhas limpas. Não puxe o bebê nem o cordão."):::orient
+    n28(["Relato Final"]):::relato
+    x1["O bebê já nasceu e não respira ou não chora?"]:::perg
+    x2["Sim"]:::opc
+    x3["Não"]:::opc
+    x4["Não sei"]:::ns
+    x5{{"🔁 Trocar natureza: Parada cardiorrespiratória (PCR)"}}:::troca
+    x6["Iremos realizar uma vídeo chamada para orientá-lo(a) até a chegada da guarnição! Mantenha a calma e siga as orientações."]:::desp
+    x7>"📞 Realize a videochamada e faça as orientações"]:::video
+    n1 --> n2
+    n2 --> n3
+    n3 --> n4
+    n2 --> n5
+    n5 --> n6
+    n2 --> n7
+    n4 --> n8
+    n6 --> n8
+    n7 --> n8
+    n8 --> x1
+    n9 --> n10
+    n9 --> n11
+    n9 --> n12
+    n10 --> n13
+    n11 --> n13
+    n12 --> n13
+    n13 --> n14
+    n13 --> n15
+    n13 --> n16
+    n14 --> n17
+    n15 --> n17
+    n16 --> n17
+    n17 --> n18
+    n17 --> n19
+    n17 --> n20
+    n18 --> n21
+    n19 --> n21
+    n20 --> n21
+    n21 --> n22
+    n22 --> n23
+    n23 --> n24
+    n23 --> n26
+    n26 -.-> n27
+    n27 --> n28
+    x1 --> x2
+    x1 --> x3
+    x1 --> x4
+    x2 --> x5
+    x3 --> n9
+    x4 --> n9
+    x5 -.-> x6
+    x5 -.-> x7
+    n24 --> n27

@@ -1,0 +1,65 @@
+flowchart TD
+    classDef troca fill:#8f7fee,stroke:#6631d7,color:#ffffff,stroke-width:3px
+    classDef titulo fill:#af7e04,stroke:#1a1a1a,color:#1a1a1a
+    classDef perg fill:#ffffff,stroke:#1a1a1a,color:#1a1a1a
+    classDef opc fill:#fff6b6,stroke:#af7e04,color:#1a1a1a
+    classDef ns fill:#dedaff,stroke:#6631d7,color:#1a1a1a
+    classDef ab fill:#ff6464,stroke:#bd0a0a,color:#1a1a1a
+    classDef desp fill:#ffc6c6,stroke:#bd0a0a,color:#1a1a1a
+    classDef recl fill:#f8d3af,stroke:#9b4a08,color:#1a1a1a
+    classDef orient fill:#ffdc4a,stroke:#af7e04,color:#1a1a1a
+    classDef relato fill:#adf0c7,stroke:#067429,color:#1a1a1a
+    n1["<b>Natureza: Naufrágio / acidente náutico</b>"]:::titulo
+    n2["Há pessoas na água?"]:::perg
+    n3("Sim"):::opc
+    n4("Não"):::opc
+    n5("Não sabe"):::ns
+    n6["🚒 <b>Despacho imediato</b><br/>Fala: O socorro já foi acionado e está a caminho. Vou fazer algumas perguntas rápidas para ajudar a equipe. Mantenha a calma e siga minhas orientações, por favor."]:::desp
+    n7["Quantas pessoas estavam na embarcação e quantas estão na água?"]:::perg
+    n8("Aberta"):::ab
+    n9["O que aconteceu?"]:::perg
+    n10("Colisão"):::opc
+    n11("Virou / afundou"):::opc
+    n12("Fogo / explosão"):::opc
+    n13("Atingido por hélice / embarcação"):::opc
+    n14["As pessoas na água estão de colete ou agarradas em algo?"]:::perg
+    n15("Sim"):::opc
+    n16("Não"):::opc
+    n17["Alguém afundou e não voltou?"]:::perg
+    n18("Sim"):::opc
+    n19{{"🔁 Trocar natureza: Afogamento"}}:::troca
+    n20("Não"):::opc
+    n21["Local exato (lago, píer, clube, ponto de referência)"]:::perg
+    n22("Aberta"):::ab
+    n23("<b>Orientação ao solicitante:</b> Se estiver em outra embarcação, aproxime-se com cuidado e jogue coletes ou boias. Não pule na água."):::orient
+    n24(["Relato Final"]):::relato
+    n1 --> n2
+    n2 --> n3
+    n2 --> n4
+    n2 --> n5
+    n3 --> n6
+    n4 --> n6
+    n5 --> n6
+    n6 --> n7
+    n7 --> n8
+    n8 --> n9
+    n9 --> n10
+    n9 --> n11
+    n9 --> n12
+    n9 --> n13
+    n10 --> n14
+    n11 --> n14
+    n12 --> n14
+    n13 --> n14
+    n14 --> n15
+    n14 --> n16
+    n15 --> n17
+    n16 --> n17
+    n17 --> n18
+    n18 --> n19
+    n17 --> n20
+
+    n20 --> n21
+    n21 --> n22
+    n22 -.-> n23
+    n23 --> n24

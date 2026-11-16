@@ -1,0 +1,129 @@
+flowchart TD
+    classDef troca fill:#8f7fee,stroke:#6631d7,color:#ffffff,stroke-width:3px
+    classDef titulo fill:#af7e04,stroke:#1a1a1a,color:#1a1a1a
+    classDef perg fill:#ffffff,stroke:#1a1a1a,color:#1a1a1a
+    classDef opc fill:#fff6b6,stroke:#af7e04,color:#1a1a1a
+    classDef ns fill:#dedaff,stroke:#6631d7,color:#1a1a1a
+    classDef ab fill:#ff6464,stroke:#bd0a0a,color:#1a1a1a
+    classDef desp fill:#ffc6c6,stroke:#bd0a0a,color:#1a1a1a
+    classDef video fill:#2dc75c,stroke:#067429,color:#1a1a1a
+    classDef acao fill:#ffffff,stroke:#757575,color:#1a1a1a
+    classDef orient fill:#ffdc4a,stroke:#af7e04,color:#1a1a1a
+    classDef relato fill:#adf0c7,stroke:#067429,color:#1a1a1a
+    n1["<b>Natureza: Queda de plano elevado</b>"]:::titulo
+    n2["De onde a pessoa caiu?"]:::perg
+    n3("Escada"):::opc
+    n4("Telhado / laje"):::opc
+    n5("Andaime / obra"):::opc
+    n6("Árvore"):::opc
+    n7("Janela / sacada"):::opc
+    n8("Aberta"):::ab
+    n9["De que altura, mais ou menos?"]:::perg
+    n10("Até 2 m"):::opc
+    n11("2 a 6 m"):::opc
+    n12("Mais de 6 m"):::opc
+    n13["🚒 <b>Despacho imediato</b><br/>Fala: O socorro já foi acionado e está a caminho. Vou fazer algumas perguntas rápidas para ajudar a equipe. Mantenha a calma e siga minhas orientações, por favor."]:::desp
+    n14["A vítima está acordada e responde quando você chama?"]:::perg
+    n15("Sim"):::opc
+    n16("Não"):::opc
+    n17("Não sabe"):::ns
+    n18["Ela respira normalmente?"]:::perg
+    n19("Sim"):::opc
+    n20("Não"):::opc
+    n21>"📞 Realize a videochamada e faça as orientações de RCP"]:::video
+    n22("Não sabe"):::ns
+    n23["Ela consegue mexer braços e pernas?"]:::perg
+    n24("Sim"):::opc
+    n25("Não"):::opc
+    n26("Não sabe"):::ns
+    n27["Há sangramento grande ou osso aparente?"]:::perg
+    n28("Sim"):::opc
+    n29("Não"):::opc
+    n30["A pessoa continua em local de risco (telhado, poço, água)?"]:::perg
+    n31("Sim"):::opc
+
+    n33("Não"):::opc
+    n34("<b>Orientação ao solicitante:</b> Não mexa a pessoa nem levante a cabeça dela. Mantenha-a aquecida e converse com ela."):::orient
+    n35(["Relato Final"]):::relato
+    x1["A pessoa se jogou de propósito?"]:::perg
+    x2["Sim"]:::opc
+    x3["Não"]:::opc
+    x4["Não sei"]:::ns
+    x5{{"🔁 Trocar natureza: Tentativa de suicídio"}}:::troca
+    x6["A queda foi da própria altura (tropeçou ou escorregou)?"]:::perg
+    x7["Sim"]:::opc
+    x8["Não"]:::opc
+    x9["Não sei"]:::ns
+    x10{{"🔁 Trocar natureza: Queda da própria altura"}}:::troca
+    x11["A queda foi de moto, bicicleta ou patinete?"]:::perg
+    x12["Sim"]:::opc
+    x13["Não"]:::opc
+    x14["Não sei"]:::ns
+    x15{{"🔁 Trocar natureza: Queda de motocicleta / Queda de bicicleta ou patinete (naturezas a aprovar)"}}:::troca
+    x16{{"🔁 Trocar natureza: Parada cardiorrespiratória (PCR)"}}:::troca
+    n1 --> n2
+    n2 --> n3
+    n2 --> n4
+    n2 --> n5
+    n2 --> n6
+    n2 --> n7
+    n2 --> n8
+    n3 --> x1
+    n4 --> x1
+    n5 --> x1
+    n6 --> x1
+    n7 --> x1
+    n8 --> x1
+    n9 --> n10
+    n9 --> n11
+    n9 --> n12
+    n10 --> n13
+    n11 --> n13
+    n12 --> n13
+    n13 --> n14
+    n14 --> n15
+    n14 --> n16
+    n14 --> n17
+    n15 --> n18
+    n16 --> n18
+    n17 --> n18
+    n18 --> n19
+    n18 --> n20
+    n20 --> n21
+    n18 --> n22
+    n19 --> n23
+    n22 --> n23
+    n23 --> n24
+    n23 --> n25
+    n23 --> n26
+    n24 --> n27
+    n25 --> n27
+    n26 --> n27
+    n27 --> n28
+    n27 --> n29
+    n28 --> n30
+    n29 --> n30
+    n30 --> n31
+    n30 --> n33
+    n33 -.-> n34
+    n34 --> n35
+    x1 --> x2
+    x1 --> x3
+    x1 --> x4
+    x2 --> x5
+    x3 --> x6
+    x4 --> x6
+    x6 --> x7
+    x6 --> x8
+    x6 --> x9
+    x7 --> x10
+    x8 --> x11
+    x9 --> x11
+    x11 --> x12
+    x11 --> x13
+    x11 --> x14
+    x12 --> x15
+    x13 --> n9
+    x14 --> n9
+    n20 --> x16
+    n31 --> n34

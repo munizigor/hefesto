@@ -1,0 +1,92 @@
+flowchart TD
+    classDef troca fill:#8f7fee,stroke:#6631d7,color:#ffffff,stroke-width:3px
+    classDef titulo fill:#af7e04,stroke:#1a1a1a,color:#1a1a1a
+    classDef perg fill:#ffffff,stroke:#1a1a1a,color:#1a1a1a
+    classDef opc fill:#fff6b6,stroke:#af7e04,color:#1a1a1a
+    classDef ns fill:#dedaff,stroke:#6631d7,color:#1a1a1a
+    classDef desp fill:#ffc6c6,stroke:#bd0a0a,color:#1a1a1a
+    classDef video fill:#2dc75c,stroke:#067429,color:#1a1a1a
+    classDef acao fill:#ffffff,stroke:#757575,color:#1a1a1a
+    classDef orient fill:#ffdc4a,stroke:#af7e04,color:#1a1a1a
+    classDef relato fill:#adf0c7,stroke:#067429,color:#1a1a1a
+    n1["<b>Natureza: Pessoa atropelada</b>"]:::titulo
+    n2["Atropelada por qual veículo?"]:::perg
+    n3("Carro"):::opc
+    n4("Moto"):::opc
+    n5("Ônibus / caminhão"):::opc
+    n6("Trem / metrô"):::opc
+    n7("Bicicleta"):::opc
+    n8["🚒 <b>Despacho imediato</b><br/>Fala: O socorro já foi acionado e está a caminho. Vou fazer algumas perguntas rápidas para ajudar a equipe. Mantenha a calma e siga minhas orientações, por favor."]:::desp
+    n9["Quantas vítimas?"]:::perg
+    n10("1"):::opc
+    n11("Mais de 1"):::opc
+    n12["A vítima está acordada e responde quando você chama?"]:::perg
+    n13("Sim"):::opc
+    n14("Não"):::opc
+    n15("Não sabe"):::ns
+    n16["Ela respira normalmente?"]:::perg
+    n17("Sim"):::opc
+    n18("Não"):::opc
+    n19>"📞 Realize a videochamada e faça as orientações de RCP"]:::video
+    n20("Não sabe"):::ns
+    n21["A pessoa está presa embaixo do veículo?"]:::perg
+    n22("Sim"):::opc
+
+    n24("Não"):::opc
+    n25["Está no meio da via com trânsito passando?"]:::perg
+    n26("Sim"):::opc
+    n27["Acionar órgão de trânsito / PMDF"]:::acao
+    n28("Não"):::opc
+    n29("<b>Orientação ao solicitante:</b> Sinalize a via se for seguro. Não mova a vítima nem retire o capacete."):::orient
+    n30(["Relato Final"]):::relato
+    x1["A pessoa se jogou na frente do veículo?"]:::perg
+    x2["Sim"]:::opc
+    x3["Não"]:::opc
+    x4["Não sei"]:::ns
+    x5{{"🔁 Trocar natureza: Tentativa de suicídio"}}:::troca
+    x6{{"🔁 Trocar natureza: Parada cardiorrespiratória (PCR)"}}:::troca
+    n1 --> n2
+    n2 --> n3
+    n2 --> n4
+    n2 --> n5
+    n2 --> n6
+    n2 --> n7
+    n3 --> n8
+    n4 --> n8
+    n5 --> n8
+    n6 --> n8
+    n7 --> n8
+    n8 --> x1
+    n9 --> n10
+    n9 --> n11
+    n10 --> n12
+    n11 --> n12
+    n12 --> n13
+    n12 --> n14
+    n12 --> n15
+    n13 --> n16
+    n14 --> n16
+    n15 --> n16
+    n16 --> n17
+    n16 --> n18
+    n18 --> n19
+    n16 --> n20
+    n17 --> n21
+    n20 --> n21
+    n21 --> n22
+    n21 --> n24
+    n24 --> n25
+    n25 --> n26
+    n26 --> n27
+    n25 --> n28
+    n27 -.-> n29
+    n28 -.-> n29
+    n29 --> n30
+    x1 --> x2
+    x1 --> x3
+    x1 --> x4
+    x2 --> x5
+    x3 --> n9
+    x4 --> n9
+    n18 --> x6
+    n22 --> n25

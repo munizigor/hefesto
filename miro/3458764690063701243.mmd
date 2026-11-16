@@ -1,0 +1,113 @@
+flowchart TD
+    classDef troca fill:#8f7fee,stroke:#6631d7,color:#ffffff,stroke-width:3px
+    classDef titulo fill:#af7e04,stroke:#1a1a1a,color:#1a1a1a
+    classDef perg fill:#ffffff,stroke:#1a1a1a,color:#1a1a1a
+    classDef opc fill:#fff6b6,stroke:#af7e04,color:#1a1a1a
+    classDef ab fill:#ff6464,stroke:#bd0a0a,color:#1a1a1a
+    classDef desp fill:#ffc6c6,stroke:#bd0a0a,color:#1a1a1a
+    classDef recl fill:#f8d3af,stroke:#9b4a08,color:#1a1a1a
+    classDef acao fill:#ffffff,stroke:#757575,color:#1a1a1a
+    classDef orient fill:#ffdc4a,stroke:#af7e04,color:#1a1a1a
+    classDef relato fill:#adf0c7,stroke:#067429,color:#1a1a1a
+    n1["<b>Natureza: Pessoa presa ou confinada</b>"]:::titulo
+    n2["Onde a pessoa está presa?"]:::perg
+    n3("Elevador"):::opc
+    n4["O elevador está parado entre andares?"]:::perg
+    n5("Poço / cisterna / galeria"):::opc
+    n6("Silo / tanque"):::opc
+    n7("Escombros"):::opc
+    n8{{"🔁 Trocar natureza: Desabamento / desmoronamento"}}:::troca
+    n9("Aberta"):::ab
+    n10["🚒 <b>Despacho imediato</b><br/>Fala: O socorro já foi acionado e está a caminho. Vou fazer algumas perguntas rápidas para ajudar a equipe. Mantenha a calma e siga minhas orientações, por favor."]:::desp
+    n11["Quantas pessoas estão presas?"]:::perg
+    n12("1"):::opc
+    n13("2 a 5"):::opc
+    n14("Mais de 5"):::opc
+    n15["Você consegue falar com elas? Elas respondem?"]:::perg
+    n16("Sim"):::opc
+    n17("Não"):::opc
+    n18["Alguém está ferido, passando mal ou com falta de ar?"]:::perg
+    n19("Sim"):::opc
+
+    n23("Sim"):::opc
+
+    n26("<b>Orientação ao solicitante:</b> Não entre em poço, tanque ou galeria para tirar a pessoa: o ar pode ser tóxico. No elevador, peça que ninguém force a porta."):::orient
+    n27(["Relato Final"]):::relato
+    x1["Tem fogo ou fumaça no local?"]:::perg
+    x2["Sim"]:::opc
+    x3["Não"]:::opc
+    x4["Não sei"]:::ns
+    x5{{"🔁 Trocar natureza: Incêndio em edificação"}}:::troca
+    x6["Está entrando água e a pessoa pode ficar submersa?"]:::perg
+    x7["Sim"]:::opc
+    x8["Não"]:::opc
+    x9["Não sei"]:::ns
+    x10{{"🔁 Trocar natureza: Afogamento"}}:::troca
+    x11{{"🔁 Trocar natureza: Afogamento"}}:::troca
+    x12["Alguma parte do corpo está presa por máquina, ferragem ou estrutura?"]:::perg
+    x13["Sim"]:::opc
+    x14["Não"]:::opc
+    x15["Não sei"]:::ns
+    x16{{"🔁 Trocar natureza: Pessoa prensada por estrutura, máquina ou veículo"}}:::troca
+    x17["Sim"]:::opc
+    x18["Não"]:::opc
+    x19["Não sei"]:::ns
+    x20["A empresa de manutenção do elevador já foi chamada?"]:::perg
+    x21["Sim"]:::opc
+    x22["Não"]:::opc
+    x23["Não sei"]:::ns
+    n1 --> n2
+    n2 --> n3
+    n3 --> n4
+    n2 --> n5
+    n2 --> n6
+    n2 --> n7
+    n7 --> n8
+    n2 --> n9
+
+    n5 --> n10
+    n6 --> n10
+    n9 --> n10
+    n10 --> x1
+    n11 --> n12
+    n11 --> n13
+    n11 --> n14
+    n12 --> n15
+    n13 --> n15
+    n14 --> n15
+    n15 --> n16
+    n15 --> n17
+    n16 --> n18
+    n17 --> n18
+    n18 --> n26
+    n26 --> n27
+    x1 --> x2
+    x1 --> x3
+    x1 --> x4
+    x2 --> x5
+    x3 --> x6
+    x4 --> x6
+    x6 --> x7
+    x6 --> x8
+    x6 --> x9
+    x7 --> x10
+    x8 --> x12
+    x9 --> x11
+    x12 --> x13
+    x12 --> x14
+    x12 --> x15
+    x13 --> x16
+    x14 --> n11
+    x15 --> n11
+    n4 --> x17
+    n4 --> x18
+    n4 --> x19
+    x17 --> x20
+    x18 --> x20
+    x19 --> x20
+    x20 --> x21
+    x20 --> x22
+    x20 --> x23
+    x21 --> n10
+    x22 --> n10
+    x23 --> n10

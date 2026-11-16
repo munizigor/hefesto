@@ -1,0 +1,80 @@
+flowchart TD
+    classDef troca fill:#8f7fee,stroke:#6631d7,color:#ffffff,stroke-width:3px
+    classDef titulo fill:#af7e04,stroke:#1a1a1a,color:#1a1a1a
+    classDef perg fill:#ffffff,stroke:#1a1a1a,color:#1a1a1a
+    classDef opc fill:#fff6b6,stroke:#af7e04,color:#1a1a1a
+    classDef ns fill:#dedaff,stroke:#6631d7,color:#1a1a1a
+    classDef ab fill:#ff6464,stroke:#bd0a0a,color:#1a1a1a
+    classDef desp fill:#ffc6c6,stroke:#bd0a0a,color:#1a1a1a
+    classDef recl fill:#f8d3af,stroke:#9b4a08,color:#1a1a1a
+    classDef orient fill:#ffdc4a,stroke:#af7e04,color:#1a1a1a
+    classDef relato fill:#adf0c7,stroke:#067429,color:#1a1a1a
+    n1["<b>Natureza: Embarcação à deriva</b>"]:::titulo
+    n2["Tem gente na embarcação?"]:::perg
+    n3("Sim"):::opc
+    n4["🚒 <b>Despacho imediato</b><br/>Fala: O socorro já foi acionado e está a caminho. Vou fazer algumas perguntas rápidas para ajudar a equipe. Mantenha a calma e siga minhas orientações, por favor."]:::desp
+    n5("Não"):::opc
+    n6("Não sabe"):::ns
+    n7[Qual o tipo de embarcação?]:::perg
+    n8("Lancha"):::opc
+    n9("Barco a remo / caiaque"):::opc
+    n10("Jet ski"):::opc
+    n11("Veleiro"):::opc
+    n12("Aberta"):::ab
+    n13["Onde está (lago, região, ponto de referência)?"]:::perg
+    n14("Aberta"):::ab
+    n15["Está afundando, com fogo ou com pessoa na água?"]:::perg
+    n16("Afundando"):::opc
+    n17{{"🔁 Trocar natureza: Naufrágio / acidente náutico"}}:::troca
+    n18("Fogo"):::opc
+    n19("Pessoa na água"):::opc
+    n20{{"🔁 Trocar natureza: Afogamento"}}:::troca
+    n21("Nenhum"):::opc
+    n22["As pessoas estão de colete?"]:::perg
+    n23("Sim"):::opc
+    n24("Não"):::opc
+    n25("Não sabe"):::ns
+    n26["Consegue falar com quem está a bordo (celular)?"]:::perg
+    n27("Sim (número)"):::opc
+    n28("Não"):::opc
+    n29("<b>Orientação ao solicitante:</b> Para quem está a bordo: vistam os coletes e fiquem na embarcação. Não tentem nadar até a margem."):::orient
+    n30(["Relato Final"]):::relato
+    n1 --> n2
+    n2 --> n3
+    n3 --> n4
+    n2 --> n5
+    n2 --> n6
+    n4 --> n7
+    n5 --> n7
+    n6 --> n7
+    n7 --> n8
+    n7 --> n9
+    n7 --> n10
+    n7 --> n11
+    n7 --> n12
+    n8 --> n13
+    n9 --> n13
+    n10 --> n13
+    n11 --> n13
+    n12 --> n13
+    n13 --> n14
+    n14 --> n15
+    n15 --> n16
+    n16 --> n17
+    n15 --> n18
+    n15 --> n19
+    n19 --> n20
+    n15 --> n21
+    n18 --> n22
+    n21 --> n22
+    n22 --> n23
+    n22 --> n24
+    n22 --> n25
+    n23 --> n26
+    n24 --> n26
+    n25 --> n26
+    n26 --> n27
+    n26 --> n28
+    n27 -.-> n29
+    n28 -.-> n29
+    n29 --> n30

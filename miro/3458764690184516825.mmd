@@ -1,0 +1,20 @@
+flowchart TD
+    classDef cnone fill:#ffffff,stroke:#1a1a1a,color:#1a1a1a
+    classDef ctitulo fill:#af7e04,stroke:#1a1a1a,color:#1a1a1a
+    classDef cfff6b6 fill:#fff6b6,stroke:#af7e04,color:#1a1a1a
+    classDef cff6464 fill:#ff6464,stroke:#bd0a0a,color:#1a1a1a
+    subgraph s0645233["🚒 Despacho imediato"]
+        n0645234["<b>Natureza: Picada de abelha / marimbondo / inseto</b>"]:::ctitulo
+    end
+    style s0645233 fill:#ffc6c6,stroke:#bd0a0a,stroke-dasharray:5 5
+    n7542438["Essa natureza não consta nas naturezas iniciais."]:::cnone
+    n2124597["O que picou/ferroou?"]:::cnone
+    n2124911["Abelha"]:::cfff6b6
+    n2124925["Marimbondo"]:::cfff6b6
+    n2192944["outro"]:::cfff6b6
+    n2193493["Aberta:"]:::cff6464
+    s0645233 --> n2124597
+    n2124597 --> n2124911
+    n2124597 --> n2124925
+    n2124597 --> n2192944
+    n2192944 --> n2193493

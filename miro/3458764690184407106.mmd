@@ -1,0 +1,113 @@
+flowchart TD
+    classDef cvideo fill:#2dc75c,stroke:#067429,color:#1a1a1a
+    classDef troca fill:#8f7fee,stroke:#6631d7,color:#ffffff,stroke-width:3px
+    classDef ctitulo fill:#af7e04,stroke:#1a1a1a,color:#1a1a1a
+    classDef cffc6c6 fill:#ffc6c6,stroke:#bd0a0a,color:#1a1a1a,stroke-dasharray:5 5
+    classDef cnone fill:#ffffff,stroke:#1a1a1a,color:#1a1a1a
+    classDef cfff6b6 fill:#fff6b6,stroke:#af7e04,color:#1a1a1a
+    classDef cdedaff fill:#dedaff,stroke:#6631d7,color:#1a1a1a
+    classDef cffdc4a fill:#ffdc4a,stroke:#af7e04,color:#1a1a1a,stroke-dasharray:5 5
+    classDef cff6464 fill:#ff6464,stroke:#bd0a0a,color:#1a1a1a
+    classDef cadf0c7 fill:#adf0c7,stroke:#067429,color:#1a1a1a
+    subgraph s8978985["🚒 Despacho imediato"]
+        n8839666["<b>Natureza: Pessoa confinada</b>"]:::ctitulo
+    end
+    style s8978985 fill:#ffc6c6,stroke:#bd0a0a,stroke-dasharray:5 5
+    n0801504("O socorro já foi acionado e está a caminho. Vou fazer algumas perguntas rápidas para ajudar a equipe. Mantenha a calma e siga minhas orientações, por favor."):::cffc6c6
+    n6980727["Onde ocorre?"]:::cnone
+    n6980922["Elevador"]:::cfff6b6
+    n6980923["Poço/vala"]:::cfff6b6
+    n7213032["Cisterna/tanque/ silo"]:::cfff6b6
+    n7213043["Máquina/ equipamento"]:::cfff6b6
+    n7213500["Veículo"]:::cfff6b6
+    n7213658["Outro"]:::cdedaff
+    n7750108["A vítima está dentro de um espaço do qual não consegue sair, sem estar presa por um objeto ou estrutura?"]:::cnone
+    n0505191("ORIENTAÇÃO AO SOLICITANTE: Não tente retirar a vítima por meios próprios nem acessar o local de risco. Mantenha a vítima calma e, se for seguro, tente manter contato até a chegada da equipe de socorro."):::cffdc4a
+    n7750213["Sim"]:::cfff6b6
+    n7750214["Não"]:::cfff6b6
+    n7750360["Não sei"]:::cdedaff
+    n8132533["A vítima tem parte do corpo ou corpo inteiro fisicamente retido por objeto, estrutura, máquina, ferragem ou escombros?"]:::cnone
+    n8373488["Sim"]:::cfff6b6
+    n8373489["Não"]:::cfff6b6
+    n8373490["Não sei"]:::cdedaff
+    n9241578["Quantas pessoas estão presas ou confinadas?"]:::cnone
+    n9365475["Aberta:"]:::cff6464
+    n9365608["Tem alguem ferido ou passando mal?"]:::cnone
+    n9241681["Sim"]:::cfff6b6
+    n9241682["Não"]:::cdedaff
+    n9504025["Há pessoas inconscientes?"]:::cnone
+    n9604667["Sim"]:::cfff6b6
+    n9604901["há algum idoso, gestante, criança ou com outra condição que exija atenção especial?"]:::cnone
+    n9604668["Não"]:::cdedaff
+    n9687723["Sim"]:::cfff6b6
+    n9687724["Não"]:::cdedaff
+    n9792191["Há presença de outros riscos no local? (Elétricos, incêndios, desabamentos ou outros)."]:::cnone
+    n8653180["Sim"]:::cfff6b6
+    n8653181["Não"]:::cdedaff
+    n8653268["Não sei"]:::cfff6b6
+    n0932024["Realto final"]:::cadf0c7
+    x1{{"🔁 Trocar natureza: Pessoa prensada por estrutura, máquina ou veículo"}}:::troca
+    x2["A pessoa inconsciente respira normalmente?"]:::cnone
+    x3["Sim"]:::cfff6b6
+    x4["Não"]:::cfff6b6
+    x5["Não sei"]:::cdedaff
+    x6{{"🔁 Trocar natureza: Parada cardiorrespiratória (PCR)"}}:::troca
+    x7{{"🔁 Trocar natureza: Parada cardiorrespiratória (PCR)"}}:::troca
+    x8{{"🔁 Trocar natureza: Incêndio em edificação ou Desabamento (conforme o risco)"}}:::troca
+    x9("Iremos realizar uma vídeo chamada para orientá-lo(a) até a chegada da guarnição! Mantenha a calma e siga as orientações."):::cffc6c6
+    x10>"📞 Realize a videochamada e faça as orientações"]:::cvideo
+    x11("Iremos realizar uma vídeo chamada para orientá-lo(a) até a chegada da guarnição! Mantenha a calma e siga as orientações."):::cffc6c6
+    x12>"📞 Realize a videochamada e faça as orientações"]:::cvideo
+    n9241578 --> n9365475
+    n9365475 --> n9365608
+    n9365608 --> n9241681
+    n9365608 --> n9241682
+    n9241681 --> n9504025
+    n9241682 --> n9504025
+    n9504025 --> n9604667
+    n9504025 --> n9604668
+    n9604901 --> n9687723
+    n9604901 --> n9687724
+    n0801504 -.-> s8978985
+
+    n9604668 --> n9604901
+    n8839666 --> n6980727
+    n9687723 --> n9792191
+    n9687724 --> n9792191
+    n7750108 --> n7750213
+    n7750108 --> n7750214
+    n7750108 --> n7750360
+    n7750213 --> n8132533
+    n7750214 --> n8132533
+    n7750360 --> n8132533
+    n8132533 --> n8373488
+    n8132533 --> n8373489
+    n8132533 --> n8373490
+
+    n8373489 --> n9241578
+    n8373490 --> n9241578
+    n9792191 --> n8653180
+    n9792191 --> n8653181
+    n9792191 --> n8653268
+    n8653180 --> n0932024
+    n8653181 --> n0932024
+    n8653268 --> n0932024
+    n6980727 --> n7213500
+    n6980727 --> n6980923
+    n6980727 --> n7213658
+    n6980727 --> n7213043
+    n6980727 --> n7213032
+    n6980727 --> n6980922
+    n8373488 --> x1
+    n9604667 --> x2
+    x2 --> x3
+    x2 --> x4
+    x2 --> x5
+    x3 --> n9604901
+    x4 --> x6
+    x5 --> x7
+    n8653180 --> x8
+    x6 -.-> x9
+    x6 -.-> x10
+    x7 -.-> x11
+    x7 -.-> x12

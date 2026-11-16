@@ -1,0 +1,110 @@
+flowchart TD
+    classDef troca fill:#8f7fee,stroke:#6631d7,color:#ffffff,stroke-width:3px
+    classDef cnone fill:#ffffff,stroke:#1a1a1a,color:#1a1a1a
+    classDef cfff6b6 fill:#fff6b6,stroke:#af7e04,color:#1a1a1a
+    classDef cffc6c6 fill:#ffc6c6,stroke:#bd0a0a,color:#1a1a1a,stroke-dasharray:5 5
+    classDef caf7e04 fill:#af7e04,stroke:#1a1a1a,color:#1a1a1a
+    classDef cff6464 fill:#ff6464,stroke:#bd0a0a,color:#1a1a1a
+    classDef cvideo fill:#2dc75c,stroke:#067429,color:#1a1a1a
+    classDef cadf0c7 fill:#adf0c7,stroke:#067429,color:#1a1a1a
+    classDef cdedaff fill:#dedaff,stroke:#6631d7,color:#1a1a1a
+    classDef c659df2 fill:#659df2,stroke:#305bab,color:#ffffff
+    classDef ctitulo fill:#af7e04,stroke:#1a1a1a,color:#1a1a1a
+    subgraph s3097928["🚒 Despacho imediato"]
+        n1912178{{"🔁 Trocar natureza: Parada Cárdiorespiratória"}}:::troca
+    end
+    style s3097928 fill:#ffc6c6,stroke:#bd0a0a,stroke-dasharray:5 5
+    subgraph s1912157["🚒 Despacho imediato"]
+        n1912166["Não"]:::cfff6b6
+        n1912163["Não sei"]:::cfff6b6
+        n1912162["Sim"]:::cfff6b6
+    end
+    style s1912157 fill:#ffc6c6,stroke:#bd0a0a,stroke-dasharray:5 5
+    n2266944["Quantas picadas aconteceram?"]:::cnone
+    n2267300["entre 1 e 3 picadas"]:::cfff6b6
+    n2267304["Houve ataque/ enxame"]:::cfff6b6
+    n1912455["A pessoa picada é criança/ pessoa idosa?"]:::cnone
+    n1912171("O socorro já foi acionado e está a caminho. Vou fazer algumas perguntas rápidas para ajudar a equipe. Mantenha a calma e siga minhas orientações, por favor."):::cffc6c6
+    n1994328["Sim"]:::cfff6b6
+    n1994329["Não"]:::cfff6b6
+    n1912160["A pessoa picada é alérgica"]:::cnone
+    n6801794["A pessoa picada apresenta sintomas graves?"]:::cnone
+    n6965179["Sim"]:::cfff6b6
+    n6965180["Não"]:::cfff6b6
+    n1912173["A pessoa picada respira?"]:::cnone
+    n1912168{{"🔁 Trocar natureza: Picada de inseto"}}:::troca
+    n7704584["Aberta:"]:::cff6464
+    n7627284["Onde foi a picada?"]:::cnone
+    n1912175["Sim"]:::cfff6b6
+    n2406892["Não"]:::cfff6b6
+    n2530992["Há muitos insetos no local?"]:::cnone
+    n2531150["Sim"]:::cfff6b6
+    n2531151["Não"]:::cfff6b6
+    n1912177>"📞 Realize a videochamada e faça as orientações"]:::cvideo
+    n2531281["Os insetos estão atacando pessoas?"]:::cnone
+    n2474838["Realto final"]:::cadf0c7
+    n2531450["Sim"]:::cfff6b6
+    n2531451["Não"]:::cfff6b6
+    n2696547["Os insetos estão agitados?"]:::cnone
+    n2696646["Sim"]:::cfff6b6
+    n5529507["Será necessário uma averiguação para captura?"]:::cnone
+    n2696647["Não"]:::cfff6b6
+    n5707572{{"🔁 Trocar natureza: Insetos, Abelha ou Similares Oferecendo Risco"}}:::troca
+    n5707076["Sim"]:::cfff6b6
+    n5707170["Não"]:::cfff6b6
+    n6629246["Qual é a emergência e por qual motivo o senhor(a) necessita do atendimento do CBMDF, considerando que não há vítimas e não há risco aparente?"]:::cnone
+    n6154873["Atenção Teleatendente! Com base nas informações, esta ocorrência aparenta não ser de competência do CBMDF. Entre em contato com o Chefe de Teleatendimento para confirmar a necessidade de envio de recursos."]:::cdedaff
+    n6442214["Despachar para CBMDF"]:::cfff6b6
+    n6442212["Realto final * Incluir texto: Ordem do Coordenador/Subcoordenador de Operações"]:::cadf0c7
+    n6442216["Encaminhar para outro órgão"]:::c659df2
+    n6442213["<b>Natureza: Insetos, Abelha ou Similares Oferecendo Risco</b>"]:::ctitulo
+    n1912160 --> n1912162
+    n1912160 --> n1912163
+    n1912160 --> n1912166
+    s1912157 -.-> n1912168
+    n1912163 --> n2530992
+    n1912162 --> n1912173
+    n1912173 --> n1912175
+    n1912177 -.-> n1912178
+    n1912455 --> n1994328
+    n1912455 --> n1994329
+    n2266944 --> n2267300
+    n2266944 --> n2267304
+    n2267300 --> n1912455
+    n2267304 --> n1912455
+    n1994328 --> n1912160
+    n1994329 --> n1912160
+    n1912173 --> n2406892
+    n2406892 --> n1912177
+    n1912177 --> n2474838
+    n2530992 --> n2531150
+    n2530992 --> n2531151
+    n2531150 --> n2531281
+    n2531151 --> n2531281
+    n2531281 --> n2531450
+    n2531281 --> n2531451
+    n1912166 --> n2530992
+    n2531450 --> n2696547
+    n2531451 --> n2696547
+    n2696547 --> n2696646
+    n2696547 --> n2696647
+    n2696646 --> n5529507
+    n2696647 --> n5529507
+    n5529507 --> n5707076
+    n5529507 --> n5707170
+    n5707076 --> n5707572
+    n6442214 --> n6442212
+    n6442212 -.-> n6442213
+    n5707572 --> n6442214
+    n5707170 --> n6629246
+    n6629246 --> n6154873
+    n6154873 --> n6442216
+    n6442216 --> n6442212
+    n1912175 --> n6801794
+    n6801794 --> n6965179
+    n6801794 --> n6965180
+    n6965179 --> n7627284
+    n7627284 --> n7704584
+    n7704584 --> n2530992
+    n6965180 --> n7627284
+    n6154873 --> n6442214

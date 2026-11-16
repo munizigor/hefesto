@@ -1,0 +1,56 @@
+flowchart TD
+    classDef troca fill:#8f7fee,stroke:#6631d7,color:#ffffff,stroke-width:3px
+    classDef titulo fill:#af7e04,stroke:#1a1a1a,color:#1a1a1a
+    classDef perg fill:#ffffff,stroke:#1a1a1a,color:#1a1a1a
+    classDef opc fill:#fff6b6,stroke:#af7e04,color:#1a1a1a
+    classDef ab fill:#ff6464,stroke:#bd0a0a,color:#1a1a1a
+    classDef desp fill:#ffc6c6,stroke:#bd0a0a,color:#1a1a1a
+    classDef recl fill:#f8d3af,stroke:#9b4a08,color:#1a1a1a
+    classDef acao fill:#ffffff,stroke:#757575,color:#1a1a1a
+    classDef orient fill:#ffdc4a,stroke:#af7e04,color:#1a1a1a
+    classDef relato fill:#adf0c7,stroke:#067429,color:#1a1a1a
+    n1["<b>Natureza: Óleo / substância na via</b>"]:::titulo
+    n2["Que substância parece ser?"]:::perg
+    n3("Óleo / combustível"):::opc
+    n4("Areia / terra"):::opc
+    n5("Produto desconhecido com cheiro forte"):::opc
+    n6{{"🔁 Trocar natureza: Vazamento / derramamento de combustível ou produto"}}:::troca
+    n7("Aberta"):::ab
+    n8["Já houve acidente ou queda de motociclista?"]:::perg
+    n9("Sim"):::opc
+
+    n11("Não"):::opc
+    n12["Qual a extensão?"]:::perg
+    n13("Mancha pequena"):::opc
+    n14("Trecho longo (mais de 50 m)"):::opc
+    n15["Está em curva, descida ou cruzamento?"]:::perg
+    n16("Sim"):::opc
+
+    n18("Não"):::opc
+    n19["🚒 Despacho conforme critério da COCB; acionar órgão de trânsito"]:::desp
+    n20("<b>Orientação ao solicitante:</b> Sinalize antes do trecho, se for seguro. Não jogue água sobre o óleo."):::orient
+    n21(["Relato Final"]):::relato
+    x1{{"🔁 Trocar natureza: Acidente de trânsito com vítima ou Queda de motocicleta"}}:::troca
+    n1 --> n2
+    n2 --> n3
+    n2 --> n4
+    n2 --> n5
+    n5 --> n6
+    n2 --> n7
+    n3 --> n8
+    n4 --> n8
+    n7 --> n8
+    n8 --> n9
+    n8 --> n11
+    n11 --> n12
+    n12 --> n13
+    n12 --> n14
+    n13 --> n15
+    n14 --> n15
+    n15 --> n16
+    n15 --> n18
+    n18 --> n19
+    n19 -.-> n20
+    n20 --> n21
+    n9 --> x1
+    n16 --> n19
