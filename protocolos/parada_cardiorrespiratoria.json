@@ -68,7 +68,8 @@
     {
      "id": "sim",
      "rotulo": "Sim",
-     "vai": ""
+     "vai": "",
+     "relato": false
     },
     {
      "id": "nao",
@@ -119,12 +120,14 @@
     {
      "id": "sim",
      "rotulo": "Sim",
-     "vai": ""
+     "vai": "",
+     "relato": false
     },
     {
      "id": "nao_sei",
      "rotulo": "Não sei",
-     "vai": "despacho_2"
+     "vai": "despacho_2",
+     "relato": false
     },
     {
      "id": "nao",

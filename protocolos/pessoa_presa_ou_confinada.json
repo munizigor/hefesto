@@ -57,7 +57,8 @@
     {
      "id": "nao_sei",
      "rotulo": "Não sei",
-     "vai": ""
+     "vai": "",
+     "relato": false
     }
    ]
   },
@@ -83,7 +84,8 @@
     {
      "id": "nao_sei",
      "rotulo": "Não sei",
-     "vai": ""
+     "vai": "",
+     "relato": false
     }
    ]
   },
@@ -120,7 +122,8 @@
     {
      "id": "nao_sei",
      "rotulo": "Não sei",
-     "vai": ""
+     "vai": "",
+     "relato": false
     }
    ]
   },
@@ -156,7 +159,8 @@
     {
      "id": "nao_sei",
      "rotulo": "Não sei",
-     "vai": "troca_afogamento_2"
+     "vai": "troca_afogamento_2",
+     "relato": false
     }
    ]
   },
@@ -192,7 +196,8 @@
     {
      "id": "nao_sei",
      "rotulo": "Não sei",
-     "vai": ""
+     "vai": "",
+     "relato": false
     }
    ]
   },

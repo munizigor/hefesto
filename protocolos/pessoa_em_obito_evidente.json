@@ -31,7 +31,8 @@
     {
      "id": "imovel_mas_nao_sabe",
      "rotulo": "Imóvel, mas não sabe",
-     "vai": "troca_parada_cardiorresp"
+     "vai": "troca_parada_cardiorresp",
+     "relato": false
     }
    ]
   },
@@ -88,7 +89,8 @@
     {
      "id": "nao_sabe",
      "rotulo": "Não sabe",
-     "vai": "acionar_pmdf_pcdf_2"
+     "vai": "acionar_pmdf_pcdf_2",
+     "relato": false
     }
    ]
   },
@@ -124,7 +126,8 @@
     {
      "id": "nao_sabe",
      "rotulo": "Não sabe",
-     "vai": ""
+     "vai": "",
+     "relato": false
     }
    ]
   },

@@ -58,7 +58,8 @@
     {
      "id": "nao_sei",
      "rotulo": "Não sei",
-     "vai": "troca_pessoa_arrastada_2"
+     "vai": "troca_pessoa_arrastada_2",
+     "relato": false
     }
    ]
   },

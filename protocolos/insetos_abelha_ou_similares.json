@@ -184,7 +184,8 @@
     {
      "id": "nao_sabe",
      "rotulo": "Não sabe",
-     "vai": ""
+     "vai": "",
+     "relato": false
     },
     {
      "id": "nao",
@@ -210,7 +211,8 @@
     {
      "id": "nao_sabe",
      "rotulo": "Não sabe",
-     "vai": ""
+     "vai": "",
+     "relato": false
     },
     {
      "id": "mais_de_3_dias",
@@ -262,7 +264,8 @@
     {
      "id": "outro",
      "rotulo": "Outro",
-     "vai": ""
+     "vai": "",
+     "relato": false
     },
     {
      "id": "bueiro",

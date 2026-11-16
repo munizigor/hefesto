@@ -63,7 +63,8 @@
     {
      "id": "nao_sei",
      "rotulo": "Não sei",
-     "vai": ""
+     "vai": "",
+     "relato": false
     },
     {
      "id": "nao",
@@ -110,7 +111,8 @@
     {
      "id": "outro",
      "rotulo": "Outro",
-     "vai": ""
+     "vai": "",
+     "relato": false
     }
    ]
   },
@@ -126,7 +128,8 @@
     {
      "id": "nao",
      "rotulo": "Não",
-     "vai": ""
+     "vai": "",
+     "relato": false
     },
     {
      "id": "sim",
@@ -136,7 +139,8 @@
     {
      "id": "nao_sei",
      "rotulo": "Não sei",
-     "vai": ""
+     "vai": "",
+     "relato": false
     }
    ]
   },
@@ -152,12 +156,14 @@
     {
      "id": "nao_sei",
      "rotulo": "Não sei",
-     "vai": ""
+     "vai": "",
+     "relato": false
     },
     {
      "id": "nao",
      "rotulo": "Não",
-     "vai": "teve_vomito_apos_2"
+     "vai": "teve_vomito_apos_2",
+     "relato": false
     },
     {
      "id": "sim",
@@ -188,12 +194,14 @@
     {
      "id": "nao_sabe",
      "rotulo": "Não sabe",
-     "vai": ""
+     "vai": "",
+     "relato": false
     },
     {
      "id": "nao",
      "rotulo": "Não",
-     "vai": ""
+     "vai": "",
+     "relato": false
     },
     {
      "id": "sim",
@@ -235,7 +243,8 @@
     {
      "id": "nao",
      "rotulo": "Não",
-     "vai": ""
+     "vai": "",
+     "relato": false
     },
     {
      "id": "sim",

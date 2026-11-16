@@ -26,7 +26,8 @@
     {
      "id": "nao_sei",
      "rotulo": "Não sei",
-     "vai": ""
+     "vai": "",
+     "relato": false
     }
    ]
   },
@@ -62,7 +63,8 @@
     {
      "id": "nao_sei",
      "rotulo": "Não sei",
-     "vai": ""
+     "vai": "",
+     "relato": false
     }
    ]
   },
@@ -98,7 +100,8 @@
     {
      "id": "nao_sei",
      "rotulo": "Não sei",
-     "vai": ""
+     "vai": "",
+     "relato": false
     }
    ]
   },
@@ -124,7 +127,8 @@
     {
      "id": "outra",
      "rotulo": "Outra",
-     "vai": "FIM"
+     "vai": "FIM",
+     "relato": false
     },
     {
      "id": "coluna_pescoco",
@@ -175,7 +179,8 @@
     {
      "id": "sim",
      "rotulo": "Sim",
-     "vai": "despacho_2"
+     "vai": "despacho_2",
+     "relato": false
     }
    ]
   },
@@ -244,7 +249,8 @@
     {
      "id": "nao_sei",
      "rotulo": "Não sei",
-     "vai": ""
+     "vai": "",
+     "relato": false
     }
    ]
   },
@@ -260,7 +266,8 @@
     {
      "id": "nao_sei",
      "rotulo": "Não sei",
-     "vai": ""
+     "vai": "",
+     "relato": false
     },
     {
      "id": "nao",
@@ -286,7 +293,8 @@
     {
      "id": "nao_sei",
      "rotulo": "Não sei",
-     "vai": ""
+     "vai": "",
+     "relato": false
     },
     {
      "id": "nao",

@@ -57,7 +57,8 @@
     {
      "id": "nao_sabe",
      "rotulo": "Não sabe",
-     "vai": ""
+     "vai": "",
+     "relato": false
     }
    ]
   },

@@ -37,7 +37,8 @@
     {
      "id": "outro",
      "rotulo": "Outro",
-     "vai": ""
+     "vai": "",
+     "relato": false
     },
     {
      "id": "maquina_equipamento",
@@ -78,7 +79,8 @@
     {
      "id": "nao_sei",
      "rotulo": "Não sei",
-     "vai": ""
+     "vai": "",
+     "relato": false
     }
    ]
   },
@@ -104,7 +106,8 @@
     {
      "id": "nao_sei",
      "rotulo": "Não sei",
-     "vai": ""
+     "vai": "",
+     "relato": false
     }
    ]
   },
@@ -145,7 +148,8 @@
     {
      "id": "nao",
      "rotulo": "Não",
-     "vai": ""
+     "vai": "",
+     "relato": false
     }
    ]
   },
@@ -166,7 +170,8 @@
     {
      "id": "nao",
      "rotulo": "Não",
-     "vai": "idoso_gestante_crianca"
+     "vai": "idoso_gestante_crianca",
+     "relato": false
     }
    ]
   },
@@ -192,7 +197,8 @@
     {
      "id": "nao_sei",
      "rotulo": "Não sei",
-     "vai": "troca_parada_cardiorresp_2"
+     "vai": "troca_parada_cardiorresp_2",
+     "relato": false
     }
    ]
   },
@@ -213,7 +219,8 @@
     {
      "id": "nao",
      "rotulo": "Não",
-     "vai": ""
+     "vai": "",
+     "relato": false
     }
    ]
   },
@@ -234,7 +241,8 @@
     {
      "id": "nao",
      "rotulo": "Não",
-     "vai": ""
+     "vai": "",
+     "relato": false
     },
     {
      "id": "nao_sei",

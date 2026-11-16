@@ -4,9 +4,10 @@ Protótipo estático para validar, com a área de negócio, a tela de atendiment
 
 ## O que tem
 
-- **Atendimento:** simula uma ligação e percorre os quatro passos (local e natureza, entrevista, solicitante, fechamento), com ficha da ocorrência, observações do atendente e registro.
+- **Atendimento:** simula uma ligação e percorre os quatro passos (local e natureza, entrevista, solicitante, fechamento), com ficha da ocorrência, observações do atendente e registro. O encaminhamento ao despacho acontece no ponto do fluxo da natureza marcado como despacho imediato, ou antes, pelo botão "Encaminhar agora".
 - **Demonstração com o Hermes:** três ligações roteirizadas sobre os fluxos do Miro (incêndio em vegetação, vazamento de gás, pessoa atropelada). O Hermes transcreve a conversa e sugere natureza, local, região, respostas da entrevista, instruções ditas e observações. Cada sugestão aparece no painel e junto do campo, e só entra na ficha quando o atendente aplica. A ocorrência registrada guarda quantas sugestões foram aplicadas e descartadas.
-- **Protocolos (gestor):** edita a entrevista de cada natureza no editor visual, no fluxo em Mermaid ou no formulário em JSON, com validação e teste.
+- **Protocolos (gestor):** edita a entrevista de cada natureza no editor visual, no fluxo em Mermaid (no padrão de cores do quadro do Miro ou na notação compacta) ou no formulário em JSON, com validação e teste. Cada resposta diz se vai ou não para o relato final.
+- **Feedback:** o botão "Dar feedback", no topo, coleta problemas, sugestões e dúvidas com o contexto da tela.
 - **Importar do Miro:** cola o Mermaid do fluxograma feito no Miro e converte em entrevista, de forma automática ou com um prompt pronto para um assistente de IA. Os dois caminhos mostram o que revisar antes de usar.
 - **Ocorrências:** lista o que foi registrado, com tempo até o encaminhamento e duração da ligação.
 
@@ -25,6 +26,7 @@ Protótipo estático para validar, com a área de negócio, a tela de atendiment
 | `style.css` | Estilos |
 | `logic.js` | Motor da entrevista, validação, Mermaid e JSON, importação do Miro e prompt para IA, naturezas e protocolos de exemplo. Sem DOM, roda também em Node |
 | `hermes.js` | Roteiros da demonstração do Hermes |
+| `config.js` | Destino do feedback |
 | `protocolos/` | **Fonte de verdade** das entrevistas: `naturezas.json` e um `<id>.json` por natureza |
 | `protocolos.js` | Montado a partir de `protocolos/` por `ferramentas/montar.js`. Não edite à mão |
 | `ferramentas/montar.js` | Monta o `protocolos.js` e aplica um zip exportado pelo site |
@@ -99,3 +101,19 @@ Na coluna da esquerda da aba Protocolos, **+ Nova natureza** cria uma natureza v
 Tudo isso vai no zip (`naturezas.json`). Ao importar, naturezas novas e renomeadas entram; naturezas que existem no navegador e não no arquivo ficam como estão. No repositório, `montar.js` avisa quando sobra o arquivo de uma natureza excluída, para apagar com `git rm`.
 
 Quando uma versão nova é publicada, cada navegador atualiza sozinho as entrevistas que a pessoa não editou e mantém as que ela editou. Com a lista de naturezas é igual: o que a publicação criou, renomeou ou removeu chega, e o que a pessoa criou ou renomeou no navegador fica. "Restaurar versão publicada", no editor, descarta a edição local de uma natureza.
+
+## Relato final
+
+Cada resposta de pergunta com opções tem a marca **no relato** ou **fora do relato**. O relato automático só leva as respostas marcadas "no relato"; quando a resposta escolhida está fora, a pergunta some do relato. A ficha e o registro da ocorrência continuam guardando todas as respostas. Perguntas abertas e orientações têm a caixa "No relato".
+
+Na importação, as respostas lilases do quadro do Miro (quase sempre "Não", "Não sei" e "Não sabe") ficaram "fora do relato": 219 respostas em 51 naturezas.
+
+## Despacho
+
+O passo 1 (local e natureza) só leva à entrevista. A ocorrência é encaminhada no item de despacho imediato do fluxo, que traz o botão "Encaminhar ao despacho e dizer a fala", no lugar onde o quadro do Miro o colocou. O botão "Encaminhar agora", no topo da ligação, adianta o encaminhamento. Se a entrevista terminar sem despacho, o fechamento avisa; dá para registrar mesmo assim, com confirmação.
+
+## Feedback
+
+O botão **Dar feedback** abre um formulário curto (tipo, comentário, nome opcional) e guarda junto onde a pessoa estava: aba, passo, natureza e a pergunta da vez. Sem destino configurado em `config.js`, o feedback fica no navegador, aparece na coluna da esquerda da aba Protocolos e sai no zip exportado (`feedback.json`). Ao aplicar o zip, `montar.js` lista os feedbacks e salva em `feedback-recebido/`, que fica fora do Git porque o repositório é público.
+
+Para receber direto, crie no Supabase uma tabela `feedback` (colunas `quando`, `tipo`, `texto`, `nome`, `contexto` jsonb, `navegador`) com política que só permite inserir, e preencha `FEEDBACK_DESTINO` em `config.js` com a URL do projeto e a chave publishable.

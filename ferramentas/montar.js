@@ -27,6 +27,13 @@ if(arg){
     if(velho!==novo){ fs.writeFileSync(alvo,novo); mud.push((velho==null?'nova  ':'mudou ')+(m[1]||m[2])); }
   });
   console.log(mud.length?mud.join('\n'):'Nada mudou.');
+  var fbk=Object.keys(z).filter(function(k){ return /(^|\/)feedback\.json$/.test(k); })[0];
+  if(fbk){ /* feedback pode ter nome de quem escreveu: fica fora do Git (feedback-recebido/ está no .gitignore) */
+    var lista=JSON.parse(z[fbk].toString('utf8')),pasta=path.join(raiz,'feedback-recebido'); if(!fs.existsSync(pasta)) fs.mkdirSync(pasta);
+    var destino=path.join(pasta,path.basename(arg).replace(/\.zip$/i,'')+'.json'); fs.writeFileSync(destino,JSON.stringify(lista,null,1)+'\n');
+    console.log(lista.length+' feedback(s) no zip, salvos em '+path.relative(raiz,destino)+' (fora do Git):');
+    lista.forEach(function(f){ console.log('  ['+f.tipo+'] '+f.texto.replace(/\s+/g,' ').slice(0,120)+(f.contexto&&f.contexto.natureza?' · '+f.contexto.natureza:'')); });
+  }
 }
 var nats=JSON.parse(fs.readFileSync(path.join(dir,'naturezas.json'),'utf8')),prot={},notas={};
 var listados={}; nats.forEach(function(n){ listados[n.id+'.json']=1; });

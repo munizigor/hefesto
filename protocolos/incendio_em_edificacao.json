@@ -37,7 +37,8 @@
     {
      "id": "nao_sei",
      "rotulo": "Não sei",
-     "vai": ""
+     "vai": "",
+     "relato": false
     }
    ]
   },
@@ -95,7 +96,8 @@
     {
      "id": "nao_sei",
      "rotulo": "Não sei",
-     "vai": ""
+     "vai": "",
+     "relato": false
     }
    ]
   },
@@ -131,7 +133,8 @@
     {
      "id": "nao_sei",
      "rotulo": "Não sei",
-     "vai": ""
+     "vai": "",
+     "relato": false
     }
    ]
   },
@@ -188,7 +191,8 @@
     {
      "id": "nao_sei",
      "rotulo": "Não sei",
-     "vai": ""
+     "vai": "",
+     "relato": false
     }
    ]
   },
@@ -333,7 +337,8 @@
     {
      "id": "nao",
      "rotulo": "Não",
-     "vai": ""
+     "vai": "",
+     "relato": false
     }
    ]
   },

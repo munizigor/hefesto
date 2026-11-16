@@ -26,7 +26,8 @@
     {
      "id": "nao_sabe",
      "rotulo": "Não sabe",
-     "vai": ""
+     "vai": "",
+     "relato": false
     }
    ]
   },
@@ -109,7 +110,8 @@
     {
      "id": "nao_sabe",
      "rotulo": "Não sabe",
-     "vai": ""
+     "vai": "",
+     "relato": false
     }
    ]
   },
@@ -135,7 +137,8 @@
     {
      "id": "nao_sabe",
      "rotulo": "Não sabe",
-     "vai": ""
+     "vai": "",
+     "relato": false
     }
    ]
   },

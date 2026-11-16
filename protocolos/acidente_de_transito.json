@@ -77,7 +77,8 @@
     {
      "id": "nao_sei",
      "rotulo": "Não sei",
-     "vai": ""
+     "vai": "",
+     "relato": false
     }
    ]
   },
@@ -113,7 +114,8 @@
     {
      "id": "nao_sei",
      "rotulo": "Não sei",
-     "vai": "troca_afogamento_2"
+     "vai": "troca_afogamento_2",
+     "relato": false
     }
    ]
   },
@@ -149,7 +151,8 @@
     {
      "id": "nao_sei",
      "rotulo": "Não sei",
-     "vai": ""
+     "vai": "",
+     "relato": false
     }
    ]
   },
@@ -185,7 +188,8 @@
     {
      "id": "nao_sei",
      "rotulo": "Não sei",
-     "vai": ""
+     "vai": "",
+     "relato": false
     }
    ]
   },
@@ -242,7 +246,8 @@
     {
      "id": "nao",
      "rotulo": "Não",
-     "vai": "houve_colisao_poste_2"
+     "vai": "houve_colisao_poste_2",
+     "relato": false
     }
    ]
   },
@@ -283,7 +288,8 @@
     {
      "id": "nao",
      "rotulo": "Não",
-     "vai": "veiculo_envolvido_eletri"
+     "vai": "veiculo_envolvido_eletri",
+     "relato": false
     }
    ]
   },
@@ -309,7 +315,8 @@
     {
      "id": "nao",
      "rotulo": "Não",
-     "vai": ""
+     "vai": "",
+     "relato": false
     },
     {
      "id": "sim",
@@ -319,7 +326,8 @@
     {
      "id": "nao_sei",
      "rotulo": "Não sei",
-     "vai": ""
+     "vai": "",
+     "relato": false
     }
    ]
   },
@@ -340,7 +348,8 @@
     {
      "id": "nao",
      "rotulo": "Não",
-     "vai": ""
+     "vai": "",
+     "relato": false
     }
    ]
   },
@@ -361,7 +370,8 @@
     {
      "id": "nao",
      "rotulo": "Não",
-     "vai": "emergencia_motivo_senhor"
+     "vai": "emergencia_motivo_senhor",
+     "relato": false
     }
    ]
   },
@@ -377,7 +387,8 @@
     {
      "id": "nao",
      "rotulo": "Não",
-     "vai": ""
+     "vai": "",
+     "relato": false
     },
     {
      "id": "sim",
@@ -387,7 +398,8 @@
     {
      "id": "nao_sei",
      "rotulo": "Não sei",
-     "vai": ""
+     "vai": "",
+     "relato": false
     }
    ]
   },
@@ -408,7 +420,8 @@
     {
      "id": "nao",
      "rotulo": "Não",
-     "vai": ""
+     "vai": "",
+     "relato": false
     }
    ]
   },
@@ -500,7 +513,8 @@
     {
      "id": "nao",
      "rotulo": "Não",
-     "vai": ""
+     "vai": "",
+     "relato": false
     },
     {
      "id": "sim",
@@ -588,12 +602,14 @@
     {
      "id": "nao_sei",
      "rotulo": "Não sei",
-     "vai": ""
+     "vai": "",
+     "relato": false
     },
     {
      "id": "nao",
      "rotulo": "Não",
-     "vai": ""
+     "vai": "",
+     "relato": false
     },
     {
      "id": "sim",
@@ -614,12 +630,14 @@
     {
      "id": "nao_sei",
      "rotulo": "Não sei",
-     "vai": ""
+     "vai": "",
+     "relato": false
     },
     {
      "id": "nao",
      "rotulo": "Não",
-     "vai": ""
+     "vai": "",
+     "relato": false
     },
     {
      "id": "sim",
@@ -640,7 +658,8 @@
     {
      "id": "nao",
      "rotulo": "Não",
-     "vai": ""
+     "vai": "",
+     "relato": false
     },
     {
      "id": "sim",
@@ -666,7 +685,8 @@
     {
      "id": "nao",
      "rotulo": "Não",
-     "vai": ""
+     "vai": "",
+     "relato": false
     }
    ]
   },
@@ -687,7 +707,8 @@
     {
      "id": "nao",
      "rotulo": "Não",
-     "vai": "veiculo_envolvido_eletri_3"
+     "vai": "veiculo_envolvido_eletri_3",
+     "relato": false
     }
    ]
   },
@@ -713,7 +734,8 @@
     {
      "id": "nao",
      "rotulo": "Não",
-     "vai": ""
+     "vai": "",
+     "relato": false
     },
     {
      "id": "sim",
@@ -723,7 +745,8 @@
     {
      "id": "nao_sei",
      "rotulo": "Não sei",
-     "vai": ""
+     "vai": "",
+     "relato": false
     }
    ]
   },
@@ -744,7 +767,8 @@
     {
      "id": "nao",
      "rotulo": "Não",
-     "vai": ""
+     "vai": "",
+     "relato": false
     }
    ]
   },
@@ -785,7 +809,8 @@
     {
      "id": "nao",
      "rotulo": "Não",
-     "vai": "troca_acidente_transito_2"
+     "vai": "troca_acidente_transito_2",
+     "relato": false
     }
    ]
   },
@@ -811,7 +836,8 @@
     {
      "id": "nao",
      "rotulo": "Não",
-     "vai": ""
+     "vai": "",
+     "relato": false
     },
     {
      "id": "sim",
@@ -821,7 +847,8 @@
     {
      "id": "nao_sei",
      "rotulo": "Não sei",
-     "vai": ""
+     "vai": "",
+     "relato": false
     }
    ]
   },
@@ -852,7 +879,8 @@
     {
      "id": "nao",
      "rotulo": "Não",
-     "vai": "veiculo_capotado_2"
+     "vai": "veiculo_capotado_2",
+     "relato": false
     }
    ]
   },
@@ -893,7 +921,8 @@
     {
      "id": "nao",
      "rotulo": "Não",
-     "vai": "veiculo_envolvido_eletri_4"
+     "vai": "veiculo_envolvido_eletri_4",
+     "relato": false
     }
    ]
   },
@@ -919,7 +948,8 @@
     {
      "id": "nao",
      "rotulo": "Não",
-     "vai": ""
+     "vai": "",
+     "relato": false
     },
     {
      "id": "sim",
@@ -929,7 +959,8 @@
     {
      "id": "nao_sei",
      "rotulo": "Não sei",
-     "vai": ""
+     "vai": "",
+     "relato": false
     }
    ]
   },
@@ -950,7 +981,8 @@
     {
      "id": "nao",
      "rotulo": "Não",
-     "vai": ""
+     "vai": "",
+     "relato": false
     }
    ]
   },
@@ -966,7 +998,8 @@
     {
      "id": "nao",
      "rotulo": "Não",
-     "vai": ""
+     "vai": "",
+     "relato": false
     },
     {
      "id": "sim",
@@ -992,7 +1025,8 @@
     {
      "id": "nao",
      "rotulo": "Não",
-     "vai": "FIM"
+     "vai": "FIM",
+     "relato": false
     }
    ]
   },
@@ -1018,7 +1052,8 @@
     {
      "id": "nao",
      "rotulo": "Não",
-     "vai": ""
+     "vai": "",
+     "relato": false
     },
     {
      "id": "sim",
@@ -1028,7 +1063,8 @@
     {
      "id": "nao_sei",
      "rotulo": "Não sei",
-     "vai": ""
+     "vai": "",
+     "relato": false
     }
    ]
   },
@@ -1049,7 +1085,8 @@
     {
      "id": "nao",
      "rotulo": "Não",
-     "vai": ""
+     "vai": "",
+     "relato": false
     }
    ]
   },
@@ -1106,7 +1143,8 @@
     {
      "id": "nao",
      "rotulo": "Não",
-     "vai": "houve_colisao_poste_7"
+     "vai": "houve_colisao_poste_7",
+     "relato": false
     }
    ]
   },
@@ -1137,7 +1175,8 @@
     {
      "id": "nao",
      "rotulo": "Não",
-     "vai": "veiculo_envolvido_eletri_6"
+     "vai": "veiculo_envolvido_eletri_6",
+     "relato": false
     }
    ]
   },
@@ -1163,7 +1202,8 @@
     {
      "id": "nao",
      "rotulo": "Não",
-     "vai": ""
+     "vai": "",
+     "relato": false
     },
     {
      "id": "sim",
@@ -1173,7 +1213,8 @@
     {
      "id": "nao_sei",
      "rotulo": "Não Sei",
-     "vai": ""
+     "vai": "",
+     "relato": false
     }
    ]
   },
@@ -1194,7 +1235,8 @@
     {
      "id": "nao",
      "rotulo": "Não",
-     "vai": ""
+     "vai": "",
+     "relato": false
     }
    ]
   },
@@ -1215,7 +1257,8 @@
     {
      "id": "nao",
      "rotulo": "Não",
-     "vai": ""
+     "vai": "",
+     "relato": false
     }
    ]
   },
@@ -1236,7 +1279,8 @@
     {
      "id": "nao",
      "rotulo": "Não",
-     "vai": "visualiza_vazamento_derr_2"
+     "vai": "visualiza_vazamento_derr_2",
+     "relato": false
     }
    ]
   },
@@ -1272,7 +1316,8 @@
     {
      "id": "nao",
      "rotulo": "Não",
-     "vai": ""
+     "vai": "",
+     "relato": false
     },
     {
      "id": "sim",
@@ -1282,7 +1327,8 @@
     {
      "id": "nao_sei",
      "rotulo": "Não sei",
-     "vai": ""
+     "vai": "",
+     "relato": false
     }
    ]
   },
@@ -1298,7 +1344,8 @@
     {
      "id": "nao",
      "rotulo": "Não",
-     "vai": ""
+     "vai": "",
+     "relato": false
     },
     {
      "id": "sim",
@@ -1324,7 +1371,8 @@
     {
      "id": "nao",
      "rotulo": "Não",
-     "vai": ""
+     "vai": "",
+     "relato": false
     }
    ]
   },
@@ -1340,7 +1388,8 @@
     {
      "id": "nao_sei",
      "rotulo": "Não sei",
-     "vai": ""
+     "vai": "",
+     "relato": false
     },
     {
      "id": "sim",
@@ -1371,7 +1420,8 @@
     {
      "id": "nao",
      "rotulo": "Não",
-     "vai": "emergencia_motivo_senhor_3"
+     "vai": "emergencia_motivo_senhor_3",
+     "relato": false
     }
    ]
   },
@@ -1454,7 +1504,8 @@
     {
      "id": "nao",
      "rotulo": "Não",
-     "vai": ""
+     "vai": "",
+     "relato": false
     },
     {
      "id": "sim",
@@ -1480,7 +1531,8 @@
     {
      "id": "nao",
      "rotulo": "Não",
-     "vai": ""
+     "vai": "",
+     "relato": false
     }
    ]
   },
@@ -1496,7 +1548,8 @@
     {
      "id": "nao",
      "rotulo": "Não",
-     "vai": ""
+     "vai": "",
+     "relato": false
     },
     {
      "id": "sim",
@@ -1633,7 +1686,8 @@
     {
      "id": "nao",
      "rotulo": "Não",
-     "vai": ""
+     "vai": "",
+     "relato": false
     },
     {
      "id": "sim",
@@ -1701,12 +1755,14 @@
     {
      "id": "nao_sei",
      "rotulo": "Não sei",
-     "vai": ""
+     "vai": "",
+     "relato": false
     },
     {
      "id": "nao",
      "rotulo": "Não",
-     "vai": ""
+     "vai": "",
+     "relato": false
     },
     {
      "id": "sim",
@@ -1727,12 +1783,14 @@
     {
      "id": "nao_sei",
      "rotulo": "Não sei",
-     "vai": ""
+     "vai": "",
+     "relato": false
     },
     {
      "id": "nao",
      "rotulo": "Não",
-     "vai": ""
+     "vai": "",
+     "relato": false
     },
     {
      "id": "sim",
@@ -1753,7 +1811,8 @@
     {
      "id": "nao",
      "rotulo": "Não",
-     "vai": ""
+     "vai": "",
+     "relato": false
     },
     {
      "id": "sim",
@@ -1774,7 +1833,8 @@
     {
      "id": "nao",
      "rotulo": "Não",
-     "vai": ""
+     "vai": "",
+     "relato": false
     },
     {
      "id": "sim",
@@ -1800,7 +1860,8 @@
     {
      "id": "nao",
      "rotulo": "Não",
-     "vai": "quando_selecionado_camin"
+     "vai": "quando_selecionado_camin",
+     "relato": false
     }
    ]
   },
@@ -1866,7 +1927,8 @@
     {
      "id": "nao",
      "rotulo": "Não",
-     "vai": ""
+     "vai": "",
+     "relato": false
     },
     {
      "id": "sim",
@@ -1908,12 +1970,14 @@
     {
      "id": "nao_sei",
      "rotulo": "Não sei",
-     "vai": ""
+     "vai": "",
+     "relato": false
     },
     {
      "id": "nao",
      "rotulo": "Não",
-     "vai": ""
+     "vai": "",
+     "relato": false
     },
     {
      "id": "sim",
@@ -1985,7 +2049,8 @@
     {
      "id": "nao",
      "rotulo": "Não",
-     "vai": "houve_colisao_poste_10"
+     "vai": "houve_colisao_poste_10",
+     "relato": false
     }
    ]
   },
@@ -2006,7 +2071,8 @@
     {
      "id": "nao",
      "rotulo": "Não",
-     "vai": ""
+     "vai": "",
+     "relato": false
     }
    ]
   },
@@ -2022,7 +2088,8 @@
     {
      "id": "nao",
      "rotulo": "Não",
-     "vai": ""
+     "vai": "",
+     "relato": false
     },
     {
      "id": "sim",
@@ -2032,7 +2099,8 @@
     {
      "id": "nao_sei",
      "rotulo": "Não Sei",
-     "vai": ""
+     "vai": "",
+     "relato": false
     }
    ]
   },
@@ -2053,7 +2121,8 @@
     {
      "id": "nao",
      "rotulo": "Não",
-     "vai": ""
+     "vai": "",
+     "relato": false
     }
    ]
   },
@@ -2074,7 +2143,8 @@
     {
      "id": "nao",
      "rotulo": "Não",
-     "vai": ""
+     "vai": "",
+     "relato": false
     }
    ]
   },
@@ -2095,7 +2165,8 @@
     {
      "id": "nao",
      "rotulo": "Não",
-     "vai": "visualiza_vazamento_derr_4"
+     "vai": "visualiza_vazamento_derr_4",
+     "relato": false
     }
    ]
   },
@@ -2121,7 +2192,8 @@
     {
      "id": "nao",
      "rotulo": "Não",
-     "vai": ""
+     "vai": "",
+     "relato": false
     },
     {
      "id": "sim",
@@ -2131,7 +2203,8 @@
     {
      "id": "nao_sei",
      "rotulo": "Não sei",
-     "vai": ""
+     "vai": "",
+     "relato": false
     }
    ]
   },
@@ -2147,7 +2220,8 @@
     {
      "id": "nao",
      "rotulo": "Não",
-     "vai": ""
+     "vai": "",
+     "relato": false
     },
     {
      "id": "sim",
@@ -2173,7 +2247,8 @@
     {
      "id": "nao",
      "rotulo": "Não",
-     "vai": ""
+     "vai": "",
+     "relato": false
     }
    ]
   },
@@ -2189,7 +2264,8 @@
     {
      "id": "nao_sei",
      "rotulo": "Não sei",
-     "vai": ""
+     "vai": "",
+     "relato": false
     },
     {
      "id": "sim",
@@ -2220,7 +2296,8 @@
     {
      "id": "nao",
      "rotulo": "Não",
-     "vai": "acidente_envolveu_animal_13"
+     "vai": "acidente_envolveu_animal_13",
+     "relato": false
     }
    ]
   },
@@ -2236,7 +2313,8 @@
     {
      "id": "nao_sei",
      "rotulo": "Não sei",
-     "vai": ""
+     "vai": "",
+     "relato": false
     },
     {
      "id": "sim",
@@ -2283,7 +2361,8 @@
     {
      "id": "nao",
      "rotulo": "Não",
-     "vai": ""
+     "vai": "",
+     "relato": false
     },
     {
      "id": "sim",
@@ -2309,7 +2388,8 @@
     {
      "id": "nao",
      "rotulo": "Não",
-     "vai": ""
+     "vai": "",
+     "relato": false
     }
    ]
   },
@@ -2330,7 +2410,8 @@
     {
      "id": "nao",
      "rotulo": "Não",
-     "vai": ""
+     "vai": "",
+     "relato": false
     }
    ]
   },
@@ -2351,7 +2432,8 @@
     {
      "id": "nao",
      "rotulo": "Não",
-     "vai": ""
+     "vai": "",
+     "relato": false
     }
    ]
   },
@@ -2428,12 +2510,14 @@
     {
      "id": "nao_sei",
      "rotulo": "Não sei",
-     "vai": ""
+     "vai": "",
+     "relato": false
     },
     {
      "id": "nao",
      "rotulo": "Não",
-     "vai": ""
+     "vai": "",
+     "relato": false
     },
     {
      "id": "sim",
@@ -2530,7 +2614,8 @@
     {
      "id": "nao",
      "rotulo": "Não",
-     "vai": ""
+     "vai": "",
+     "relato": false
     },
     {
      "id": "sim",
@@ -2540,7 +2625,8 @@
     {
      "id": "nao_sei",
      "rotulo": "Não sei",
-     "vai": ""
+     "vai": "",
+     "relato": false
     }
    ]
   },
@@ -2556,7 +2642,8 @@
     {
      "id": "nao",
      "rotulo": "Não",
-     "vai": ""
+     "vai": "",
+     "relato": false
     },
     {
      "id": "sim",
@@ -2582,7 +2669,8 @@
     {
      "id": "nao",
      "rotulo": "Não",
-     "vai": ""
+     "vai": "",
+     "relato": false
     }
    ]
   },
