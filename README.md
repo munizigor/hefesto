@@ -4,7 +4,7 @@ Protótipo estático para validar, com a área de negócio, a tela de atendiment
 
 ## O que tem
 
-- **Atendimento:** simula uma ligação e percorre os quatro passos (local e natureza, entrevista, solicitante, fechamento), com ficha da ocorrência, observações do atendente e registro. O encaminhamento ao despacho acontece no ponto do fluxo da natureza marcado como despacho imediato, ou antes, pelo botão "Encaminhar agora".
+- **Atendimento:** simula uma ligação e percorre os quatro passos (local e natureza, entrevista, solicitante, fechamento), com ficha da ocorrência, observações do atendente e registro. O encaminhamento ao despacho acontece no ponto do fluxo da natureza marcado como despacho imediato, ou antes, pelo botão "Adiantar despacho".
 - **Demonstração com o Hermes:** três ligações roteirizadas sobre os fluxos do Miro (incêndio em vegetação, vazamento de gás, pessoa atropelada). O Hermes transcreve a conversa e sugere natureza, local, região, respostas da entrevista, instruções ditas e observações. Cada sugestão aparece no painel e junto do campo, e só entra na ficha quando o atendente aplica. A ocorrência registrada guarda quantas sugestões foram aplicadas e descartadas.
 - **Protocolos (gestor):** edita a entrevista de cada natureza no editor visual, no fluxo em Mermaid (no padrão de cores do quadro do Miro ou na notação compacta) ou no formulário em JSON, com validação e teste. Cada resposta diz se vai ou não para o relato final.
 - **Feedback:** o botão "Dar feedback", no topo, coleta problemas, sugestões e dúvidas com o contexto da tela.
@@ -110,7 +110,7 @@ Na importação, as respostas lilases do quadro do Miro (quase sempre "Não", "N
 
 ## Despacho
 
-O passo 1 (local e natureza) só leva à entrevista. A ocorrência é encaminhada no item de despacho imediato do fluxo, que traz o botão "Encaminhar ao despacho e dizer a fala", no lugar onde o quadro do Miro o colocou. O botão "Encaminhar agora", no topo da ligação, adianta o encaminhamento. Se a entrevista terminar sem despacho, o fechamento avisa; dá para registrar mesmo assim, com confirmação.
+O passo 1 (local e natureza) só leva à entrevista. A ocorrência é encaminhada no item de despacho imediato do fluxo, que traz o botão "Encaminhar ao despacho e dizer a fala", no lugar onde o quadro do Miro o colocou. O botão "Adiantar despacho", no topo da ligação, adianta o encaminhamento. Se a entrevista terminar sem despacho, o fechamento avisa; dá para registrar mesmo assim, com confirmação.
 
 ## Feedback
 

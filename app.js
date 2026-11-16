@@ -41,7 +41,9 @@
     if(!Array.isArray(meu)){ DB.protocolos[n.id]=pub; DB.base[n.id]=ip; return; }
     var im=impr(meu);
     if(im===ip){ DB.base[n.id]=ip; return; }
-    if(DB.base[n.id]&&DB.base[n.id]===im){ DB.protocolos[n.id]=pub; DB.base[n.id]=ip; atualizadas++; }
+    /* não editada: bate com a última versão que este navegador recebeu, ou com qualquer versão já publicada */
+    var jaPublicada=typeof IMPRESSOES_PUBLICADAS!=='undefined'&&(IMPRESSOES_PUBLICADAS[n.id]||[]).indexOf(im)>=0;
+    if((DB.base[n.id]&&DB.base[n.id]===im)||jaPublicada){ DB.protocolos[n.id]=pub; DB.base[n.id]=ip; atualizadas++; }
   });
   try{ if(localStorage.getItem(KEY)||atualizadas||natsMudaram) localStorage.setItem(KEY,JSON.stringify(DB)); }catch(e){}
   function alterada(id){ return impr(DB.protocolos[id])!==impr(PUB[id]||[]); }
@@ -293,7 +295,7 @@
     var c=$('encAgora'); if(!c||!A) return; c.textContent='';
     if(A.encS!=null) return;
     var ok=!faltasEncaminhar().length;
-    c.appendChild(el('button',{class:'btn sm '+(ok?'verm':'apag'),title:ok?'Encaminhar ao despacho antes de chegar ao ponto do fluxo':'Preencha natureza, local e região para encaminhar',disabled:!ok,onclick:function(){ encaminhar(); desenharCentro(); }},['🚒 Encaminhar agora']));
+    c.appendChild(el('button',{class:'btn sm '+(ok?'vermv':'apag'),title:ok?'O encaminhamento acontece no ponto de despacho do fluxo da natureza. Use este botão só para adiantar.':'Preencha natureza, local e região para poder adiantar o despacho',disabled:!ok,onclick:function(){ encaminhar(); desenharCentro(); }},['🚒 Adiantar despacho']));
   }
   function relogio(){
     if(!A) return; var s=seg(),t=$('timer'); if(!t) return;
@@ -900,7 +902,7 @@
   + '<tr><td>“o desvio não volta para …”</td><td>Em múltipla escolha, o ramo termina sem voltar ao tronco. Aponte o último item do ramo para o item de “Depois dos desvios”.</td></tr></table>'
   + '<h3>7. Relato final e despacho</h3><ul>'
   + '<li>Ao lado de cada resposta, o botão <b>no relato</b> / <b>fora do relato</b> diz se ela entra no texto do relato. Respostas que só descartam uma hipótese, como “Não” em “Há outras pessoas no local?”, ficam fora. Nas perguntas abertas e nas orientações, use a caixa <b>No relato</b>.</li>'
-  + '<li>O encaminhamento ao despacho acontece no item de despacho imediato do fluxo. O atendente pode adiantar com <b>Encaminhar agora</b>, no topo da ligação.</li></ul>'
+  + '<li>O encaminhamento ao despacho acontece no item de despacho imediato do fluxo. O atendente pode adiantar com <b>Adiantar despacho</b>, no topo da ligação.</li></ul>'
   + '<h3>8. Boas práticas</h3><ul>'
   + '<li>Pergunte primeiro o que muda o recurso enviado ou a instrução dada.</li>'
   + '<li>Uma pergunta por item, com texto curto, do jeito que o atendente fala.</li>'

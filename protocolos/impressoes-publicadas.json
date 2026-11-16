@@ -1,0 +1,190 @@
+{
+ "acidente_de_transito": [
+  "9v95o2.39284",
+  "1lddrn6.40604"
+ ],
+ "afogamento": [
+  "16aj5n7.4245"
+ ],
+ "agressao_fisica": [
+  "1xzdiz5.5364",
+  "gy0679.5409"
+ ],
+ "amputacao_ou_esmagamento_de_membro": [
+  "1xl8tjf.2799"
+ ],
+ "animal_domestico_em_situacao_de_risco": [
+  "1f8lsxg.2162"
+ ],
+ "apoio_a_outros_orgaos": [
+  "15ej4il.2013"
+ ],
+ "arvore_com_risco_de_queda": [
+  "1hr8za7.3932",
+  "1p8benv.4067"
+ ],
+ "ataque_picada_de_animal": [
+  "xhnylz.8875",
+  "191q1hn.8920"
+ ],
+ "atividade_preventiva_palestra_demonstrac": [
+  "15l9bek.1350"
+ ],
+ "choque_eletrico": [
+  "17o0d30.3087",
+  "1lnmrio.3132"
+ ],
+ "desabamento_desmoronamento": [
+  "5j1mr8.2375",
+  "1iw01ow.2390"
+ ],
+ "embarcacao_a_deriva": [
+  "16yghxk.2584",
+  "1w3ms2o.2614"
+ ],
+ "emergencia_clinica": [
+  "r6thx7.982",
+  "f493xz.997"
+ ],
+ "emergencia_nuclear_radiologica": [
+  "6imk6q.2237"
+ ],
+ "explosao_ameaca_de_explosao": [
+  "1vr2swe.2895",
+  "1aogulm.2910"
+ ],
+ "ferimento_diverso": [
+  "1wbf5ef.4656",
+  "l27l8j.4731"
+ ],
+ "ferimento_por_arma_branca": [
+  "1ruwm7a.3452",
+  "1di0jzq.3512"
+ ],
+ "ferimento_por_arma_de_fogo": [
+  "10bad07.3275",
+  "fg78iv.3335"
+ ],
+ "fratura_luxacao_ou_entorse": [
+  "p55ywa.4303",
+  "1029kp6.4423"
+ ],
+ "incendio_em_edificacao": [
+  "irutxj.5134",
+  "1sqnj0z.5209"
+ ],
+ "incendio_em_lixo_entulho": [
+  "vl4g71.2420",
+  "aak7p.2450"
+ ],
+ "incendio_em_meio_de_transporte": [
+  "1obpjc0.3654",
+  "1psmpe0.3744"
+ ],
+ "incendio_em_vegetacao": [
+  "1wizfdx.3774",
+  "1sx5gsx.3849"
+ ],
+ "insetos_abelha_ou_similares_2": [
+  "1dzie5f.4627"
+ ],
+ "insetos_abelha_ou_similares": [
+  "wbii09.5590",
+  "135krj1.5635"
+ ],
+ "inundacao_alagamento": [
+  "18u1mpk.3110",
+  "jpqj1w.3125"
+ ],
+ "naufragio_acidente_nautico": [
+  "nlq6yn.2220",
+  "18ryl2z.2235"
+ ],
+ "obstrucao_de_via_publica": [
+  "p02tnn.1944"
+ ],
+ "obstrucao_de_vias_aereas": [
+  "rfhnv5.2154"
+ ],
+ "oleo_substancia_na_via": [
+  "u97rxn.1954"
+ ],
+ "paciente_com_necessidade_de_transferenci": [
+  "px01lo.2019"
+ ],
+ "parada_cardiorrespiratoria": [
+  "1kb5q8i.3243",
+  "5u42g6.3288"
+ ],
+ "parto_de_emergencia": [
+  "1edqgk1.3743",
+  "5v8odl.3773"
+ ],
+ "pessoa_arrastada_por_enxurrada": [
+  "pzr44m.2630",
+  "w17aaq.2645"
+ ],
+ "pessoa_atropelada": [
+  "l6q8u2.3265",
+  "rl4kdq.3310"
+ ],
+ "pessoa_com_necessidade_de_auxilio_para_m": [
+  "1vldig3.2214"
+ ],
+ "pessoa_confinada": [
+  "iz24f1.5128",
+  "cxa4ot.5248"
+ ],
+ "pessoa_em_obito_evidente": [
+  "hrfrse.2902",
+  "7jlpxe.2947"
+ ],
+ "pessoa_em_profundidade": [
+  "1y11je3.2718",
+  "1esuo2n.2763"
+ ],
+ "pessoa_em_risco_de_queda": [
+  "qz010y.2648",
+  "xbepwm.2693"
+ ],
+ "pessoa_prensada_por_estrutura_maquina_ou": [
+  "15jp21t.3696",
+  "b17o25.3771"
+ ],
+ "pessoa_presa_ou_confinada": [
+  "1coxjgm.3999",
+  "mrbiwi.4074"
+ ],
+ "pessoa_trancada_acesso_bloqueado": [
+  "2j5ds1.2633"
+ ],
+ "picada_de_abelha_marimbondo_inseto": [
+  "1teooz7.456"
+ ],
+ "queda_da_propria_altura": [
+  "hxgqwe.4891",
+  "1vj2z1m.5026"
+ ],
+ "queda_de_plano_elevado": [
+  "byfw9j.4496",
+  "1yfyg9r.4586"
+ ],
+ "risco_de_choque_eletrico": [
+  "1sofvd0.2132"
+ ],
+ "risco_de_desabamento": [
+  "9pknsk.2325",
+  "vvifqo.2340"
+ ],
+ "simulado": [
+  "1re6f4g.1229"
+ ],
+ "tentativa_de_suicidio": [
+  "1icgclu.7555",
+  "1k7si0a.7705"
+ ],
+ "vazamento_de_gas_glp": [
+  "1sk89a3.2741",
+  "1sk5pir.2771"
+ ]
+}
