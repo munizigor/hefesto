@@ -44,7 +44,8 @@
    "mermaid": "",
    "prox": "ela_consegue_tossir",
    "opcoes": [],
-   "despacho": true
+   "despacho": true,
+   "fala": "padrao"
   },
   {
    "id": "ela_consegue_tossir",

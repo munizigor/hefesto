@@ -1,0 +1,10 @@
+{
+ "padrao": {
+  "nome": "Despacho: socorro a caminho",
+  "texto": "O socorro já foi acionado e está a caminho. Vou fazer algumas perguntas rápidas para ajudar a equipe. Mantenha a calma e siga minhas orientações, por favor."
+ },
+ "video": {
+  "nome": "Despacho: videochamada",
+  "texto": "Iremos realizar uma vídeo chamada para orientá-lo(a) até a chegada da guarnição! Mantenha a calma e siga as orientações."
+ }
+}

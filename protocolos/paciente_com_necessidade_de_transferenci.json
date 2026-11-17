@@ -122,7 +122,8 @@
    "mermaid": "",
    "prox": "FIM",
    "opcoes": [],
-   "despacho": true
+   "despacho": true,
+   "fala": "padrao"
   },
   {
    "id": "troca_fora_competencia",

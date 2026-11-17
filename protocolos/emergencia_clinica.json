@@ -23,7 +23,8 @@
    "mermaid": "",
    "prox": "quem_precisa_apoio",
    "opcoes": [],
-   "despacho": true
+   "despacho": true,
+   "fala": "padrao"
   },
   {
    "id": "quem_precisa_apoio",

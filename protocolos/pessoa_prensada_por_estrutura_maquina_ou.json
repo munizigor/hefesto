@@ -39,7 +39,8 @@
    "mermaid": "",
    "prox": "vitima_acordada_responde",
    "opcoes": [],
-   "despacho": true
+   "despacho": true,
+   "fala": "padrao"
   },
   {
    "id": "vitima_acordada_responde",
@@ -73,7 +74,7 @@
     },
     {
      "id": "nao_sei",
-     "rotulo": "Não sei",
+     "rotulo": "Não sabe",
      "vai": "",
      "relato": false
     }

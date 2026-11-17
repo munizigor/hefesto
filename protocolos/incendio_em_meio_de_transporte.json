@@ -44,7 +44,8 @@
    "mermaid": "",
    "prox": "dentro_preso_veiculo",
    "opcoes": [],
-   "despacho": true
+   "despacho": true,
+   "fala": "padrao"
   },
   {
    "id": "dentro_preso_veiculo",
@@ -94,7 +95,7 @@
     },
     {
      "id": "nao_sei",
-     "rotulo": "Não sei",
+     "rotulo": "Não sabe",
      "vai": "",
      "relato": false
     }
@@ -178,7 +179,7 @@
     },
     {
      "id": "nao_sei",
-     "rotulo": "Não sei",
+     "rotulo": "Não sabe",
      "vai": "",
      "relato": false
     }
@@ -279,7 +280,7 @@
     },
     {
      "id": "nao_sei",
-     "rotulo": "Não sei",
+     "rotulo": "Não sabe",
      "vai": "",
      "relato": false
     }

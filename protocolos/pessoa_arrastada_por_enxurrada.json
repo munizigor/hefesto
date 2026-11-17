@@ -34,7 +34,8 @@
    "mermaid": "",
    "prox": "pessoa_agarrada_algo",
    "opcoes": [],
-   "despacho": true
+   "despacho": true,
+   "fala": "padrao"
   },
   {
    "id": "pessoa_agarrada_algo",
@@ -83,7 +84,7 @@
     },
     {
      "id": "nao_sei",
-     "rotulo": "Não sei",
+     "rotulo": "Não sabe",
      "vai": "troca_afogamento_2",
      "relato": false
     }

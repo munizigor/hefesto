@@ -56,7 +56,7 @@
     },
     {
      "id": "nao_sei",
-     "rotulo": "Não sei",
+     "rotulo": "Não sabe",
      "vai": "",
      "relato": false
     }
@@ -93,7 +93,7 @@
     },
     {
      "id": "nao_sei",
-     "rotulo": "Não sei",
+     "rotulo": "Não sabe",
      "vai": "",
      "relato": false
     }
@@ -130,7 +130,7 @@
     },
     {
      "id": "nao_sei",
-     "rotulo": "Não sei",
+     "rotulo": "Não sabe",
      "vai": "",
      "relato": false
     }
@@ -253,13 +253,14 @@
   {
    "id": "despacho",
    "tipo": "instrucao",
-   "texto": "🚒 Despacho conforme gravidade",
+   "texto": "Despacho conforme gravidade",
    "obrig": false,
    "outro": false,
    "mermaid": "",
    "prox": "aperte_local_pano",
    "opcoes": [],
-   "despacho": true
+   "despacho": true,
+   "nota": true
   },
   {
    "id": "aperte_local_pano",
@@ -274,13 +275,14 @@
   {
    "id": "despacho_2",
    "tipo": "instrucao",
-   "texto": "🚒 Despacho imediato",
+   "texto": "Despacho imediato",
    "obrig": false,
    "outro": false,
    "mermaid": "",
    "prox": "onde_ferimento",
    "opcoes": [],
-   "despacho": true
+   "despacho": true,
+   "nota": true
   }
  ],
  "notas": [

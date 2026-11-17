@@ -13,7 +13,8 @@
    "mermaid": "",
    "prox": "acidente_transito",
    "opcoes": [],
-   "despacho": true
+   "despacho": true,
+   "fala": "padrao"
   },
   {
    "id": "acidente_transito",

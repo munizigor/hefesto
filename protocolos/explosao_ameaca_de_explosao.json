@@ -34,7 +34,8 @@
    "mermaid": "",
    "prox": "explodiu_pode_explodir",
    "opcoes": [],
-   "despacho": true
+   "despacho": true,
+   "fala": "padrao"
   },
   {
    "id": "explodiu_pode_explodir",

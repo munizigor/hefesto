@@ -81,14 +81,14 @@
    "prox": "realize_videochamada_fac",
    "opcoes": [
     {
-     "id": "nao",
-     "rotulo": "Não",
-     "vai": ""
-    },
-    {
      "id": "sim",
      "rotulo": "Sim",
      "vai": "FIM"
+    },
+    {
+     "id": "nao",
+     "rotulo": "Não",
+     "vai": ""
     }
    ]
   },
@@ -112,7 +112,8 @@
    "mermaid": "",
    "prox": "troca_parada_cardiorresp",
    "opcoes": [],
-   "despacho": true
+   "despacho": true,
+   "fala": "video"
   },
   {
    "id": "troca_parada_cardiorresp",
@@ -134,14 +135,14 @@
    "prox": "despacho_2",
    "opcoes": [
     {
-     "id": "nao",
-     "rotulo": "Não",
-     "vai": ""
-    },
-    {
      "id": "sim",
      "rotulo": "Sim",
      "vai": "despacho_3"
+    },
+    {
+     "id": "nao",
+     "rotulo": "Não",
+     "vai": ""
     }
    ]
   },
@@ -208,14 +209,14 @@
    "prox": "FIM",
    "opcoes": [
     {
-     "id": "nao",
-     "rotulo": "Não",
-     "vai": ""
-    },
-    {
      "id": "sim",
      "rotulo": "Sim",
      "vai": "nao_entre_agua"
+    },
+    {
+     "id": "nao",
+     "rotulo": "Não",
+     "vai": ""
     }
    ]
   },
@@ -279,7 +280,8 @@
    "mermaid": "",
    "prox": "FIM",
    "opcoes": [],
-   "despacho": true
+   "despacho": true,
+   "fala": "padrao"
   }
  ],
  "notas": [

@@ -20,7 +20,7 @@ var arg=process.argv[2];
 if(arg){
   var z=lerZip(fs.readFileSync(arg)),mud=[];
   Object.keys(z).forEach(function(nome){
-    var m=/(?:^|\/)protocolos\/([a-z0-9_]+)\.json$|(?:^|\/)(naturezas|blocos)\.json$|(?:^|\/)blocos\/([a-z0-9_]+)\.json$/.exec(nome); if(!m) return;
+    var m=/(?:^|\/)protocolos\/([a-z0-9_]+)\.json$|(?:^|\/)(naturezas|blocos|falas)\.json$|(?:^|\/)blocos\/([a-z0-9_]+)\.json$/.exec(nome); if(!m) return;
     if(m[3]&&!fs.existsSync(path.join(dir,'blocos'))) fs.mkdirSync(path.join(dir,'blocos'));
     var alvo=m[3]?path.join(dir,'blocos',m[3]+'.json'):path.join(dir,(m[1]||m[2])+'.json'),novo=z[nome].toString('utf8');
     JSON.parse(novo);
@@ -40,7 +40,7 @@ var nats=JSON.parse(fs.readFileSync(path.join(dir,'naturezas.json'),'utf8')),pro
 /* blocos reutilizáveis: protocolos/blocos.json e protocolos/blocos/<id>.json */
 var blocos=fs.existsSync(path.join(dir,'blocos.json'))?JSON.parse(fs.readFileSync(path.join(dir,'blocos.json'),'utf8')):[];
 blocos.forEach(function(b){ var f=path.join(dir,'blocos',b.id+'.json'); var o=fs.existsSync(f)?JSON.parse(fs.readFileSync(f,'utf8')):{itens:[]}; prot['bloco:'+b.id]=o.itens||[]; if(o.layout) lays['bloco:'+b.id]=o.layout; });
-var listados={'impressoes-publicadas.json':1,'blocos.json':1}; nats.forEach(function(n){ listados[n.id+'.json']=1; });
+var listados={'impressoes-publicadas.json':1,'blocos.json':1,'falas.json':1}; nats.forEach(function(n){ listados[n.id+'.json']=1; });
 var orfaos=fs.readdirSync(dir).filter(function(f){ return /\.json$/.test(f)&&f!=='naturezas.json'&&!listados[f]; });
 if(orfaos.length) console.log('Atenção: estes arquivos não estão em naturezas.json (natureza excluída?) e ficaram fora do site: '+orfaos.join(', ')+'. Apague com git rm se for o caso.');
 nats.forEach(function(n){ var f=path.join(dir,n.id+'.json'); var o=fs.existsSync(f)?JSON.parse(fs.readFileSync(f,'utf8')):{itens:[]}; prot[n.id]=o.itens||[]; if(o.notas&&o.notas.length) notas[n.id]=o.notas; if(o.layout) lays[n.id]=o.layout; });
@@ -52,12 +52,14 @@ Object.keys(prot).forEach(function(k){ var x=impr(prot[k]); imps[k]=imps[k]||[];
 fs.writeFileSync(arqImp,JSON.stringify(imps,null,1)+'\n');
 var out='/* GERADO por ferramentas/montar.js a partir da pasta protocolos/. Não edite à mão. */\n'
  +'NATUREZAS = '+JSON.stringify(nats,null,0).replace(/\},\{/g,'},\n  {')+';\n'
+ +'var FALAS = '+JSON.stringify(fs.existsSync(path.join(dir,'falas.json'))?JSON.parse(fs.readFileSync(path.join(dir,'falas.json'),'utf8')):{})+';\n'
+ +"if(typeof definirFalas==='function') definirFalas(FALAS);\n"
  +'var BLOCOS = '+JSON.stringify(blocos)+';\n'
  +'var PROTOCOLOS_PUBLICADOS = '+JSON.stringify(prot)+';\n'
  +'var NOTAS_PROTOCOLOS = '+JSON.stringify(notas)+';\n'
  +'var LAYOUTS_PUBLICADOS = '+JSON.stringify(lays)+';\n'
  +'var IMPRESSOES_PUBLICADAS = '+JSON.stringify(imps)+';\n'
  +'exemplos = function(){ return JSON.parse(JSON.stringify(PROTOCOLOS_PUBLICADOS)); };\n'
- +"if(typeof module!=='undefined') module.exports={NATUREZAS:NATUREZAS,BLOCOS:BLOCOS,PROTOCOLOS_PUBLICADOS:PROTOCOLOS_PUBLICADOS,NOTAS_PROTOCOLOS:NOTAS_PROTOCOLOS};\n";
+ +"if(typeof module!=='undefined') module.exports={NATUREZAS:NATUREZAS,BLOCOS:BLOCOS,FALAS:FALAS,PROTOCOLOS_PUBLICADOS:PROTOCOLOS_PUBLICADOS,NOTAS_PROTOCOLOS:NOTAS_PROTOCOLOS};\n";
 fs.writeFileSync(path.join(raiz,'protocolos.js'),out);
 console.log('protocolos.js montado: '+nats.length+' naturezas, '+blocos.length+' blocos.');

@@ -23,7 +23,8 @@
    "mermaid": "",
    "prox": "ela_acordada",
    "opcoes": [],
-   "despacho": true
+   "despacho": true,
+   "fala": "padrao"
   },
   {
    "id": "ela_acordada",
@@ -124,15 +125,15 @@
      "relato": false
     },
     {
-     "id": "nao_sei",
-     "rotulo": "Não sei",
-     "vai": "despacho_2",
-     "relato": false
-    },
-    {
      "id": "nao",
      "rotulo": "Não",
      "vai": "despacho_3"
+    },
+    {
+     "id": "nao_sei",
+     "rotulo": "Não sabe",
+     "vai": "despacho_2",
+     "relato": false
     }
    ]
   },
@@ -155,7 +156,8 @@
    "mermaid": "",
    "prox": "realize_videochamada_fac",
    "opcoes": [],
-   "despacho": true
+   "despacho": true,
+   "fala": "video"
   },
   {
    "id": "realize_videochamada_fac",
@@ -177,7 +179,8 @@
    "mermaid": "",
    "prox": "FIM",
    "opcoes": [],
-   "despacho": true
+   "despacho": true,
+   "fala": "video"
   }
  ],
  "notas": []

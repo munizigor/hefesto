@@ -148,7 +148,8 @@
    "mermaid": "",
    "prox": "nao_tente_pegar",
    "opcoes": [],
-   "despacho": true
+   "despacho": true,
+   "fala": "padrao"
   },
   {
    "id": "nao_tente_pegar",

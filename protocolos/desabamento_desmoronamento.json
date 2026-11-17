@@ -71,7 +71,8 @@
    "mermaid": "",
    "prox": "pessoas_estavam_local",
    "opcoes": [],
-   "despacho": true
+   "despacho": true,
+   "fala": "padrao"
   },
   {
    "id": "pessoas_estavam_local",

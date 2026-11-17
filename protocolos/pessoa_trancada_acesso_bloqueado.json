@@ -115,13 +115,14 @@
   {
    "id": "despacho",
    "tipo": "instrucao",
-   "texto": "🚒 Despacho imediato",
+   "texto": "Despacho imediato",
    "obrig": false,
    "outro": false,
    "mermaid": "",
    "prox": "quanto_tempo",
    "opcoes": [],
-   "despacho": true
+   "despacho": true,
+   "nota": true
   },
   {
    "id": "quanto_tempo",

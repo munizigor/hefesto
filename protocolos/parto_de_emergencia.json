@@ -50,7 +50,8 @@
    "mermaid": "",
    "prox": "bebe_ja_nasceu",
    "opcoes": [],
-   "despacho": true
+   "despacho": true,
+   "fala": "padrao"
   },
   {
    "id": "bebe_ja_nasceu",
@@ -73,7 +74,7 @@
     },
     {
      "id": "nao_sei",
-     "rotulo": "Não sei",
+     "rotulo": "Não sabe",
      "vai": "",
      "relato": false
     }

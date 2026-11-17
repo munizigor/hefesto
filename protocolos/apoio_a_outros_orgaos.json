@@ -147,7 +147,8 @@
    "mermaid": "",
    "prox": "FIM",
    "opcoes": [],
-   "despacho": true
+   "despacho": true,
+   "fala": "padrao"
   }
  ],
  "notas": [

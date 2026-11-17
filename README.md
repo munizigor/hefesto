@@ -31,6 +31,7 @@ Protótipo estático para validar, com a área de negócio, a tela de atendiment
 | `protocolos/` | **Fonte de verdade** das entrevistas: `naturezas.json` e um `<id>.json` por natureza; `blocos.json` e `blocos/<id>.json` com os blocos reutilizáveis |
 | `protocolos.js` | Montado a partir de `protocolos/` por `ferramentas/montar.js`. Não edite à mão |
 | `ferramentas/montar.js` | Monta o `protocolos.js` e aplica um zip exportado pelo site |
+| `ferramentas/padronizar.js` | Padroniza respostas (Sim, Não, Não sabe) e liga as falas de despacho à biblioteca, conferindo que nenhum caminho muda |
 | `ferramentas/blocos.js` | Encontra trechos idênticos entre naturezas e os transforma em blocos, conferindo que o atendimento não muda |
 | `miro/` | Arquivo histórico da importação do Miro: código de cada diagrama, manifesto e conversor |
 | `app.js` | Interface: atendimento, editor de protocolos e ocorrências |
@@ -157,3 +158,18 @@ Os pontos aparecem no painel "Testar", na lista de naturezas (⚠) e no editor v
 - **Decisão obrigatória sobre o despacho:** uma ocorrência que não foi encaminhada só é registrada depois de o atendente encaminhar ou escolher o motivo (trote ou engano, encaminhada a outro órgão, sem necessidade de recurso, solicitante desistiu, outro). O motivo fica na ocorrência.
 - **Múltipla escolha com confirmação:** o atendente marca todas as respostas que valem (pelo mouse ou pelas teclas 1 a 9) e confirma com "Pronto" ou Enter. O destaque não pula antes da confirmação.
 - **Troca para natureza não cadastrada:** em vez de encerrar sem explicação, avisa que a natureza não existe, segue com a atual e anota a indicação nas observações.
+
+## Padronização
+
+**Respostas.** As perguntas de sim e não usam sempre "Sim, Não, Não sabe", nessa ordem (teclas 1, 2, 3 no atendimento). A padronização reordenou ou corrigiu 117 perguntas, trocando "Não sei" por "Não sabe", e pôs 2 perguntas numéricas em ordem crescente. Cada resposta levou junto o seu destino e a marca de relato. No editor, o seletor "Respostas" cria os conjuntos padrão, e a verificação avisa quando uma pergunta sai do padrão.
+
+**Falas padrão** (`protocolos/falas.json`). A fala do despacho ("O socorro já foi acionado…") e a da videochamada existem uma vez só; 68 itens de despacho apontam para elas (`"fala":"padrao"` ou `"fala":"video"`). Editar a fala em "Falas padrão", na aba Protocolos, muda todos os itens. Oito itens que eram instruções para o atendente ("Despacho conforme critério da COCB…") passaram a ser **notas** (`"nota":true`): no atendimento aparecem como "Ponto de despacho · para você, não ler ao solicitante".
+
+**Política de despacho por natureza** (campo `despacho` em `naturezas.json`):
+- `imediato`: o passo 1 vira "Encaminhar e seguir para a entrevista". Usada em Agressão física, Amputação ou esmagamento, Incêndio em edificação, PCR, Pessoa confinada e Tentativa de suicídio, que já despachavam antes de qualquer pergunta.
+- `agendavel`: sem despacho, e o registro grava "Atendimento agendável". Usada em Atividade preventiva e Simulado.
+- sem o campo: o despacho acontece no item de despacho do fluxo.
+
+A política se escolhe no cabeçalho da natureza, vai no zip e é considerada pela verificação.
+
+`node ferramentas/padronizar.js` mostra o que mudaria; com `--aplicar`, grava depois de comparar cada natureza com a original caminho a caminho.

@@ -50,7 +50,8 @@
    "mermaid": "",
    "prox": "propria_pessoa_feriu",
    "opcoes": [],
-   "despacho": true
+   "despacho": true,
+   "fala": "padrao"
   },
   {
    "id": "propria_pessoa_feriu",
@@ -73,7 +74,7 @@
     },
     {
      "id": "nao_sei",
-     "rotulo": "Não sei",
+     "rotulo": "Não sabe",
      "vai": "",
      "relato": false
     }

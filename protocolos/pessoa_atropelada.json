@@ -49,7 +49,8 @@
    "mermaid": "",
    "prox": "pessoa_jogou_frente",
    "opcoes": [],
-   "despacho": true
+   "despacho": true,
+   "fala": "padrao"
   },
   {
    "id": "pessoa_jogou_frente",
@@ -72,7 +73,7 @@
     },
     {
      "id": "nao_sei",
-     "rotulo": "Não sei",
+     "rotulo": "Não sabe",
      "vai": "",
      "relato": false
     }

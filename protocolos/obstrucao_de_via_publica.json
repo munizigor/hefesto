@@ -111,13 +111,14 @@
   {
    "id": "despacho",
    "tipo": "instrucao",
-   "texto": "🚒 Despacho conforme critério da COCB; acionar órgão de trânsito",
+   "texto": "Despacho conforme critério da COCB; acionar órgão de trânsito",
    "obrig": false,
    "outro": false,
    "mermaid": "",
    "prox": "sinalize_pisca_alerta",
    "opcoes": [],
-   "despacho": true
+   "despacho": true,
+   "nota": true
   },
   {
    "id": "sinalize_pisca_alerta",

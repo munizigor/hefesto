@@ -12,12 +12,14 @@
  {
   "id": "agressao_fisica",
   "nome": "Agressão física",
-  "fonte": "transcrição do quadro"
+  "fonte": "transcrição do quadro",
+  "despacho": "imediato"
  },
  {
   "id": "amputacao_ou_esmagamento_de_membro",
   "nome": "Amputação ou esmagamento de membro",
-  "fonte": "transcrição do quadro"
+  "fonte": "transcrição do quadro",
+  "despacho": "imediato"
  },
  {
   "id": "animal_domestico_em_situacao_de_risco",
@@ -42,7 +44,8 @@
  {
   "id": "atividade_preventiva_palestra_demonstrac",
   "nome": "Atividade preventiva / palestra / demonstração profissional",
-  "fonte": "fluxo novo"
+  "fonte": "fluxo novo",
+  "despacho": "agendavel"
  },
  {
   "id": "choque_eletrico",
@@ -97,7 +100,8 @@
  {
   "id": "incendio_em_edificacao",
   "nome": "Incêndio em edificação",
-  "fonte": "transcrição do quadro"
+  "fonte": "transcrição do quadro",
+  "despacho": "imediato"
  },
  {
   "id": "incendio_em_lixo_entulho",
@@ -157,7 +161,8 @@
  {
   "id": "parada_cardiorrespiratoria",
   "nome": "Parada cardiorrespiratória (PCR)",
-  "fonte": "transcrição do quadro"
+  "fonte": "transcrição do quadro",
+  "despacho": "imediato"
  },
  {
   "id": "parto_de_emergencia",
@@ -182,7 +187,8 @@
  {
   "id": "pessoa_confinada",
   "nome": "Pessoa confinada",
-  "fonte": "transcrição do quadro"
+  "fonte": "transcrição do quadro",
+  "despacho": "imediato"
  },
  {
   "id": "pessoa_em_obito_evidente",
@@ -242,12 +248,14 @@
  {
   "id": "simulado",
   "nome": "Simulado",
-  "fonte": "fluxo novo"
+  "fonte": "fluxo novo",
+  "despacho": "agendavel"
  },
  {
   "id": "tentativa_de_suicidio",
   "nome": "Tentativa de suicídio",
-  "fonte": "transcrição do quadro"
+  "fonte": "transcrição do quadro",
+  "despacho": "imediato"
  },
  {
   "id": "vazamento_de_gas_glp",

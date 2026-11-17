@@ -25,7 +25,7 @@
     },
     {
      "id": "nao_sei",
-     "rotulo": "Não sei",
+     "rotulo": "Não sabe",
      "vai": "",
      "relato": false
     }
@@ -122,13 +122,14 @@
   {
    "id": "despacho",
    "tipo": "instrucao",
-   "texto": "O socorro já foi acionado e está a caminho. Vou fazer mais algumas perguntas rápidas para ajudar a equipe. Mantenha a calma e siga minhas orientações, por favor.",
+   "texto": "O socorro já foi acionado e está a caminho. Vou fazer algumas perguntas rápidas para ajudar a equipe. Mantenha a calma e siga minhas orientações, por favor.",
    "obrig": false,
    "outro": false,
    "mermaid": "",
    "prox": "pessoa_picada",
    "opcoes": [],
-   "despacho": true
+   "despacho": true,
+   "fala": "padrao"
   },
   {
    "id": "pessoa_picada",
@@ -264,13 +265,14 @@
   {
    "id": "despacho_2",
    "tipo": "instrucao",
-   "texto": "O socorro já foi acionado e está a caminho. Vou fazer mais algumas perguntas rápidas para ajudar a equipe. Mantenha a calma e siga minhas orientações, por favor.",
+   "texto": "O socorro já foi acionado e está a caminho. Vou fazer algumas perguntas rápidas para ajudar a equipe. Mantenha a calma e siga minhas orientações, por favor.",
    "obrig": false,
    "outro": false,
    "mermaid": "",
    "prox": "pessoa_atacada",
    "opcoes": [],
-   "despacho": true
+   "despacho": true,
+   "fala": "padrao"
   },
   {
    "id": "pessoa_atacada",
@@ -328,13 +330,13 @@
    "prox": "ela_confusa_sonolenta_2",
    "opcoes": [
     {
-     "id": "nao",
-     "rotulo": "Não",
+     "id": "sim",
+     "rotulo": "Sim",
      "vai": ""
     },
     {
-     "id": "sim",
-     "rotulo": "Sim",
+     "id": "nao",
+     "rotulo": "Não",
      "vai": ""
     }
    ]
@@ -349,15 +351,15 @@
    "prox": "FIM",
    "opcoes": [
     {
+     "id": "sim",
+     "rotulo": "Sim",
+     "vai": ""
+    },
+    {
      "id": "nao",
      "rotulo": "Não",
      "vai": "",
      "relato": false
-    },
-    {
-     "id": "sim",
-     "rotulo": "Sim",
-     "vai": ""
     }
    ]
   },
@@ -427,13 +429,13 @@
      "vai": ""
     },
     {
-     "id": "nao_sei",
-     "rotulo": "Não sei",
+     "id": "nao",
+     "rotulo": "Não",
      "vai": ""
     },
     {
-     "id": "nao",
-     "rotulo": "Não",
+     "id": "nao_sei",
+     "rotulo": "Não sabe",
      "vai": ""
     }
    ]
@@ -462,13 +464,14 @@
   {
    "id": "despacho_3",
    "tipo": "instrucao",
-   "texto": "O socorro já foi acionado e está a caminho. Vou fazer mais algumas perguntas rápidas para ajudar a equipe. Mantenha a calma e siga minhas orientações, por favor.",
+   "texto": "O socorro já foi acionado e está a caminho. Vou fazer algumas perguntas rápidas para ajudar a equipe. Mantenha a calma e siga minhas orientações, por favor.",
    "obrig": false,
    "outro": false,
    "mermaid": "",
    "prox": "picadas_aconteceram",
    "opcoes": [],
-   "despacho": true
+   "despacho": true,
+   "fala": "padrao"
   },
   {
    "id": "picadas_aconteceram",
@@ -547,7 +550,8 @@
    "mermaid": "",
    "prox": "FIM",
    "opcoes": [],
-   "despacho": true
+   "despacho": true,
+   "fala": "video"
   },
   {
    "id": "troca_parada_cardiorespi_2",
@@ -600,7 +604,8 @@
    "mermaid": "",
    "prox": "FIM",
    "opcoes": [],
-   "despacho": true
+   "despacho": true,
+   "fala": "video"
   },
   {
    "id": "despacho_6",
@@ -611,7 +616,8 @@
    "mermaid": "",
    "prox": "FIM",
    "opcoes": [],
-   "despacho": true
+   "despacho": true,
+   "fala": "video"
   },
   {
    "id": "possivel_seguranca_tire",
