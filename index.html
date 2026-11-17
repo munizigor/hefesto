@@ -24,18 +24,19 @@
 <div id="vProt" style="display:none">
   <div class="wrap">
     <nav class="col" id="pNats" aria-label="Naturezas"></nav>
-    <section class="col" id="pEditor" aria-label="Editor da entrevista"></section>
-    <aside class="col" id="pSide" aria-label="Teste, fluxo e formulário">
-      <div class="tabs" id="pTabs" role="tablist">
-        <button role="tab" data-tab="teste">Testar</button>
-        <button role="tab" data-tab="fluxo">Fluxo (Mermaid)</button>
-        <button role="tab" data-tab="form">Formulário (JSON)</button>
-        <button role="tab" data-tab="importar">Importar do Miro</button>
-        <button role="tab" data-tab="manual">Manual</button>
+    <section class="col" id="pMain" aria-label="Protocolo da natureza">
+      <div id="pTopo"></div>
+      <div class="tabs" id="pTabs" role="tablist" aria-label="Modos de edição">
+        <button role="tab" data-tab="fluxo">Fluxo</button>
+        <button role="tab" data-tab="roteiro">Roteiro</button>
+        <button role="tab" data-tab="simular">Simular</button>
+        <button role="tab" data-tab="avancado">Avançado</button>
+        <button role="tab" data-tab="ajuda">Ajuda</button>
       </div>
       <div id="pValid"></div>
+      <div id="pEditor"></div>
       <div id="pPanel"></div>
-    </aside>
+    </section>
   </div>
 </div>
 <div id="vOcorr" style="display:none"></div>

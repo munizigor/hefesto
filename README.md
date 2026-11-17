@@ -125,9 +125,15 @@ Sem destino configurado, ou quando a pessoa escolhe "Sem internet? Escrever aqui
 
 ## Editor visual
 
-O botão **✏️ Editor visual** abre o fluxo da natureza em tela cheia, com as cores do quadro do Miro. Cada item é uma caixa; as respostas de uma pergunta aparecem como linhas dentro dela, amarelas (vão para o relato) ou lilases (ficam fora), cada uma com um ponto ● de saída. Puxe do ponto até a caixa seguinte para ligar; solte no vazio para desfazer a ligação daquela resposta. O ponto embaixo da caixa é o caminho padrão, e o da caixa da natureza escolhe a primeira pergunta. A barra de cima cria caixas (pergunta, pergunta aberta, orientação, despacho, informação, videochamada, troca de natureza) e o painel da direita edita a caixa selecionada. Ctrl+Z desfaz e Delete apaga a caixa, ligando quem vinha antes ao que vinha depois. A validação aparece no alto, ao vivo.
+O editor de protocolos abre direto no desenho do fluxo. A natureza tem cinco abas: **Fluxo** (o editor visual, que é a tela principal), **Roteiro** (a mesma entrevista em lista, na ordem em que o atendente lê), **Simular** (percorre a entrevista item por item e mostra os detalhes da validação), **Avançado** (Mermaid, JSON e importação do Miro, para quem conhece) e **Ajuda**. Os identificadores técnicos ficam escondidos; o Roteiro mostra os destinos pelo número e texto do item ("→ 12. Há vítimas presas?") e tem a opção "Mostrar identificadores técnicos" para quem precisar. Uma faixa logo abaixo das abas resume caminhos sem despacho e avisos, com "Ver detalhes".
+
+No Fluxo, o desenho segue as cores do quadro do Miro e **⤢ Tela cheia** amplia a área de trabalho. Cada item é uma caixa; as respostas de uma pergunta aparecem como linhas dentro dela, amarelas (vão para o relato) ou lilases (ficam fora), cada uma com um ponto ● de saída. Puxe do ponto até a caixa seguinte para ligar; solte no vazio para desfazer a ligação daquela resposta. O ponto embaixo da caixa é o caminho padrão, e o da caixa da natureza escolhe a primeira pergunta. A barra de cima cria caixas (pergunta, pergunta aberta, orientação, despacho, informação, videochamada, troca de natureza) e o painel da direita edita a caixa selecionada. Ctrl+Z desfaz e Delete apaga a caixa, ligando quem vinha antes ao que vinha depois. A validação aparece no alto, ao vivo.
 
 A posição das caixas fica no navegador, vai no zip (`layout` em cada `protocolos/<id>.json`) e é publicada pelo `montar.js`. Sem posição salva, o editor organiza o fluxo em camadas a partir do início ("Reorganizar" refaz isso).
+
+### Busca da natureza por outros nomes
+
+No atendimento, o campo Natureza aceita o que o solicitante falou: "batida" sugere Acidente de trânsito, "cheiro de gás" sugere Vazamento de gás / GLP, "engasgou" sugere Obstrução de vias aéreas. A lista mostra por qual nome a natureza foi encontrada; ↓ e Enter escolhem sem tirar a mão do teclado. Os outros nomes de cada natureza ficam no campo `sinonimos` de `protocolos/naturezas.json` e são editados no topo da natureza ("Outros nomes que o atendente pode digitar"). Já vêm preenchidos para 17 naturezas frequentes; a equipe deve revisar e completar.
 
 ## Blocos reutilizáveis
 
@@ -152,7 +158,7 @@ Blocos vão no zip (`blocos.json` e `blocos/<id>.json`) e entram pelo `montar.js
 - **Atenção:** mais de 5 perguntas antes do despacho, trocas para naturezas não cadastradas e caminhos sem despacho que só acontecem quando uma pergunta é pulada.
 - **Informação:** naturezas sem nenhum despacho (podem ser agendáveis).
 
-Os pontos aparecem no painel "Testar", na lista de naturezas (⚠) e no editor visual.
+Os pontos aparecem na faixa abaixo das abas da natureza (com detalhes na aba Simular), na lista de naturezas (⚠) e no editor visual.
 
 **No atendimento:**
 - **Decisão obrigatória sobre o despacho:** uma ocorrência que não foi encaminhada só é registrada depois de o atendente encaminhar ou escolher o motivo (trote ou engano, encaminhada a outro órgão, sem necessidade de recurso, solicitante desistiu, outro). O motivo fica na ocorrência.

@@ -2,12 +2,26 @@
  {
   "id": "acidente_de_transito",
   "nome": "Acidente de trânsito",
-  "fonte": "transcrição do quadro"
+  "fonte": "transcrição do quadro",
+  "sinonimos": [
+   "batida",
+   "colisão",
+   "capotamento",
+   "capotou",
+   "engavetamento",
+   "acidente de carro",
+   "acidente de moto"
+  ]
  },
  {
   "id": "afogamento",
   "nome": "Afogamento",
-  "fonte": "transcrição do quadro"
+  "fonte": "transcrição do quadro",
+  "sinonimos": [
+   "afogou",
+   "afogado",
+   "caiu na piscina"
+  ]
  },
  {
   "id": "agressao_fisica",
@@ -34,12 +48,22 @@
  {
   "id": "arvore_com_risco_de_queda",
   "nome": "Árvore com risco de queda",
-  "fonte": "transcrição do quadro"
+  "fonte": "transcrição do quadro",
+  "sinonimos": [
+   "árvore caindo",
+   "galho caindo"
+  ]
  },
  {
   "id": "ataque_picada_de_animal",
   "nome": "Ataque / picada de animal",
-  "fonte": "transcrição do quadro"
+  "fonte": "transcrição do quadro",
+  "sinonimos": [
+   "mordida",
+   "cachorro mordeu",
+   "cobra",
+   "escorpião"
+  ]
  },
  {
   "id": "atividade_preventiva_palestra_demonstrac",
@@ -65,7 +89,12 @@
  {
   "id": "emergencia_clinica",
   "nome": "Emergência clínica",
-  "fonte": "transcrição do quadro"
+  "fonte": "transcrição do quadro",
+  "sinonimos": [
+   "passando mal",
+   "desmaio",
+   "convulsão"
+  ]
  },
  {
   "id": "emergencia_nuclear_radiologica",
@@ -101,7 +130,13 @@
   "id": "incendio_em_edificacao",
   "nome": "Incêndio em edificação",
   "fonte": "transcrição do quadro",
-  "despacho": "imediato"
+  "despacho": "imediato",
+  "sinonimos": [
+   "fogo em casa",
+   "incêndio em casa",
+   "incêndio em prédio",
+   "apartamento pegando fogo"
+  ]
  },
  {
   "id": "incendio_em_lixo_entulho",
@@ -111,12 +146,23 @@
  {
   "id": "incendio_em_meio_de_transporte",
   "nome": "Incêndio em meio de transporte",
-  "fonte": "fluxo novo"
+  "fonte": "fluxo novo",
+  "sinonimos": [
+   "carro pegando fogo",
+   "fogo em veículo",
+   "ônibus pegando fogo"
+  ]
  },
  {
   "id": "incendio_em_vegetacao",
   "nome": "Incêndio em vegetação",
-  "fonte": "fluxo novo"
+  "fonte": "fluxo novo",
+  "sinonimos": [
+   "fogo no mato",
+   "queimada",
+   "fogo no cerrado",
+   "incêndio florestal"
+  ]
  },
  {
   "id": "insetos_abelha_ou_similares_2",
@@ -131,7 +177,13 @@
  {
   "id": "inundacao_alagamento",
   "nome": "Inundação / alagamento",
-  "fonte": "fluxo novo"
+  "fonte": "fluxo novo",
+  "sinonimos": [
+   "enchente",
+   "alagou",
+   "alagamento",
+   "casa alagada"
+  ]
  },
  {
   "id": "naufragio_acidente_nautico",
@@ -146,7 +198,13 @@
  {
   "id": "obstrucao_de_vias_aereas",
   "nome": "Obstrução de vias aéreas (OVACE)",
-  "fonte": "fluxo novo"
+  "fonte": "fluxo novo",
+  "sinonimos": [
+   "engasgo",
+   "engasgou",
+   "engasgado",
+   "OVACE"
+  ]
  },
  {
   "id": "oleo_substancia_na_via",
@@ -162,12 +220,23 @@
   "id": "parada_cardiorrespiratoria",
   "nome": "Parada cardiorrespiratória (PCR)",
   "fonte": "transcrição do quadro",
-  "despacho": "imediato"
+  "despacho": "imediato",
+  "sinonimos": [
+   "parou de respirar",
+   "não respira",
+   "infarto",
+   "PCR"
+  ]
  },
  {
   "id": "parto_de_emergencia",
   "nome": "Parto de emergência",
-  "fonte": "fluxo novo"
+  "fonte": "fluxo novo",
+  "sinonimos": [
+   "trabalho de parto",
+   "bebê nascendo",
+   "bolsa estourou"
+  ]
  },
  {
   "id": "pessoa_arrastada_por_enxurrada",
@@ -177,7 +246,11 @@
  {
   "id": "pessoa_atropelada",
   "nome": "Pessoa atropelada",
-  "fonte": "fluxo novo"
+  "fonte": "fluxo novo",
+  "sinonimos": [
+   "atropelamento",
+   "atropelou"
+  ]
  },
  {
   "id": "pessoa_com_necessidade_de_auxilio_para_m",
@@ -228,12 +301,22 @@
  {
   "id": "queda_da_propria_altura",
   "nome": "Queda da própria altura",
-  "fonte": "transcrição do quadro"
+  "fonte": "transcrição do quadro",
+  "sinonimos": [
+   "caiu no chão",
+   "tombo",
+   "escorregou"
+  ]
  },
  {
   "id": "queda_de_plano_elevado",
   "nome": "Queda de plano elevado",
-  "fonte": "fluxo novo"
+  "fonte": "fluxo novo",
+  "sinonimos": [
+   "caiu da escada",
+   "caiu do telhado",
+   "caiu de altura"
+  ]
  },
  {
   "id": "risco_de_choque_eletrico",
@@ -255,11 +338,21 @@
   "id": "tentativa_de_suicidio",
   "nome": "Tentativa de suicídio",
   "fonte": "transcrição do quadro",
-  "despacho": "imediato"
+  "despacho": "imediato",
+  "sinonimos": [
+   "quer se matar",
+   "ameaça pular",
+   "tentou se matar"
+  ]
  },
  {
   "id": "vazamento_de_gas_glp",
   "nome": "Vazamento de gás / GLP",
-  "fonte": "fluxo novo"
+  "fonte": "fluxo novo",
+  "sinonimos": [
+   "cheiro de gás",
+   "botijão vazando",
+   "vazamento de gás"
+  ]
  }
 ]

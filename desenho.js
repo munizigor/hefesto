@@ -10,7 +10,7 @@
      api.layout() / api.setLayout(mapa)   posições {id:{x,y}} desta natureza
      api.mudou()            salva e redesenha o resto da tela */
 var HefestoDesenho=(function(){
-  var API=null,R=null,V={tx:40,ty:40,k:1},sel=null,multi={},ultimoClique={id:null,t:0},pilha=[],arraste=null,ligacao=null,raiz=null;
+  var API=null,R=null,V={tx:40,ty:40,k:1},embutido=null,sel=null,multi={},ultimoClique={id:null,t:0},pilha=[],arraste=null,ligacao=null,raiz=null;
   var PAPEL={titulo:['#af7e04','#1a1a1a'],perg:['#ffffff','#1a1a1a'],desp:['#ffc6c6','#bd0a0a'],orient:['#ffdc4a','#af7e04'],acao:['#ffffff','#757575'],video:['#2dc75c','#067429'],troca:['#8f7fee','#6631d7'],diag:['#f8f6ff','#5b3fc4'],fim:['#adf0c7','#067429'],bloco:['#e3f2fd','#1565c0'],saida:['#e3f2fd','#1565c0']};
   function papel(it){ if(it.tipo==='bloco') return 'bloco'; if(ehPergunta(it)) return 'perg'; if(it.tipo==='instrucao') return it.despacho?'desp':'orient'; if(it.tipo==='informacao') return it.video?'video':'acao'; if(it.tipo==='troca') return 'troca'; if(it.tipo==='diagrama') return 'diag'; return 'acao'; }
   function nomeTipo(it){ var p=papel(it); return {perg:it.tipo==='texto'||it.tipo==='numero'?'Pergunta aberta':it.tipo==='multipla'?'Pergunta · várias respostas':'Pergunta',desp:'🚒 Despacho imediato',orient:'Orientação ao solicitante',acao:'Informação ao atendente',video:'📞 Videochamada',troca:'🔁 Trocar natureza',diag:'Fluxograma de consulta',bloco:'🧩 Bloco reutilizável'}[p]; }
@@ -50,19 +50,23 @@ var HefestoDesenho=(function(){
     return pos;
   }
   /* ---------- desenho ---------- */
-  function abrir(api){
+  /* container: embute o editor na página (aba Fluxo); sem container, abre em tela cheia */
+  function abrir(api,container){
     API=api; sel=null; multi={}; pilha=[]; V={tx:60,ty:40,k:1};
     fechar();
-    raiz=h('div',{class:'dz',role:'dialog','aria-label':'Editor visual do fluxo'});
-    document.body.appendChild(raiz);
+    embutido=container||null;
+    raiz=h('div',{class:'dz'+(embutido?' dzEmb':''),role:embutido?'region':'dialog','aria-label':'Editor visual do fluxo'});
+    (embutido||document.body).appendChild(raiz);
     document.addEventListener('keydown',tecla,true);
     desenhar(true);
   }
   function fechar(){ if(raiz){ raiz.remove(); raiz=null; document.removeEventListener('keydown',tecla,true); } }
+  function cheia(){ if(!raiz||!embutido) return; raiz.classList.toggle('dzCheia'); desenhar(true); }
   function tecla(e){
     if(!raiz) return;
     var emCampo=/INPUT|TEXTAREA|SELECT/.test((e.target&&e.target.tagName)||'');
-    if(e.key==='Escape'&&!emCampo){ e.preventDefault(); e.stopPropagation(); if(sel){ sel=null; desenhar(); } else fechar(); return; }
+    if(embutido&&!raiz.classList.contains('dzCheia')&&!raiz.contains(document.activeElement)&&document.activeElement!==document.body) return;
+    if(e.key==='Escape'&&!emCampo){ e.preventDefault(); e.stopPropagation(); if(sel){ sel=null; desenhar(); } else if(embutido){ if(raiz.classList.contains('dzCheia')) cheia(); } else fechar(); return; }
     if((e.ctrlKey||e.metaKey)&&e.key.toLowerCase()==='z'&&!emCampo){ e.preventDefault(); e.stopPropagation(); desfazer(); return; }
     if(e.key==='Escape'&&!emCampo&&Object.keys(multi).length){ multi={}; desenhar(); return; }
     if((e.key==='Delete'||e.key==='Backspace')&&!emCampo&&sel){ e.preventDefault(); e.stopPropagation(); excluir(sel); }
@@ -76,7 +80,7 @@ var HefestoDesenho=(function(){
     var paleta=[['Pergunta','perg'],['Pergunta aberta','aberta'],['Orientação','orient'],['Despacho','desp'],['Informação','acao'],['Videochamada','video'],['Trocar natureza','troca']];
     raiz.appendChild(h('div',{class:'dzBarra'},[
       API.voltar?h('button',{class:'btn sm',text:'‹ Voltar para '+API.voltar.nome,onclick:API.voltar.fn}):null,
-      h('b',{text:(API.emBloco?'Bloco · ':'Editor visual · ')+API.natureza.nome}),
+      embutido?null:h('b',{text:(API.emBloco?'Bloco · ':'Editor visual · ')+API.natureza.nome}),
       h('span',{class:'dzSep'}),
       h('span',{class:'muted',text:'Adicionar:'})].concat(paleta.map(function(p){ return h('button',{class:'dzAdd dz-'+(p[1]==='aberta'?'perg':p[1]),text:'+ '+p[0],onclick:function(){ adicionar(p[1]); }}); })).concat([
       listaB.length?h('select',{class:'dzAddB','aria-label':'Adicionar bloco',onchange:function(e){ if(e.target.value) adicionar('bloco',e.target.value); }},[h('option',{value:'',text:'+ Bloco…'})].concat(listaB.map(function(b){ return h('option',{value:b.id,text:b.nome+' ('+b.n+' itens)'}); }))):null,
@@ -87,9 +91,9 @@ var HefestoDesenho=(function(){
       h('button',{class:'btn sm',text:'−',title:'Diminuir',onclick:function(){ zoom(0.8); }}),
       h('button',{class:'btn sm',text:'+',title:'Aumentar',onclick:function(){ zoom(1.25); }}),
       h('button',{class:'btn sm',text:'Ver tudo',onclick:function(){ caber(true); }}),
-      h('button',{class:'btn sm pri',text:'Fechar',onclick:fechar})])));
+      embutido?h('button',{class:'btn sm',text:raiz.classList.contains('dzCheia')?'⤡ Sair da tela cheia':'⤢ Tela cheia',onclick:cheia}):h('button',{class:'btn sm pri',text:'Fechar',onclick:fechar})])));
     var proc=API.processo?API.processo():[],altos=proc.filter(function(x){ return x.nivel==='alto'; });
-    if(altos.length) raiz.appendChild(h('div',{class:'dzStatus err',title:altos.map(function(x){ return x.msg; }).join('\n'),text:'🚒 '+altos.length+' caminho'+(altos.length>1?'s':'')+' termina'+(altos.length>1?'m':'')+' sem despacho. '+altos[0].msg+(altos.length>1?' (veja todos no painel “Testar” ao lado da entrevista)':'')}));
+    if(altos.length) raiz.appendChild(h('div',{class:'dzStatus err',title:altos.map(function(x){ return x.msg; }).join('\n'),text:'🚒 '+altos.length+' caminho'+(altos.length>1?'s':'')+' termina'+(altos.length>1?'m':'')+' sem despacho. '+altos[0].msg+(altos.length>1?' (veja todos em “Ver detalhes”, na faixa acima)':'')}));
     var status=v.erros.length?h('div',{class:'dzStatus err',text:'⚠ '+v.erros.length+' erro(s): '+v.erros[0]+(v.erros.length>1?' …':'')+' A entrevista não aparece no atendimento até corrigir.'}):v.avisos.length?h('div',{class:'dzStatus inf',text:v.avisos.length+' aviso(s): '+v.avisos[0]}):h('div',{class:'dzStatus ok',text:'Fluxo sem erros · '+itens().length+' itens. Puxe do ponto ● de uma resposta até outra caixa para ligar. Duplo clique no fundo ajusta a tela.'});
     raiz.appendChild(status);
     var corpo=h('div',{class:'dzCorpo'}),tela=h('div',{class:'dzTela'}),mundo=h('div',{class:'dzMundo'}),svg=document.createElementNS('http://www.w3.org/2000/svg','svg');
