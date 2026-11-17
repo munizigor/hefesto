@@ -48,7 +48,7 @@
     if(JSON.stringify(velha)!==JSON.stringify(PUB_FALAS)) natsMudaram=true;
     DB.falas=out; DB.pubFalas=PUB_FALAS; definirFalas(DB.falas); })();
   function politica(natId){ var n=natPorId(natId); return (n&&n.despacho)||'fluxo'; }
-  function listaAlterada(){ var f=function(l){ return JSON.stringify(l.map(function(n){ return [n.id,n.nome,n.despacho||'']; })); }; return f(NATUREZAS)!==f(PUB_NAT)||f(BLOCOS)!==f(PUB_BLO)||JSON.stringify(DB.falas)!==JSON.stringify(PUB_FALAS); }
+  function listaAlterada(){ var f=function(l){ return JSON.stringify(l.map(function(n){ return [n.id,n.nome,n.despacho||'',n.sinonimos||[]]; })); }; return f(NATUREZAS)!==f(PUB_NAT)||f(BLOCOS)!==f(PUB_BLO)||JSON.stringify(DB.falas)!==JSON.stringify(PUB_FALAS); }
   /* ---------- blocos reutilizáveis ---------- */
   function ehBloco(k){ return /^bloco:/.test(k||''); }
   function blocoPorId(id){ return BLOCOS.filter(function(b){ return b.id===id; })[0]||null; }
@@ -58,11 +58,18 @@
   function porChave(k){ if(ehBloco(k)){ var b=blocoPorId(k.slice(6)); return b?{id:k,nome:b.nome,bloco:b}:null; } return natPorId(k); }
   function usosBloco(bid){ return chaves().filter(function(k){ return (DB.protocolos[k]||[]).some(function(x){ return x.tipo==='bloco'&&x.bloco===bid; }); }).map(porChave); }
   function processoDe(k,itens){ if(ehBloco(k)) return []; return verificarProcesso(expandir(itens||DB.protocolos[k]||[],getBloco),NATUREZAS.map(function(n){ return n.nome; }),politica(k)); }
+  /* troca “identificador” pelo começo do texto do item nas mensagens */
+  function humanizar(v,itens){
+    var mapa={},cur=function(t){ t=String(t||''); return t.length>50?t.slice(0,49)+'…':t; };
+    expandir(itens||[],getBloco).concat(itens||[]).forEach(function(x){ if(!mapa[x.id]) mapa[x.id]=x.tipo==='troca'?'Trocar para '+x.texto:x.texto||x.id; });
+    var f=function(m){ return m.replace(/“([a-z0-9_]+)(?: \/ ([a-z0-9_]+))?”/g,function(t,id,op){ return mapa[id]?'“'+cur(mapa[id])+'”'+(op?' (resposta '+op.replace(/_/g,' ')+')':''):t; }); };
+    return {erros:v.erros.map(f),avisos:v.avisos.map(f)};
+  }
   function validarAlvo(itens,k){
-    if(ehBloco(k)) return validarBloco(itens,getBloco,k.slice(6));
+    if(ehBloco(k)) return humanizar(validarBloco(itens,getBloco,k.slice(6)),itens);
     var v=validar(expandir(itens,getBloco));
     itens.forEach(function(x){ if(x.tipo==='bloco'&&!getBloco(x.bloco)) v.erros.unshift('“'+x.id+'”: o bloco “'+(x.texto||x.bloco)+'” não existe na biblioteca.'); });
-    return v;
+    return humanizar(v,itens);
   }
   var atualizadas=0;
   chaves().map(function(k){ return {id:k}; }).forEach(function(n){
@@ -255,6 +262,21 @@
     if(est.pendente) previsao(itens,A.resp,est.pendente).forEach(function(id){ if(lista.indexOf(id)<0) lista.push(id); });
     return {itens:itens,g:g,est:est,lista:lista};
   }
+  /* busca de natureza por nome e por outros nomes (sinônimos): todas as palavras digitadas precisam aparecer */
+  function buscarNaturezas(txt){
+    var pal=norm(txt).split(' ').filter(Boolean); if(!pal.length) return [];
+    var res=[];
+    NATUREZAS.forEach(function(n){
+      var nome=norm(n.nome),termos=[[n.nome,nome,0]].concat((n.sinonimos||[]).map(function(x){ return [x,norm(x),1]; })),melhor=null;
+      termos.forEach(function(t){
+        var ws=t[1].split(' '),ok=pal.every(function(p){ return ws.some(function(w){ return w.indexOf(p)===0; })||t[1].indexOf(p)>=0; }); if(!ok) return;
+        var sc=(t[1].indexOf(pal.join(' '))===0?100:pal.every(function(p){ return ws.some(function(w){ return w.indexOf(p)===0; }); })?70:40)-(t[2]?10:0);
+        if(!melhor||sc>melhor.sc) melhor={sc:sc,por:t[2]?t[0]:''};
+      });
+      if(melhor) res.push({n:n,sc:melhor.sc,por:melhor.por});
+    });
+    return res.sort(function(a,b){ return b.sc-a.sc||a.n.nome.localeCompare(b.n.nome,'pt-BR'); }).slice(0,6);
+  }
   function natPorNome(nome){ var a=norm(nome); return NATUREZAS.filter(function(n){ return norm(n.nome)===a; })[0]||null; }
   function trocarNatureza(n){
     var de=natPorId(A.nat); A.trocas=(A.trocas||[]).concat([{de:de?de.nome:'',para:n.nome}]);
@@ -441,13 +463,19 @@
   }
   function passoLocal(c){
     c.appendChild(el('h1',{class:'tit',text:'O que aconteceu e onde?'}));
-    var dl=el('datalist',{id:'dlNat'},NATUREZAS.map(function(n){ return el('option',{value:n.nome}); }));
+    var sug=el('div',{class:'sugNat',id:'sugNat',role:'listbox','aria-label':'Naturezas encontradas'}),destaque=0,achadas=[];
+    var escolher=function(n){ A.natTxt=n.nome; if(A.nat!==n.id){ A.nat=n.id; A.resp={}; } desenharCentro(); desenharFicha(); atualizarEnc(); var l=$('fLocal'); if(l) l.focus(); };
+    var pintaSug=function(){ sug.textContent=''; var t=A.natTxt.trim(); achadas=t&&!natPorId(A.nat)?buscarNaturezas(t):[]; if(destaque>=achadas.length) destaque=0;
+      achadas.forEach(function(r,i){ sug.appendChild(el('button',{type:'button',class:'sugItem'+(i===destaque?' on':''),role:'option','aria-selected':i===destaque?'true':'false',onmousedown:function(e){ e.preventDefault(); escolher(r.n); }},[el('span',{text:r.n.nome}),r.por?el('span',{class:'sugPor',text:'por “'+r.por+'”'}):null])); });
+      if(t&&!natPorId(A.nat)&&!achadas.length) sug.appendChild(el('div',{class:'apoio',text:'Nenhuma natureza encontrada. Tente outra palavra (ex.: batida, fogo, gás, afogamento).'})); };
     var infoNat=el('span',{class:'apoio',id:'infoNat'});
-    var pintaNat=function(){ var n=natPorId(A.nat); if(!A.natTxt.trim()) infoNat.textContent='Digite parte do nome e escolha na lista.'; else if(!n) infoNat.textContent='Natureza não reconhecida. Escolha uma da lista.'; else { var q=DB.protocolos[n.id].length; infoNat.textContent=!q?'Esta natureza ainda não tem entrevista cadastrada.':validarAlvo(DB.protocolos[n.id],n.id).erros.length?'A entrevista desta natureza está com erros no editor e não será usada.':({imediato:'Despacho imediato: a ocorrência é encaminhada ao seguir para a entrevista.',agendavel:'Atendimento agendável: esta natureza não encaminha ao despacho.'}[politica(n.id)]||'Natureza reconhecida.'); } };
-    var iNat=el('input',{type:'text',id:'fNat',list:'dlNat',value:A.natTxt,autocomplete:'off','data-foco':A.natTxt?null:'1',placeholder:'Ex.: capotamento, incêndio',oninput:function(e){
-      A.natTxt=e.target.value; var alvo=norm(A.natTxt),ach=NATUREZAS.filter(function(n){ return norm(n.nome)===alvo; })[0];
-      var novo=ach?ach.id:''; if(novo!==A.nat){ A.nat=novo; A.resp={}; } pintaNat(); pintaDup(); atualizarEnc(); desenharFicha(); }});
-    c.appendChild(campo('Natureza',iNat,[obrig()])); c.appendChild(dl); c.appendChild(infoNat); c.appendChild(dica('natureza')); pintaNat();
+    var pintaNat=function(){ var n=natPorId(A.nat); if(!A.natTxt.trim()) infoNat.textContent='Digite o que o solicitante contou; ↓ e Enter escolhem.'; else if(!n) infoNat.textContent=''; else { var q=DB.protocolos[n.id].length; infoNat.textContent=!q?'Esta natureza ainda não tem entrevista cadastrada.':validarAlvo(DB.protocolos[n.id],n.id).erros.length?'A entrevista desta natureza está com erros no editor e não será usada.':({imediato:'Despacho imediato: a ocorrência é encaminhada ao seguir para a entrevista.',agendavel:'Atendimento agendável: esta natureza não encaminha ao despacho.'}[politica(n.id)]||'Natureza reconhecida.'); } };
+    var iNat=el('input',{type:'text',id:'fNat',value:A.natTxt,autocomplete:'off',role:'combobox','aria-autocomplete':'list','aria-controls':'sugNat','data-foco':A.natTxt?null:'1',placeholder:'O que aconteceu? Ex.: batida, fogo no mato, cheiro de gás',
+      onkeydown:function(e){ if(!achadas.length) return; if(e.key==='ArrowDown'){ e.preventDefault(); destaque=(destaque+1)%achadas.length; pintaSug(); } else if(e.key==='ArrowUp'){ e.preventDefault(); destaque=(destaque-1+achadas.length)%achadas.length; pintaSug(); } else if(e.key==='Enter'&&!e.ctrlKey){ e.preventDefault(); escolher(achadas[destaque].n); } },
+      oninput:function(e){
+      A.natTxt=e.target.value; destaque=0; var alvo=norm(A.natTxt),ach=NATUREZAS.filter(function(n){ return norm(n.nome)===alvo; })[0];
+      var novo=ach?ach.id:''; if(novo!==A.nat){ A.nat=novo; A.resp={}; } pintaNat(); pintaSug(); pintaDup(); atualizarEnc(); desenharFicha(); }});
+    c.appendChild(campo('Natureza',iNat,[obrig()])); c.appendChild(sug); c.appendChild(infoNat); pintaSug(); c.appendChild(dica('natureza')); pintaNat();
     c.appendChild(campo('Local',el('input',{type:'text',id:'fLocal',value:A.local,autocomplete:'off',placeholder:'Via, número, quadra, sentido',oninput:function(e){ A.local=e.target.value; atualizarEnc(); desenharFicha(); }}),[obrig()]));
     c.appendChild(dica('local'));
     var qt=el('input',{type:'text',id:'fQt',value:quartelAtual(),placeholder:'Preenchido pela região',oninput:function(e){ A.quartel=e.target.value; desenharFicha(); }});
@@ -610,13 +638,16 @@
   function copiar(t){ try{ navigator.clipboard.writeText(t).then(function(){ status('Copiado'); },function(){ status('Não foi possível copiar; selecione o texto e copie.'); }); }catch(e){ status('Não foi possível copiar; selecione o texto e copie.'); } }
 
   /* ---------- protocolos (editor do gestor) ---------- */
-  var S={nat:NATUREZAS[0].id,aba:'teste',resp:{},fluxo:'',fluxoSujo:false,form:'',formSujo:false,msg:null};
+  var S={nat:NATUREZAS[0].id,aba:'fluxo',av:'mermaid',ids:false,resp:{},fluxo:'',fluxoSujo:false,form:'',formSujo:false,msg:null};
   Object.defineProperty(S,'itens',{get:function(){ return DB.protocolos[S.nat]; },set:function(v){ DB.protocolos[S.nat]=v; }});
   /* posições das caixas no editor visual: as deste navegador, senão as publicadas */
   function layoutDe(id){ return DB.layout[id]||(typeof LAYOUTS_PUBLICADOS!=='undefined'&&LAYOUTS_PUBLICADOS[id])||{}; }
   var pilhaDesenho=[];
-  function abrirDesenho(voltando){
-    if(!voltando) pilhaDesenho=[];
+  /* o editor visual fica embutido na aba Fluxo; os botões “Editor visual” levam para ela */
+  function abrirDesenho(voltando,container){
+    if(!container){ HefestoDesenho.fechar(); S.aba='fluxo'; desenharProt(); return; }
+    if(!voltando&&!S.manterPilha) pilhaDesenho=[];
+    S.manterPilha=false;
     var n=porChave(S.nat);
     HefestoDesenho.abrir({itens:function(){ return S.itens; },setItens:function(v){ S.itens=v; },natureza:n,naturezas:NATUREZAS,
       emBloco:ehBloco(S.nat),
@@ -624,12 +655,17 @@
       validar:function(){ return validarAlvo(S.itens,S.nat); },
       processo:function(){ return processoDe(S.nat,S.itens); },
       falas:function(){ return DB.falas; },
-      abrirBloco:function(bid){ if(!blocoPorId(bid)) return; pilhaDesenho.push(S.nat); S.nat='bloco:'+bid; S.resp={}; desenharProt(); abrirDesenho(true); },
-      voltar:pilhaDesenho.length?{nome:(porChave(pilhaDesenho[pilhaDesenho.length-1])||{}).nome,fn:function(){ S.nat=pilhaDesenho.pop(); S.resp={}; desenharProt(); abrirDesenho(true); }}:null,
+      abrirBloco:function(bid){ if(!blocoPorId(bid)) return; pilhaDesenho.push(S.nat); S.nat='bloco:'+bid; S.resp={}; S.manterPilha=true; desenharProt(); },
+      voltar:pilhaDesenho.length?{nome:(porChave(pilhaDesenho[pilhaDesenho.length-1])||{}).nome,fn:function(){ S.nat=pilhaDesenho.pop(); S.resp={}; S.manterPilha=true; desenharProt(); }}:null,
       criarBloco:function(nome,itens){ var r=criarBloco(nome,itens); if(!r.erro) desenharNats(); return r; },
-      layout:function(){ return layoutDe(S.nat); },setLayout:function(l){ DB.layout[S.nat]=l; },mudou:function(){ mudou(true); }});
+      layout:function(){ return layoutDe(S.nat); },setLayout:function(l){ DB.layout[S.nat]=l; },mudou:function(){ mudou(true); }},container);
   }
-  function mudou(estrutura){ S.resp={}; S.fluxoSujo=false; S.formSujo=false; salvar(); if(estrutura) desenharEditor(); desenharLado(); desenharNats(); }
+  function mudou(estrutura){
+    S.resp={}; S.fluxoSujo=false; S.formSujo=false; salvar();
+    /* na aba Fluxo o editor visual se redesenha sozinho: aqui só atualiza o resto */
+    if(S.aba==='fluxo'&&document.querySelector('#pPanel .dzEmb')){ desenharTopo(); desenharStatus(); desenharNats(); return; }
+    if(estrutura) desenharEditor(); desenharLado(); desenharNats();
+  }
   function desenharNats(){
     var n=$('pNats'); n.textContent='';
     desenharArquivo(n);
@@ -639,7 +675,7 @@
     desenharNova(n);
     var resumoProc=[]; NATUREZAS.forEach(function(x){ var q=DB.protocolos[x.id].length,erro=q&&validarAlvo(DB.protocolos[x.id],x.id).erros.length,altos=q?processoDe(x.id).filter(function(y){ return y.nivel==='alto'; }).length:0; if(altos) resumoProc.push([x,altos]);
       n.appendChild(el('button',{class:'natBtn'+(x.id===S.nat?' on':''),'aria-current':x.id===S.nat?'true':null,onclick:function(){ S.nat=x.id; S.msg=null; S.resp={}; S.fluxoSujo=false; S.formSujo=false; desenharProt(); }},[el('span',{text:x.nome}),el('span',{class:'natQ'+(erro?' er':q?'':' vz'),text:(erro?'com erros':q?q+' itens':'sem entrevista')+(x.fonte==='criada no site'&&!PUB_NAT.some(function(p){ return p.id===x.id; })?' · nova':alterada(x.id)?' · alterada':'')}),altos?el('span',{class:'natProc',text:'⚠ '+altos+' caminho'+(altos>1?'s':'')+' sem despacho'}):null])); });
-    if(resumoProc.length){ var rp=el('details',{class:'proc alto resumo'},[el('summary',{text:'⚠ '+resumoProc.length+' naturezas com caminhos sem despacho'})].concat(resumoProc.map(function(r){ return el('button',{class:'lnk',text:r[0].nome+' ('+r[1]+')',onclick:function(){ S.nat=r[0].id; S.aba='teste'; desenharProt(); window.scrollTo(0,0); }}); }))); sec.insertBefore(rp,sec.children[2]||null); }
+    if(resumoProc.length){ var rp=el('details',{class:'proc alto resumo'},[el('summary',{text:'⚠ '+resumoProc.length+' naturezas com caminhos sem despacho'})].concat(resumoProc.map(function(r){ return el('button',{class:'lnk',text:r[0].nome+' ('+r[1]+')',onclick:function(){ S.nat=r[0].id; S.aba='simular'; desenharProt(); window.scrollTo(0,0); }}); }))); sec.insertBefore(rp,sec.children[2]||null); }
     desenharBlocos($('pNats'));
     desenharFalas($('pNats'));
   }
@@ -794,7 +830,8 @@
   /* ---------- editor visual ---------- */
   function seletorDestino(valor,proprio,padrao,aria,aoMudar){
     var ops=[el('option',{value:'',text:padrao,selected:valor===''})];
-    S.itens.forEach(function(x){ if(x.id!==proprio) ops.push(el('option',{value:x.id,text:'→ '+x.id,selected:valor===x.id})); });
+    /* destinos pelo texto que o gestor reconhece; o identificador só aparece se pedido */
+    S.itens.forEach(function(x,i){ if(x.id!==proprio){ var t=x.tipo==='bloco'?'🧩 '+x.texto:x.tipo==='troca'?'🔁 Trocar para '+x.texto:x.texto; t=(i+1)+'. '+(t.length>48?t.slice(0,47)+'…':t); ops.push(el('option',{value:x.id,text:'→ '+t+(S.ids?' ['+x.id+']':''),title:x.id,selected:valor===x.id})); } });
     if(ehBloco(S.nat)) ops.push(el('option',{value:'SAIDA',text:'↩ Saída do bloco',selected:valor==='SAIDA'}));
     ops.push(el('option',{value:'FIM',text:'■ Fechamento',selected:valor==='FIM'}));
     return el('select',{'aria-label':aria,onchange:function(e){ aoMudar(e.target.value); mudou(false); }},ops);
@@ -802,7 +839,8 @@
   function desenharItem(it,i){
     var box=el('div',{class:'item '+it.tipo});
     box.appendChild(el('div',{class:'row'},[
-      el('input',{type:'text',class:'id',value:it.id,'aria-label':'Identificador',onchange:function(e){ var novo=slug(e.target.value); var u=usados(S.itens); delete u[it.id]; novo=idLivre(novo,u); renomear(S.itens,it.id,novo); it.id=novo; mudou(true); }}),
+      el('span',{class:'numItem',text:String(i+1)}),
+      el('input',{type:'text',class:'id'+(S.ids?'':' oculto'),value:it.id,'aria-label':'Identificador',onchange:function(e){ var novo=slug(e.target.value); var u=usados(S.itens); delete u[it.id]; novo=idLivre(novo,u); renomear(S.itens,it.id,novo); it.id=novo; mudou(true); }}),
       el('select',{'aria-label':'Tipo do item '+it.id,onchange:function(e){ it.tipo=e.target.value; if(it.tipo==='bloco'&&!it.bloco){ var b0=BLOCOS.filter(function(b){ return 'bloco:'+b.id!==S.nat; })[0]; it.bloco=b0?b0.id:''; it.texto=b0?b0.nome:''; } if(temOpcoes(it)&&it.opcoes.length<2) it.opcoes=[O('sim','Sim'),O('nao','Não'),O('nao_sabe','Não sabe')]; if(it.tipo==='diagrama'&&!it.mermaid) it.mermaid='flowchart LR\n  A[Chama amarela] --> B[Combustível comum]\n  C[Chama azul] --> D[Gás: não usar água]'; mudou(true); }},TIPOS.map(function(t){ return el('option',{value:t[0],text:t[1],selected:t[0]===it.tipo}); })),
       el('span',{class:'grow'}),
       el('button',{class:'btn ic','aria-label':'Mover para cima',text:'↑',onclick:function(){ if(i>0){ var x=S.itens[i]; S.itens[i]=S.itens[i-1]; S.itens[i-1]=x; mudou(true); } }}),
@@ -822,17 +860,17 @@
     if(ehPergunta(it)) linha.appendChild(el('label',{class:'row',style:'gap:6px'},[el('input',{type:'checkbox',checked:!!it.obrig,onchange:function(e){ it.obrig=e.target.checked; mudou(false); }}),'Obrigatória']));
     if(it.tipo==='numero'||it.tipo==='texto'||it.tipo==='instrucao') linha.appendChild(el('label',{class:'row',style:'gap:6px',title:'Se desmarcado, a resposta ou a orientação não aparece no relato final'},[el('input',{type:'checkbox',checked:it.relato!==false,onchange:function(e){ if(e.target.checked) delete it.relato; else it.relato=false; mudou(false); }}),'No relato']));
     if(temOpcoes(it)) linha.appendChild(el('label',{class:'row',style:'gap:6px'},[el('input',{type:'checkbox',checked:!!it.outro,onchange:function(e){ it.outro=e.target.checked; mudou(false); }}),'Incluir “Outro”']));
-    linha.appendChild(el('span',{class:'lbl',text:it.tipo==='multipla'?'Depois dos desvios:':temOpcoes(it)?'Depois (padrão):':'Depois:'}));
-    linha.appendChild(seletorDestino(it.prox,it.id,'próximo da lista','Depois de '+it.id,function(v){ it.prox=v; }));
+    linha.appendChild(el('span',{class:'lbl',text:it.tipo==='multipla'?'Depois desta pergunta, vai para:':temOpcoes(it)?'Respostas sem caminho próprio vão para:':'Depois, vai para:'}));
+    linha.appendChild(seletorDestino(it.prox,it.id,'o item seguinte do roteiro','Para onde vai depois de '+(it.texto||it.id),function(v){ it.prox=v; }));
     box.appendChild(linha);
     if(temOpcoes(it)){
       var opts=el('div',{class:'opts'});
       it.opcoes.forEach(function(o,j){
         opts.appendChild(el('div',{class:'row'},[
-          el('input',{type:'text',class:'id',style:'width:110px',value:o.id,'aria-label':'Identificador da opção',onchange:function(e){ var u={}; it.opcoes.forEach(function(x){ if(x!==o) u[x.id]=1; }); o.id=idLivre(e.target.value,u); mudou(true); }}),
+          el('input',{type:'text',class:'id'+(S.ids?'':' oculto'),style:'width:110px',value:o.id,'aria-label':'Identificador da opção',onchange:function(e){ var u={}; it.opcoes.forEach(function(x){ if(x!==o) u[x.id]=1; }); o.id=idLivre(e.target.value,u); mudou(true); }}),
           el('input',{type:'text',class:'grow',value:o.rotulo,'aria-label':'Rótulo da opção '+o.id,oninput:function(e){ o.rotulo=e.target.value; mudou(false); }}),
           el('button',{class:'relTg'+(o.relato===false?' off':''),'aria-pressed':o.relato===false?'false':'true',title:o.relato===false?'Esta resposta não aparece no relato final. Clique para incluir.':'Esta resposta aparece no relato final. Clique para tirar.',onclick:function(){ if(o.relato===false) delete o.relato; else o.relato=false; mudou(true); }},[o.relato===false?'fora do relato':'no relato']),
-          seletorDestino(o.vai,it.id,it.tipo==='multipla'?'sem desvio':'segue o padrão','Destino da opção '+o.id,function(v){ o.vai=v; }),
+          seletorDestino(o.vai,it.id,it.tipo==='multipla'?'sem caminho próprio':'mesmo caminho das demais','Para onde vai a resposta '+o.rotulo,function(v){ o.vai=v; }),
           el('button',{class:'btn ic del','aria-label':'Remover opção '+o.id,text:'✕',onclick:function(){ it.opcoes.splice(j,1); mudou(true); }})]));
       });
       opts.appendChild(el('div',{},[el('button',{class:'btn dash sm',text:'+ Opção',onclick:function(){ var u={}; it.opcoes.forEach(function(x){u[x.id]=1;}); it.opcoes.push(O(idLivre('opcao',u),'Nova opção')); mudou(true); }})]));
@@ -840,9 +878,13 @@
     }
     return box;
   }
+  function desenharTopo(){ var t=$('pTopo'); t.textContent=''; desenharEditorTopo(t); }
   function desenharEditor(){
+    desenharTopo();
     var ed=$('pEditor'); ed.textContent='';
-    desenharEditorTopo(ed);
+    if(S.aba!=='roteiro') return;
+    ed.appendChild(el('div',{class:'roteiroTopo'},[el('span',{class:'muted grow',text:'A entrevista na ordem em que o atendente lê. Cada item diz para onde o fluxo vai depois; a primeira caixa abre a entrevista.'}),el('label',{class:'row',style:'gap:6px;font-size:13px'},[el('input',{type:'checkbox',checked:S.ids,onchange:function(e){ S.ids=e.target.checked; desenharEditor(); }}),'Mostrar identificadores técnicos'])]));
+    if(!S.itens.length) ed.appendChild(el('div',{class:'msg inf',text:'Entrevista vazia: crie o primeiro item com os botões abaixo ou na aba Fluxo.'}));
     S.itens.forEach(function(it,i){ ed.appendChild(desenharItem(it,i)); });
     ed.appendChild(el('div',{class:'row',style:'margin-top:10px'},TIPOS.filter(function(t){return ['unica','instrucao','informacao','diagrama'].indexOf(t[0])>=0||(t[0]==='bloco'&&BLOCOS.some(function(b){ return 'bloco:'+b.id!==S.nat; }));}).map(function(t){
       return el('button',{class:'btn dash sm',text:'+ '+({unica:'Pergunta',instrucao:'Instrução',informacao:'Informação',diagrama:'Fluxograma',bloco:'Bloco'})[t[0]],onclick:function(){ var id=idLivre(t[0]==='unica'?'pergunta':t[0],usados(S.itens)); var it=I(id,t[0],t[0]==='unica'?'Nova pergunta':t[0]==='diagrama'?'Fluxograma de consulta':'Novo texto'); if(t[0]==='bloco'){ var b0=BLOCOS.filter(function(b){ return 'bloco:'+b.id!==S.nat; })[0]; it.bloco=b0.id; it.texto=b0.nome; } if(t[0]==='unica') it.opcoes=[O('sim','Sim'),O('nao','Não'),O('nao_sabe','Não sabe')]; if(t[0]==='diagrama') it.mermaid='flowchart LR\n  A[Chama amarela] --> B[Combustível comum]\n  C[Chama azul] --> D[Gás: não usar água]'; S.itens.push(it); mudou(true); }}); })));
@@ -879,7 +921,7 @@
     if(v.erros.length){ p.appendChild(el('div',{class:'muted',style:'margin-top:8px',text:'Corrija os erros acima para testar.'})); return; }
     var lista=ehBloco(S.nat)?expandir([I('b','bloco','',{bloco:S.nat.slice(6),prox:'FIM'})],getBloco):expandir(S.itens,getBloco);
     var est=caminhar(lista,S.resp),g=grafo(lista),it=est.pendente?g.item[est.pendente]:null;
-    p.appendChild(el('div',{class:'row',style:'justify-content:space-between'},[el('span',{class:'muted',text:'Percorrer o fluxo, um item por vez'+(it?' · item “'+it.id+'”':'')}),el('button',{class:'btn sm',text:'Recomeçar',onclick:function(){ S.resp={}; desenharLado(); }})]));
+    p.appendChild(el('div',{class:'row',style:'justify-content:space-between'},[el('span',{class:'muted',text:'Percorrer o fluxo, um item por vez'+(it&&S.ids?' · item “'+it.id+'”':'')}),el('button',{class:'btn sm',text:'Recomeçar',onclick:function(){ S.resp={}; desenharLado(); }})]));
     var responder=function(r){ S.resp[it.id]=r; desenharLado(); };
     if(!it) p.appendChild(el('div',{class:'msg okm',style:'font-size:16px;font-weight:700',text:'Entrevista concluída. Segue para o fechamento.'}));
     else if(it.tipo==='instrucao'){ p.appendChild(el('div',{class:'muted',style:'margin-top:10px',text:'Diga ao solicitante'})); p.appendChild(el('div',{class:'instr',text:it.texto})); p.appendChild(el('button',{class:'btn ok',text:'✓ Dito, continuar',onclick:function(){ responder(true); }})); }
@@ -911,13 +953,12 @@
   /* ---------- fluxo (mermaid) ---------- */
   var LEGENDA=[['titulo','#af7e04','#fff','Natureza (início)','inicio(["Natureza: Nome"]):::titulo'],['perg','#ffffff','#1a1a1a','Pergunta','id["Texto da pergunta?"]:::perg'],['opc','#fff6b6','#1a1a1a','Resposta que vai para o relato','id__sim("Sim"):::opc'],['ns','#dedaff','#1a1a1a','Resposta fora do relato','id__nao("Não"):::ns'],['ab','#ff6464','#1a1a1a','Resposta aberta (texto livre)','id__outro("Aberta"):::ab'],['desp','#ffc6c6','#1a1a1a','Despacho imediato: encaminha e diz a fala','despacho["Fala: O socorro já foi acionado..."]:::desp'],['orient','#ffdc4a','#1a1a1a','Orientação ao solicitante','id("Afaste-se do local."):::orient'],['acao','#ffffff','#1a1a1a','Informação ao atendente','id["Acionar PMDF"]:::acao'],['video','#2dc75c','#1a1a1a','Videochamada','id>"Realize a videochamada"]:::video'],['troca','#8f7fee','#fff','Trocar natureza','id{{"Trocar natureza: Nome"}}:::troca'],['bloco','#e3f2fd','#1a1a1a','Bloco reutilizável (escolha o bloco no editor)','id[["🧩 Bloco: Nome"]]:::bloco'],['relato','#adf0c7','#1a1a1a','Relato final (fim)','fim(["Relato final"]):::relato']];
   function painelFluxo(p,v){
-    if(ehBloco(S.nat)){ p.appendChild(el('button',{class:'btn ok grande',style:'margin-top:8px;width:100%',onclick:function(){ abrirDesenho(); }},['✏️ Abrir o editor visual do bloco'])); p.appendChild(el('p',{class:'muted',text:'Em blocos, edite pelo editor visual ou pelo editor de itens. O Mermaid desta aba vale para naturezas.'})); return; }
+    if(ehBloco(S.nat)){ p.appendChild(el('p',{class:'muted',text:'Em blocos, edite pela aba Fluxo ou pelo Roteiro. O Mermaid vale para naturezas.'})); return; }
     var miro=S.notacao!=='compacta',nat=natPorId(S.nat);
     if(!S.fluxoSujo) S.fluxo=v.erros.length&&!S.fluxo?'':(miro?fluxoMiro(S.itens,nat.nome):fluxoMermaid(S.itens,false));
     p.appendChild(el('div',{class:'row'},[el('span',{class:'lbl',text:'Notação:'}),
       el('button',{class:'btn sm'+(miro?' pri':''),'aria-pressed':miro?'true':'false',text:'Padrão do Miro (cores)',onclick:function(){ S.notacao='miro'; S.fluxoSujo=false; S.msg=null; desenharLado(); }}),
       el('button',{class:'btn sm'+(!miro?' pri':''),'aria-pressed':!miro?'true':'false',text:'Compacta',onclick:function(){ S.notacao='compacta'; S.fluxoSujo=false; S.msg=null; desenharLado(); }})]));
-    p.appendChild(el('button',{class:'btn ok grande',style:'margin-top:8px;width:100%',onclick:function(){ abrirDesenho(); }},['✏️ Abrir o editor visual (arrastar e ligar caixas)']));
     if(miro){
       p.appendChild(el('div',{class:'muted',style:'margin-top:6px',text:'Ou edite o código: desenhe como no quadro do Miro: cada caixa tem uma classe de cor, e as respostas são caixas ligadas à pergunta. A classe da resposta diz se ela vai para o relato. Identificadores novos criam itens; os existentes guardam o que o desenho não mostra (obrigatória, múltipla escolha, lista, número).'}));
       p.appendChild(el('details',{class:'legenda'},[el('summary',{text:'Legenda das classes'}),el('table',{},LEGENDA.map(function(x){ return el('tr',{},[el('td',{},[el('span',{class:'cor',style:'background:'+x[1]+';color:'+x[2],text:x[0]})]),el('td',{text:x[3]}),el('td',{},[el('code',{text:x[4]})])]); }))]));
@@ -999,21 +1040,23 @@
     if(!v.erros.length) desenhar(fluxoMermaid(R.itens,true),d); else d.appendChild(el('span',{class:'muted',text:'O desenho aparece quando não houver erros.'}));
     var q=S.itens.length;
     box.appendChild(el('div',{class:'row',style:'margin-top:10px'},[
-      el('button',{class:'btn ok',text:'Usar em '+nat.nome,disabled:!R.itens.length,onclick:function(){ S.itens=JSON.parse(JSON.stringify(R.itens)); I_.res=null; S.aba='teste'; S.msg=null; mudou(true); status('Rascunho importado para '+nat.nome); }}),
+      el('button',{class:'btn ok',text:'Usar em '+nat.nome,disabled:!R.itens.length,onclick:function(){ S.itens=JSON.parse(JSON.stringify(R.itens)); I_.res=null; S.aba='fluxo'; S.msg=null; mudou(true); status('Rascunho importado para '+nat.nome); }}),
       el('button',{class:'btn',text:'Descartar rascunho',onclick:function(){ I_.res=null; desenharLado(); }}),
       el('span',{class:'apoio',text:q?'Substitui os '+q+' itens atuais desta natureza.':'Esta natureza está sem entrevista.'})]));
     p.appendChild(box);
   }
   var MANUAL = '<div class="man">'
   + '<p><b>Neste protótipo:</b> escolha a natureza na coluna da esquerda. O que você editar vale na próxima ligação simulada na aba Atendimento, onde os itens aparecem juntos em uma página.</p>'
-  + '<p>Uma entrevista tem duas partes. O <b>formulário</b> diz quais são os itens. O <b>fluxo</b> diz em que ordem eles aparecem e para onde cada resposta leva. O editor visual grava as duas.</p>'
+  + '<p>A entrevista pode ser editada de dois jeitos, e os dois mexem na mesma coisa. Na aba <b>Fluxo</b> ela aparece desenhada, com as cores do quadro do Miro. Na aba <b>Roteiro</b> ela aparece como lista, na ordem em que o atendente lê. A aba <b>Simular</b> percorre a entrevista item por item, e a aba <b>Avançado</b> guarda as ferramentas para quem conhece Mermaid, JSON ou quer importar do Miro.</p>'
   + '<h3>1. Monte em seis passos</h3><ol>'
   + '<li>Liste o que o atendente precisa perguntar e dizer naquela natureza.</li>'
-  + '<li>Crie um item para cada coisa, com os botões <b>+ Pergunta</b>, <b>+ Instrução</b>, <b>+ Informação</b> e <b>+ Fluxograma</b>.</li>'
-  + '<li>Dê a cada item um identificador curto, como <code>preso</code> ou <code>cor_chamas</code>. Use letras minúsculas, números e <code>_</code>.</li>'
-  + '<li>Nas perguntas, escolha o tipo de resposta e escreva as opções.</li>'
-  + '<li>Ligue os itens: em <b>Depois</b> e em cada opção, escolha o próximo item. O primeiro da lista inicia a entrevista.</li>'
-  + '<li>Confira a faixa de validação e percorra a entrevista na aba <b>Testar</b>, respondendo de formas diferentes.</li></ol>'
+  + '<li>Crie uma caixa para cada coisa, pela barra <b>Adicionar</b> da aba Fluxo (ou pelos botões no fim do Roteiro).</li>'
+  + '<li>Nas perguntas, escolha as respostas. Para sim e não, use o botão de respostas padrão.</li>'
+  + '<li>Ligue as caixas: puxe a seta do ponto ● de cada resposta até a caixa seguinte. No Roteiro, escolha em “Depois desta pergunta, vai para”.</li>'
+  + '<li>Ponha o item de despacho no ponto em que já dá para mandar o socorro.</li>'
+  + '<li>Confira a faixa de avisos logo abaixo das abas.</li>'
+  + '<li>Percorra a entrevista na aba <b>Simular</b>, respondendo de formas diferentes.</li></ol>'
+  + '<p>Cada item tem um identificador técnico, usado só pelo sistema. Ele fica escondido; marque “Mostrar identificadores técnicos” no Roteiro se precisar vê-lo.</p>'
   + '<h3>2. Tipos de item</h3><table><tr><th>Tipo</th><th>Quando usar</th></tr>'
   + '<tr><td>Escolha única</td><td>Poucas opções, só uma vale. Aparecem como botões.</td></tr>'
   + '<tr><td>Múltipla escolha</td><td>Mais de uma opção pode valer. Pode ter “Outro” com texto.</td></tr>'
@@ -1023,13 +1066,13 @@
   + '<tr><td>Informação ao atendente</td><td>Aviso só para o atendente. Não é lido ao solicitante.</td></tr>'
   + '<tr><td>Fluxograma de consulta</td><td>Um desenho de apoio, escrito em Mermaid, mostrado naquele ponto.</td></tr></table>'
   + '<h3>3. Como o fluxo anda</h3><ul>'
-  + '<li><b>Depois:</b> para onde o item vai por padrão. “Próximo da lista” segue a ordem do editor.</li>'
-  + '<li><b>Escolha única e lista:</b> a opção marcada decide o caminho. Opção sem destino próprio segue o padrão do item.</li>'
+  + '<li><b>Depois, vai para:</b> para onde o item vai por padrão. “O item seguinte do roteiro” segue a ordem da lista.</li>'
+  + '<li><b>Escolha única e lista:</b> a opção marcada decide o caminho. Resposta “sem caminho próprio” segue o padrão do item.</li>'
   + '<li><b>Múltipla escolha:</b> cada opção marcada abre um desvio, na ordem das opções. Cada desvio precisa voltar ao item indicado em “Depois dos desvios”.</li>'
   + '<li><b>Fechamento:</b> encerra a entrevista. Um caminho que chega ao fechamento dentro de um desvio encerra tudo.</li>'
   + '<li>O mesmo item pode ser destino de vários caminhos. Não é preciso copiar.</li></ul>'
   + '<h3>4. Editor visual</h3>'
-  + '<p>O botão <b>✏️ Editor visual</b> (no topo da entrevista ou na aba Fluxo) abre o fluxo em tela cheia, com as cores do quadro do Miro. Arraste as caixas, puxe a seta do ponto ● de uma resposta até a caixa seguinte, crie caixas pela barra de cima e edite texto, tipo e respostas no painel da direita. O ponto embaixo da caixa é o caminho padrão. Ctrl+Z desfaz; Delete apaga a caixa selecionada e liga quem vinha antes ao que vinha depois. A posição das caixas vai junto no zip exportado.</p>'
+  + '<p>É a aba <b>Fluxo</b>, que abre primeiro. <b>⤢ Tela cheia</b> amplia o desenho. Arraste as caixas, puxe a seta do ponto ● de uma resposta até a caixa seguinte, crie caixas pela barra de cima e edite texto, tipo e respostas no painel da direita. O ponto embaixo da caixa é o caminho padrão. Ctrl+Z desfaz; Delete apaga a caixa selecionada e liga quem vinha antes ao que vinha depois. A posição das caixas vai junto no zip exportado.</p>'
   + '<h3>5. Blocos reutilizáveis</h3>'
   + '<p>Um bloco é um trecho de entrevista com nome, usado em várias naturezas (por exemplo, “Consciência e respiração da vítima”). Na natureza ele aparece como uma caixa azul; no atendimento, as perguntas dele entram no lugar. Corrigir o bloco corrige em todas as naturezas que o usam, e o cabeçalho do bloco mostra onde ele é usado.</p><ul>'
   + '<li>Dentro do bloco, <b>Saída do bloco</b> continua o fluxo de quem usa o bloco; <b>Fechamento</b> encerra a entrevista.</li>'
@@ -1037,7 +1080,7 @@
   + '<li>Para criar um bloco a partir de um trecho: Shift+clique nas caixas e <b>Transformar em bloco</b>. O trecho precisa ter uma entrada e uma saída só (o fechamento pode aparecer à vontade).</li>'
   + '<li>Para trocar outras cópias do mesmo trecho pelo bloco: apague as caixas copiadas, ponha o bloco com <b>+ Bloco…</b> e ligue as setas.</li></ul>'
   + '<h3>6. Desenhar o fluxo em Mermaid</h3>'
-  + '<p>Na aba <b>Fluxo</b>, a notação <b>Padrão do Miro</b> desenha a entrevista com as mesmas cores do quadro. Cada caixa tem uma classe, e as respostas são caixas ligadas à pergunta. Abra a <b>Legenda das classes</b> para ver todas.</p>'
+  + '<p>Em <b>Avançado › Fluxo em Mermaid</b>, a notação <b>Padrão do Miro</b> desenha a entrevista com as mesmas cores do quadro. Cada caixa tem uma classe, e as respostas são caixas ligadas à pergunta. Abra a <b>Legenda das classes</b> para ver todas.</p>'
   + '<pre>inicio(["Natureza: Vazamento de gás"]):::titulo --> tipo\ntipo["É botijão ou encanado?"]:::perg\ntipo --> tipo__botijao("Botijão"):::opc --> despacho\ntipo --> tipo__nao_sabe("Não sabe"):::ns --> despacho\ndespacho["Fala: O socorro já foi acionado."]:::desp --> afastar\nafastar("Saia do local e não acenda luz."):::orient --> fim(["Relato final"]):::relato</pre>'
   + '<ul><li>Resposta <code>:::opc</code> vai para o relato; <code>:::ns</code> não vai. <code>:::ab</code> é resposta aberta.</li>'
   + '<li>O nome da resposta é <code>pergunta__resposta</code>. Identificadores que já existem guardam o que o desenho não mostra: obrigatória, múltipla escolha, lista, número.</li>'
@@ -1045,7 +1088,7 @@
   + '<li><b>Ver rascunho</b> desenha sem aplicar. <b>Aplicar fluxo</b> confere tudo antes de mudar a entrevista.</li></ul>'
   + '<p>A notação <b>Compacta</b> continua disponível: cada linha é uma seta entre identificadores, e o texto da seta é a opção.</p>'
   + '<h3>7. Escrever o formulário em JSON</h3>'
-  + '<p>Na aba <b>Formulário</b>, cada identificador tem tipo, texto e, nas perguntas com opções, a lista de opções.</p>'
+  + '<p>Em <b>Avançado › Formulário em JSON</b>, cada identificador tem tipo, texto e, nas perguntas com opções, a lista de opções.</p>'
   + '<pre>{\n  "preso": {\n    "tipo": "unica",\n    "texto": "Tem alguém preso?",\n    "obrigatoria": true,\n    "opcoes": [\n      { "id": "sim", "rotulo": "Sim" },\n      { "id": "nao", "rotulo": "Não" }\n    ]\n  },\n  "vitimas": { "tipo": "numero", "texto": "Quantas vítimas?" }\n}</pre>'
   + '<p>Tipos aceitos: <code>unica</code>, <code>multipla</code>, <code>lista</code>, <code>numero</code>, <code>texto</code>, <code>instrucao</code>, <code>informacao</code>, <code>diagrama</code>.</p>'
   + '<h3>8. Mensagens da validação</h3><table><tr><th>Mensagem</th><th>O que fazer</th></tr>'
@@ -1073,19 +1116,37 @@
   + '<li>Leia a lista “Para revisar”, confira o desenho e clique em <b>Usar</b>. Depois ajuste no editor e teste.</li></ol>'
   + '<p>Não cole dados de ocorrências reais no assistente de IA. O fluxograma de protocolo não tem dados pessoais, mas confira antes.</p>'
   + '</div>';
+  /* faixa de situação: uma linha; os detalhes ficam na aba Simular */
+  function desenharStatus(){
+    var d=$('pValid'); if(!d) return; d.textContent='';
+    if(!S.itens.length){ return; }
+    var v=validarAlvo(S.itens,S.nat),proc=processoDe(S.nat,S.itens);
+    if(S.aba==='simular'){ desenharValidacao(v,proc); return; }
+    var altos=proc.filter(function(x){ return x.nivel==='alto'; }).length,aten=proc.filter(function(x){ return x.nivel==='atencao'; }).length+v.avisos.length,cls=v.erros.length||altos?'alto':aten?'atencao':'ok';
+    var partes=[]; if(v.erros.length) partes.push(v.erros.length+' erro'+(v.erros.length>1?'s':'')+' (a entrevista não aparece no atendimento até corrigir)'); if(altos) partes.push(altos+' caminho'+(altos>1?'s':'')+' sem despacho'); if(aten) partes.push(aten+' ponto'+(aten>1?'s':'')+' de atenção');
+    d.appendChild(el('div',{class:'statusLinha '+cls,role:'status'},[el('span',{class:'grow',text:partes.length?'⚠ '+partes.join(' · '):'✓ Fluxo sem erros e sem caminhos sem despacho · '+S.itens.length+' itens'}),partes.length?el('button',{class:'btn sm',text:'Ver detalhes',onclick:function(){ S.aba='simular'; desenharProt(); }}):null]));
+  }
   function desenharLado(){
     Array.prototype.forEach.call(document.querySelectorAll('#pTabs button'),function(b){ var on=b.getAttribute('data-tab')===S.aba; b.className=on?'on':''; b.setAttribute('aria-selected',on?'true':'false'); });
+    HefestoDesenho.fechar();
     var p=$('pPanel'); p.textContent='';
-    if(!S.itens.length&&S.aba!=='manual'&&S.aba!=='fluxo'&&S.aba!=='form'&&S.aba!=='importar'){ $('pValid').textContent=''; p.appendChild(el('div',{class:'muted',text:'Sem itens para testar. Crie o primeiro item no editor, ou escreva o fluxo na aba Fluxo.'})); return; }
-    var v=S.itens.length?validarAlvo(S.itens,S.nat):{erros:[],avisos:[]}; if(S.itens.length) desenharValidacao(v,processoDe(S.nat,S.itens)); else $('pValid').textContent='';
-    if(S.aba==='teste') painelTeste(p,v); else if(S.aba==='fluxo') painelFluxo(p,v); else if(S.aba==='manual') p.innerHTML=MANUAL; else if(S.aba==='importar') painelImport(p); else painelForm(p);
+    desenharStatus();
+    var v=S.itens.length?validarAlvo(S.itens,S.nat):{erros:[],avisos:[]};
+    if(S.aba==='fluxo'){ abrirDesenho(false,p); return; }
+    if(S.aba==='roteiro') return;
+    if(S.aba==='simular'){ if(!S.itens.length){ p.appendChild(el('div',{class:'muted',text:'Sem itens para simular.'})); return; } painelTeste(p,v); return; }
+    if(S.aba==='ajuda'){ p.innerHTML=MANUAL; return; }
+    /* avançado */
+    p.appendChild(el('div',{class:'subAbas'},[['mermaid','Fluxo em Mermaid'],['json','Formulário em JSON'],['miro','Importar do Miro']].map(function(x){ return el('button',{class:'btn sm'+(S.av===x[0]?' pri':''),text:x[1],onclick:function(){ S.av=x[0]; S.msg=null; desenharLado(); }}); })));
+    p.appendChild(el('p',{class:'muted',text:'Para quem já conhece estes formatos. O dia a dia é na aba Fluxo.'}));
+    if(S.av==='mermaid') painelFluxo(p,v); else if(S.av==='json') painelForm(p); else painelImport(p);
   }
   function desenharEditorTopo(ed){
     if(ehBloco(S.nat)){
       var bl=porChave(S.nat),exb=exemplos()[S.nat],us=usosBloco(bl.bloco.id);
       ed.appendChild(el('div',{class:'row'},[el('h2',{class:'grow',text:'Bloco · '+bl.nome}),
         exb&&alterada(S.nat)?el('button',{class:'btn sm',text:'Restaurar versão publicada',onclick:function(){ if(!confirm('Descartar as suas mudanças no bloco?')) return; S.itens=exb; mudou(true); }}):null,
-        el('button',{class:'btn sm ok',text:'✏️ Editor visual',onclick:function(){ abrirDesenho(); }}),
+        
         el('button',{class:'btn sm',text:'Renomear',onclick:function(){ var nv=prompt('Novo nome do bloco:',bl.nome); if(nv==null) return; var r=renomearBloco(bl.bloco.id,nv); if(r) alert(r); }}),
         el('button',{class:'btn sm del',text:'Excluir bloco',onclick:function(){ excluirBloco(bl.bloco.id); }})]));
       ed.appendChild(el('div',{class:'msg inf'},[el('b',{text:'Usado em '+us.length+(us.length===1?' lugar':' lugares')+': '}),us.map(function(x){ return x.nome; }).join(', ')||'nenhum ainda',el('br'),'Mudanças aqui valem em todos esses lugares.']));
@@ -1096,16 +1157,17 @@
     var n=natPorId(S.nat),ex=exemplos()[S.nat];
     ed.appendChild(el('div',{class:'row'},[el('h2',{class:'grow',text:'Entrevista · '+n.nome}),
       ex&&alterada(S.nat)?el('button',{class:'btn sm',text:'Restaurar versão publicada',onclick:function(){ if(!confirm('Descartar as suas mudanças em '+n.nome+'?')) return; S.itens=ex; S.msg=null; mudou(true); }}):null,
-      el('button',{class:'btn sm ok',text:'✏️ Editor visual',onclick:function(){ abrirDesenho(); }}),
+      
       el('button',{class:'btn sm',text:'Renomear',onclick:function(){ var nv=prompt('Novo nome da natureza:',n.nome); if(nv==null) return; var r=renomearNatureza(n.id,nv); if(r) alert(r); }}),
       el('button',{class:'btn sm del',text:'Excluir natureza',onclick:function(){ excluirNatureza(n.id); }})]));
     var POL=[['fluxo','No ponto do fluxo (item de despacho)'],['imediato','Imediato: ao definir local e natureza'],['agendavel','Agendável: sem despacho']];
     ed.appendChild(el('div',{class:'row polRow'},[el('label',{class:'lbl',for:'polDesp',text:'Despacho:'}),el('select',{id:'polDesp',onchange:function(e){ if(e.target.value==='fluxo') delete n.despacho; else n.despacho=e.target.value; salvar(); desenharProt(); }},POL.map(function(x){ return el('option',{value:x[0],text:x[1],selected:(n.despacho||'fluxo')===x[0]}); })),el('span',{class:'apoio',text:{fluxo:'O atendente encaminha quando chega ao item de despacho da entrevista.',imediato:'Para emergências em que cada segundo conta: a ocorrência sai assim que local e natureza estão definidos.',agendavel:'Serviços sem urgência: o registro não pede despacho.'}[n.despacho||'fluxo']})]));
+    var sin=n.sinonimos||[];
+    ed.appendChild(el('details',{class:'natCfg'},[el('summary',{text:'Outros nomes que o atendente pode digitar ('+(sin.length?sin.slice(0,3).join(', ')+(sin.length>3?'…':''):'nenhum')+')'}),el('div',{class:'row polRow'},[el('label',{class:'lbl',for:'sinNat',text:'Separados por vírgula:'}),el('input',{type:'text',id:'sinNat',class:'grow',value:(n.sinonimos||[]).join(', '),placeholder:'Ex.: batida, colisão, capotou',onchange:function(e){ var l=e.target.value.split(',').map(function(x){ return x.trim(); }).filter(Boolean); if(l.length) n.sinonimos=l; else delete n.sinonimos; salvar(); desenharNats(); status('Outros nomes salvos'); }})])]));
     var notas=(typeof NOTAS_PROTOCOLOS!=='undefined'&&NOTAS_PROTOCOLOS[S.nat])||[],alt=alterada(S.nat);
     ed.appendChild(el('div',{class:'muted',style:'margin-top:6px',text:alt?'Alterada neste navegador. “Restaurar versão publicada” descarta as suas mudanças nesta natureza.':'Igual à versão publicada.'}));
     if(notas.length) ed.appendChild(el('details',{class:'msg inf'},[el('summary',{text:'Notas da importação do Miro ('+notas.length+')'}),el('p',{class:'muted',text:'Apontadas quando o fluxo veio do Miro. Podem já ter sido corrigidas.'}),el('ul',{},notas.map(function(x){ return el('li',{text:x}); }))]));
-    ed.appendChild(el('div',{class:'muted',style:'margin-top:6px',text:'Cada item tem um identificador. O primeiro da lista inicia a entrevista. Em “Depois” e em cada opção você escolhe para onde o fluxo vai. O que você muda aqui vale na próxima ligação da aba Atendimento.'}));
-    if(!S.itens.length) ed.appendChild(el('div',{class:'msg inf',text:'Esta natureza está sem entrevista: no atendimento, o passo Entrevista avisa e segue direto para o solicitante. Use os botões abaixo para criar o primeiro item.'}));
+    if(!S.itens.length) ed.appendChild(el('div',{class:'msg inf',text:'Esta natureza está sem entrevista: no atendimento, o passo Entrevista avisa e segue direto para o solicitante.'}));
   }
 
   /* ---------- feedback de quem usa ---------- */
@@ -1183,10 +1245,11 @@
   function mostrar(v){
     V.view=v;
     ['atend','prot','ocorr'].forEach(function(x){ $('v'+x.charAt(0).toUpperCase()+x.slice(1)).style.display=x===v?'':'none'; var b=$('t_'+x); b.className=x===v?'on':''; b.setAttribute('aria-selected',x===v?'true':'false'); });
+    if(v!=='prot') HefestoDesenho.fechar();
     if(v==='prot') desenharProt(); else if(v==='ocorr') desenharOcorr(); else if(!$('centro')&&!$('bNova')) desenharAtend();
   }
   ['atend','prot','ocorr'].forEach(function(x){ $('t_'+x).addEventListener('click',function(){ mostrar(x); }); });
-  Array.prototype.forEach.call(document.querySelectorAll('#pTabs button'),function(b){ b.addEventListener('click',function(){ S.aba=b.getAttribute('data-tab'); S.msg=null; desenharLado(); }); });
+  Array.prototype.forEach.call(document.querySelectorAll('#pTabs button'),function(b){ b.addEventListener('click',function(){ S.aba=b.getAttribute('data-tab'); S.msg=null; desenharEditor(); desenharLado(); }); });
   if(window.mermaid){ try{ window.mermaid.initialize({startOnLoad:false,securityLevel:'strict',theme:'neutral',flowchart:{useMaxWidth:false}}); }catch(e){} }
   desenharAtend(); mostrar('atend');
   window.__hefesto={DB:DB,estado:function(){ return A; }};
