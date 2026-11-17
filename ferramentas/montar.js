@@ -1,6 +1,9 @@
 /* Monta ../protocolos.js a partir da pasta protocolos/ (a fonte de verdade).
    Uso: node ferramentas/montar.js            monta a partir de protocolos/
         node ferramentas/montar.js arq.zip    antes, aplica um zip exportado pelo site (Protocolos, Exportar)
+        node ferramentas/montar.js arq.zip --so-aprovadas   aplica só as naturezas e blocos aprovados na revisão técnica
+   Ao aplicar um zip, mostra o que mudou em cada natureza e a situação da revisão, e acrescenta
+   o registro em protocolos/historico.json (mostrado no site, no topo de cada natureza).
    protocolos/naturezas.json   lista [{id, nome, fonte}]
    protocolos/<id>.json        {"natureza":{id,nome}, "itens":[...], "notas":[...]} */
 var fs=require('fs'),path=require('path'),zlib=require('zlib');
@@ -16,11 +19,39 @@ function lerZip(buf){ /* leitor mínimo: arquivos guardados (store) ou comprimid
   }
   return out;
 }
-var arg=process.argv[2];
+var args=process.argv.slice(2),soAprovadas=args.indexOf('--so-aprovadas')>=0,arg=args.filter(function(a){ return !/^--/.test(a); })[0];
+var L=require('../logic.js'),SIT={rascunho:'rascunho',pronta:'aguardando revisão',aprovada:'aprovada',devolvida:'devolvida'};
+var lerJ=function(f,pad){ return fs.existsSync(f)?JSON.parse(fs.readFileSync(f,'utf8')):pad; };
 if(arg){
-  var z=lerZip(fs.readFileSync(arg)),mud=[];
+  var z=lerZip(fs.readFileSync(arg)),mud=[],achar=function(re){ return Object.keys(z).filter(function(k){ return re.test(k); })[0]; };
+  var rk=achar(/(^|\/)revisao\.json$/),rev=rk?JSON.parse(z[rk].toString('utf8')):{};
+  var fk=achar(/(^|\/)falas\.json$/); L.definirFalas(fk?JSON.parse(z[fk].toString('utf8')):lerJ(path.join(dir,'falas.json'),{}));
+  var natsAntes=lerJ(path.join(dir,'naturezas.json'),[]),bloAntes=lerJ(path.join(dir,'blocos.json'),[]);
+  var nomeDe=function(k,lista){ var id=k.replace(/^bloco:/,''),x=lista.filter(function(y){ return y.id===id; })[0]; return x?x.nome:null; };
+  var nk=achar(/(^|\/)naturezas\.json$/),bk=achar(/(^|\/)blocos\.json$/),natsZ=nk?JSON.parse(z[nk].toString('utf8')):natsAntes,bloZ=bk?JSON.parse(z[bk].toString('utf8')):bloAntes;
+  var pulou={},hoje=new Date().toISOString().slice(0,10),hist=lerJ(path.join(dir,'historico.json'),[]),relatorio=[];
+  /* 1. entrevistas e blocos: diferença, revisão e (com --so-aprovadas) filtro */
+  Object.keys(z).forEach(function(nome){
+    var m=/(?:^|\/)protocolos\/([a-z0-9_]+)\.json$|(?:^|\/)blocos\/([a-z0-9_]+)\.json$/.exec(nome); if(!m) return;
+    var k=m[1]||'bloco:'+m[2],alvo=m[1]?path.join(dir,m[1]+'.json'):path.join(dir,'blocos',m[2]+'.json');
+    var velho=lerJ(alvo,null),novo=JSON.parse(z[nome].toString('utf8')),lista=m[1]?natsZ:bloZ,listaA=m[1]?natsAntes:bloAntes;
+    var meta=function(l){ var x=l.filter(function(y){ return y.id===k.replace(/^bloco:/,''); })[0]; return x?JSON.stringify([x.nome,x.despacho||'',x.sinonimos||[]]):''; };
+    var dif=L.diferencas(velho?velho.itens:[],novo.itens).map(function(d){ return d.msg; });
+    if(!velho) dif.unshift(m[1]?'Natureza nova.':'Bloco novo.'); else if(nomeDe(k,listaA)!==nomeDe(k,lista)) dif.unshift('Nome: “'+nomeDe(k,listaA)+'” → “'+nomeDe(k,lista)+'”.');
+    if(velho&&meta(listaA)!==meta(lista)&&nomeDe(k,listaA)===nomeDe(k,lista)) dif.unshift('Despacho ou outros nomes para a busca mudaram.');
+    if(!dif.length) return;
+    var r=rev[k]||{sit:'rascunho'};
+    if(soAprovadas&&r.sit!=='aprovada'){ pulou[k]=1; relatorio.push('PULADA  '+(nomeDe(k,lista)||k)+' ('+SIT[r.sit]+')'); return; }
+    relatorio.push((r.sit==='aprovada'?'APROVADA ':'ATENÇÃO  ')+(nomeDe(k,lista)||k)+' · '+SIT[r.sit]+(r.autor?' · alterada por '+r.autor:'')+(r.revisor?' · revisão: '+r.revisor:'')+'\n'+dif.map(function(d){ return '           - '+d; }).join('\n'));
+    hist.push({data:hoje,chave:k,nome:nomeDe(k,lista)||k,sit:r.sit,autor:r.autor||'',revisor:r.sit==='aprovada'?r.revisor||'':'',parecer:r.parecer||'',mudancas:dif});
+  });
+  /* naturezas e blocos puladas mantêm a versão de antes na lista (ou ficam fora, se eram novas) */
+  var filtra=function(lz,la,pre){ return lz.filter(function(x){ return !pulou[pre+x.id]||la.some(function(y){ return y.id===x.id; }); }).map(function(x){ return pulou[pre+x.id]?la.filter(function(y){ return y.id===x.id; })[0]:x; }); };
   Object.keys(z).forEach(function(nome){
     var m=/(?:^|\/)protocolos\/([a-z0-9_]+)\.json$|(?:^|\/)(naturezas|blocos|falas)\.json$|(?:^|\/)blocos\/([a-z0-9_]+)\.json$/.exec(nome); if(!m) return;
+    if(pulou[m[1]]||pulou['bloco:'+m[3]]) return;
+    if(m[2]==='naturezas'&&soAprovadas) z[nome]=Buffer.from(JSON.stringify(filtra(natsZ,natsAntes,''),null,1)+'\n');
+    if(m[2]==='blocos'&&soAprovadas) z[nome]=Buffer.from(JSON.stringify(filtra(bloZ,bloAntes,'bloco:'),null,1)+'\n');
     if(m[3]&&!fs.existsSync(path.join(dir,'blocos'))) fs.mkdirSync(path.join(dir,'blocos'));
     var alvo=m[3]?path.join(dir,'blocos',m[3]+'.json'):path.join(dir,(m[1]||m[2])+'.json'),novo=z[nome].toString('utf8');
     JSON.parse(novo);
@@ -28,6 +59,9 @@ if(arg){
     if(velho!==novo){ fs.writeFileSync(alvo,novo); mud.push((velho==null?'nova  ':'mudou ')+(m[3]?'bloco '+m[3]:(m[1]||m[2]))); }
   });
   console.log(mud.length?mud.join('\n'):'Nada mudou.');
+  if(relatorio.length){ console.log('\nRevisão técnica e o que mudou:\n'+relatorio.join('\n'));
+    var nao=relatorio.filter(function(l){ return /^ATENÇÃO/.test(l); }).length; if(nao) console.log('\n'+nao+' alteração(ões) aplicadas sem aprovação. Para aplicar só as aprovadas: --so-aprovadas'); }
+  fs.writeFileSync(path.join(dir,'historico.json'),JSON.stringify(hist,null,1)+'\n');
   var fbk=Object.keys(z).filter(function(k){ return /(^|\/)feedback\.json$/.test(k); })[0];
   if(fbk){ /* feedback pode ter nome de quem escreveu: fica fora do Git (feedback-recebido/ está no .gitignore) */
     var lista=JSON.parse(z[fbk].toString('utf8')),pasta=path.join(raiz,'feedback-recebido'); if(!fs.existsSync(pasta)) fs.mkdirSync(pasta);
@@ -40,7 +74,7 @@ var nats=JSON.parse(fs.readFileSync(path.join(dir,'naturezas.json'),'utf8')),pro
 /* blocos reutilizáveis: protocolos/blocos.json e protocolos/blocos/<id>.json */
 var blocos=fs.existsSync(path.join(dir,'blocos.json'))?JSON.parse(fs.readFileSync(path.join(dir,'blocos.json'),'utf8')):[];
 blocos.forEach(function(b){ var f=path.join(dir,'blocos',b.id+'.json'); var o=fs.existsSync(f)?JSON.parse(fs.readFileSync(f,'utf8')):{itens:[]}; prot['bloco:'+b.id]=o.itens||[]; if(o.layout) lays['bloco:'+b.id]=o.layout; });
-var listados={'impressoes-publicadas.json':1,'blocos.json':1,'falas.json':1}; nats.forEach(function(n){ listados[n.id+'.json']=1; });
+var listados={'historico.json':1,'impressoes-publicadas.json':1,'blocos.json':1,'falas.json':1}; nats.forEach(function(n){ listados[n.id+'.json']=1; });
 var orfaos=fs.readdirSync(dir).filter(function(f){ return /\.json$/.test(f)&&f!=='naturezas.json'&&!listados[f]; });
 if(orfaos.length) console.log('Atenção: estes arquivos não estão em naturezas.json (natureza excluída?) e ficaram fora do site: '+orfaos.join(', ')+'. Apague com git rm se for o caso.');
 nats.forEach(function(n){ var f=path.join(dir,n.id+'.json'); var o=fs.existsSync(f)?JSON.parse(fs.readFileSync(f,'utf8')):{itens:[]}; prot[n.id]=o.itens||[]; if(o.notas&&o.notas.length) notas[n.id]=o.notas; if(o.layout) lays[n.id]=o.layout; });
@@ -59,6 +93,7 @@ var out='/* GERADO por ferramentas/montar.js a partir da pasta protocolos/. Não
  +'var NOTAS_PROTOCOLOS = '+JSON.stringify(notas)+';\n'
  +'var LAYOUTS_PUBLICADOS = '+JSON.stringify(lays)+';\n'
  +'var IMPRESSOES_PUBLICADAS = '+JSON.stringify(imps)+';\n'
+ +'var HISTORICO = '+JSON.stringify(fs.existsSync(path.join(dir,'historico.json'))?JSON.parse(fs.readFileSync(path.join(dir,'historico.json'),'utf8')):[])+';\n'
  +'exemplos = function(){ return JSON.parse(JSON.stringify(PROTOCOLOS_PUBLICADOS)); };\n'
  +"if(typeof module!=='undefined') module.exports={NATUREZAS:NATUREZAS,BLOCOS:BLOCOS,FALAS:FALAS,PROTOCOLOS_PUBLICADOS:PROTOCOLOS_PUBLICADOS,NOTAS_PROTOCOLOS:NOTAS_PROTOCOLOS};\n";
 fs.writeFileSync(path.join(raiz,'protocolos.js'),out);

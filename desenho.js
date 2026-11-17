@@ -17,6 +17,16 @@ var HefestoDesenho=(function(){
   function h(tag,attrs,kids){ var e=document.createElement(tag); for(var k in (attrs||{})){ var v=attrs[k]; if(k==='class') e.className=v; else if(k==='text') e.textContent=v; else if(k.slice(0,2)==='on') e.addEventListener(k.slice(2),v); else if(v===true) e.setAttribute(k,''); else if(v!==false&&v!=null) e.setAttribute(k,v); } (kids||[]).forEach(function(c){ if(c) e.appendChild(typeof c==='string'?document.createTextNode(c):c); }); return e; }
   function itens(){ return API.itens(); }
   /* destinos resolvidos; dentro de um bloco, o fim da lista é a saída do bloco */
+  /* etapas do atendimento: o que vem antes do despacho (triagem), o despacho e o que vem depois (orientações até a chegada) */
+  var verEtapas=false,ET={};
+  function calcEtapas(){
+    var g=gr(),E={},fila=g.inicio?[g.inicio]:[],ehD=function(x){ return x&&x.despacho; };
+    var suc=function(id){ return vizinhos(g,id).filter(function(y){ return g.item[y]; }); };
+    while(fila.length){ var x=fila.shift(); if(E[x]||!g.item[x]) continue; if(ehD(g.item[x])){ E[x]='desp'; continue; } E[x]='antes'; suc(x).forEach(function(y){ fila.push(y); }); }
+    fila=[]; Object.keys(E).forEach(function(k){ if(E[k]==='desp') suc(k).forEach(function(y){ fila.push(y); }); });
+    while(fila.length){ var z=fila.shift(); if(E[z]) continue; E[z]=ehD(g.item[z])?'desp':'depois'; suc(z).forEach(function(y){ fila.push(y); }); }
+    return E;
+  }
   function gr(){ var g=grafo(itens()),l=itens(); if(API.emBloco&&l.length){ var u=l[l.length-1]; if(!u.prox) g.def[u.id]='SAIDA'; } return g; }
   function porId(id){ return itens().filter(function(x){ return x.id===id; })[0]||null; }
   function lay(){ return API.layout()||{}; }
@@ -87,6 +97,7 @@ var HefestoDesenho=(function(){
       nMulti>=2?h('button',{class:'btn sm ok',text:'🧩 Transformar em bloco ('+nMulti+')',title:'Junta as caixas selecionadas num bloco reutilizável',onclick:transformar}):null,
       h('span',{class:'grow'}),
       h('button',{class:'btn sm',text:'↶ Desfazer',disabled:!pilha.length,title:'Ctrl+Z',onclick:desfazer}),
+      h('button',{class:'btn sm'+(verEtapas?' pri':''),'aria-pressed':verEtapas?'true':'false',text:'Etapas',title:'Marca o que vem antes do despacho, o despacho e o que vem depois',onclick:function(){ verEtapas=!verEtapas; desenhar(); }}),
       h('button',{class:'btn sm',text:'Reorganizar',title:'Refaz a disposição automática das caixas',onclick:function(){ guardar(); API.setLayout({}); desenhar(true); }}),
       h('button',{class:'btn sm',text:'−',title:'Diminuir',onclick:function(){ zoom(0.8); }}),
       h('button',{class:'btn sm',text:'+',title:'Aumentar',onclick:function(){ zoom(1.25); }}),
@@ -96,6 +107,8 @@ var HefestoDesenho=(function(){
     if(altos.length) raiz.appendChild(h('div',{class:'dzStatus err',title:altos.map(function(x){ return x.msg; }).join('\n'),text:'🚒 '+altos.length+' caminho'+(altos.length>1?'s':'')+' termina'+(altos.length>1?'m':'')+' sem despacho. '+altos[0].msg+(altos.length>1?' (veja todos em “Ver detalhes”, na faixa acima)':'')}));
     var status=v.erros.length?h('div',{class:'dzStatus err',text:'⚠ '+v.erros.length+' erro(s): '+v.erros[0]+(v.erros.length>1?' …':'')+' A entrevista não aparece no atendimento até corrigir.'}):v.avisos.length?h('div',{class:'dzStatus inf',text:v.avisos.length+' aviso(s): '+v.avisos[0]}):h('div',{class:'dzStatus ok',text:'Fluxo sem erros · '+itens().length+' itens. Puxe do ponto ● de uma resposta até outra caixa para ligar. Duplo clique no fundo ajusta a tela.'});
     raiz.appendChild(status);
+    if(verEtapas){ ET=calcEtapas(); var cont={antes:0,desp:0,depois:0}; itens().forEach(function(x){ if(ET[x.id]&&(ET[x.id]!=='antes'||ehPergunta(x))) cont[ET[x.id]]++; });
+      raiz.appendChild(h('div',{class:'dzEtapas'},[h('span',{class:'etL et-antes',text:'Antes do despacho: '+cont.antes+' pergunta'+(cont.antes===1?'':'s')}),h('span',{class:'etL et-desp',text:'Despacho ('+cont.desp+')'}),h('span',{class:'etL et-depois',text:'Depois do despacho: '+cont.depois+(cont.depois===1?' item':' itens')}),h('span',{class:'muted',text:'Sem faixa: nenhum caminho chega até a caixa.'})])); } else ET={};
     var corpo=h('div',{class:'dzCorpo'}),tela=h('div',{class:'dzTela'}),mundo=h('div',{class:'dzMundo'}),svg=document.createElementNS('http://www.w3.org/2000/svg','svg');
     svg.setAttribute('class','dzSvg'); mundo.appendChild(svg); tela.appendChild(mundo); corpo.appendChild(tela);
     corpo.appendChild(painel()); raiz.appendChild(corpo);
@@ -108,7 +121,7 @@ var HefestoDesenho=(function(){
     for(var k in R.nos) mundo.appendChild(R.nos[k]);
     /* posições */
     var L=lay(),faltam=!L.__inicio||itens().some(function(it){ return !L[it.id]; });
-    if(faltam){ var tam={}; for(var k2 in R.nos) tam[k2]={w:R.nos[k2].offsetWidth,h:R.nos[k2].offsetHeight}; var auto=organizar(tam); var novo={}; for(var k3 in auto) novo[k3]=L[k3]||auto[k3]; API.setLayout(novo); L=novo; ajustar=true; }
+    if(faltam){ var tam={}; for(var k2 in R.nos) tam[k2]={w:R.nos[k2].offsetWidth,h:R.nos[k2].offsetHeight}; var auto=organizar(tam); var novo={}; for(var k3 in auto) novo[k3]=L[k3]||auto[k3]; API.setLayout(novo,true); L=novo; ajustar=true; }
     for(var k4 in R.nos){ var p=L[k4]||{x:0,y:0}; R.nos[k4].style.left=p.x+'px'; R.nos[k4].style.top=p.y+'px'; }
     aplicarVista(); arestas();
     if(ajustar) caber();
@@ -121,7 +134,7 @@ var HefestoDesenho=(function(){
     arrastavel(n,id); return n;
   }
   function caixa(it){
-    var p=papel(it),n=h('div',{class:'dzNo dz-'+p+(sel===it.id?' sel':'')+(multi[it.id]?' multi':''),'data-id':it.id});
+    var p=papel(it),n=h('div',{class:'dzNo dz-'+p+(sel===it.id?' sel':'')+(multi[it.id]?' multi':'')+(ET[it.id]?' et-'+ET[it.id]:''),'data-id':it.id});
     if(it.tipo==='bloco'){
       var b=(API.blocos?API.blocos():[]).filter(function(x){ return x.id===it.bloco; })[0];
       n.appendChild(h('div',{class:'dzTipo',text:'🧩 Bloco'+(b?' · '+b.n+' itens · usado em '+b.usos:' · não encontrado')}));
@@ -294,7 +307,7 @@ var HefestoDesenho=(function(){
     }
     if(!it){
       p.appendChild(h('h3',{text:'Como usar'}));
-      p.appendChild(h('ul',{},['Clique numa caixa para editar o texto, as respostas e o tipo.','Puxe do ponto ● ao lado de uma resposta até a caixa seguinte. O ponto embaixo da caixa é o caminho padrão.','Solte a seta no vazio para desfazer a ligação daquela resposta.','Puxe do ponto da caixa da natureza para escolher a primeira pergunta.','Arraste o fundo para mover a tela e use a roda do mouse para aproximar.','Resposta amarela vai para o relato; lilás fica fora (clique no rótulo no painel para trocar).','Delete apaga a caixa selecionada; Ctrl+Z desfaz.','Shift+clique seleciona várias caixas; “Transformar em bloco” junta o trecho num bloco reutilizável.','Caixa azul é um bloco: duplo clique abre o bloco para editar.'].map(function(t){ return h('li',{text:t}); })));
+      p.appendChild(h('ul',{},['Clique numa caixa para editar o texto, as respostas e o tipo.','Puxe do ponto ● ao lado de uma resposta até a caixa seguinte. O ponto embaixo da caixa é o caminho padrão.','Solte a seta no vazio para desfazer a ligação daquela resposta.','Puxe do ponto da caixa da natureza para escolher a primeira pergunta.','Arraste o fundo para mover a tela e use a roda do mouse para aproximar.','Resposta amarela vai para o relato; lilás fica fora (clique no rótulo no painel para trocar).','Delete apaga a caixa selecionada; Ctrl+Z desfaz.','Shift+clique seleciona várias caixas; “Transformar em bloco” junta o trecho num bloco reutilizável.','Caixa azul é um bloco: duplo clique abre o bloco para editar.','Etapas pinta uma faixa em cada caixa: azul antes do despacho, vermelha no despacho, verde depois.'].map(function(t){ return h('li',{text:t}); })));
       return p;
     }
     var ed=function(fn){ return function(e){ guardar(); fn(e); API.mudou(); atualizarCaixa(); }; };

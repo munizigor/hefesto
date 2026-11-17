@@ -10,7 +10,7 @@
 
   /* ---------- dados ---------- */
   var DB={protocolos:null,ocorrencias:[],seq:1};
-  try{ var salvo=JSON.parse(localStorage.getItem(KEY)||'null'); if(salvo&&salvo.protocolos){ DB.protocolos=salvo.protocolos; DB.ocorrencias=salvo.ocorrencias||[]; DB.seq=salvo.seq||1; DB.base=salvo.base||null; DB.ultimaExportacao=salvo.ultimaExportacao||null; DB.naturezas=salvo.naturezas||null; DB.pubNat=salvo.pubNat||null; DB.blocos=salvo.blocos||null; DB.pubBlo=salvo.pubBlo||null; DB.falas=salvo.falas||null; DB.pubFalas=salvo.pubFalas||null; DB.feedbacks=salvo.feedbacks||[]; DB.layout=salvo.layout||{}; } }catch(e){}
+  try{ var salvo=JSON.parse(localStorage.getItem(KEY)||'null'); if(salvo&&salvo.protocolos){ DB.protocolos=salvo.protocolos; DB.ocorrencias=salvo.ocorrencias||[]; DB.seq=salvo.seq||1; DB.base=salvo.base||null; DB.ultimaExportacao=salvo.ultimaExportacao||null; DB.naturezas=salvo.naturezas||null; DB.pubNat=salvo.pubNat||null; DB.blocos=salvo.blocos||null; DB.pubBlo=salvo.pubBlo||null; DB.falas=salvo.falas||null; DB.pubFalas=salvo.pubFalas||null; DB.feedbacks=salvo.feedbacks||[]; DB.layout=salvo.layout||{}; DB.revisao=salvo.revisao||{}; DB.meuNome=salvo.meuNome||''; } }catch(e){}
   /* versão publicada (protocolos.js) x cópia deste navegador.
      DB.base guarda a impressão da versão publicada que este navegador recebeu. Natureza que a pessoa não editou
      acompanha a nova publicação; natureza editada fica como está até ser exportada e publicada. */
@@ -73,7 +73,7 @@
   }
   var atualizadas=0;
   chaves().map(function(k){ return {id:k}; }).forEach(function(n){
-    var pub=PUB[n.id]||[],meu=DB.protocolos[n.id],ip=impr(pub);
+    var pub=JSON.parse(JSON.stringify(PUB[n.id]||[])),meu=DB.protocolos[n.id],ip=impr(pub);
     if(!Array.isArray(meu)){ DB.protocolos[n.id]=pub; DB.base[n.id]=ip; return; }
     var im=impr(meu);
     if(im===ip){ DB.base[n.id]=ip; return; }
@@ -84,6 +84,55 @@
   try{ if(localStorage.getItem(KEY)||atualizadas||natsMudaram) localStorage.setItem(KEY,JSON.stringify(DB)); }catch(e){}
   function alterada(id){ return impr(DB.protocolos[id])!==impr(PUB[id]||[]); }
   function alteradas(){ return chaves().filter(function(k){ return alterada(k); }).map(porChave); }
+  /* ---------- revisão técnica: rascunho → aguardando revisão → aprovada (ou devolvida) ---------- */
+  if(!DB.revisao) DB.revisao={};
+  function metaDe(k,lista){ var x=(lista||(ehBloco(k)?BLOCOS:NATUREZAS)).filter(function(y){ return y.id===(ehBloco(k)?k.slice(6):k); })[0]; return x?(ehBloco(k)?[x.nome]:[x.nome,x.despacho||'',x.sinonimos||[]]):null; }
+  function metaAlterada(k){ return JSON.stringify(metaDe(k))!==JSON.stringify(metaDe(k,ehBloco(k)?PUB_BLO:PUB_NAT)); }
+  function pendente(k){ return alterada(k)||metaAlterada(k); }
+  function assin(k){ return impr(DB.protocolos[k])+'|'+JSON.stringify(metaDe(k)); }
+  function revisaoDe(k){ if(!pendente(k)) return null; var r=DB.revisao[k]; if(!r||r.assin!==assin(k)) return {sit:'rascunho',anterior:r||null}; return r; }
+  Object.keys(DB.revisao).forEach(function(k){ if(!porChave(k)||!pendente(k)) delete DB.revisao[k]; }); /* já publicada: a revisão cumpriu o papel */
+  var SIT_REV={rascunho:'Rascunho',pronta:'Aguardando revisão',aprovada:'Aprovada',devolvida:'Devolvida'};
+  function mudancasDe(k){
+    var m=[],a=metaDe(k,ehBloco(k)?PUB_BLO:PUB_NAT),b=metaDe(k);
+    if(!a) m.push(ehBloco(k)?'Bloco novo.':'Natureza nova.');
+    else if(b){ if(a[0]!==b[0]) m.push('Nome mudou de “'+a[0]+'” para “'+b[0]+'”.');
+      var POLN={'':'no ponto do fluxo',imediato:'imediato',agendavel:'agendável'};
+      if(!ehBloco(k)&&a[1]!==b[1]) m.push('Despacho mudou de '+POLN[a[1]]+' para '+POLN[b[1]]+'.');
+      if(!ehBloco(k)&&JSON.stringify(a[2])!==JSON.stringify(b[2])) m.push('Outros nomes para a busca: '+(b[2].join(', ')||'nenhum')+'.'); }
+    return m.concat(diferencas(PUB[k]||[],DB.protocolos[k]||[]).map(function(d){ return d.msg; }));
+  }
+  function pedirNome(msg){ var v=prompt(msg,DB.meuNome||''); if(v==null) return null; v=v.replace(/\s+/g,' ').trim(); if(!v){ alert('Escreva um nome ou posto.'); return null; } DB.meuNome=v; return v; }
+  function marcarRevisao(k,acao){
+    var r=revisaoDe(k),agora=Date.now(); if(!r) return;
+    if(acao==='enviar'){ var nome=pedirNome('Seu nome ou posto (vai junto para quem fizer a revisão técnica):'); if(!nome) return; var nota=prompt('Recado para quem vai revisar (opcional): o que mudou e por quê.',''); if(nota==null) return;
+      DB.revisao[k]={sit:'pronta',autor:nome,enviadaEm:agora,nota:nota.trim(),assin:assin(k)}; status('Enviada para revisão. Exporte o zip e mande para quem revisa.'); }
+    else if(acao==='aprovar'||acao==='devolver'){ var rev=pedirNome(acao==='aprovar'?'Revisão técnica: seu nome ou posto.':'Quem está devolvendo (nome ou posto)?'); if(!rev) return;
+      if(r.autor&&norm(rev)===norm(r.autor)){ alert('A revisão técnica precisa ser feita por outra pessoa, não por quem fez a alteração ('+r.autor+').'); return; }
+      var par=prompt(acao==='aprovar'?'Parecer (opcional):':'O que precisa ser corrigido?',''); if(par==null) return; if(acao==='devolver'&&!par.trim()){ alert('Diga o que precisa ser corrigido.'); return; }
+      DB.revisao[k]=Object.assign({},r,{sit:acao==='aprovar'?'aprovada':'devolvida',revisor:rev,revisadaEm:agora,parecer:par.trim(),assin:assin(k)}); status(acao==='aprovar'?'Aprovada. Exporte o zip para publicar.':'Devolvida para correção.'); }
+    else if(acao==='reabrir'){ delete DB.revisao[k]; }
+    salvar(); desenharProt();
+  }
+  function quando(t){ return t?new Date(t).toLocaleString('pt-BR',{day:'2-digit',month:'2-digit',year:'numeric',hour:'2-digit',minute:'2-digit'}):''; }
+  function painelRevisao(k){
+    var r=revisaoDe(k),hist=(typeof HISTORICO!=='undefined'?HISTORICO:[]).filter(function(h){ return h.chave===k; }).slice().reverse(),box=el('div',{class:'revisao'});
+    if(r){
+      var mud=mudancasDe(k),acoes=[],texto='';
+      if(r.sit==='rascunho'){ texto='Rascunho neste navegador: ainda não foi para revisão técnica.'+(r.anterior&&r.anterior.sit==='devolvida'?' Devolvida antes por '+r.anterior.revisor+': “'+r.anterior.parecer+'”.':r.anterior?' Mudou depois de ter sido '+(r.anterior.sit==='aprovada'?'aprovada':'enviada')+', então volta para rascunho.':'');
+        acoes.push(el('button',{class:'btn sm ok',text:'Enviar para revisão',onclick:function(){ marcarRevisao(k,'enviar'); }})); }
+      else if(r.sit==='pronta'){ texto='Aguardando revisão técnica. Enviada por '+r.autor+' em '+quando(r.enviadaEm)+'.'+(r.nota?' Recado: “'+r.nota+'”.':'');
+        acoes.push(el('button',{class:'btn sm ok',text:'Aprovar',onclick:function(){ marcarRevisao(k,'aprovar'); }}),el('button',{class:'btn sm del',text:'Devolver',onclick:function(){ marcarRevisao(k,'devolver'); }})); }
+      else if(r.sit==='aprovada'){ texto='Aprovada por '+r.revisor+' em '+quando(r.revisadaEm)+(r.parecer?': “'+r.parecer+'”':'')+'. Alterada por '+r.autor+'. Pronta para publicar: exporte o zip.';
+        acoes.push(el('button',{class:'btn sm',text:'Reabrir',onclick:function(){ if(confirm('Desfazer a aprovação e voltar para rascunho?')) marcarRevisao(k,'reabrir'); }})); }
+      else if(r.sit==='devolvida'){ texto='Devolvida por '+r.revisor+' em '+quando(r.revisadaEm)+': “'+r.parecer+'”. Corrija e envie de novo.';
+        acoes.push(el('button',{class:'btn sm ok',text:'Enviar de novo',onclick:function(){ marcarRevisao(k,'enviar'); }})); }
+      box.appendChild(el('div',{class:'row revLinha rev-'+r.sit},[el('span',{class:'revSit',text:SIT_REV[r.sit]}),el('span',{class:'grow',text:texto})].concat(acoes)));
+      box.appendChild(el('details',{class:'revMud',open:!!S.revAberto,ontoggle:function(e){ S.revAberto=e.target.open; }},[el('summary',{text:'O que mudou em relação à versão publicada ('+mud.length+')'}),mud.length?el('ul',{},mud.map(function(x){ return el('li',{text:x}); })):el('p',{class:'muted',text:'Nada além da ordem dos itens.'})]));
+    }
+    if(hist.length) box.appendChild(el('details',{class:'revMud'},[el('summary',{text:'Histórico de publicações ('+hist.length+')'}),el('ul',{},hist.map(function(h){ return el('li',{},[el('b',{text:h.data+': '}),(h.autor?'alterada por '+h.autor:'')+(h.revisor?(h.autor?', ':'')+'aprovada por '+h.revisor:'')+(h.autor||h.revisor?'. ':'')+(h.sit&&h.sit!=='aprovada'?'Publicada sem aprovação ('+(SIT_REV[h.sit]||h.sit).toLowerCase()+'). ':''),el('span',{class:'muted',text:h.mudancas.slice(0,6).join(' ')+(h.mudancas.length>6?' (+'+(h.mudancas.length-6)+')':'')})]); }))]));
+    return box;
+  }
   function status(t){ var s=$('status'); if(s) s.textContent=t; }
   setTimeout(function(){ if(atualizadas) status(atualizadas+' natureza'+(atualizadas>1?'s':'')+' atualizada'+(atualizadas>1?'s':'')+' com a versão publicada'); },0);
   function salvar(){ try{ localStorage.setItem(KEY,JSON.stringify(DB)); status('Salvo neste navegador'); }catch(e){ status('Não foi possível salvar neste navegador'); } }
@@ -641,7 +690,10 @@
   var S={nat:NATUREZAS[0].id,aba:'fluxo',av:'mermaid',ids:false,resp:{},fluxo:'',fluxoSujo:false,form:'',formSujo:false,msg:null};
   Object.defineProperty(S,'itens',{get:function(){ return DB.protocolos[S.nat]; },set:function(v){ DB.protocolos[S.nat]=v; }});
   /* posições das caixas no editor visual: as deste navegador, senão as publicadas */
-  function layoutDe(id){ return DB.layout[id]||(typeof LAYOUTS_PUBLICADOS!=='undefined'&&LAYOUTS_PUBLICADOS[id])||{}; }
+  /* posição das caixas: a que a pessoa arrumou (DB.layout), a publicada, ou a automática desta sessão (não salva nem exportada) */
+  var LAY_AUTO={};
+  function layoutSalvo(id){ return DB.layout[id]||(typeof LAYOUTS_PUBLICADOS!=='undefined'&&LAYOUTS_PUBLICADOS[id])||{}; }
+  function layoutDe(id){ return DB.layout[id]||LAY_AUTO[id]||(typeof LAYOUTS_PUBLICADOS!=='undefined'&&LAYOUTS_PUBLICADOS[id])||{}; }
   var pilhaDesenho=[];
   /* o editor visual fica embutido na aba Fluxo; os botões “Editor visual” levam para ela */
   function abrirDesenho(voltando,container){
@@ -658,13 +710,13 @@
       abrirBloco:function(bid){ if(!blocoPorId(bid)) return; pilhaDesenho.push(S.nat); S.nat='bloco:'+bid; S.resp={}; S.manterPilha=true; desenharProt(); },
       voltar:pilhaDesenho.length?{nome:(porChave(pilhaDesenho[pilhaDesenho.length-1])||{}).nome,fn:function(){ S.nat=pilhaDesenho.pop(); S.resp={}; S.manterPilha=true; desenharProt(); }}:null,
       criarBloco:function(nome,itens){ var r=criarBloco(nome,itens); if(!r.erro) desenharNats(); return r; },
-      layout:function(){ return layoutDe(S.nat); },setLayout:function(l){ DB.layout[S.nat]=l; },mudou:function(){ mudou(true); }},container);
+      layout:function(){ return layoutDe(S.nat); },setLayout:function(l,auto){ if(auto&&!DB.layout[S.nat]) LAY_AUTO[S.nat]=l; else DB.layout[S.nat]=l; },mudou:function(){ mudou(true); }},container);
   }
   function mudou(estrutura){
     S.resp={}; S.fluxoSujo=false; S.formSujo=false; salvar();
     /* na aba Fluxo o editor visual se redesenha sozinho: aqui só atualiza o resto */
     if(S.aba==='fluxo'&&document.querySelector('#pPanel .dzEmb')){ desenharTopo(); desenharStatus(); desenharNats(); return; }
-    if(estrutura) desenharEditor(); desenharLado(); desenharNats();
+    if(estrutura) desenharEditor(); else desenharTopo(); desenharLado(); desenharNats();
   }
   function desenharNats(){
     var n=$('pNats'); n.textContent='';
@@ -674,7 +726,7 @@
     n.appendChild(el('p',{class:'muted',text:'Crie, renomeie ou exclua naturezas aqui. A entrevista de cada uma é editada ao lado.'}));
     desenharNova(n);
     var resumoProc=[]; NATUREZAS.forEach(function(x){ var q=DB.protocolos[x.id].length,erro=q&&validarAlvo(DB.protocolos[x.id],x.id).erros.length,altos=q?processoDe(x.id).filter(function(y){ return y.nivel==='alto'; }).length:0; if(altos) resumoProc.push([x,altos]);
-      n.appendChild(el('button',{class:'natBtn'+(x.id===S.nat?' on':''),'aria-current':x.id===S.nat?'true':null,onclick:function(){ S.nat=x.id; S.msg=null; S.resp={}; S.fluxoSujo=false; S.formSujo=false; desenharProt(); }},[el('span',{text:x.nome}),el('span',{class:'natQ'+(erro?' er':q?'':' vz'),text:(erro?'com erros':q?q+' itens':'sem entrevista')+(x.fonte==='criada no site'&&!PUB_NAT.some(function(p){ return p.id===x.id; })?' · nova':alterada(x.id)?' · alterada':'')}),altos?el('span',{class:'natProc',text:'⚠ '+altos+' caminho'+(altos>1?'s':'')+' sem despacho'}):null])); });
+      n.appendChild(el('button',{class:'natBtn'+(x.id===S.nat?' on':''),'aria-current':x.id===S.nat?'true':null,onclick:function(){ S.nat=x.id; S.msg=null; S.resp={}; S.fluxoSujo=false; S.formSujo=false; desenharProt(); }},[el('span',{text:x.nome}),el('span',{class:'natQ'+(erro?' er':q?'':' vz'),text:(erro?'com erros':q?q+' itens':'sem entrevista')+(x.fonte==='criada no site'&&!PUB_NAT.some(function(p){ return p.id===x.id; })?' · nova':'')}),revisaoDe(x.id)?el('span',{class:'revSit mini rev-'+revisaoDe(x.id).sit,text:SIT_REV[revisaoDe(x.id).sit]}):null,altos?el('span',{class:'natProc',text:'⚠ '+altos+' caminho'+(altos>1?'s':'')+' sem despacho'}):null])); });
     if(resumoProc.length){ var rp=el('details',{class:'proc alto resumo'},[el('summary',{text:'⚠ '+resumoProc.length+' naturezas com caminhos sem despacho'})].concat(resumoProc.map(function(r){ return el('button',{class:'lnk',text:r[0].nome+' ('+r[1]+')',onclick:function(){ S.nat=r[0].id; S.aba='simular'; desenharProt(); window.scrollTo(0,0); }}); }))); sec.insertBefore(rp,sec.children[2]||null); }
     desenharBlocos($('pNats'));
     desenharFalas($('pNats'));
@@ -684,7 +736,7 @@
     n.appendChild(el('p',{class:'muted',text:'Trechos de entrevista usados em várias naturezas. Corrigir um bloco corrige em todas.'}));
     if(!BLOCOS.length) n.appendChild(el('p',{class:'muted',text:'Nenhum bloco ainda.'}));
     BLOCOS.forEach(function(b){ var k='bloco:'+b.id,q=(DB.protocolos[k]||[]).length,u=usosBloco(b.id).length,erro=q&&validarAlvo(DB.protocolos[k],k).erros.length;
-      n.appendChild(el('button',{class:'natBtn bloco'+(k===S.nat?' on':''),'aria-current':k===S.nat?'true':null,onclick:function(){ S.nat=k; S.msg=null; S.resp={}; S.fluxoSujo=false; S.formSujo=false; desenharProt(); }},[el('span',{text:'🧩 '+b.nome}),el('span',{class:'natQ'+(erro?' er':''),text:(erro?'com erros · ':'')+q+' itens · usado em '+u+(alterada(k)?' · alterado':'')})])); });
+      n.appendChild(el('button',{class:'natBtn bloco'+(k===S.nat?' on':''),'aria-current':k===S.nat?'true':null,onclick:function(){ S.nat=k; S.msg=null; S.resp={}; S.fluxoSujo=false; S.formSujo=false; desenharProt(); }},[el('span',{text:'🧩 '+b.nome}),el('span',{class:'natQ'+(erro?' er':''),text:(erro?'com erros · ':'')+q+' itens · usado em '+u}),revisaoDe(k)?el('span',{class:'revSit mini rev-'+revisaoDe(k).sit,text:SIT_REV[revisaoDe(k).sit]}):null])); });
     n.appendChild(el('button',{class:'btn dash sm',style:'margin-top:8px',text:'+ Novo bloco',onclick:function(){ var nome=prompt('Nome do bloco (ex.: Consciência e respiração):'); if(!nome) return; var r=criarBloco(nome,[]); if(r.erro) alert(r.erro); else { S.nat='bloco:'+r.id; desenharProt(); } }}));
   }
   function usosFala(k){ var n=0; chaves().forEach(function(c){ (DB.protocolos[c]||[]).forEach(function(x){ if(x.fala===k) n++; }); }); return n; }
@@ -749,15 +801,19 @@
     n.appendChild(el('div',{class:'novaNat'},[inp,el('div',{class:'row'},[el('button',{class:'btn sm ok',text:'Criar',onclick:ok}),el('button',{class:'btn sm',text:'Cancelar',onclick:function(){ NOVA.aberta=false; desenharNats(); }})]),NOVA.erro?el('div',{class:'msg err',text:NOVA.erro}):null]));
   }
   /* ---------- exportar e importar (.zip) ---------- */
-  var IMP=null,IMP_FALAS=null;
-  function arquivoProtocolo(n){ var lay=layoutDe(n.id),o={natureza:{id:n.id,nome:n.nome},itens:DB.protocolos[n.id]||[],notas:(typeof NOTAS_PROTOCOLOS!=='undefined'&&NOTAS_PROTOCOLOS[n.id])||[]}; if(Object.keys(lay).length) o.layout=lay; return JSON.stringify(o,null,1)+'\n'; }
+  var IMP=null,IMP_FALAS=null,IMP_REV=null;
+  function arquivoProtocolo(n){ var lay=layoutSalvo(n.id),o={natureza:{id:n.id,nome:n.nome},itens:DB.protocolos[n.id]||[],notas:(typeof NOTAS_PROTOCOLOS!=='undefined'&&NOTAS_PROTOCOLOS[n.id])||[]}; if(Object.keys(lay).length) o.layout=lay; return JSON.stringify(o,null,1)+'\n'; }
   function exportarZip(){
     var z={},d=new Date(),dd=function(x){ return ('0'+x).slice(-2); },carimbo=d.getFullYear()+'-'+dd(d.getMonth()+1)+'-'+dd(d.getDate())+'-'+dd(d.getHours())+'h'+dd(d.getMinutes()),alt=alteradas();
     z['naturezas.json']=(JSON.stringify(NATUREZAS,null,1)+'\n');
     NATUREZAS.forEach(function(n){ z['protocolos/'+n.id+'.json']=arquivoProtocolo(n); });
     z['blocos.json']=JSON.stringify(BLOCOS,null,1)+'\n';
     z['falas.json']=JSON.stringify(DB.falas,null,1)+'\n';
-    BLOCOS.forEach(function(b){ var k='bloco:'+b.id,lay=layoutDe(k),o={bloco:{id:b.id,nome:b.nome},itens:DB.protocolos[k]||[]}; if(Object.keys(lay).length) o.layout=lay; z['blocos/'+b.id+'.json']=JSON.stringify(o,null,1)+'\n'; });
+    BLOCOS.forEach(function(b){ var k='bloco:'+b.id,lay=layoutSalvo(k),o={bloco:{id:b.id,nome:b.nome},itens:DB.protocolos[k]||[]}; if(Object.keys(lay).length) o.layout=lay; z['blocos/'+b.id+'.json']=JSON.stringify(o,null,1)+'\n'; });
+    var pend=chaves().filter(pendente),rv={};
+    pend.forEach(function(k){ var r=revisaoDe(k); rv[k]=r.sit==='rascunho'?{sit:'rascunho'}:Object.assign({},r); delete rv[k].anterior; rv[k].mudancas=mudancasDe(k); });
+    if(pend.length){ z['revisao.json']=JSON.stringify(rv,null,1)+'\n';
+      z['O-QUE-MUDOU.txt']='O que mudou em relação à versão publicada ('+d.toLocaleString('pt-BR')+')\n\n'+pend.map(function(k){ var r=rv[k]; return '## '+porChave(k).nome+' · '+SIT_REV[r.sit]+(r.autor?' · alterada por '+r.autor:'')+(r.revisor?' · '+(r.sit==='aprovada'?'aprovada':'devolvida')+' por '+r.revisor:'')+'\n'+(r.nota?'Recado: '+r.nota+'\n':'')+(r.parecer?'Parecer: '+r.parecer+'\n':'')+r.mudancas.map(function(m){ return '- '+m; }).join('\n'); }).join('\n\n')+'\n'; }
     if(DB.feedbacks.length) z['feedback.json']=JSON.stringify(DB.feedbacks,null,1)+'\n';
     z['LEIA-ME.txt']=('Protocolos do protótipo Hefesto, exportados em '+d.toLocaleString('pt-BR')+'.\n\nPara continuar em outro navegador: aba Protocolos, Importar, escolha este arquivo.\nPara publicar: envie este arquivo para quem cuida do repositório.\n\nNaturezas alteradas em relação à versão publicada ('+alt.length+'):\n'+(alt.map(function(n){ return '- '+n.nome; }).join('\n')||'(nenhuma)')+'\n'+(listaAlterada()?'\nA lista de naturezas também foi alterada (naturezas criadas, renomeadas ou excluídas).\n':''));
     (function(b){
@@ -766,7 +822,7 @@
     })(new Blob([zipCriar(z,d)],{type:'application/zip'}));
   }
   function lerArquivo(f){
-    IMP=null;
+    IMP=null; IMP_REV=null;
     var fim=function(mapa,natsZip,lays){ /* mapa: {idNatureza: itens}; natsZip: lista de naturezas do arquivo, se houver */
       var linhas=[],nz={}; (natsZip||[]).forEach(function(n){ nz[n.id]=n; });
       Object.keys(mapa).forEach(function(id){
@@ -774,7 +830,9 @@
         if(!n&&!z){ linhas.push({id:id,nome:id,sit:'desconhecida'}); return; }
         if(!Array.isArray(itens)){ linhas.push({id:id,nome:(n||z).nome,sit:'inválida'}); return; }
         var nova=!n,renome=n&&z&&z.nome!==n.nome,igual=!nova&&impr(itens)===impr(DB.protocolos[id]);
-        linhas.push({id:id,nome:z?z.nome:n.nome,antigo:renome?n.nome:'',nova:nova,nat:z||n,sit:igual&&!renome?'igual':'muda',itens:itens,antes:nova?0:(DB.protocolos[id]||[]).length,erros:0});
+        var mz=function(x){ return JSON.stringify([x.despacho||'',x.sinonimos||[]]); },metaMuda=!nova&&!!z&&!ehBloco(id)&&mz(z)!==mz(n);
+        var dif=nova?[]:(renome?['Nome: “'+n.nome+'” → “'+z.nome+'”.']:[]).concat(metaMuda?['Despacho ou outros nomes para a busca mudaram.']:[]).concat(diferencas(DB.protocolos[id]||[],itens).map(function(d){ return d.msg; }));
+        linhas.push({id:id,nome:z?z.nome:n.nome,antigo:renome?n.nome:'',nova:nova,nat:z||n,sit:igual&&!renome&&!metaMuda?'igual':'muda',itens:itens,antes:nova?0:(DB.protocolos[id]||[]).length,erros:0,dif:dif});
       });
       var fora=NATUREZAS.filter(function(n){ return natsZip&&!nz[n.id]; });
       /* erros conferidos com a biblioteca de blocos que ficaria depois de importar */
@@ -793,6 +851,7 @@
       var nk=Object.keys(z).filter(function(k){ return /(^|\/)naturezas\.json$/.test(k); })[0],bk=Object.keys(z).filter(function(k){ return /(^|\/)blocos\.json$/.test(k); })[0];
       var lista=nk?JSON.parse(z[nk]):null; if(lista&&bk) lista=lista.concat(JSON.parse(z[bk]).map(function(b){ return {id:'bloco:'+b.id,nome:b.nome}; }));
       var fk=Object.keys(z).filter(function(k){ return /(^|\/)falas\.json$/.test(k); })[0]; IMP_FALAS=fk?JSON.parse(z[fk]):null;
+      var rk=Object.keys(z).filter(function(k){ return /(^|\/)revisao\.json$/.test(k); })[0]; IMP_REV=rk?JSON.parse(z[rk]):null;
       fim(m,lista,lays);
     }).catch(erro);
   }
@@ -813,14 +872,20 @@
     var muda=IMP.linhas.filter(function(l){ return l.sit==='muda'; }),outras=IMP.linhas.filter(function(l){ return l.sit==='desconhecida'||l.sit==='inválida'; });
     box.appendChild(el('b',{text:IMP.nome}));
     box.appendChild(el('div',{class:'muted',text:muda.length?muda.length+' natureza'+(muda.length>1?'s':'')+' diferente'+(muda.length>1?'s':'')+' do que está neste navegador:':'Tudo igual ao que está neste navegador.'}));
-    if(muda.length) box.appendChild(el('ul',{},muda.map(function(l){ return el('li',{},[l.nova?el('b',{text:'Nova: '}):null,l.nome+(l.antigo?' (antes “'+l.antigo+'”)':'')+' ('+l.antes+' → '+l.itens.length+' itens)',!l.nova&&alterada(l.id)&&impr(l.itens)!==impr(DB.protocolos[l.id])?el('b',{class:'aviso',text:' · substitui sua edição'}):null,l.erros?el('span',{class:'aviso',text:' · com erros'}):null]); })));
+    var revDe=function(l){ var r=IMP_REV&&IMP_REV[l.id]; return r&&r.sit!=='rascunho'?r:null; };
+    var revNovas=IMP.linhas.filter(function(l){ var r=revDe(l),a=porChave(l.id)&&revisaoDe(l.id); return (l.sit==='igual'||l.sit==='muda')&&r&&(l.sit==='muda'||!a||a.sit!==r.sit); });
+    if(revNovas.length) box.appendChild(el('div',{class:'muted',text:'Situação da revisão no arquivo: '+revNovas.map(function(l){ var r=revDe(l); return l.nome+' ('+SIT_REV[r.sit].toLowerCase()+(r.revisor?' por '+r.revisor:r.autor?', enviada por '+r.autor:'')+')'; }).join('; ')+'.'}));
+    if(muda.length) box.appendChild(el('ul',{},muda.map(function(l){ return el('li',{},[l.nova?el('b',{text:'Nova: '}):null,l.nome+(l.antigo?' (antes “'+l.antigo+'”)':'')+' ('+l.antes+' → '+l.itens.length+' itens)',!l.nova&&alterada(l.id)&&impr(l.itens)!==impr(DB.protocolos[l.id])?el('b',{class:'aviso',text:' · substitui sua edição'}):null,l.erros?el('span',{class:'aviso',text:' · com erros'}):null,l.dif&&l.dif.length?el('details',{class:'revMud'},[el('summary',{text:'ver o que muda ('+l.dif.length+')'}),el('ul',{},l.dif.map(function(x){ return el('li',{text:x}); }))]):null]); })));
     if(IMP.fora&&IMP.fora.length) box.appendChild(el('div',{class:'muted',text:IMP.fora.length+' natureza'+(IMP.fora.length>1?'s existem':' existe')+' aqui e não no arquivo; '+(IMP.fora.length>1?'ficam':'fica')+' como '+(IMP.fora.length>1?'estão':'está')+': '+IMP.fora.map(function(n){ return n.nome; }).join(', ')+'.'}));
     if(outras.length) box.appendChild(el('div',{class:'msg inf',text:'Ignoradas, porque a natureza não existe neste site: '+outras.map(function(l){ return l.nome; }).join(', ')+'.'}));
     box.appendChild(el('div',{class:'row',style:'margin-top:6px'},[
       falasMudam&&!muda.length?el('span',{class:'muted',text:'As falas padrão do arquivo são diferentes das deste navegador.'}):null,
-      muda.length||falasMudam?el('button',{class:'btn sm ok',text:'Aplicar',onclick:function(){ muda.forEach(function(l){
+      muda.length||falasMudam||revNovas.length?el('button',{class:'btn sm ok',text:'Aplicar',onclick:function(){ muda.forEach(function(l){
         if(ehBloco(l.id)){ var bid=l.id.slice(6); if(l.nova) BLOCOS.push({id:bid,nome:l.nome}); else if(l.antigo){ blocoPorId(bid).nome=l.nome; chaves().forEach(function(k){ (DB.protocolos[k]||[]).forEach(function(x){ if(x.tipo==='bloco'&&x.bloco===bid) x.texto=l.nome; }); }); } DB.protocolos[l.id]=l.itens; return; }
-        if(l.nova){ if(!nomeLivre(l.nome)) l.nat=Object.assign({},l.nat,{nome:l.nome+' (importada)'}); NATUREZAS.push({id:l.id,nome:l.nat.nome,fonte:l.nat.fonte||'criada no site'}); } else if(l.antigo){ trocarNomeEmTrocas(l.antigo,l.nome); natPorId(l.id).nome=l.nome; } DB.protocolos[l.id]=l.itens; });
+        if(l.nova){ if(!nomeLivre(l.nome)) l.nat=Object.assign({},l.nat,{nome:l.nome+' (importada)'}); NATUREZAS.push({id:l.id,nome:l.nat.nome,fonte:l.nat.fonte||'criada no site'}); } else if(l.antigo){ trocarNomeEmTrocas(l.antigo,l.nome); natPorId(l.id).nome=l.nome; }
+        var nn=natPorId(l.id); if(nn&&l.nat&&l.nat!==nn){ if(l.nat.despacho) nn.despacho=l.nat.despacho; else delete nn.despacho; if(l.nat.sinonimos&&l.nat.sinonimos.length) nn.sinonimos=l.nat.sinonimos; else delete nn.sinonimos; }
+        DB.protocolos[l.id]=l.itens; });
+      revNovas.forEach(function(l){ var r=Object.assign({},revDe(l)); delete r.mudancas; r.assin=assin(l.id); DB.revisao[l.id]=r; }); IMP_REV=null;
       Object.keys(IMP.lays||{}).forEach(function(id){ if(porChave(id)) DB.layout[id]=IMP.lays[id]; });
       if(IMP_FALAS){ Object.keys(IMP_FALAS).forEach(function(k){ DB.falas[k]=IMP_FALAS[k]; }); definirFalas(DB.falas); IMP_FALAS=null; } ordenarNats(); BLOCOS.sort(function(a,b){ return a.nome.localeCompare(b.nome,'pt-BR'); }); IMP=null; salvar(); S.resp={}; status(muda.length+' natureza'+(muda.length>1?'s importadas':' importada')); desenharProt(); }}):null,
       el('button',{class:'btn sm',text:muda.length?'Cancelar':'Fechar',onclick:function(){ IMP=null; desenharNats(); }})]));
@@ -1073,6 +1138,12 @@
   + '<li>O mesmo item pode ser destino de vários caminhos. Não é preciso copiar.</li></ul>'
   + '<h3>4. Editor visual</h3>'
   + '<p>É a aba <b>Fluxo</b>, que abre primeiro. <b>⤢ Tela cheia</b> amplia o desenho. Arraste as caixas, puxe a seta do ponto ● de uma resposta até a caixa seguinte, crie caixas pela barra de cima e edite texto, tipo e respostas no painel da direita. O ponto embaixo da caixa é o caminho padrão. Ctrl+Z desfaz; Delete apaga a caixa selecionada e liga quem vinha antes ao que vinha depois. A posição das caixas vai junto no zip exportado.</p>'
+  + '<p>O botão <b>Etapas</b> pinta uma faixa em cima de cada caixa: azul para o que vem antes do despacho (a triagem), vermelha para o despacho e verde para o que vem depois (orientações até a chegada). Ajuda a ver quantas perguntas o atendente faz antes de mandar o socorro.</p>'
+  + '<h3>Revisão técnica antes de publicar</h3><ol>'
+  + '<li>Quem altera a natureza clica em <b>Enviar para revisão</b>, no topo, informa nome ou posto e um recado, e exporta o zip.</li>'
+  + '<li>Quem revisa importa o zip, abre <b>O que mudou em relação à versão publicada</b> e clica em <b>Aprovar</b> ou <b>Devolver</b> (com o motivo). A revisão precisa ser feita por outra pessoa.</li>'
+  + '<li>O zip com as naturezas aprovadas vai para publicação. Qualquer edição depois da aprovação volta a natureza para rascunho.</li></ol>'
+  + '<p>O <b>Histórico de publicações</b>, no topo da natureza, mostra quando cada versão foi publicada, quem alterou, quem aprovou e o que mudou.</p>'
   + '<h3>5. Blocos reutilizáveis</h3>'
   + '<p>Um bloco é um trecho de entrevista com nome, usado em várias naturezas (por exemplo, “Consciência e respiração da vítima”). Na natureza ele aparece como uma caixa azul; no atendimento, as perguntas dele entram no lugar. Corrigir o bloco corrige em todas as naturezas que o usam, e o cabeçalho do bloco mostra onde ele é usado.</p><ul>'
   + '<li>Dentro do bloco, <b>Saída do bloco</b> continua o fluxo de quem usa o bloco; <b>Fechamento</b> encerra a entrevista.</li>'
@@ -1151,6 +1222,7 @@
         el('button',{class:'btn sm del',text:'Excluir bloco',onclick:function(){ excluirBloco(bl.bloco.id); }})]));
       ed.appendChild(el('div',{class:'msg inf'},[el('b',{text:'Usado em '+us.length+(us.length===1?' lugar':' lugares')+': '}),us.map(function(x){ return x.nome; }).join(', ')||'nenhum ainda',el('br'),'Mudanças aqui valem em todos esses lugares.']));
       ed.appendChild(el('div',{class:'muted',style:'margin-top:6px',text:'Dentro do bloco, “Saída do bloco” continua o fluxo de quem usa o bloco (é o destino do fim da lista). “Fechamento” encerra a entrevista. '+(alterada(S.nat)?'Alterado neste navegador.':'Igual à versão publicada.')}));
+      ed.appendChild(painelRevisao(S.nat));
       if(!S.itens.length) ed.appendChild(el('div',{class:'msg inf',text:'Bloco vazio. Crie os itens abaixo ou no editor visual.'}));
       return;
     }
@@ -1165,7 +1237,7 @@
     var sin=n.sinonimos||[];
     ed.appendChild(el('details',{class:'natCfg'},[el('summary',{text:'Outros nomes que o atendente pode digitar ('+(sin.length?sin.slice(0,3).join(', ')+(sin.length>3?'…':''):'nenhum')+')'}),el('div',{class:'row polRow'},[el('label',{class:'lbl',for:'sinNat',text:'Separados por vírgula:'}),el('input',{type:'text',id:'sinNat',class:'grow',value:(n.sinonimos||[]).join(', '),placeholder:'Ex.: batida, colisão, capotou',onchange:function(e){ var l=e.target.value.split(',').map(function(x){ return x.trim(); }).filter(Boolean); if(l.length) n.sinonimos=l; else delete n.sinonimos; salvar(); desenharNats(); status('Outros nomes salvos'); }})])]));
     var notas=(typeof NOTAS_PROTOCOLOS!=='undefined'&&NOTAS_PROTOCOLOS[S.nat])||[],alt=alterada(S.nat);
-    ed.appendChild(el('div',{class:'muted',style:'margin-top:6px',text:alt?'Alterada neste navegador. “Restaurar versão publicada” descarta as suas mudanças nesta natureza.':'Igual à versão publicada.'}));
+    ed.appendChild(painelRevisao(S.nat)); if(!revisaoDe(S.nat)) ed.appendChild(el('div',{class:'muted',style:'margin-top:6px',text:'Igual à versão publicada.'}));
     if(notas.length) ed.appendChild(el('details',{class:'msg inf'},[el('summary',{text:'Notas da importação do Miro ('+notas.length+')'}),el('p',{class:'muted',text:'Apontadas quando o fluxo veio do Miro. Podem já ter sido corrigidas.'}),el('ul',{},notas.map(function(x){ return el('li',{text:x}); }))]));
     if(!S.itens.length) ed.appendChild(el('div',{class:'msg inf',text:'Esta natureza está sem entrevista: no atendimento, o passo Entrevista avisa e segue direto para o solicitante.'}));
   }
@@ -1252,5 +1324,5 @@
   Array.prototype.forEach.call(document.querySelectorAll('#pTabs button'),function(b){ b.addEventListener('click',function(){ S.aba=b.getAttribute('data-tab'); S.msg=null; desenharEditor(); desenharLado(); }); });
   if(window.mermaid){ try{ window.mermaid.initialize({startOnLoad:false,securityLevel:'strict',theme:'neutral',flowchart:{useMaxWidth:false}}); }catch(e){} }
   desenharAtend(); mostrar('atend');
-  window.__hefesto={DB:DB,estado:function(){ return A; }};
+  window.__hefesto={DB:DB,estado:function(){ return A; },revisaoDe:revisaoDe,alterada:alterada,metaAlterada:metaAlterada};
 })();

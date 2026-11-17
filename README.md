@@ -135,6 +135,16 @@ A posição das caixas fica no navegador, vai no zip (`layout` em cada `protocol
 
 No atendimento, o campo Natureza aceita o que o solicitante falou: "batida" sugere Acidente de trânsito, "cheiro de gás" sugere Vazamento de gás / GLP, "engasgou" sugere Obstrução de vias aéreas. A lista mostra por qual nome a natureza foi encontrada; ↓ e Enter escolhem sem tirar a mão do teclado. Os outros nomes de cada natureza ficam no campo `sinonimos` de `protocolos/naturezas.json` e são editados no topo da natureza ("Outros nomes que o atendente pode digitar"). Já vêm preenchidos para 17 naturezas frequentes; a equipe deve revisar e completar.
 
+## Revisão técnica e histórico
+
+Cada natureza ou bloco alterado neste navegador passa por quatro situações, mostradas no topo da natureza e na lista da esquerda: **Rascunho**, **Aguardando revisão**, **Aprovada** ou **Devolvida**. Quem altera clica em "Enviar para revisão" (nome ou posto e um recado) e exporta o zip. Quem revisa importa o zip, lê "O que mudou em relação à versão publicada" (em frases, sem identificadores: texto que mudou, resposta nova, caminho que passou a ir para outra pergunta, ponto de despacho, relato) e aprova ou devolve com o motivo. O site não aceita que a mesma pessoa altere e aprove. Qualquer edição depois da aprovação volta a natureza para rascunho.
+
+O zip exportado leva `revisao.json` (situação, autor, revisor, parecer) e `O-QUE-MUDOU.txt`, legível sem o site. Ao aplicar o zip, `node ferramentas/montar.js arquivo.zip` lista cada natureza com a situação da revisão e o que mudou, e acrescenta o registro em `protocolos/historico.json`, que o site mostra em "Histórico de publicações". Com `--so-aprovadas`, só as naturezas e blocos aprovados entram; os demais ficam como estavam. Atenção: o histórico guarda o nome ou posto de quem alterou e de quem aprovou, e vai para o repositório.
+
+## Etapas no editor visual
+
+O botão **Etapas**, na barra do editor visual, pinta uma faixa em cada caixa: azul para o que vem antes do despacho (triagem), vermelha para o despacho e verde para o que vem depois (orientações até a chegada da guarnição). A legenda conta as perguntas antes do despacho.
+
 ## Blocos reutilizáveis
 
 Um bloco é um trecho de entrevista com nome, guardado uma vez e usado em várias naturezas. Na natureza ele é um item do tipo `bloco` (`{"tipo":"bloco","bloco":"<id>","prox":...}`); no atendimento, no teste e na validação, `expandir()` (em `logic.js`) põe os itens do bloco no lugar, com identificadores `<item>__<item do bloco>`. Dentro do bloco, o destino `SAIDA` (e o fim da lista) continua para o "depois" do item que usa o bloco, e `FIM` encerra a entrevista.
