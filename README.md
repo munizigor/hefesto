@@ -143,3 +143,17 @@ Blocos publicados hoje, extraídos de trechos idênticos (`node ferramentas/bloc
 A ferramenta só junta trechos idênticos e, antes de gravar, percorre todos os caminhos de cada entrevista nova e original em paralelo: se qualquer pergunta, resposta ou destino mudar, nada é gravado. Em Acidente de trânsito as cópias dos riscos variam de um ramo para outro (despacho, "veículo capotado", vazamento e trocas em pontos diferentes), então harmonizá-las num bloco único é decisão de protocolo. Para isso, o editor visual tem **Transformar em bloco** (Shift+clique nas caixas) e **+ Bloco…**.
 
 Blocos vão no zip (`blocos.json` e `blocos/<id>.json`) e entram pelo `montar.js` como as naturezas.
+
+## Segurança do processo de emergência
+
+**Verificação dos fluxos** (`verificarProcesso` em `logic.js`). Para cada natureza, já com os blocos expandidos, o editor aponta:
+- **Sem despacho:** caminhos que chegam ao fim da entrevista sem passar pelo despacho imediato, por uma troca para natureza cadastrada ou por encaminhamento a outro órgão. Mostra o caminho exato, pergunta por pergunta.
+- **Atenção:** mais de 5 perguntas antes do despacho, trocas para naturezas não cadastradas e caminhos sem despacho que só acontecem quando uma pergunta é pulada.
+- **Informação:** naturezas sem nenhum despacho (podem ser agendáveis).
+
+Os pontos aparecem no painel "Testar", na lista de naturezas (⚠) e no editor visual.
+
+**No atendimento:**
+- **Decisão obrigatória sobre o despacho:** uma ocorrência que não foi encaminhada só é registrada depois de o atendente encaminhar ou escolher o motivo (trote ou engano, encaminhada a outro órgão, sem necessidade de recurso, solicitante desistiu, outro). O motivo fica na ocorrência.
+- **Múltipla escolha com confirmação:** o atendente marca todas as respostas que valem (pelo mouse ou pelas teclas 1 a 9) e confirma com "Pronto" ou Enter. O destaque não pula antes da confirmação.
+- **Troca para natureza não cadastrada:** em vez de encerrar sem explicação, avisa que a natureza não existe, segue com a atual e anota a indicação nas observações.

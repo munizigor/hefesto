@@ -88,6 +88,8 @@ var HefestoDesenho=(function(){
       h('button',{class:'btn sm',text:'+',title:'Aumentar',onclick:function(){ zoom(1.25); }}),
       h('button',{class:'btn sm',text:'Ver tudo',onclick:function(){ caber(true); }}),
       h('button',{class:'btn sm pri',text:'Fechar',onclick:fechar})])));
+    var proc=API.processo?API.processo():[],altos=proc.filter(function(x){ return x.nivel==='alto'; });
+    if(altos.length) raiz.appendChild(h('div',{class:'dzStatus err',title:altos.map(function(x){ return x.msg; }).join('\n'),text:'🚒 '+altos.length+' caminho'+(altos.length>1?'s':'')+' termina'+(altos.length>1?'m':'')+' sem despacho. '+altos[0].msg+(altos.length>1?' (veja todos no painel “Testar” ao lado da entrevista)':'')}));
     var status=v.erros.length?h('div',{class:'dzStatus err',text:'⚠ '+v.erros.length+' erro(s): '+v.erros[0]+(v.erros.length>1?' …':'')+' A entrevista não aparece no atendimento até corrigir.'}):v.avisos.length?h('div',{class:'dzStatus inf',text:v.avisos.length+' aviso(s): '+v.avisos[0]}):h('div',{class:'dzStatus ok',text:'Fluxo sem erros · '+itens().length+' itens. Puxe do ponto ● de uma resposta até outra caixa para ligar. Duplo clique no fundo ajusta a tela.'});
     raiz.appendChild(status);
     var corpo=h('div',{class:'dzCorpo'}),tela=h('div',{class:'dzTela'}),mundo=h('div',{class:'dzMundo'}),svg=document.createElementNS('http://www.w3.org/2000/svg','svg');

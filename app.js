@@ -46,6 +46,7 @@
   function chaves(){ return NATUREZAS.map(function(n){ return n.id; }).concat(BLOCOS.map(function(b){ return 'bloco:'+b.id; })); }
   function porChave(k){ if(ehBloco(k)){ var b=blocoPorId(k.slice(6)); return b?{id:k,nome:b.nome,bloco:b}:null; } return natPorId(k); }
   function usosBloco(bid){ return chaves().filter(function(k){ return (DB.protocolos[k]||[]).some(function(x){ return x.tipo==='bloco'&&x.bloco===bid; }); }).map(porChave); }
+  function processoDe(k,itens){ if(ehBloco(k)) return []; return verificarProcesso(expandir(itens||DB.protocolos[k]||[],getBloco),NATUREZAS.map(function(n){ return n.nome; })); }
   function validarAlvo(itens,k){
     if(ehBloco(k)) return validarBloco(itens,getBloco,k.slice(6));
     var v=validar(expandir(itens,getBloco));
@@ -269,7 +270,6 @@
     var f=[],P=protocolo();
     if(P.est) P.lista.forEach(function(id){ var it=P.g.item[id]; if(ehPergunta(it)&&it.obrig){ var r=A.resp[id]; if(!respondido(it,r)||r.pulada) f.push('pergunta obrigatória “'+it.texto+'”'); } });
     if(!A.nomeNI&&!A.nome.trim()) f.push('nome do solicitante (ou marcar “Não informado”)');
-    if(A.encS==null) f.push('encaminhamento ao despacho (a ocorrência não foi encaminhada)');
     return f;
   }
   function contagem(P){ var t=0,n=0; if(P.est) P.lista.forEach(function(id){ var it=P.g.item[id]; if(ehPergunta(it)){ t++; var r=A.resp[id]; if(respondido(it,r)&&!r.pulada) n++; } }); return {t:t,n:n}; }
@@ -293,11 +293,13 @@
   function registrar(forcar,depois){
     if(!A) return;
     if(faltasEncaminhar().length){ A.erro='Para registrar falta: '+faltasEncaminhar().join(', ')+'.'; A.passo=0; desenharPassos(); desenharCentro(); return; }
+    /* rede de segurança: ocorrência sem despacho só é registrada com uma decisão explícita */
+    if(A.encS==null&&!A.semDespacho){ A.conf={tipo:'desp',forcar:forcar,depois:depois}; desenharConf(); return; }
     var f=faltasRegistro();
     if(f.length&&!forcar){ A.conf={tipo:'reg',faltas:f}; desenharConf(); return; }
     var P=protocolo(),n=natPorId(A.nat),ent=[];
     if(P.est) P.est.path.forEach(function(id){ var it=P.g.item[id],r=A.resp[id]; if(respondido(it,r)) ent.push({id:id,tipo:it.tipo,texto:it.texto,resposta:valorResposta(it,r)}); });
-    var o={numero:DB.seq++,ts:Date.now(),natureza:A.nat,naturezaNome:n?n.nome:'',local:A.local,uf:A.uf,ra:A.ra,quartel:quartelAtual(),referencia:A.ref,solicitante:A.nomeNI?'Não informado':A.nome,telefone:A.tel,entrevista:ent,relato:relatoAtual(),observacoes:A.obs,segEncaminhar:A.encS,segTotal:seg(),pendencias:f};
+    var o={numero:DB.seq++,ts:Date.now(),natureza:A.nat,naturezaNome:n?n.nome:'',local:A.local,uf:A.uf,ra:A.ra,quartel:quartelAtual(),referencia:A.ref,solicitante:A.nomeNI?'Não informado':A.nome,telefone:A.tel,entrevista:ent,relato:relatoAtual(),observacoes:A.obs,segEncaminhar:A.encS,segTotal:seg(),pendencias:f,semDespacho:A.semDespacho?A.semDespacho.motivo:null};
     if(A.hermes){ var hc=hermesContas(); o.hermes={roteiro:A.hermes.rot.titulo,aplicadas:hc.ok,descartadas:hc.x,semResposta:hc.pend}; }
     DB.ocorrencias.unshift(o); salvar();
     V.aviso={t:'okm',m:'Ocorrência nº '+o.numero+' registrada. Encaminhada em '+mmss(o.segEncaminhar)+', ligação de '+mmss(o.segTotal)+'.'};
@@ -370,6 +372,15 @@
     var c=$('conf'); if(!c) return; c.textContent=''; if(!A||!A.conf) return;
     var fechar=function(){ A.conf=null; desenharConf(); };
     var k=A.conf,kids=[];
+    if(k.tipo==='desp'){
+      var segue=function(){ var kk=A.conf; A.conf=null; desenharConf(); registrar(kk.forcar,kk.depois); };
+      kids.push(el('div',{class:'confTxt'},[el('b',{text:'A ocorrência não foi encaminhada ao despacho.'}),el('div',{text:'Antes de registrar, encaminhe ou diga por que não vai encaminhar.'})]));
+      kids.push(el('button',{class:'btn verm',text:'🚒 Encaminhar agora e registrar',onclick:function(){ if(encaminhar()) segue(); else { A.conf=null; desenharConf(); } }}));
+      ['Trote ou engano','Encaminhada a outro órgão','Sem necessidade de recurso','Solicitante desistiu'].forEach(function(m){ kids.push(el('button',{class:'btn',text:m,onclick:function(){ A.semDespacho={motivo:m}; segue(); }})); });
+      kids.push(el('button',{class:'btn',text:'Outro motivo…',onclick:function(){ var m=prompt('Por que a ocorrência não será encaminhada ao despacho?'); if(m&&m.trim()){ A.semDespacho={motivo:m.trim()}; segue(); } }}));
+      kids.push(el('button',{class:'btn',onclick:fechar},['Voltar ',el('kbd',{text:'Esc'})]));
+      c.appendChild(el('div',{class:'confFaixa',role:'alertdialog','aria-label':'Decisão sobre o despacho'},kids)); var b0=c.querySelector('button'); if(b0) b0.focus(); return;
+    }
     if(k.tipo==='reg'){
       kids.push(el('div',{class:'confTxt'},[el('b',{text:'Faltam dados para o registro:'}),el('ul',{},k.faltas.map(function(x){ return el('li',{text:x}); }))]));
       kids.push(el('button',{class:'btn ok',text:'Registrar mesmo assim',onclick:function(){ registrar(true); }}));
@@ -418,7 +429,7 @@
     c.appendChild(el('h1',{class:'tit',text:'O que aconteceu e onde?'}));
     var dl=el('datalist',{id:'dlNat'},NATUREZAS.map(function(n){ return el('option',{value:n.nome}); }));
     var infoNat=el('span',{class:'apoio',id:'infoNat'});
-    var pintaNat=function(){ var n=natPorId(A.nat); if(!A.natTxt.trim()) infoNat.textContent='Digite parte do nome e escolha na lista.'; else if(!n) infoNat.textContent='Natureza não reconhecida. Escolha uma da lista.'; else { var q=DB.protocolos[n.id].length; infoNat.textContent=!q?'Esta natureza ainda não tem entrevista cadastrada.':validarAlvo(DB.protocolos[n.id],n.id).erros.length?'A entrevista desta natureza está com erros no editor e não será usada.':'Entrevista desta natureza: '+q+' itens.'; } };
+    var pintaNat=function(){ var n=natPorId(A.nat); if(!A.natTxt.trim()) infoNat.textContent='Digite parte do nome e escolha na lista.'; else if(!n) infoNat.textContent='Natureza não reconhecida. Escolha uma da lista.'; else { var q=DB.protocolos[n.id].length; infoNat.textContent=!q?'Esta natureza ainda não tem entrevista cadastrada.':validarAlvo(DB.protocolos[n.id],n.id).erros.length?'A entrevista desta natureza está com erros no editor e não será usada.':'Natureza reconhecida.'; } };
     var iNat=el('input',{type:'text',id:'fNat',list:'dlNat',value:A.natTxt,autocomplete:'off','data-foco':A.natTxt?null:'1',placeholder:'Ex.: capotamento, incêndio',oninput:function(e){
       A.natTxt=e.target.value; var alvo=norm(A.natTxt),ach=NATUREZAS.filter(function(n){ return norm(n.nome)===alvo; })[0];
       var novo=ach?ach.id:''; if(novo!==A.nat){ A.nat=novo; A.resp={}; } pintaNat(); pintaDup(); atualizarEnc(); desenharFicha(); }});
@@ -449,10 +460,11 @@
       var row=el('div',{class:'qrow'+(cur?' cur':'')+(fut?' fut':'')+' t-'+it.tipo,'data-qid':id});
       if(it.tipo==='troca'){
         var nt=natPorNome(it.texto),bt=el('div',{class:'bloco troca'},[el('span',{class:'bTag',text:'🔁 Trocar natureza'}),el('span',{class:'bTxt',text:'Pelas respostas, a natureza indicada é: '+it.texto+'.'})]);
-        if(ans) bt.appendChild(el('span',{class:'feito',text:'✓ Natureza mantida'}));
+        if(ans) bt.appendChild(el('span',{class:'feito',text:nt?'✓ Natureza mantida':'✓ Ciente · seguiu com a natureza atual'}));
         else if(!fut) bt.appendChild(el('div',{class:'linhaBtn'},[
-          nt?el('button',{class:'btn roxo',text:'Trocar para '+nt.nome,onclick:function(){ trocarNatureza(nt); }}):el('span',{class:'apoio',text:'Essa natureza ainda não tem entrevista no protótipo.'}),
-          el('button',{class:'btn',text:'Manter a natureza atual',onclick:function(){ responder(id,true); }})]));
+          nt?el('button',{class:'btn roxo',text:'Trocar para '+nt.nome,onclick:function(){ trocarNatureza(nt); }}):null,
+          nt?el('button',{class:'btn',text:'Manter a natureza atual',onclick:function(){ responder(id,true); }}):el('button',{class:'btn pri',text:'Ciente, seguir com a natureza atual',onclick:function(){ var t='Protocolo indicou a natureza “'+it.texto+'”, ainda não cadastrada.'; if(String(A.obs).indexOf(t)<0) A.obs=(String(A.obs).trim()?String(A.obs).trim()+' ':'')+t; responder(id,true); }})]));
+        if(!nt&&!ans) bt.insertBefore(el('div',{class:'msg inf',style:'margin:0',text:'Esta natureza ainda não está cadastrada no sistema. Siga com a natureza atual; a indicação vai para as observações da ficha.'}),bt.lastChild);
         row.appendChild(bt);
       } else if(it.tipo==='instrucao'||it.tipo==='informacao'||it.tipo==='diagrama'){
         var bloco=el('div',{class:'bloco '+it.tipo+(it.despacho?' desp':'')},[
@@ -471,8 +483,10 @@
         var ctl=el('div',{class:'qctl'}),sel=(r&&r.ops)||[];
         if(it.tipo==='unica') it.opcoes.forEach(function(o,k){ var on=sel.indexOf(o.id)>=0; ctl.appendChild(opBtn(o.rotulo,on,fut,function(){ responder(id,on?null:{ops:[o.id]}); },cur&&k<9?String(k+1):'',o.id)); });
         else if(it.tipo==='multipla'){
-          it.opcoes.forEach(function(o){ var on=sel.indexOf(o.id)>=0; ctl.appendChild(opBtn(o.rotulo,on,fut,function(){ var ops=sel.filter(function(x){return x!==o.id;}); if(!on) ops.push(o.id); var out=(r&&r.outro)||''; responder(id,(ops.length||out)?{ops:ops,outro:out}:null); },'',o.id)); });
-          if(it.outro) ctl.appendChild(el('input',{type:'text',class:'curto',value:(r&&r.outro)||'',placeholder:'Outro: descreva','aria-label':'Outro, em '+it.texto,onchange:function(e){ var t=e.target.value.trim(); responder(id,(sel.length||t)?{ops:sel,outro:t}:null); }}));
+          it.opcoes.forEach(function(o,k){ var on=sel.indexOf(o.id)>=0; ctl.appendChild(opBtn(o.rotulo,on,fut,function(){ var ops=sel.filter(function(x){return x!==o.id;}); if(!on) ops.push(o.id); var out=(r&&r.outro)||''; responder(id,(ops.length||out)?{ops:ops,outro:out,feito:!!(r&&r.feito)}:null); },cur&&k<9?String(k+1):'',o.id)); });
+          if(it.outro) ctl.appendChild(el('input',{type:'text',class:'curto',value:(r&&r.outro)||'',placeholder:'Outro: descreva','aria-label':'Outro, em '+it.texto,onchange:function(e){ var t=e.target.value.trim(); responder(id,(sel.length||t)?{ops:sel,outro:t,feito:!!(r&&r.feito)}:null); }}));
+          if(r&&(sel.length||r.outro)&&!r.feito) ctl.appendChild(el('button',{class:'btn pri',onclick:function(){ responder(id,{ops:sel,outro:(r&&r.outro)||'',feito:true}); }},['Pronto ✓ ',el('kbd',{text:'Enter'})]));
+          else if(cur&&!sel.length) ctl.appendChild(el('span',{class:'apoio',text:'Marque todas que valem e confirme.'}));
         }
         else if(it.tipo==='lista') ctl.appendChild(el('select',{'aria-label':it.texto,value:sel[0]||'',onchange:function(e){ responder(id,e.target.value?{ops:[e.target.value]}:null); }},[el('option',{value:'',text:'Selecione…'})].concat(it.opcoes.map(function(o){ return el('option',{value:o.id,text:o.rotulo}); }))));
         else ctl.appendChild(el('input',{type:'text',class:'curto',inputmode:it.tipo==='numero'?'numeric':'text',value:(r&&r.valor)||'',placeholder:it.tipo==='numero'?'0':'Digite','aria-label':it.texto,
@@ -510,7 +524,7 @@
   function desenharFicha(){
     var f=$('ficha'); if(!f||!A) return; var st=f.scrollTop,foc=document.activeElement&&document.activeElement.id; f.textContent='';
     var n=natPorId(A.nat),P=protocolo(),ct=contagem(P);
-    f.appendChild(el('div',{class:'fTopo'},[el('h2',{text:'Ficha da ocorrência'}),A.encS!=null?el('span',{class:'chip verde',text:'Encaminhada '+mmss(A.encS)}):el('span',{class:'chip cinza',text:'Não encaminhada'})]));
+    f.appendChild(el('div',{class:'fTopo'},[el('h2',{text:'Ficha da ocorrência'}),A.encS!=null?el('span',{class:'chip verde',text:'Encaminhada '+mmss(A.encS)}):A.semDespacho?el('span',{class:'chip cinza',text:'Sem despacho: '+A.semDespacho.motivo}):el('span',{class:'chip cinza',text:'Não encaminhada'})]));
     var linha=function(rot,val,passo){ var vazio=!String(val||'').trim(); return el('div',{class:'fl'+(A.passo===passo?' at':'')},[el('div',{class:'flc'},[el('span',{class:'fr',text:rot}),el('span',{class:'fv'+(vazio?' vz':''),text:vazio?'—':val})]),el('button',{class:'caneta','aria-label':'Corrigir '+rot,title:'Corrigir',disabled:passo>0&&A.encS==null,onclick:function(){ ir(passo); }},['✎'])]); };
     f.appendChild(linha('Natureza',n?n.nome:'',0)); f.appendChild(linha('Local',A.local,0)); f.appendChild(linha('UF',A.uf,0));
     f.appendChild(linha('Região administrativa',A.ra,0)); f.appendChild(linha('Quartel',quartelAtual(),0)); f.appendChild(linha('Ponto de referência',A.ref,0));
@@ -553,8 +567,10 @@
     if(k==='F8'){ e.preventDefault(); registrar(false); return; }
     var t=(e.target&&e.target.tagName)||''; var emTexto=t==='INPUT'||t==='TEXTAREA'||t==='SELECT';
     if(!emTexto&&A.passo===1&&!e.ctrlKey&&!e.altKey&&!e.metaKey&&k>='1'&&k<='9'){
-      var P=protocolo(); if(P.est&&P.est.pendente){ var it=P.g.item[P.est.pendente]; if(it.tipo==='unica'&&it.opcoes[+k-1]){ e.preventDefault(); responder(it.id,{ops:[it.opcoes[+k-1].id]}); } }
+      var P=protocolo(); if(P.est&&P.est.pendente){ var it=P.g.item[P.est.pendente]; if(it.tipo==='unica'&&it.opcoes[+k-1]){ e.preventDefault(); responder(it.id,{ops:[it.opcoes[+k-1].id]}); }
+        else if(it.tipo==='multipla'&&it.opcoes[+k-1]){ e.preventDefault(); var r0=A.resp[it.id]||{ops:[],outro:''},oid=it.opcoes[+k-1].id,ops=(r0.ops||[]).slice(),i0=ops.indexOf(oid); if(i0>=0) ops.splice(i0,1); else ops.push(oid); responder(it.id,(ops.length||r0.outro)?{ops:ops,outro:r0.outro||'',feito:false}:null); } }
     }
+    if(!emTexto&&A.passo===1&&k==='Enter'&&!e.ctrlKey){ var P2=protocolo(); if(P2.est&&P2.est.pendente){ var it2=P2.g.item[P2.est.pendente],r2=A.resp[it2.id]; if(it2.tipo==='multipla'&&r2&&((r2.ops&&r2.ops.length)||r2.outro)){ e.preventDefault(); responder(it2.id,{ops:r2.ops||[],outro:r2.outro||'',feito:true}); } } }
   });
 
   /* ---------- ocorrências ---------- */
@@ -572,6 +588,7 @@
         el('div',{},[el('span',{class:'fr',text:'Relato'}),el('span',{class:'fv',text:o.relato||'—'})]),
         o.observacoes?el('div',{},[el('span',{class:'fr',text:'Observações do atendente'}),el('span',{class:'fv',text:o.observacoes})]):null,
         o.pendencias&&o.pendencias.length?el('div',{class:'msg inf',text:'Registrada com pendências: '+o.pendencias.join('; ')+'.'}):null,
+        o.semDespacho?el('div',{class:'msg inf',text:'Não encaminhada ao despacho: '+o.semDespacho+'.'}):null,
         o.hermes?el('div',{},[el('span',{class:'fr',text:'Hermes (demonstração)'}),el('span',{class:'fv',text:o.hermes.roteiro+': '+o.hermes.aplicadas+' sugestões aplicadas, '+o.hermes.descartadas+' descartadas, '+o.hermes.semResposta+' sem resposta.'})]):null]);
       r.appendChild(el('details',{class:'oc'},[el('summary',{},[el('b',{text:'Nº '+o.numero}),' · '+hora+' · '+o.naturezaNome+' · '+o.local+' ('+o.ra+')'+(o.hermes?' · com Hermes':'')]),corpo]));
     });
@@ -591,6 +608,7 @@
       emBloco:ehBloco(S.nat),
       blocos:function(){ return BLOCOS.filter(function(b){ return 'bloco:'+b.id!==S.nat; }).map(function(b){ return {id:b.id,nome:b.nome,n:(DB.protocolos['bloco:'+b.id]||[]).length,usos:usosBloco(b.id).length}; }); },
       validar:function(){ return validarAlvo(S.itens,S.nat); },
+      processo:function(){ return processoDe(S.nat,S.itens); },
       abrirBloco:function(bid){ if(!blocoPorId(bid)) return; pilhaDesenho.push(S.nat); S.nat='bloco:'+bid; S.resp={}; desenharProt(); abrirDesenho(true); },
       voltar:pilhaDesenho.length?{nome:(porChave(pilhaDesenho[pilhaDesenho.length-1])||{}).nome,fn:function(){ S.nat=pilhaDesenho.pop(); S.resp={}; desenharProt(); abrirDesenho(true); }}:null,
       criarBloco:function(nome,itens){ var r=criarBloco(nome,itens); if(!r.erro) desenharNats(); return r; },
@@ -604,8 +622,9 @@
     var sec=el('div',{id:'secNats'}); n.appendChild(sec); n=sec;
     n.appendChild(el('p',{class:'muted',text:'Crie, renomeie ou exclua naturezas aqui. A entrevista de cada uma é editada ao lado.'}));
     desenharNova(n);
-    NATUREZAS.forEach(function(x){ var q=DB.protocolos[x.id].length,erro=q&&validarAlvo(DB.protocolos[x.id],x.id).erros.length;
-      n.appendChild(el('button',{class:'natBtn'+(x.id===S.nat?' on':''),'aria-current':x.id===S.nat?'true':null,onclick:function(){ S.nat=x.id; S.msg=null; S.resp={}; S.fluxoSujo=false; S.formSujo=false; desenharProt(); }},[el('span',{text:x.nome}),el('span',{class:'natQ'+(erro?' er':q?'':' vz'),text:(erro?'com erros':q?q+' itens':'sem entrevista')+(x.fonte==='criada no site'&&!PUB_NAT.some(function(p){ return p.id===x.id; })?' · nova':alterada(x.id)?' · alterada':'')})])); });
+    var resumoProc=[]; NATUREZAS.forEach(function(x){ var q=DB.protocolos[x.id].length,erro=q&&validarAlvo(DB.protocolos[x.id],x.id).erros.length,altos=q?processoDe(x.id).filter(function(y){ return y.nivel==='alto'; }).length:0; if(altos) resumoProc.push([x,altos]);
+      n.appendChild(el('button',{class:'natBtn'+(x.id===S.nat?' on':''),'aria-current':x.id===S.nat?'true':null,onclick:function(){ S.nat=x.id; S.msg=null; S.resp={}; S.fluxoSujo=false; S.formSujo=false; desenharProt(); }},[el('span',{text:x.nome}),el('span',{class:'natQ'+(erro?' er':q?'':' vz'),text:(erro?'com erros':q?q+' itens':'sem entrevista')+(x.fonte==='criada no site'&&!PUB_NAT.some(function(p){ return p.id===x.id; })?' · nova':alterada(x.id)?' · alterada':'')}),altos?el('span',{class:'natProc',text:'⚠ '+altos+' caminho'+(altos>1?'s':'')+' sem despacho'}):null])); });
+    if(resumoProc.length){ var rp=el('details',{class:'proc alto resumo'},[el('summary',{text:'⚠ '+resumoProc.length+' naturezas com caminhos sem despacho'})].concat(resumoProc.map(function(r){ return el('button',{class:'lnk',text:r[0].nome+' ('+r[1]+')',onclick:function(){ S.nat=r[0].id; S.aba='teste'; desenharProt(); window.scrollTo(0,0); }}); }))); sec.insertBefore(rp,sec.children[2]||null); }
     desenharBlocos($('pNats'));
   }
   function desenharBlocos(n){
@@ -794,8 +813,20 @@
   }
 
   /* ---------- validação ---------- */
-  function desenharValidacao(v){
+  function blocoProcesso(lista,curto){
+    if(!lista.length) return null;
+    var altos=lista.filter(function(x){ return x.nivel==='alto'; }).length;
+    var box=el('details',{class:'proc'+(altos?' alto':''),open:altos?true:null},[el('summary',{},[el('b',{text:'Processo de emergência: '}),altos?altos+' caminho'+(altos>1?'s':'')+' sem despacho':'',altos&&lista.length>altos?' · ':'',lista.length>altos?(lista.length-altos)+' ponto'+(lista.length-altos>1?'s':'')+' de atenção':''])]);
+    lista.forEach(function(x){
+      var li=el('div',{class:'procItem '+x.nivel},[el('span',{class:'procTag',text:x.nivel==='alto'?'Sem despacho':x.nivel==='atencao'?'Atenção':'Informação'}),el('div',{text:x.msg})]);
+      if(x.caminho&&!curto) li.appendChild(el('ol',{class:'procCam'},x.caminho.map(function(c){ return el('li',{text:c}); })));
+      box.appendChild(li);
+    });
+    return box;
+  }
+  function desenharValidacao(v,proc){
     var d=$('pValid'); d.textContent='';
+    var bp=blocoProcesso(proc||[]); if(bp) d.appendChild(bp);
     var bloco=function(cls,titulo,lista){ if(lista.length) d.appendChild(el('div',{class:'msg '+cls,role:cls==='err'?'alert':'status'},[el('b',{text:titulo}),el('ul',{},lista.slice(0,6).map(function(x){ return el('li',{text:x}); }))])); };
     bloco('err','Erros (a entrevista não aparece no atendimento até corrigir)',v.erros); bloco('inf','Avisos',v.avisos);
     if(!v.erros.length&&!v.avisos.length) d.appendChild(el('div',{class:'msg okm',role:'status',text:'Formulário e fluxo conferem: '+S.itens.length+' itens, sem erros.'}));
@@ -827,7 +858,7 @@
       else if(it.tipo==='multipla'){
         var cs=it.opcoes.map(function(o){ var c=el('input',{type:'checkbox',value:o.id}); a.appendChild(el('label',{},[c,o.rotulo])); return c; });
         var out=null; if(it.outro){ out=el('input',{type:'text',placeholder:'Outro: descreva','aria-label':'Outro'}); a.appendChild(out); }
-        a.appendChild(el('button',{class:'btn pri',text:'Confirmar',onclick:function(){ var m=cs.filter(function(c){return c.checked;}).map(function(c){return c.value;}); var t=out?out.value.trim():''; if(m.length||t) responder({ops:m,outro:t}); }}));
+        a.appendChild(el('button',{class:'btn pri',text:'Confirmar',onclick:function(){ var m=cs.filter(function(c){return c.checked;}).map(function(c){return c.value;}); var t=out?out.value.trim():''; if(m.length||t) responder({ops:m,outro:t,feito:true}); }}));
       } else { var inp=el('input',{type:'text',inputmode:it.tipo==='numero'?'numeric':'text',placeholder:it.tipo==='numero'?'0':'Digite a resposta','aria-label':it.texto}); a.appendChild(inp); a.appendChild(el('button',{class:'btn pri',text:'Confirmar',onclick:function(){ var x=inp.value.trim(); if(x&&(it.tipo!=='numero'||/^\d+$/.test(x))) responder({valor:x}); }})); }
       p.appendChild(a);
       if(!it.obrig) p.appendChild(el('button',{class:'btn sm',style:'margin-top:8px',text:'Pular (não obrigatória)',onclick:function(){ responder({pulada:true,ops:[]}); }}));
@@ -1007,7 +1038,7 @@
     Array.prototype.forEach.call(document.querySelectorAll('#pTabs button'),function(b){ var on=b.getAttribute('data-tab')===S.aba; b.className=on?'on':''; b.setAttribute('aria-selected',on?'true':'false'); });
     var p=$('pPanel'); p.textContent='';
     if(!S.itens.length&&S.aba!=='manual'&&S.aba!=='fluxo'&&S.aba!=='form'&&S.aba!=='importar'){ $('pValid').textContent=''; p.appendChild(el('div',{class:'muted',text:'Sem itens para testar. Crie o primeiro item no editor, ou escreva o fluxo na aba Fluxo.'})); return; }
-    var v=S.itens.length?validarAlvo(S.itens,S.nat):{erros:[],avisos:[]}; if(S.itens.length) desenharValidacao(v); else $('pValid').textContent='';
+    var v=S.itens.length?validarAlvo(S.itens,S.nat):{erros:[],avisos:[]}; if(S.itens.length) desenharValidacao(v,processoDe(S.nat,S.itens)); else $('pValid').textContent='';
     if(S.aba==='teste') painelTeste(p,v); else if(S.aba==='fluxo') painelFluxo(p,v); else if(S.aba==='manual') p.innerHTML=MANUAL; else if(S.aba==='importar') painelImport(p); else painelForm(p);
   }
   function desenharEditorTopo(ed){
