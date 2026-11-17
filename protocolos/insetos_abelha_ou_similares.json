@@ -46,7 +46,7 @@
     },
     {
      "id": "nao_sei",
-     "rotulo": "Não sei",
+     "rotulo": "Não sabe",
      "vai": ""
     }
    ]
@@ -138,7 +138,8 @@
    "mermaid": "",
    "prox": "FIM",
    "opcoes": [],
-   "despacho": true
+   "despacho": true,
+   "fala": "padrao"
   },
   {
    "id": "troca_parada_cardiorespi",
@@ -170,7 +171,8 @@
    "mermaid": "",
    "prox": "FIM",
    "opcoes": [],
-   "despacho": true
+   "despacho": true,
+   "fala": "video"
   },
   {
    "id": "formacao_colmeia",
@@ -182,10 +184,9 @@
    "prox": "dias_insetos_local",
    "opcoes": [
     {
-     "id": "nao_sabe",
-     "rotulo": "Não sabe",
-     "vai": "",
-     "relato": false
+     "id": "sim",
+     "rotulo": "Sim",
+     "vai": ""
     },
     {
      "id": "nao",
@@ -193,9 +194,10 @@
      "vai": ""
     },
     {
-     "id": "sim",
-     "rotulo": "Sim",
-     "vai": ""
+     "id": "nao_sabe",
+     "rotulo": "Não sabe",
+     "vai": "",
+     "relato": false
     }
    ]
   },
@@ -334,14 +336,14 @@
    "prox": "acesso_local_insetos",
    "opcoes": [
     {
-     "id": "nao",
-     "rotulo": "Não",
-     "vai": ""
-    },
-    {
      "id": "sim",
      "rotulo": "Sim",
      "vai": "aproximadamente_metros"
+    },
+    {
+     "id": "nao",
+     "rotulo": "Não",
+     "vai": ""
     }
    ]
   },
@@ -355,14 +357,14 @@
    "prox": "FIM",
    "opcoes": [
     {
-     "id": "nao",
-     "rotulo": "Não",
-     "vai": ""
-    },
-    {
      "id": "sim",
      "rotulo": "Sim",
      "vai": "isole_area_onde"
+    },
+    {
+     "id": "nao",
+     "rotulo": "Não",
+     "vai": ""
     }
    ]
   },

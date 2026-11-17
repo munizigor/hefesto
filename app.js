@@ -10,7 +10,7 @@
 
   /* ---------- dados ---------- */
   var DB={protocolos:null,ocorrencias:[],seq:1};
-  try{ var salvo=JSON.parse(localStorage.getItem(KEY)||'null'); if(salvo&&salvo.protocolos){ DB.protocolos=salvo.protocolos; DB.ocorrencias=salvo.ocorrencias||[]; DB.seq=salvo.seq||1; DB.base=salvo.base||null; DB.ultimaExportacao=salvo.ultimaExportacao||null; DB.naturezas=salvo.naturezas||null; DB.pubNat=salvo.pubNat||null; DB.blocos=salvo.blocos||null; DB.pubBlo=salvo.pubBlo||null; DB.feedbacks=salvo.feedbacks||[]; DB.layout=salvo.layout||{}; } }catch(e){}
+  try{ var salvo=JSON.parse(localStorage.getItem(KEY)||'null'); if(salvo&&salvo.protocolos){ DB.protocolos=salvo.protocolos; DB.ocorrencias=salvo.ocorrencias||[]; DB.seq=salvo.seq||1; DB.base=salvo.base||null; DB.ultimaExportacao=salvo.ultimaExportacao||null; DB.naturezas=salvo.naturezas||null; DB.pubNat=salvo.pubNat||null; DB.blocos=salvo.blocos||null; DB.pubBlo=salvo.pubBlo||null; DB.falas=salvo.falas||null; DB.pubFalas=salvo.pubFalas||null; DB.feedbacks=salvo.feedbacks||[]; DB.layout=salvo.layout||{}; } }catch(e){}
   /* versão publicada (protocolos.js) x cópia deste navegador.
      DB.base guarda a impressão da versão publicada que este navegador recebeu. Natureza que a pessoa não editou
      acompanha a nova publicação; natureza editada fica como está até ser exportada e publicada. */
@@ -27,7 +27,10 @@
     var mapa=function(l){ var m={}; l.forEach(function(n){ m[n.id]=n; }); return m; },L_=mapa(loc),V=mapa(velha),N=mapa(nova),out=[];
     nova.forEach(function(n){
       if(V[n.id]&&!L_[n.id]) return; /* excluída aqui */
-      var x=JSON.parse(JSON.stringify(n)); if(L_[n.id]&&V[n.id]&&L_[n.id].nome!==V[n.id].nome) x.nome=L_[n.id].nome; out.push(x);
+      /* cada campo (nome, política de despacho…) mudado neste navegador prevalece sobre a publicação */
+      var x=JSON.parse(JSON.stringify(n)),lo=L_[n.id],ve=V[n.id];
+      if(lo&&ve) Object.keys(Object.assign({},lo,ve)).forEach(function(f){ if(f!=='id'&&JSON.stringify(lo[f])!==JSON.stringify(ve[f])){ if(lo[f]===undefined) delete x[f]; else x[f]=lo[f]; } });
+      out.push(x);
     });
     loc.forEach(function(n){ if(!N[n.id]&&!V[n.id]) out.push(n); }); /* criadas aqui */
     out.sort(function(a,b){ return a.nome.localeCompare(b.nome,'pt-BR'); });
@@ -37,7 +40,15 @@
   DB.naturezas=mesclarLista(DB.naturezas,DB.pubNat,PUB_NAT); DB.pubNat=PUB_NAT;
   DB.blocos=mesclarLista(DB.blocos,DB.pubBlo,PUB_BLO); DB.pubBlo=PUB_BLO;
   NATUREZAS=DB.naturezas; window.BLOCOS=DB.blocos;
-  function listaAlterada(){ var f=function(l){ return JSON.stringify(l.map(function(n){ return [n.id,n.nome]; })); }; return f(NATUREZAS)!==f(PUB_NAT)||f(BLOCOS)!==f(PUB_BLO); }
+  /* falas padrão: a publicada, salvo o que foi editado neste navegador */
+  var PUB_FALAS=JSON.parse(JSON.stringify(typeof FALAS!=='undefined'?FALAS:{}));
+  (function(){ var loc=DB.falas,velha=DB.pubFalas||PUB_FALAS,out={};
+    Object.keys(PUB_FALAS).forEach(function(k){ out[k]=JSON.parse(JSON.stringify(PUB_FALAS[k])); if(loc&&loc[k]&&velha[k]&&JSON.stringify(loc[k])!==JSON.stringify(velha[k])) out[k]=loc[k]; });
+    if(loc) Object.keys(loc).forEach(function(k){ if(!PUB_FALAS[k]&&!velha[k]) out[k]=loc[k]; });
+    if(JSON.stringify(velha)!==JSON.stringify(PUB_FALAS)) natsMudaram=true;
+    DB.falas=out; DB.pubFalas=PUB_FALAS; definirFalas(DB.falas); })();
+  function politica(natId){ var n=natPorId(natId); return (n&&n.despacho)||'fluxo'; }
+  function listaAlterada(){ var f=function(l){ return JSON.stringify(l.map(function(n){ return [n.id,n.nome,n.despacho||'']; })); }; return f(NATUREZAS)!==f(PUB_NAT)||f(BLOCOS)!==f(PUB_BLO)||JSON.stringify(DB.falas)!==JSON.stringify(PUB_FALAS); }
   /* ---------- blocos reutilizáveis ---------- */
   function ehBloco(k){ return /^bloco:/.test(k||''); }
   function blocoPorId(id){ return BLOCOS.filter(function(b){ return b.id===id; })[0]||null; }
@@ -46,7 +57,7 @@
   function chaves(){ return NATUREZAS.map(function(n){ return n.id; }).concat(BLOCOS.map(function(b){ return 'bloco:'+b.id; })); }
   function porChave(k){ if(ehBloco(k)){ var b=blocoPorId(k.slice(6)); return b?{id:k,nome:b.nome,bloco:b}:null; } return natPorId(k); }
   function usosBloco(bid){ return chaves().filter(function(k){ return (DB.protocolos[k]||[]).some(function(x){ return x.tipo==='bloco'&&x.bloco===bid; }); }).map(porChave); }
-  function processoDe(k,itens){ if(ehBloco(k)) return []; return verificarProcesso(expandir(itens||DB.protocolos[k]||[],getBloco),NATUREZAS.map(function(n){ return n.nome; })); }
+  function processoDe(k,itens){ if(ehBloco(k)) return []; return verificarProcesso(expandir(itens||DB.protocolos[k]||[],getBloco),NATUREZAS.map(function(n){ return n.nome; }),politica(k)); }
   function validarAlvo(itens,k){
     if(ehBloco(k)) return validarBloco(itens,getBloco,k.slice(6));
     var v=validar(expandir(itens,getBloco));
@@ -288,12 +299,15 @@
     if(A.encS==null) A.encS=seg();
     relogio(); desenharChamada(); desenharFicha(); return true;
   }
-  function avancar(){ if(!A) return; ir(A.passo+1); }
+  function avancar(){ if(!A) return; if(A.passo===0) seguirEntrevista(); else ir(A.passo+1); }
+  /* natureza de despacho imediato: encaminha ao sair do passo 1 */
+  function seguirEntrevista(){ if(faltasEncaminhar().length){ ir(1); return; } if(politica(A.nat)==='imediato'&&A.encS==null) encaminhar(); ir(1); }
   function responder(id,r){ if(r==null) delete A.resp[id]; else A.resp[id]=r; desenharCentro(); desenharFicha(); foco(); }
   function registrar(forcar,depois){
     if(!A) return;
     if(faltasEncaminhar().length){ A.erro='Para registrar falta: '+faltasEncaminhar().join(', ')+'.'; A.passo=0; desenharPassos(); desenharCentro(); return; }
     /* rede de segurança: ocorrência sem despacho só é registrada com uma decisão explícita */
+    if(A.encS==null&&!A.semDespacho&&politica(A.nat)==='agendavel') A.semDespacho={motivo:'Atendimento agendável'};
     if(A.encS==null&&!A.semDespacho){ A.conf={tipo:'desp',forcar:forcar,depois:depois}; desenharConf(); return; }
     var f=faltasRegistro();
     if(f.length&&!forcar){ A.conf={tipo:'reg',faltas:f}; desenharConf(); return; }
@@ -312,7 +326,7 @@
   /* ---------- atendimento: desenho ---------- */
   function desenharChamada(){
     var c=$('encAgora'); if(!c||!A) return; c.textContent='';
-    if(A.encS!=null) return;
+    if(A.encS!=null||politica(A.nat)==='agendavel') return;
     var ok=!faltasEncaminhar().length;
     c.appendChild(el('button',{class:'btn sm '+(ok?'vermv':'apag'),title:ok?'O encaminhamento acontece no ponto de despacho do fluxo da natureza. Use este botão só para adiantar.':'Preencha natureza, local e região para poder adiantar o despacho',disabled:!ok,onclick:function(){ encaminhar(); desenharCentro(); }},['🚒 Adiantar despacho']));
   }
@@ -413,11 +427,11 @@
   function navBotoes(){
     var kids=[];
     if(A.passo>0) kids.push(el('button',{class:'btn azulv grande',onclick:function(){ ir(A.passo-1); }},['‹ Anterior ',el('kbd',{text:'Alt+PgUp'})]));
-    if(A.passo===0){ var ok=!faltasEncaminhar().length; kids.push(el('button',{class:'btn grande '+(ok?'pri':'apag'),id:'bEnc',onclick:function(){ ir(1); }},['Seguir para a entrevista ',el('kbd',{text:'Ctrl+Enter'}),' ›'])); }
+    if(A.passo===0){ var ok=!faltasEncaminhar().length,imed=politica(A.nat)==='imediato'&&A.encS==null; kids.push(el('button',{class:'btn grande '+(ok?(imed?'verm':'pri'):'apag'),id:'bEnc',onclick:seguirEntrevista},[imed?'🚒 Encaminhar e seguir para a entrevista ':'Seguir para a entrevista ',el('kbd',{text:'Ctrl+Enter'}),' ›'])); }
     else if(A.passo<3) kids.push(el('button',{class:'btn pri grande',onclick:avancar},['Próximo ',el('kbd',{text:'Alt+PgDn'}),' ›']));
     return el('div',{class:'nav'},kids);
   }
-  function atualizarEnc(){ var f=faltasEncaminhar().length,b=$('bEnc'); if(b) b.className='btn grande '+(f?'apag':'pri'); desenharChamada(); if(!f&&A.erro){ A.erro=''; var m=document.querySelector('#centro > .msg.err'); if(m) m.remove(); } }
+  function atualizarEnc(){ var f=faltasEncaminhar().length,b=$('bEnc'); if(b){ var im=politica(A.nat)==='imediato'&&A.encS==null; b.className='btn grande '+(f?'apag':im?'verm':'pri'); b.firstChild.textContent=im?'🚒 Encaminhar e seguir para a entrevista ':'Seguir para a entrevista '; } desenharChamada(); if(!f&&A.erro){ A.erro=''; var m=document.querySelector('#centro > .msg.err'); if(m) m.remove(); } }
   function desenharCentro(){
     var c=$('centro'); if(!c||!A) return; c.textContent='';
     if(A.erro) c.appendChild(el('div',{class:'msg err',role:'alert',text:A.erro}));
@@ -429,7 +443,7 @@
     c.appendChild(el('h1',{class:'tit',text:'O que aconteceu e onde?'}));
     var dl=el('datalist',{id:'dlNat'},NATUREZAS.map(function(n){ return el('option',{value:n.nome}); }));
     var infoNat=el('span',{class:'apoio',id:'infoNat'});
-    var pintaNat=function(){ var n=natPorId(A.nat); if(!A.natTxt.trim()) infoNat.textContent='Digite parte do nome e escolha na lista.'; else if(!n) infoNat.textContent='Natureza não reconhecida. Escolha uma da lista.'; else { var q=DB.protocolos[n.id].length; infoNat.textContent=!q?'Esta natureza ainda não tem entrevista cadastrada.':validarAlvo(DB.protocolos[n.id],n.id).erros.length?'A entrevista desta natureza está com erros no editor e não será usada.':'Natureza reconhecida.'; } };
+    var pintaNat=function(){ var n=natPorId(A.nat); if(!A.natTxt.trim()) infoNat.textContent='Digite parte do nome e escolha na lista.'; else if(!n) infoNat.textContent='Natureza não reconhecida. Escolha uma da lista.'; else { var q=DB.protocolos[n.id].length; infoNat.textContent=!q?'Esta natureza ainda não tem entrevista cadastrada.':validarAlvo(DB.protocolos[n.id],n.id).erros.length?'A entrevista desta natureza está com erros no editor e não será usada.':({imediato:'Despacho imediato: a ocorrência é encaminhada ao seguir para a entrevista.',agendavel:'Atendimento agendável: esta natureza não encaminha ao despacho.'}[politica(n.id)]||'Natureza reconhecida.'); } };
     var iNat=el('input',{type:'text',id:'fNat',list:'dlNat',value:A.natTxt,autocomplete:'off','data-foco':A.natTxt?null:'1',placeholder:'Ex.: capotamento, incêndio',oninput:function(e){
       A.natTxt=e.target.value; var alvo=norm(A.natTxt),ach=NATUREZAS.filter(function(n){ return norm(n.nome)===alvo; })[0];
       var novo=ach?ach.id:''; if(novo!==A.nat){ A.nat=novo; A.resp={}; } pintaNat(); pintaDup(); atualizarEnc(); desenharFicha(); }});
@@ -468,13 +482,13 @@
         row.appendChild(bt);
       } else if(it.tipo==='instrucao'||it.tipo==='informacao'||it.tipo==='diagrama'){
         var bloco=el('div',{class:'bloco '+it.tipo+(it.despacho?' desp':'')},[
-          el('span',{class:'bTag',text:it.despacho?'🚒 Despacho imediato · diga ao solicitante':it.video?'📞 Videochamada':it.tipo==='instrucao'?'Diga ao solicitante':it.tipo==='informacao'?'Para você, não ler ao solicitante':'Fluxograma de consulta'}),
+          el('span',{class:'bTag',text:it.despacho&&it.nota?'🚒 Ponto de despacho · para você, não ler ao solicitante':it.despacho?'🚒 Despacho imediato · diga ao solicitante':it.video?'📞 Videochamada':it.tipo==='instrucao'?'Diga ao solicitante':it.tipo==='informacao'?'Para você, não ler ao solicitante':'Fluxograma de consulta'}),
           el('span',{class:'bTxt',text:it.texto})]);
         if(it.tipo==='diagrama'){ var d=el('div',{class:'diag'}); bloco.appendChild(d); if(!fut) desenhar(it.mermaid,d); }
         if(it.despacho){
           if(A.encS!=null) bloco.appendChild(el('span',{class:'apoio',text:'Ocorrência encaminhada ao despacho aos '+mmss(A.encS)+'.'}));
           if(ans) bloco.appendChild(el('span',{class:'feito',text:'✓ Dita'}));
-          else if(!fut) bloco.appendChild(A.encS==null?el('button',{class:'btn verm',text:'🚒 Encaminhar ao despacho e dizer a fala',onclick:function(){ if(encaminhar()) responder(id,true); }}):el('button',{class:'btn ok',text:'✓ Dito',onclick:function(){ responder(id,true); }}));
+          else if(!fut) bloco.appendChild(A.encS==null?el('button',{class:'btn verm',text:it.nota?'🚒 Encaminhar ao despacho':'🚒 Encaminhar ao despacho e dizer a fala',onclick:function(){ if(encaminhar()) responder(id,true); }}):el('button',{class:'btn ok',text:it.nota?'Ciente':'✓ Dito',onclick:function(){ responder(id,true); }}));
         }
         else if(ans) bloco.appendChild(el('span',{class:'feito',text:it.tipo==='instrucao'?'✓ Dita':'✓ Ciente'}));
         else if(!fut) bloco.appendChild(el('button',{class:'btn '+(it.tipo==='instrucao'?'ok':'pri'),text:it.tipo==='instrucao'?'✓ Dito':'Ciente',onclick:function(){ responder(id,true); }}));
@@ -513,7 +527,7 @@
   }
   function passoFechamento(c){
     c.appendChild(el('h1',{class:'tit',text:'Relato'}));
-    if(A.encS==null) c.appendChild(el('div',{class:'msg inf'},['A ocorrência ainda não foi encaminhada ao despacho. O fluxo desta natureza não pediu o encaminhamento nas respostas dadas. ',el('button',{class:'btn sm verm',text:'🚒 Encaminhar agora',onclick:function(){ encaminhar(); desenharCentro(); }})]));
+    if(A.encS==null&&politica(A.nat)!=='agendavel') c.appendChild(el('div',{class:'msg inf'},['A ocorrência ainda não foi encaminhada ao despacho. O fluxo desta natureza não pediu o encaminhamento nas respostas dadas. ',el('button',{class:'btn sm verm',text:'🚒 Encaminhar agora',onclick:function(){ encaminhar(); desenharCentro(); }})]));
     var ta=el('textarea',{id:'fRel',rows:'7','data-foco':'1','aria-label':'Relato da ocorrência',value:relatoAtual(),oninput:function(e){ A.relato=e.target.value; A.relManual=true; var s=$('relFicha'); if(s) s.textContent=A.relato; }});
     c.appendChild(ta);
     c.appendChild(el('div',{class:'linhaBtn'},[
@@ -561,7 +575,7 @@
     if(V.view!=='atend') return;
     if(k==='F1'){ e.preventDefault(); V.help=!V.help; desenharAjuda(); return; }
     if(!A||A.conf||V.help||FB.aberto) return;
-    if(e.ctrlKey&&k==='Enter'){ e.preventDefault(); if(A.passo===0) ir(1); return; }
+    if(e.ctrlKey&&k==='Enter'){ e.preventDefault(); if(A.passo===0) seguirEntrevista(); return; }
     if(e.altKey&&k==='PageDown'){ e.preventDefault(); avancar(); return; }
     if(e.altKey&&k==='PageUp'){ e.preventDefault(); ir(A.passo-1); return; }
     if(k==='F8'){ e.preventDefault(); registrar(false); return; }
@@ -609,6 +623,7 @@
       blocos:function(){ return BLOCOS.filter(function(b){ return 'bloco:'+b.id!==S.nat; }).map(function(b){ return {id:b.id,nome:b.nome,n:(DB.protocolos['bloco:'+b.id]||[]).length,usos:usosBloco(b.id).length}; }); },
       validar:function(){ return validarAlvo(S.itens,S.nat); },
       processo:function(){ return processoDe(S.nat,S.itens); },
+      falas:function(){ return DB.falas; },
       abrirBloco:function(bid){ if(!blocoPorId(bid)) return; pilhaDesenho.push(S.nat); S.nat='bloco:'+bid; S.resp={}; desenharProt(); abrirDesenho(true); },
       voltar:pilhaDesenho.length?{nome:(porChave(pilhaDesenho[pilhaDesenho.length-1])||{}).nome,fn:function(){ S.nat=pilhaDesenho.pop(); S.resp={}; desenharProt(); abrirDesenho(true); }}:null,
       criarBloco:function(nome,itens){ var r=criarBloco(nome,itens); if(!r.erro) desenharNats(); return r; },
@@ -626,6 +641,7 @@
       n.appendChild(el('button',{class:'natBtn'+(x.id===S.nat?' on':''),'aria-current':x.id===S.nat?'true':null,onclick:function(){ S.nat=x.id; S.msg=null; S.resp={}; S.fluxoSujo=false; S.formSujo=false; desenharProt(); }},[el('span',{text:x.nome}),el('span',{class:'natQ'+(erro?' er':q?'':' vz'),text:(erro?'com erros':q?q+' itens':'sem entrevista')+(x.fonte==='criada no site'&&!PUB_NAT.some(function(p){ return p.id===x.id; })?' · nova':alterada(x.id)?' · alterada':'')}),altos?el('span',{class:'natProc',text:'⚠ '+altos+' caminho'+(altos>1?'s':'')+' sem despacho'}):null])); });
     if(resumoProc.length){ var rp=el('details',{class:'proc alto resumo'},[el('summary',{text:'⚠ '+resumoProc.length+' naturezas com caminhos sem despacho'})].concat(resumoProc.map(function(r){ return el('button',{class:'lnk',text:r[0].nome+' ('+r[1]+')',onclick:function(){ S.nat=r[0].id; S.aba='teste'; desenharProt(); window.scrollTo(0,0); }}); }))); sec.insertBefore(rp,sec.children[2]||null); }
     desenharBlocos($('pNats'));
+    desenharFalas($('pNats'));
   }
   function desenharBlocos(n){
     n.appendChild(el('h2',{style:'margin-top:16px',text:'Blocos'}));
@@ -634,6 +650,15 @@
     BLOCOS.forEach(function(b){ var k='bloco:'+b.id,q=(DB.protocolos[k]||[]).length,u=usosBloco(b.id).length,erro=q&&validarAlvo(DB.protocolos[k],k).erros.length;
       n.appendChild(el('button',{class:'natBtn bloco'+(k===S.nat?' on':''),'aria-current':k===S.nat?'true':null,onclick:function(){ S.nat=k; S.msg=null; S.resp={}; S.fluxoSujo=false; S.formSujo=false; desenharProt(); }},[el('span',{text:'🧩 '+b.nome}),el('span',{class:'natQ'+(erro?' er':''),text:(erro?'com erros · ':'')+q+' itens · usado em '+u+(alterada(k)?' · alterado':'')})])); });
     n.appendChild(el('button',{class:'btn dash sm',style:'margin-top:8px',text:'+ Novo bloco',onclick:function(){ var nome=prompt('Nome do bloco (ex.: Consciência e respiração):'); if(!nome) return; var r=criarBloco(nome,[]); if(r.erro) alert(r.erro); else { S.nat='bloco:'+r.id; desenharProt(); } }}));
+  }
+  function usosFala(k){ var n=0; chaves().forEach(function(c){ (DB.protocolos[c]||[]).forEach(function(x){ if(x.fala===k) n++; }); }); return n; }
+  function desenharFalas(n){
+    var ks=Object.keys(DB.falas); if(!ks.length) return;
+    n.appendChild(el('h2',{style:'margin-top:16px',text:'Falas padrão'}));
+    n.appendChild(el('p',{class:'muted',text:'Texto único, usado em todos os itens de despacho que apontam para ele.'}));
+    ks.forEach(function(k){ var f=DB.falas[k],ta=el('textarea',{rows:'4','aria-label':'Texto da fala '+f.nome,value:f.texto});
+      n.appendChild(el('details',{class:'falaEd'},[el('summary',{},[el('b',{text:f.nome}),el('span',{class:'natQ',text:' · usada em '+usosFala(k)})]),ta,
+        el('div',{class:'row',style:'margin-top:6px'},[el('button',{class:'btn sm ok',text:'Salvar',onclick:function(){ var t=ta.value.replace(/\s+/g,' ').trim(); if(!t) return; f.texto=t; definirFalas(DB.falas); chaves().forEach(function(c){ (DB.protocolos[c]||[]).forEach(function(x){ if(x.fala===k) x.texto=t; }); }); salvar(); status('Fala atualizada em '+usosFala(k)+' itens'); desenharProt(); }}),el('span',{class:'apoio',text:'Vale para todas as naturezas e blocos.'})])])); });
   }
   function criarBloco(nome,itens){
     nome=String(nome||'').replace(/\s+/g,' ').trim(); if(!nome) return {erro:'Escreva o nome do bloco.'};
@@ -688,13 +713,14 @@
     n.appendChild(el('div',{class:'novaNat'},[inp,el('div',{class:'row'},[el('button',{class:'btn sm ok',text:'Criar',onclick:ok}),el('button',{class:'btn sm',text:'Cancelar',onclick:function(){ NOVA.aberta=false; desenharNats(); }})]),NOVA.erro?el('div',{class:'msg err',text:NOVA.erro}):null]));
   }
   /* ---------- exportar e importar (.zip) ---------- */
-  var IMP=null;
+  var IMP=null,IMP_FALAS=null;
   function arquivoProtocolo(n){ var lay=layoutDe(n.id),o={natureza:{id:n.id,nome:n.nome},itens:DB.protocolos[n.id]||[],notas:(typeof NOTAS_PROTOCOLOS!=='undefined'&&NOTAS_PROTOCOLOS[n.id])||[]}; if(Object.keys(lay).length) o.layout=lay; return JSON.stringify(o,null,1)+'\n'; }
   function exportarZip(){
     var z={},d=new Date(),dd=function(x){ return ('0'+x).slice(-2); },carimbo=d.getFullYear()+'-'+dd(d.getMonth()+1)+'-'+dd(d.getDate())+'-'+dd(d.getHours())+'h'+dd(d.getMinutes()),alt=alteradas();
     z['naturezas.json']=(JSON.stringify(NATUREZAS,null,1)+'\n');
     NATUREZAS.forEach(function(n){ z['protocolos/'+n.id+'.json']=arquivoProtocolo(n); });
     z['blocos.json']=JSON.stringify(BLOCOS,null,1)+'\n';
+    z['falas.json']=JSON.stringify(DB.falas,null,1)+'\n';
     BLOCOS.forEach(function(b){ var k='bloco:'+b.id,lay=layoutDe(k),o={bloco:{id:b.id,nome:b.nome},itens:DB.protocolos[k]||[]}; if(Object.keys(lay).length) o.layout=lay; z['blocos/'+b.id+'.json']=JSON.stringify(o,null,1)+'\n'; });
     if(DB.feedbacks.length) z['feedback.json']=JSON.stringify(DB.feedbacks,null,1)+'\n';
     z['LEIA-ME.txt']=('Protocolos do protótipo Hefesto, exportados em '+d.toLocaleString('pt-BR')+'.\n\nPara continuar em outro navegador: aba Protocolos, Importar, escolha este arquivo.\nPara publicar: envie este arquivo para quem cuida do repositório.\n\nNaturezas alteradas em relação à versão publicada ('+alt.length+'):\n'+(alt.map(function(n){ return '- '+n.nome; }).join('\n')||'(nenhuma)')+'\n'+(listaAlterada()?'\nA lista de naturezas também foi alterada (naturezas criadas, renomeadas ou excluídas).\n':''));
@@ -730,6 +756,7 @@
       Object.keys(z).filter(function(k){ return /(^|\/)blocos\/[a-z0-9_]+\.json$/.test(k); }).forEach(function(k){ var o=JSON.parse(z[k]),id='bloco:'+k.replace(/^.*\//,'').replace(/\.json$/,''); m[id]=o.itens; if(o.layout) lays[id]=o.layout; });
       var nk=Object.keys(z).filter(function(k){ return /(^|\/)naturezas\.json$/.test(k); })[0],bk=Object.keys(z).filter(function(k){ return /(^|\/)blocos\.json$/.test(k); })[0];
       var lista=nk?JSON.parse(z[nk]):null; if(lista&&bk) lista=lista.concat(JSON.parse(z[bk]).map(function(b){ return {id:'bloco:'+b.id,nome:b.nome}; }));
+      var fk=Object.keys(z).filter(function(k){ return /(^|\/)falas\.json$/.test(k); })[0]; IMP_FALAS=fk?JSON.parse(z[fk]):null;
       fim(m,lista,lays);
     }).catch(erro);
   }
@@ -746,6 +773,7 @@
     if(!IMP) return;
     var box=el('div',{class:'impArq',role:'status'});
     if(IMP.erro){ box.appendChild(el('div',{class:'msg err',text:'Não consegui ler '+IMP.nome+': '+IMP.erro})); box.appendChild(el('button',{class:'btn sm',text:'Fechar',onclick:function(){ IMP=null; desenharNats(); }})); n.appendChild(box); return; }
+    var falasMudam=!!(IMP_FALAS&&JSON.stringify(IMP_FALAS)!==JSON.stringify(DB.falas));
     var muda=IMP.linhas.filter(function(l){ return l.sit==='muda'; }),outras=IMP.linhas.filter(function(l){ return l.sit==='desconhecida'||l.sit==='inválida'; });
     box.appendChild(el('b',{text:IMP.nome}));
     box.appendChild(el('div',{class:'muted',text:muda.length?muda.length+' natureza'+(muda.length>1?'s':'')+' diferente'+(muda.length>1?'s':'')+' do que está neste navegador:':'Tudo igual ao que está neste navegador.'}));
@@ -753,10 +781,12 @@
     if(IMP.fora&&IMP.fora.length) box.appendChild(el('div',{class:'muted',text:IMP.fora.length+' natureza'+(IMP.fora.length>1?'s existem':' existe')+' aqui e não no arquivo; '+(IMP.fora.length>1?'ficam':'fica')+' como '+(IMP.fora.length>1?'estão':'está')+': '+IMP.fora.map(function(n){ return n.nome; }).join(', ')+'.'}));
     if(outras.length) box.appendChild(el('div',{class:'msg inf',text:'Ignoradas, porque a natureza não existe neste site: '+outras.map(function(l){ return l.nome; }).join(', ')+'.'}));
     box.appendChild(el('div',{class:'row',style:'margin-top:6px'},[
-      muda.length?el('button',{class:'btn sm ok',text:'Aplicar',onclick:function(){ muda.forEach(function(l){
+      falasMudam&&!muda.length?el('span',{class:'muted',text:'As falas padrão do arquivo são diferentes das deste navegador.'}):null,
+      muda.length||falasMudam?el('button',{class:'btn sm ok',text:'Aplicar',onclick:function(){ muda.forEach(function(l){
         if(ehBloco(l.id)){ var bid=l.id.slice(6); if(l.nova) BLOCOS.push({id:bid,nome:l.nome}); else if(l.antigo){ blocoPorId(bid).nome=l.nome; chaves().forEach(function(k){ (DB.protocolos[k]||[]).forEach(function(x){ if(x.tipo==='bloco'&&x.bloco===bid) x.texto=l.nome; }); }); } DB.protocolos[l.id]=l.itens; return; }
         if(l.nova){ if(!nomeLivre(l.nome)) l.nat=Object.assign({},l.nat,{nome:l.nome+' (importada)'}); NATUREZAS.push({id:l.id,nome:l.nat.nome,fonte:l.nat.fonte||'criada no site'}); } else if(l.antigo){ trocarNomeEmTrocas(l.antigo,l.nome); natPorId(l.id).nome=l.nome; } DB.protocolos[l.id]=l.itens; });
-      Object.keys(IMP.lays||{}).forEach(function(id){ if(porChave(id)) DB.layout[id]=IMP.lays[id]; }); ordenarNats(); BLOCOS.sort(function(a,b){ return a.nome.localeCompare(b.nome,'pt-BR'); }); IMP=null; salvar(); S.resp={}; status(muda.length+' natureza'+(muda.length>1?'s importadas':' importada')); desenharProt(); }}):null,
+      Object.keys(IMP.lays||{}).forEach(function(id){ if(porChave(id)) DB.layout[id]=IMP.lays[id]; });
+      if(IMP_FALAS){ Object.keys(IMP_FALAS).forEach(function(k){ DB.falas[k]=IMP_FALAS[k]; }); definirFalas(DB.falas); IMP_FALAS=null; } ordenarNats(); BLOCOS.sort(function(a,b){ return a.nome.localeCompare(b.nome,'pt-BR'); }); IMP=null; salvar(); S.resp={}; status(muda.length+' natureza'+(muda.length>1?'s importadas':' importada')); desenharProt(); }}):null,
       el('button',{class:'btn sm',text:muda.length?'Cancelar':'Fechar',onclick:function(){ IMP=null; desenharNats(); }})]));
     n.appendChild(box);
   }
@@ -783,6 +813,12 @@
     else box.appendChild(el('div',{class:'row',style:'margin-top:8px'},[el('input',{type:'text',class:'grow',value:it.texto,placeholder:it.tipo==='diagrama'?'Título do fluxograma':'Texto','aria-label':'Texto de '+it.id,oninput:function(e){ it.texto=e.target.value; mudou(false); }})]));
     if(it.tipo==='diagrama'){ var ta=el('textarea',{class:'code',style:'min-height:110px;margin-top:8px','aria-label':'Código Mermaid do fluxograma de consulta',spellcheck:'false'}); ta.value=it.mermaid||''; ta.addEventListener('input',function(){ it.mermaid=ta.value; mudou(false); }); box.appendChild(ta); }
     var linha=el('div',{class:'row',style:'margin-top:8px'});
+    if(it.tipo==='instrucao') linha.appendChild(el('label',{class:'row',style:'gap:6px',title:'No atendimento, este item encaminha a ocorrência ao despacho'},[el('input',{type:'checkbox',checked:!!it.despacho,onchange:function(e){ if(e.target.checked){ it.despacho=true; if(!it.texto||/^novo texto$/i.test(it.texto)){ it.fala='padrao'; it.texto=textoFala(it); } } else { delete it.despacho; delete it.fala; delete it.nota; } mudou(true); }}),'Ponto de despacho']));
+    if(it.despacho){ var FS=Object.keys(DB.falas),modo=it.fala&&DB.falas[it.fala]?it.fala:it.nota?'__nota':'__proprio';
+      box.insertBefore(el('div',{class:'row',style:'margin-top:8px'},[el('span',{class:'lbl',text:'Fala:'}),el('select',{'aria-label':'Fala do despacho',onchange:function(e){ var v=e.target.value; delete it.fala; delete it.nota; if(v==='__nota') it.nota=true; else if(v!=='__proprio'){ it.fala=v; it.texto=textoFala(it); } mudou(true); }},FS.map(function(k){ return el('option',{value:k,text:'Padrão: '+DB.falas[k].nome,selected:modo===k}); }).concat([el('option',{value:'__nota',text:'Nenhuma: só uma nota para o atendente',selected:modo==='__nota'}),el('option',{value:'__proprio',text:'Texto próprio (só neste item)',selected:modo==='__proprio'})])),it.fala?el('span',{class:'apoio',text:'Texto da biblioteca. Para mudar em todo lugar, edite em “Falas padrão”, na coluna da esquerda.'}):null]),box.children[2]||null);
+      if(it.fala){ var ti=box.querySelector('input.grow'); if(ti){ ti.readOnly=true; ti.title='Fala padrão: edite em “Falas padrão”'; } } }
+    if(temOpcoes(it)){ var conj=function(l){ return it.opcoes.map(function(o){ return o.rotulo; }).join('|')===l.join('|'); },atual=conj(RESPOSTAS_PADRAO.sn)?'sn':conj(RESPOSTAS_PADRAO.sns)?'sns':'outra';
+      linha.appendChild(el('select',{'aria-label':'Conjunto de respostas',title:'Respostas padrão mantêm a mesma ordem (teclas 1, 2, 3) em todas as naturezas',onchange:function(e){ var v=e.target.value; if(v==='outra') return; var nn=function(t){ return norm(t).replace(/^nao sei$/,'nao sabe'); },velhas={}; it.opcoes.forEach(function(o){ velhas[nn(o.rotulo)]=o; }); it.opcoes=RESPOSTAS_PADRAO[v].map(function(r){ var o=velhas[nn(r)]; if(o){ o.rotulo=r; return o; } var no=O(slug(r),r,''); if(r==='Não sabe') no.relato=false; return no; }); mudou(true); }},[el('option',{value:'sn',text:'Respostas: Sim · Não',selected:atual==='sn'}),el('option',{value:'sns',text:'Respostas: Sim · Não · Não sabe',selected:atual==='sns'}),el('option',{value:'outra',text:'Respostas personalizadas',selected:atual==='outra'})])); }
     if(ehPergunta(it)) linha.appendChild(el('label',{class:'row',style:'gap:6px'},[el('input',{type:'checkbox',checked:!!it.obrig,onchange:function(e){ it.obrig=e.target.checked; mudou(false); }}),'Obrigatória']));
     if(it.tipo==='numero'||it.tipo==='texto'||it.tipo==='instrucao') linha.appendChild(el('label',{class:'row',style:'gap:6px',title:'Se desmarcado, a resposta ou a orientação não aparece no relato final'},[el('input',{type:'checkbox',checked:it.relato!==false,onchange:function(e){ if(e.target.checked) delete it.relato; else it.relato=false; mudou(false); }}),'No relato']));
     if(temOpcoes(it)) linha.appendChild(el('label',{class:'row',style:'gap:6px'},[el('input',{type:'checkbox',checked:!!it.outro,onchange:function(e){ it.outro=e.target.checked; mudou(false); }}),'Incluir “Outro”']));
@@ -1018,6 +1054,9 @@
   + '<tr><td>“nenhum caminho chega até ele”</td><td>O item existe, mas nada aponta para ele. Ligue-o a alguma opção ou exclua.</td></tr>'
   + '<tr><td>“o desvio não volta para …”</td><td>Em múltipla escolha, o ramo termina sem voltar ao tronco. Aponte o último item do ramo para o item de “Depois dos desvios”.</td></tr></table>'
   + '<h3>9. Relato final e despacho</h3><ul>'
+  + '<li><b>Respostas padrão:</b> perguntas de sim e não usam sempre “Sim, Não, Não sabe”, nessa ordem; o atendente responde pelas teclas 1, 2 e 3. Use o seletor “Respostas” no item.</li>'
+  + '<li><b>Falas padrão:</b> no item de despacho, escolha a fala da biblioteca. Para mudar o texto em todo lugar, edite em “Falas padrão”, na coluna da esquerda. “Nenhuma” transforma o item numa nota só para o atendente.</li>'
+  + '<li><b>Política de despacho</b>, no topo da natureza: no ponto do fluxo, imediato (ao definir local e natureza) ou agendável (sem despacho).</li>'
   + '<li>Ao lado de cada resposta, o botão <b>no relato</b> / <b>fora do relato</b> diz se ela entra no texto do relato. Respostas que só descartam uma hipótese, como “Não” em “Há outras pessoas no local?”, ficam fora. Nas perguntas abertas e nas orientações, use a caixa <b>No relato</b>.</li>'
   + '<li>O encaminhamento ao despacho acontece no item de despacho imediato do fluxo. O atendente pode adiantar com <b>Adiantar despacho</b>, no topo da ligação.</li></ul>'
   + '<h3>10. Boas práticas</h3><ul>'
@@ -1060,6 +1099,8 @@
       el('button',{class:'btn sm ok',text:'✏️ Editor visual',onclick:function(){ abrirDesenho(); }}),
       el('button',{class:'btn sm',text:'Renomear',onclick:function(){ var nv=prompt('Novo nome da natureza:',n.nome); if(nv==null) return; var r=renomearNatureza(n.id,nv); if(r) alert(r); }}),
       el('button',{class:'btn sm del',text:'Excluir natureza',onclick:function(){ excluirNatureza(n.id); }})]));
+    var POL=[['fluxo','No ponto do fluxo (item de despacho)'],['imediato','Imediato: ao definir local e natureza'],['agendavel','Agendável: sem despacho']];
+    ed.appendChild(el('div',{class:'row polRow'},[el('label',{class:'lbl',for:'polDesp',text:'Despacho:'}),el('select',{id:'polDesp',onchange:function(e){ if(e.target.value==='fluxo') delete n.despacho; else n.despacho=e.target.value; salvar(); desenharProt(); }},POL.map(function(x){ return el('option',{value:x[0],text:x[1],selected:(n.despacho||'fluxo')===x[0]}); })),el('span',{class:'apoio',text:{fluxo:'O atendente encaminha quando chega ao item de despacho da entrevista.',imediato:'Para emergências em que cada segundo conta: a ocorrência sai assim que local e natureza estão definidos.',agendavel:'Serviços sem urgência: o registro não pede despacho.'}[n.despacho||'fluxo']})]));
     var notas=(typeof NOTAS_PROTOCOLOS!=='undefined'&&NOTAS_PROTOCOLOS[S.nat])||[],alt=alterada(S.nat);
     ed.appendChild(el('div',{class:'muted',style:'margin-top:6px',text:alt?'Alterada neste navegador. “Restaurar versão publicada” descarta as suas mudanças nesta natureza.':'Igual à versão publicada.'}));
     if(notas.length) ed.appendChild(el('details',{class:'msg inf'},[el('summary',{text:'Notas da importação do Miro ('+notas.length+')'}),el('p',{class:'muted',text:'Apontadas quando o fluxo veio do Miro. Podem já ter sido corrigidas.'}),el('ul',{},notas.map(function(x){ return el('li',{text:x}); }))]));

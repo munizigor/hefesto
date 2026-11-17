@@ -315,6 +315,12 @@ var HefestoDesenho=(function(){
     if(ehPergunta(it)) p.appendChild(marca('Obrigatória',it.obrig,function(v){ it.obrig=v; }));
     if(temOpcoes(it)) p.appendChild(marca('Aceita resposta aberta (outra)',it.outro,function(v){ it.outro=v; }));
     if(it.tipo==='instrucao') p.appendChild(marca('É o despacho imediato (encaminha a ocorrência)',it.despacho,function(v){ if(v) it.despacho=true; else delete it.despacho; }));
+    if(it.despacho&&API.falas){ var FL=API.falas(),modo=it.fala&&FL[it.fala]?it.fala:it.nota?'__nota':'__proprio';
+      p.appendChild(h('label',{class:'dzRot',text:'Fala do despacho'}));
+      p.appendChild(h('select',{'data-k':'fala',onchange:function(e){ guardar(); var v=e.target.value; delete it.fala; delete it.nota; if(v==='__nota') it.nota=true; else if(v!=='__proprio'){ it.fala=v; it.texto=FL[v].texto; } mudou(); }},Object.keys(FL).map(function(k){ return h('option',{value:k,text:'Padrão: '+FL[k].nome,selected:modo===k}); }).concat([h('option',{value:'__nota',text:'Nenhuma: só nota para o atendente',selected:modo==='__nota'}),h('option',{value:'__proprio',text:'Texto próprio',selected:modo==='__proprio'})])));
+      if(it.fala) p.appendChild(h('p',{class:'muted',text:'Fala da biblioteca: para mudar em todo lugar, edite em “Falas padrão”.'})); }
+    if(temOpcoes(it)){ var lista=it.opcoes.map(function(o){ return o.rotulo; }).join('|');
+      p.appendChild(h('div',{class:'row',style:'margin-top:8px'},[h('span',{class:'muted',text:'Respostas padrão:'})].concat([['sn','Sim · Não'],['sns','Sim · Não · Não sabe']].map(function(c){ return h('button',{class:'btn sm'+(lista===RESPOSTAS_PADRAO[c[0]].join('|')?' pri':''),text:c[1],onclick:function(){ guardar(); var nn=function(t){ return String(t).normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase().trim().replace(/^nao sei$/,'nao sabe'); },velhas={}; it.opcoes.forEach(function(o){ velhas[nn(o.rotulo)]=o; }); it.opcoes=RESPOSTAS_PADRAO[c[0]].map(function(r){ var o=velhas[nn(r)]; if(o){ o.rotulo=r; return o; } var no=O(nn(r).replace(/ /g,'_'),r,''); if(r==='Não sabe') no.relato=false; return no; }); mudou(); }}); })))); }
     if(it.tipo==='informacao') p.appendChild(marca('É videochamada',it.video,function(v){ if(v) it.video=true; else delete it.video; }));
     if(it.tipo==='texto'||it.tipo==='numero'||it.tipo==='instrucao') p.appendChild(marca('Vai para o relato',it.relato!==false,function(v){ if(v) delete it.relato; else it.relato=false; }));
     if(temOpcoes(it)){

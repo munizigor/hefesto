@@ -96,7 +96,8 @@
    "mermaid": "",
    "prox": "comecou_depois_chuva",
    "opcoes": [],
-   "despacho": true
+   "despacho": true,
+   "fala": "padrao"
   },
   {
    "id": "comecou_depois_chuva",
@@ -133,13 +134,14 @@
   {
    "id": "despacho_2",
    "tipo": "instrucao",
-   "texto": "🚒 Despacho conforme critério da COCB; avaliar acionamento da Defesa Civil",
+   "texto": "Despacho conforme critério da COCB; avaliar acionamento da Defesa Civil",
    "obrig": false,
    "outro": false,
    "mermaid": "",
    "prox": "saia_imovel_nao",
    "opcoes": [],
-   "despacho": true
+   "despacho": true,
+   "nota": true
   },
   {
    "id": "saia_imovel_nao",

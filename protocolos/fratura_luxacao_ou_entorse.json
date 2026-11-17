@@ -25,7 +25,7 @@
     },
     {
      "id": "nao_sei",
-     "rotulo": "Não sei",
+     "rotulo": "Não sabe",
      "vai": "",
      "relato": false
     }
@@ -62,7 +62,7 @@
     },
     {
      "id": "nao_sei",
-     "rotulo": "Não sei",
+     "rotulo": "Não sabe",
      "vai": "",
      "relato": false
     }
@@ -99,7 +99,7 @@
     },
     {
      "id": "nao_sei",
-     "rotulo": "Não sei",
+     "rotulo": "Não sabe",
      "vai": "",
      "relato": false
     }
@@ -172,15 +172,15 @@
    "prox": "troca_parada_cardiorespi",
    "opcoes": [
     {
-     "id": "nao",
-     "rotulo": "Não",
-     "vai": ""
-    },
-    {
      "id": "sim",
      "rotulo": "Sim",
      "vai": "despacho_2",
      "relato": false
+    },
+    {
+     "id": "nao",
+     "rotulo": "Não",
+     "vai": ""
     }
    ]
   },
@@ -204,7 +204,8 @@
    "mermaid": "",
    "prox": "deformidade",
    "opcoes": [],
-   "despacho": true
+   "despacho": true,
+   "fala": "padrao"
   },
   {
    "id": "deformidade",
@@ -216,18 +217,18 @@
    "prox": "osso_exposto",
    "opcoes": [
     {
-     "id": "nao",
-     "rotulo": "Não",
-     "vai": ""
-    },
-    {
      "id": "sim",
      "rotulo": "Sim",
      "vai": ""
     },
     {
+     "id": "nao",
+     "rotulo": "Não",
+     "vai": ""
+    },
+    {
      "id": "nao_sei",
-     "rotulo": "Não sei",
+     "rotulo": "Não sabe",
      "vai": "",
      "relato": false
     }
@@ -243,10 +244,9 @@
    "prox": "sangramento",
    "opcoes": [
     {
-     "id": "nao_sei",
-     "rotulo": "Não sei",
-     "vai": "",
-     "relato": false
+     "id": "sim",
+     "rotulo": "Sim",
+     "vai": ""
     },
     {
      "id": "nao",
@@ -254,9 +254,10 @@
      "vai": ""
     },
     {
-     "id": "sim",
-     "rotulo": "Sim",
-     "vai": ""
+     "id": "nao_sei",
+     "rotulo": "Não sabe",
+     "vai": "",
+     "relato": false
     }
    ]
   },
@@ -270,10 +271,9 @@
    "prox": "outras_lesoes",
    "opcoes": [
     {
-     "id": "nao_sei",
-     "rotulo": "Não sei",
-     "vai": "",
-     "relato": false
+     "id": "sim",
+     "rotulo": "Sim",
+     "vai": "intenso_controlado"
     },
     {
      "id": "nao",
@@ -281,9 +281,10 @@
      "vai": ""
     },
     {
-     "id": "sim",
-     "rotulo": "Sim",
-     "vai": "intenso_controlado"
+     "id": "nao_sei",
+     "rotulo": "Não sabe",
+     "vai": "",
+     "relato": false
     }
    ]
   },
@@ -297,18 +298,18 @@
    "prox": "FIM",
    "opcoes": [
     {
-     "id": "nao",
-     "rotulo": "Não",
-     "vai": ""
-    },
-    {
      "id": "sim",
      "rotulo": "Sim",
      "vai": ""
     },
     {
+     "id": "nao",
+     "rotulo": "Não",
+     "vai": ""
+    },
+    {
      "id": "nao_sei",
-     "rotulo": "Não sei",
+     "rotulo": "Não sabe",
      "vai": ""
     }
    ]

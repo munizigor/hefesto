@@ -60,7 +60,8 @@
    "mermaid": "",
    "prox": "fogo_atingiu_casa",
    "opcoes": [],
-   "despacho": true
+   "despacho": true,
+   "fala": "padrao"
   },
   {
    "id": "fogo_atingiu_casa",
@@ -83,7 +84,7 @@
     },
     {
      "id": "nao_sei",
-     "rotulo": "Não sei",
+     "rotulo": "Não sabe",
      "vai": "",
      "relato": false
     }

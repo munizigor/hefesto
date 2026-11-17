@@ -86,7 +86,8 @@
    "mermaid": "",
    "prox": "vitima_acordada_responde",
    "opcoes": [],
-   "despacho": true
+   "despacho": true,
+   "fala": "padrao"
   },
   {
    "id": "vitima_acordada_responde",

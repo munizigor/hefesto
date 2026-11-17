@@ -40,7 +40,8 @@
    "mermaid": "",
    "prox": "tipo_embarcacao",
    "opcoes": [],
-   "despacho": true
+   "despacho": true,
+   "fala": "padrao"
   },
   {
    "id": "tipo_embarcacao",

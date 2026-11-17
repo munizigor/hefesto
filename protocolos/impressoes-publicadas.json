@@ -3,31 +3,39 @@
   "9v95o2.39284",
   "1lddrn6.40604",
   "1vn366n.40812",
-  "1yb8np4.39888"
+  "1yb8np4.39888",
+  "1ob4orn.40128"
  ],
  "afogamento": [
-  "16aj5n7.4245"
+  "16aj5n7.4245",
+  "hrmm91.4276"
  ],
  "agressao_fisica": [
   "1xzdiz5.5364",
-  "gy0679.5409"
+  "gy0679.5409",
+  "1fm8e2a.5427"
  ],
  "amputacao_ou_esmagamento_de_membro": [
-  "1xl8tjf.2799"
+  "1xl8tjf.2799",
+  "1igl1g.2815"
  ],
  "animal_domestico_em_situacao_de_risco": [
-  "1f8lsxg.2162"
+  "1f8lsxg.2162",
+  "1nhievh.2178"
  ],
  "apoio_a_outros_orgaos": [
-  "15ej4il.2013"
+  "15ej4il.2013",
+  "10zzmty.2029"
  ],
  "arvore_com_risco_de_queda": [
   "1hr8za7.3932",
-  "1p8benv.4067"
+  "1p8benv.4067",
+  "1hwraa7.4069"
  ],
  "ataque_picada_de_animal": [
   "xhnylz.8875",
-  "191q1hn.8920"
+  "191q1hn.8920",
+  "1pc0wmv.9000"
  ],
  "atividade_preventiva_palestra_demonstrac": [
   "15l9bek.1350"
@@ -35,160 +43,198 @@
  "choque_eletrico": [
   "17o0d30.3087",
   "1lnmrio.3132",
-  "fmhudo.2312"
+  "fmhudo.2312",
+  "1fbi539.2328"
  ],
  "desabamento_desmoronamento": [
   "5j1mr8.2375",
-  "1iw01ow.2390"
+  "1iw01ow.2390",
+  "15ozzjd.2406"
  ],
  "embarcacao_a_deriva": [
   "16yghxk.2584",
-  "1w3ms2o.2614"
+  "1w3ms2o.2614",
+  "14x9qqh.2630"
  ],
  "emergencia_clinica": [
   "r6thx7.982",
-  "f493xz.997"
+  "f493xz.997",
+  "1pmkxg0.1013"
  ],
  "emergencia_nuclear_radiologica": [
-  "6imk6q.2237"
+  "6imk6q.2237",
+  "1goegmj.2253"
  ],
  "explosao_ameaca_de_explosao": [
   "1vr2swe.2895",
-  "1aogulm.2910"
+  "1aogulm.2910",
+  "eyz29v.2926"
  ],
  "ferimento_diverso": [
   "1wbf5ef.4656",
   "l27l8j.4731",
-  "1x8xa7z.3911"
+  "1x8xa7z.3911",
+  "1pchtd3.3932"
  ],
  "ferimento_por_arma_branca": [
   "1ruwm7a.3452",
   "1di0jzq.3512",
-  "o3486q.2692"
+  "o3486q.2692",
+  "wt6cx1.2709"
  ],
  "ferimento_por_arma_de_fogo": [
   "10bad07.3275",
   "fg78iv.3335",
-  "114lskj.2515"
+  "114lskj.2515",
+  "1qtbyza.2532"
  ],
  "fratura_luxacao_ou_entorse": [
   "p55ywa.4303",
   "1029kp6.4423",
-  "1ff2vji.3990"
+  "1ff2vji.3990",
+  "xwaxjx.4013"
  ],
  "incendio_em_edificacao": [
   "irutxj.5134",
-  "1sqnj0z.5209"
+  "1sqnj0z.5209",
+  "tq08dp.5244"
  ],
  "incendio_em_lixo_entulho": [
   "vl4g71.2420",
-  "aak7p.2450"
+  "aak7p.2450",
+  "1sgqqqw.2467"
  ],
  "incendio_em_meio_de_transporte": [
   "1obpjc0.3654",
-  "1psmpe0.3744"
+  "1psmpe0.3744",
+  "r21f3j.3763"
  ],
  "incendio_em_vegetacao": [
   "1wizfdx.3774",
-  "1sx5gsx.3849"
+  "1sx5gsx.3849",
+  "18dp2se.3867"
  ],
  "insetos_abelha_ou_similares_2": [
   "1dzie5f.4627",
-  "hk2r4x.4168"
+  "hk2r4x.4168",
+  "jpwfpw.4185"
  ],
  "insetos_abelha_ou_similares": [
   "wbii09.5590",
-  "135krj1.5635"
+  "135krj1.5635",
+  "1u8y4nd.5667"
  ],
  "inundacao_alagamento": [
   "18u1mpk.3110",
-  "jpqj1w.3125"
+  "jpqj1w.3125",
+  "19u44j8.3151"
  ],
  "naufragio_acidente_nautico": [
   "nlq6yn.2220",
-  "18ryl2z.2235"
+  "18ryl2z.2235",
+  "huupis.2251"
  ],
  "obstrucao_de_via_publica": [
-  "p02tnn.1944"
+  "p02tnn.1944",
+  "b9ityo.1953"
  ],
  "obstrucao_de_vias_aereas": [
-  "rfhnv5.2154"
+  "rfhnv5.2154",
+  "1l8mnai.2170"
  ],
  "oleo_substancia_na_via": [
-  "u97rxn.1954"
+  "u97rxn.1954",
+  "1qrbmm0.1963"
  ],
  "paciente_com_necessidade_de_transferenci": [
-  "px01lo.2019"
+  "px01lo.2019",
+  "g13jqt.2035"
  ],
  "parada_cardiorrespiratoria": [
   "1kb5q8i.3243",
-  "5u42g6.3288"
+  "5u42g6.3288",
+  "1ghbz57.3335"
  ],
  "parto_de_emergencia": [
   "1edqgk1.3743",
   "5v8odl.3773",
-  "1knre17.3336"
+  "1knre17.3336",
+  "tmkzy6.3353"
  ],
  "pessoa_arrastada_por_enxurrada": [
   "pzr44m.2630",
-  "w17aaq.2645"
+  "w17aaq.2645",
+  "117f5f9.2662"
  ],
  "pessoa_atropelada": [
   "l6q8u2.3265",
   "rl4kdq.3310",
-  "12rolbe.2490"
+  "12rolbe.2490",
+  "jg2r3x.2507"
  ],
  "pessoa_com_necessidade_de_auxilio_para_m": [
-  "1vldig3.2214"
+  "1vldig3.2214",
+  "prfaqk.2230"
  ],
  "pessoa_confinada": [
   "iz24f1.5128",
   "cxa4ot.5248",
-  "1rrzxj1.4370"
+  "1rrzxj1.4370",
+  "snjmse.4390"
  ],
  "pessoa_em_obito_evidente": [
   "hrfrse.2902",
   "7jlpxe.2947",
-  "lk50bo.2510"
+  "lk50bo.2510",
+  "1ctt259.2526"
  ],
  "pessoa_em_profundidade": [
   "1y11je3.2718",
-  "1esuo2n.2763"
+  "1esuo2n.2763",
+  "1n2an1u.2780"
  ],
  "pessoa_em_risco_de_queda": [
   "qz010y.2648",
-  "xbepwm.2693"
+  "xbepwm.2693",
+  "ge8c8p.2710"
  ],
  "pessoa_prensada_por_estrutura_maquina_ou": [
   "15jp21t.3696",
   "b17o25.3771",
-  "101zxzd.2951"
+  "101zxzd.2951",
+  "ce2pvg.2968"
  ],
  "pessoa_presa_ou_confinada": [
   "1coxjgm.3999",
-  "mrbiwi.4074"
+  "mrbiwi.4074",
+  "la3gel.4095"
  ],
  "pessoa_trancada_acesso_bloqueado": [
-  "2j5ds1.2633"
+  "2j5ds1.2633",
+  "1aojl8u.2642"
  ],
  "picada_de_abelha_marimbondo_inseto": [
   "1teooz7.456"
  ],
  "queda_da_propria_altura": [
   "hxgqwe.4891",
-  "1vj2z1m.5026"
+  "1vj2z1m.5026",
+  "14d3e9o.5092"
  ],
  "queda_de_plano_elevado": [
   "byfw9j.4496",
   "1yfyg9r.4586",
-  "qaf0rf.3766"
+  "qaf0rf.3766",
+  "106pkiq.3785"
  ],
  "risco_de_choque_eletrico": [
-  "1sofvd0.2132"
+  "1sofvd0.2132",
+  "udjld.2141"
  ],
  "risco_de_desabamento": [
   "9pknsk.2325",
-  "vvifqo.2340"
+  "vvifqo.2340",
+  "rmf68m.2365"
  ],
  "simulado": [
   "1re6f4g.1229"
@@ -196,11 +242,13 @@
  "tentativa_de_suicidio": [
   "1icgclu.7555",
   "1k7si0a.7705",
-  "b3vnca.6827"
+  "b3vnca.6827",
+  "ikx1m9.6846"
  ],
  "vazamento_de_gas_glp": [
   "1sk89a3.2741",
-  "1sk5pir.2771"
+  "1sk5pir.2771",
+  "1qjyvgm.2788"
  ],
  "bloco:consciencia_e_respiracao": [
   "19iv9n8.1018"
@@ -209,6 +257,7 @@
   "1o40vgs.799"
  ],
  "bloco:suspeita_de_pcr": [
-  "tdcuc2.623"
+  "tdcuc2.623",
+  "11jftij.638"
  ]
 }

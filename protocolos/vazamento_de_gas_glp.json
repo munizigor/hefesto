@@ -76,7 +76,8 @@
    "mermaid": "",
    "prox": "ja_houve_explosao",
    "opcoes": [],
-   "despacho": true
+   "despacho": true,
+   "fala": "padrao"
   },
   {
    "id": "ja_houve_explosao",
@@ -99,7 +100,7 @@
     },
     {
      "id": "nao_sei",
-     "rotulo": "Não sei",
+     "rotulo": "Não sabe",
      "vai": "",
      "relato": false
     }

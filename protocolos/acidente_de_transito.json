@@ -76,7 +76,7 @@
     },
     {
      "id": "nao_sei",
-     "rotulo": "Não sei",
+     "rotulo": "Não sabe",
      "vai": "",
      "relato": false
     }
@@ -113,7 +113,7 @@
     },
     {
      "id": "nao_sei",
-     "rotulo": "Não sei",
+     "rotulo": "Não sabe",
      "vai": "troca_afogamento_2",
      "relato": false
     }
@@ -150,7 +150,7 @@
     },
     {
      "id": "nao_sei",
-     "rotulo": "Não sei",
+     "rotulo": "Não sabe",
      "vai": "",
      "relato": false
     }
@@ -187,7 +187,7 @@
     },
     {
      "id": "nao_sei",
-     "rotulo": "Não sei",
+     "rotulo": "Não sabe",
      "vai": "",
      "relato": false
     }
@@ -213,18 +213,18 @@
    "prox": "fumaca_principio_incendi",
    "opcoes": [
     {
-     "id": "nao",
-     "rotulo": "Não",
-     "vai": ""
-    },
-    {
      "id": "sim",
      "rotulo": "Sim",
      "vai": "pessoas_precisam_atendim"
     },
     {
+     "id": "nao",
+     "rotulo": "Não",
+     "vai": ""
+    },
+    {
      "id": "nao_sei",
-     "rotulo": "Não sei",
+     "rotulo": "Não sabe",
      "vai": "fumaca_principio_incendi_3"
     }
    ]
@@ -270,7 +270,8 @@
    "mermaid": "",
    "prox": "houve_colisao_poste",
    "opcoes": [],
-   "despacho": true
+   "despacho": true,
+   "fala": "padrao"
   },
   {
    "id": "houve_colisao_poste",
@@ -314,19 +315,19 @@
    "prox": "acidente_envolveu_animal",
    "opcoes": [
     {
+     "id": "sim",
+     "rotulo": "Sim",
+     "vai": ""
+    },
+    {
      "id": "nao",
      "rotulo": "Não",
      "vai": "",
      "relato": false
     },
     {
-     "id": "sim",
-     "rotulo": "Sim",
-     "vai": ""
-    },
-    {
      "id": "nao_sei",
-     "rotulo": "Não sei",
+     "rotulo": "Não sabe",
      "vai": "",
      "relato": false
     }
@@ -386,19 +387,19 @@
    "prox": "acidente_envolveu_animal_2",
    "opcoes": [
     {
+     "id": "sim",
+     "rotulo": "Sim",
+     "vai": "atencao_risco_choque_2"
+    },
+    {
      "id": "nao",
      "rotulo": "Não",
      "vai": "",
      "relato": false
     },
     {
-     "id": "sim",
-     "rotulo": "Sim",
-     "vai": "atencao_risco_choque_2"
-    },
-    {
      "id": "nao_sei",
-     "rotulo": "Não sei",
+     "rotulo": "Não sabe",
      "vai": "",
      "relato": false
     }
@@ -472,13 +473,13 @@
      "vai": "vitima_atropelada"
     },
     {
-     "id": "3",
-     "rotulo": "3",
+     "id": "2",
+     "rotulo": "2",
      "vai": ""
     },
     {
-     "id": "2",
-     "rotulo": "2",
+     "id": "3",
+     "rotulo": "3",
      "vai": ""
     },
     {
@@ -488,7 +489,7 @@
     },
     {
      "id": "5ou_mais",
-     "rotulo": "5ou mais",
+     "rotulo": "5 ou mais",
      "vai": ""
     }
    ]
@@ -503,15 +504,15 @@
    "prox": "troca_acidente_transito",
    "opcoes": [
     {
+     "id": "sim",
+     "rotulo": "Sim",
+     "vai": "troca_pessoa_atropelada"
+    },
+    {
      "id": "nao",
      "rotulo": "Não",
      "vai": "",
      "relato": false
-    },
-    {
-     "id": "sim",
-     "rotulo": "Sim",
-     "vai": "troca_pessoa_atropelada"
     }
    ]
   },
@@ -534,7 +535,8 @@
    "mermaid": "",
    "prox": "ela_dentro_veiculo",
    "opcoes": [],
-   "despacho": true
+   "despacho": true,
+   "fala": "padrao"
   },
   {
    "id": "ela_dentro_veiculo",
@@ -578,7 +580,7 @@
     },
     {
      "id": "nao_sei",
-     "rotulo": "Não sei",
+     "rotulo": "Não sabe",
      "vai": ""
     }
    ]
@@ -593,10 +595,9 @@
    "prox": "muito_sangue_visivel",
    "opcoes": [
     {
-     "id": "nao_sei",
-     "rotulo": "Não sei",
-     "vai": "",
-     "relato": false
+     "id": "sim",
+     "rotulo": "Sim",
+     "vai": ""
     },
     {
      "id": "nao",
@@ -605,9 +606,10 @@
      "relato": false
     },
     {
-     "id": "sim",
-     "rotulo": "Sim",
-     "vai": ""
+     "id": "nao_sei",
+     "rotulo": "Não sabe",
+     "vai": "",
+     "relato": false
     }
    ]
   },
@@ -621,10 +623,9 @@
    "prox": "veiculo_capotado",
    "opcoes": [
     {
-     "id": "nao_sei",
-     "rotulo": "Não sei",
-     "vai": "",
-     "relato": false
+     "id": "sim",
+     "rotulo": "Sim",
+     "vai": ""
     },
     {
      "id": "nao",
@@ -633,9 +634,10 @@
      "relato": false
     },
     {
-     "id": "sim",
-     "rotulo": "Sim",
-     "vai": ""
+     "id": "nao_sei",
+     "rotulo": "Não sabe",
+     "vai": "",
+     "relato": false
     }
    ]
   },
@@ -649,15 +651,15 @@
    "prox": "fumaca_principio_incendi_2",
    "opcoes": [
     {
+     "id": "sim",
+     "rotulo": "Sim",
+     "vai": ""
+    },
+    {
      "id": "nao",
      "rotulo": "Não",
      "vai": "",
      "relato": false
-    },
-    {
-     "id": "sim",
-     "rotulo": "Sim",
-     "vai": ""
     }
    ]
   },
@@ -725,19 +727,19 @@
    "prox": "acidente_envolveu_animal_3",
    "opcoes": [
     {
+     "id": "sim",
+     "rotulo": "Sim",
+     "vai": ""
+    },
+    {
      "id": "nao",
      "rotulo": "Não",
      "vai": "",
      "relato": false
     },
     {
-     "id": "sim",
-     "rotulo": "Sim",
-     "vai": ""
-    },
-    {
      "id": "nao_sei",
-     "rotulo": "Não sei",
+     "rotulo": "Não sabe",
      "vai": "",
      "relato": false
     }
@@ -784,7 +786,8 @@
    "mermaid": "",
    "prox": "ela_desacordada",
    "opcoes": [],
-   "despacho": true
+   "despacho": true,
+   "fala": "padrao"
   },
   {
    "id": "vitima_atropelada_2",
@@ -817,7 +820,8 @@
    "mermaid": "",
    "prox": "ela_desacordada_2",
    "opcoes": [],
-   "despacho": true
+   "despacho": true,
+   "fala": "padrao"
   },
   {
    "id": "ela_desacordada_2",
@@ -829,19 +833,19 @@
    "prox": "muito_sangue_visivel",
    "opcoes": [
     {
+     "id": "sim",
+     "rotulo": "Sim",
+     "vai": ""
+    },
+    {
      "id": "nao",
      "rotulo": "Não",
      "vai": "",
      "relato": false
     },
     {
-     "id": "sim",
-     "rotulo": "Sim",
-     "vai": ""
-    },
-    {
      "id": "nao_sei",
-     "rotulo": "Não sei",
+     "rotulo": "Não sabe",
      "vai": "",
      "relato": false
     }
@@ -898,7 +902,8 @@
    "mermaid": "",
    "prox": "houve_colisao_poste_4",
    "opcoes": [],
-   "despacho": true
+   "despacho": true,
+   "fala": "padrao"
   },
   {
    "id": "houve_colisao_poste_4",
@@ -942,19 +947,19 @@
    "prox": "acidente_envolveu_animal_4",
    "opcoes": [
     {
+     "id": "sim",
+     "rotulo": "Sim",
+     "vai": ""
+    },
+    {
      "id": "nao",
      "rotulo": "Não",
      "vai": "",
      "relato": false
     },
     {
-     "id": "sim",
-     "rotulo": "Sim",
-     "vai": ""
-    },
-    {
      "id": "nao_sei",
-     "rotulo": "Não sei",
+     "rotulo": "Não sabe",
      "vai": "",
      "relato": false
     }
@@ -992,15 +997,15 @@
    "prox": "houve_colisao_poste_5",
    "opcoes": [
     {
+     "id": "sim",
+     "rotulo": "Sim",
+     "vai": ""
+    },
+    {
      "id": "nao",
      "rotulo": "Não",
      "vai": "",
      "relato": false
-    },
-    {
-     "id": "sim",
-     "rotulo": "Sim",
-     "vai": ""
     }
    ]
   },
@@ -1046,19 +1051,19 @@
    "prox": "acidente_envolveu_animal_5",
    "opcoes": [
     {
+     "id": "sim",
+     "rotulo": "Sim",
+     "vai": ""
+    },
+    {
      "id": "nao",
      "rotulo": "Não",
      "vai": "",
      "relato": false
     },
     {
-     "id": "sim",
-     "rotulo": "Sim",
-     "vai": ""
-    },
-    {
      "id": "nao_sei",
-     "rotulo": "Não sei",
+     "rotulo": "Não sabe",
      "vai": "",
      "relato": false
     }
@@ -1106,18 +1111,18 @@
    "prox": "fumaca_principio_incendi_4",
    "opcoes": [
     {
-     "id": "nao",
-     "rotulo": "Não",
-     "vai": ""
-    },
-    {
      "id": "sim",
      "rotulo": "Sim",
      "vai": "pessoas_precisam_atendim_2"
     },
     {
+     "id": "nao",
+     "rotulo": "Não",
+     "vai": ""
+    },
+    {
      "id": "nao_sei",
-     "rotulo": "Não sei",
+     "rotulo": "Não sabe",
      "vai": "socorro_ja_acionado_9"
     }
    ]
@@ -1196,19 +1201,19 @@
    "prox": "visualiza_derramamento_v",
    "opcoes": [
     {
+     "id": "sim",
+     "rotulo": "Sim",
+     "vai": ""
+    },
+    {
      "id": "nao",
      "rotulo": "Não",
      "vai": "",
      "relato": false
     },
     {
-     "id": "sim",
-     "rotulo": "Sim",
-     "vai": ""
-    },
-    {
      "id": "nao_sei",
-     "rotulo": "Não Sei",
+     "rotulo": "Não sabe",
      "vai": "",
      "relato": false
     }
@@ -1310,19 +1315,19 @@
    "prox": "visualiza_vazamento_derr",
    "opcoes": [
     {
+     "id": "sim",
+     "rotulo": "Sim",
+     "vai": ""
+    },
+    {
      "id": "nao",
      "rotulo": "Não",
      "vai": "",
      "relato": false
     },
     {
-     "id": "sim",
-     "rotulo": "Sim",
-     "vai": ""
-    },
-    {
      "id": "nao_sei",
-     "rotulo": "Não sei",
+     "rotulo": "Não sabe",
      "vai": "",
      "relato": false
     }
@@ -1338,15 +1343,15 @@
    "prox": "acidente_envolveu_animal_7",
    "opcoes": [
     {
+     "id": "sim",
+     "rotulo": "Sim",
+     "vai": "vazamento_derramamento_c"
+    },
+    {
      "id": "nao",
      "rotulo": "Não",
      "vai": "",
      "relato": false
-    },
-    {
-     "id": "sim",
-     "rotulo": "Sim",
-     "vai": "vazamento_derramamento_c"
     }
    ]
   },
@@ -1382,12 +1387,6 @@
    "prox": "acidente_envolveu_animal_7",
    "opcoes": [
     {
-     "id": "nao_sei",
-     "rotulo": "Não sei",
-     "vai": "",
-     "relato": false
-    },
-    {
      "id": "sim",
      "rotulo": "Sim",
      "vai": ""
@@ -1396,6 +1395,12 @@
      "id": "nao",
      "rotulo": "Não",
      "vai": ""
+    },
+    {
+     "id": "nao_sei",
+     "rotulo": "Não sabe",
+     "vai": "",
+     "relato": false
     }
    ]
   },
@@ -1431,11 +1436,6 @@
    "prox": "vazamento_derramamento_g",
    "opcoes": [
     {
-     "id": "nao_sei",
-     "rotulo": "Não sei",
-     "vai": ""
-    },
-    {
      "id": "sim",
      "rotulo": "Sim",
      "vai": "troca_vazamento_derramam"
@@ -1444,6 +1444,11 @@
      "id": "nao",
      "rotulo": "Não",
      "vai": "vazamento_sobre_pista"
+    },
+    {
+     "id": "nao_sei",
+     "rotulo": "Não sabe",
+     "vai": ""
     }
    ]
   },
@@ -1487,7 +1492,8 @@
    "mermaid": "",
    "prox": "veiculo_envolvido_eletri_8",
    "opcoes": [],
-   "despacho": true
+   "despacho": true,
+   "fala": "padrao"
   },
   {
    "id": "veiculo_envolvido_eletri_8",
@@ -1499,15 +1505,15 @@
    "prox": "acidente_envolveu_animal_8",
    "opcoes": [
     {
+     "id": "sim",
+     "rotulo": "Sim",
+     "vai": ""
+    },
+    {
      "id": "nao",
      "rotulo": "Não",
      "vai": "",
      "relato": false
-    },
-    {
-     "id": "sim",
-     "rotulo": "Sim",
-     "vai": ""
     }
    ]
   },
@@ -1543,15 +1549,15 @@
    "prox": "emergencia_motivo_senhor_2",
    "opcoes": [
     {
+     "id": "sim",
+     "rotulo": "Sim",
+     "vai": "FIM"
+    },
+    {
      "id": "nao",
      "rotulo": "Não",
      "vai": "",
      "relato": false
-    },
-    {
-     "id": "sim",
-     "rotulo": "Sim",
-     "vai": "FIM"
     }
    ]
   },
@@ -1631,14 +1637,14 @@
      "vai": ""
     },
     {
-     "id": "3_ou_mais",
-     "rotulo": "3 ou mais",
-     "vai": "troca_acidente_transito_4"
-    },
-    {
      "id": "2",
      "rotulo": "2",
      "vai": "troca_acidente_transito_5"
+    },
+    {
+     "id": "3_ou_mais",
+     "rotulo": "3 ou mais",
+     "vai": "troca_acidente_transito_4"
     }
    ]
   },
@@ -1661,7 +1667,8 @@
    "mermaid": "",
    "prox": "vitima_atropelada_3",
    "opcoes": [],
-   "despacho": true
+   "despacho": true,
+   "fala": "padrao"
   },
   {
    "id": "vitima_atropelada_3",
@@ -1673,15 +1680,15 @@
    "prox": "ela_dentro_veiculo_2",
    "opcoes": [
     {
+     "id": "sim",
+     "rotulo": "Sim",
+     "vai": "ela_desacordada_3"
+    },
+    {
      "id": "nao",
      "rotulo": "Não",
      "vai": "",
      "relato": false
-    },
-    {
-     "id": "sim",
-     "rotulo": "Sim",
-     "vai": "ela_desacordada_3"
     }
    ]
   },
@@ -1727,7 +1734,7 @@
     },
     {
      "id": "nao_sei",
-     "rotulo": "Não sei",
+     "rotulo": "Não sabe",
      "vai": ""
     }
    ]
@@ -1742,10 +1749,9 @@
    "prox": "muito_sangue_visivel_2",
    "opcoes": [
     {
-     "id": "nao_sei",
-     "rotulo": "Não sei",
-     "vai": "",
-     "relato": false
+     "id": "sim",
+     "rotulo": "Sim",
+     "vai": ""
     },
     {
      "id": "nao",
@@ -1754,9 +1760,10 @@
      "relato": false
     },
     {
-     "id": "sim",
-     "rotulo": "Sim",
-     "vai": ""
+     "id": "nao_sei",
+     "rotulo": "Não sabe",
+     "vai": "",
+     "relato": false
     }
    ]
   },
@@ -1770,10 +1777,9 @@
    "prox": "fumaca_principio_incendi_5",
    "opcoes": [
     {
-     "id": "nao_sei",
-     "rotulo": "Não sei",
-     "vai": "",
-     "relato": false
+     "id": "sim",
+     "rotulo": "Sim",
+     "vai": ""
     },
     {
      "id": "nao",
@@ -1782,9 +1788,10 @@
      "relato": false
     },
     {
-     "id": "sim",
-     "rotulo": "Sim",
-     "vai": ""
+     "id": "nao_sei",
+     "rotulo": "Não sabe",
+     "vai": "",
+     "relato": false
     }
    ]
   },
@@ -1798,15 +1805,15 @@
    "prox": "veiculo_capotado_3",
    "opcoes": [
     {
+     "id": "sim",
+     "rotulo": "Sim",
+     "vai": ""
+    },
+    {
      "id": "nao",
      "rotulo": "Não",
      "vai": "",
      "relato": false
-    },
-    {
-     "id": "sim",
-     "rotulo": "Sim",
-     "vai": ""
     }
    ]
   },
@@ -1820,15 +1827,15 @@
    "prox": "houve_colisao_poste_8",
    "opcoes": [
     {
+     "id": "sim",
+     "rotulo": "Sim",
+     "vai": ""
+    },
+    {
      "id": "nao",
      "rotulo": "Não",
      "vai": "",
      "relato": false
-    },
-    {
-     "id": "sim",
-     "rotulo": "Sim",
-     "vai": ""
     }
    ]
   },
@@ -1903,7 +1910,8 @@
    "mermaid": "",
    "prox": "vitima_atropelada_4",
    "opcoes": [],
-   "despacho": true
+   "despacho": true,
+   "fala": "padrao"
   },
   {
    "id": "vitima_atropelada_4",
@@ -1915,15 +1923,15 @@
    "prox": "vitima_dentro_veiculo",
    "opcoes": [
     {
+     "id": "sim",
+     "rotulo": "Sim",
+     "vai": ""
+    },
+    {
      "id": "nao",
      "rotulo": "Não",
      "vai": "",
      "relato": false
-    },
-    {
-     "id": "sim",
-     "rotulo": "Sim",
-     "vai": ""
     }
    ]
   },
@@ -1937,14 +1945,14 @@
    "prox": "vitima_desacordada",
    "opcoes": [
     {
-     "id": "nao",
-     "rotulo": "Não",
-     "vai": ""
-    },
-    {
      "id": "sim",
      "rotulo": "Sim",
      "vai": "vitima_presano_veiculo"
+    },
+    {
+     "id": "nao",
+     "rotulo": "Não",
+     "vai": ""
     }
    ]
   },
@@ -1958,10 +1966,9 @@
    "prox": "muito_sangue_visivel_2",
    "opcoes": [
     {
-     "id": "nao_sei",
-     "rotulo": "Não sei",
-     "vai": "",
-     "relato": false
+     "id": "sim",
+     "rotulo": "Sim",
+     "vai": ""
     },
     {
      "id": "nao",
@@ -1970,9 +1977,10 @@
      "relato": false
     },
     {
-     "id": "sim",
-     "rotulo": "Sim",
-     "vai": ""
+     "id": "nao_sei",
+     "rotulo": "Não sabe",
+     "vai": "",
+     "relato": false
     }
    ]
   },
@@ -1986,8 +1994,8 @@
    "prox": "vitima_desacordada",
    "opcoes": [
     {
-     "id": "nao_sei",
-     "rotulo": "Não sei",
+     "id": "sim",
+     "rotulo": "Sim",
      "vai": ""
     },
     {
@@ -1996,8 +2004,8 @@
      "vai": ""
     },
     {
-     "id": "sim",
-     "rotulo": "Sim",
+     "id": "nao_sei",
+     "rotulo": "Não sabe",
      "vai": ""
     }
    ]
@@ -2011,7 +2019,8 @@
    "mermaid": "",
    "prox": "troca_acidente_transito_6",
    "opcoes": [],
-   "despacho": true
+   "despacho": true,
+   "fala": "padrao"
   },
   {
    "id": "troca_acidente_transito_6",
@@ -2077,19 +2086,19 @@
    "prox": "visualiza_derramamento_v_2",
    "opcoes": [
     {
+     "id": "sim",
+     "rotulo": "Sim",
+     "vai": ""
+    },
+    {
      "id": "nao",
      "rotulo": "Não",
      "vai": "",
      "relato": false
     },
     {
-     "id": "sim",
-     "rotulo": "Sim",
-     "vai": ""
-    },
-    {
      "id": "nao_sei",
-     "rotulo": "Não Sei",
+     "rotulo": "Não sabe",
      "vai": "",
      "relato": false
     }
@@ -2181,19 +2190,19 @@
    "prox": "visualiza_vazamento_derr_3",
    "opcoes": [
     {
+     "id": "sim",
+     "rotulo": "Sim",
+     "vai": ""
+    },
+    {
      "id": "nao",
      "rotulo": "Não",
      "vai": "",
      "relato": false
     },
     {
-     "id": "sim",
-     "rotulo": "Sim",
-     "vai": ""
-    },
-    {
      "id": "nao_sei",
-     "rotulo": "Não sei",
+     "rotulo": "Não sabe",
      "vai": "",
      "relato": false
     }
@@ -2209,15 +2218,15 @@
    "prox": "acidente_envolveu_animal_10",
    "opcoes": [
     {
+     "id": "sim",
+     "rotulo": "Sim",
+     "vai": "vazamento_derramamento_c_3"
+    },
+    {
      "id": "nao",
      "rotulo": "Não",
      "vai": "",
      "relato": false
-    },
-    {
-     "id": "sim",
-     "rotulo": "Sim",
-     "vai": "vazamento_derramamento_c_3"
     }
    ]
   },
@@ -2253,12 +2262,6 @@
    "prox": "acidente_envolveu_animal_10",
    "opcoes": [
     {
-     "id": "nao_sei",
-     "rotulo": "Não sei",
-     "vai": "",
-     "relato": false
-    },
-    {
      "id": "sim",
      "rotulo": "Sim",
      "vai": ""
@@ -2267,6 +2270,12 @@
      "id": "nao",
      "rotulo": "Não",
      "vai": ""
+    },
+    {
+     "id": "nao_sei",
+     "rotulo": "Não sabe",
+     "vai": "",
+     "relato": false
     }
    ]
   },
@@ -2302,12 +2311,6 @@
    "prox": "vazamento_derramamento_g_2",
    "opcoes": [
     {
-     "id": "nao_sei",
-     "rotulo": "Não sei",
-     "vai": "",
-     "relato": false
-    },
-    {
      "id": "sim",
      "rotulo": "Sim",
      "vai": "veiculo_envolvido_eletri_11"
@@ -2316,6 +2319,12 @@
      "id": "nao",
      "rotulo": "Não",
      "vai": "acidente_envolveu_animal_12"
+    },
+    {
+     "id": "nao_sei",
+     "rotulo": "Não sabe",
+     "vai": "",
+     "relato": false
     }
    ]
   },
@@ -2350,15 +2359,15 @@
    "prox": "acidente_envolveu_animal_11",
    "opcoes": [
     {
+     "id": "sim",
+     "rotulo": "Sim",
+     "vai": ""
+    },
+    {
      "id": "nao",
      "rotulo": "Não",
      "vai": "",
      "relato": false
-    },
-    {
-     "id": "sim",
-     "rotulo": "Sim",
-     "vai": ""
     }
    ]
   },
@@ -2437,7 +2446,8 @@
    "mermaid": "",
    "prox": "FIM",
    "opcoes": [],
-   "despacho": true
+   "despacho": true,
+   "fala": "padrao"
   },
   {
    "id": "socorro_ja_acionado_11",
@@ -2448,7 +2458,8 @@
    "mermaid": "",
    "prox": "FIM",
    "opcoes": [],
-   "despacho": true
+   "despacho": true,
+   "fala": "padrao"
   },
   {
    "id": "troca_pessoa_atropelada_2",
@@ -2469,7 +2480,8 @@
    "mermaid": "",
    "prox": "FIM",
    "opcoes": [],
-   "despacho": true
+   "despacho": true,
+   "fala": "padrao"
   },
   {
    "id": "vitima_dentro_veiculo_2",
@@ -2481,14 +2493,14 @@
    "prox": "vitima_desacordada_2",
    "opcoes": [
     {
-     "id": "nao",
-     "rotulo": "Não",
-     "vai": ""
-    },
-    {
      "id": "sim",
      "rotulo": "Sim",
      "vai": "vitima_presa_veiculo"
+    },
+    {
+     "id": "nao",
+     "rotulo": "Não",
+     "vai": ""
     }
    ]
   },
@@ -2502,10 +2514,9 @@
    "prox": "muito_sangue_visivel",
    "opcoes": [
     {
-     "id": "nao_sei",
-     "rotulo": "Não sei",
-     "vai": "",
-     "relato": false
+     "id": "sim",
+     "rotulo": "Sim",
+     "vai": ""
     },
     {
      "id": "nao",
@@ -2514,9 +2525,10 @@
      "relato": false
     },
     {
-     "id": "sim",
-     "rotulo": "Sim",
-     "vai": ""
+     "id": "nao_sei",
+     "rotulo": "Não sabe",
+     "vai": "",
+     "relato": false
     }
    ]
   },
@@ -2530,8 +2542,8 @@
    "prox": "vitima_desacordada_2",
    "opcoes": [
     {
-     "id": "nao_sei",
-     "rotulo": "Não sei",
+     "id": "sim",
+     "rotulo": "Sim",
      "vai": ""
     },
     {
@@ -2540,8 +2552,8 @@
      "vai": ""
     },
     {
-     "id": "sim",
-     "rotulo": "Sim",
+     "id": "nao_sei",
+     "rotulo": "Não sabe",
      "vai": ""
     }
    ]
@@ -2555,7 +2567,8 @@
    "mermaid": "",
    "prox": "FIM",
    "opcoes": [],
-   "despacho": true
+   "despacho": true,
+   "fala": "padrao"
   },
   {
    "id": "troca_acidente_transito_7",
@@ -2607,19 +2620,19 @@
    "prox": "visualiza_derramamento_v_3",
    "opcoes": [
     {
+     "id": "sim",
+     "rotulo": "Sim",
+     "vai": ""
+    },
+    {
      "id": "nao",
      "rotulo": "Não",
      "vai": "",
      "relato": false
     },
     {
-     "id": "sim",
-     "rotulo": "Sim",
-     "vai": ""
-    },
-    {
      "id": "nao_sei",
-     "rotulo": "Não sei",
+     "rotulo": "Não sabe",
      "vai": "",
      "relato": false
     }
@@ -2635,15 +2648,15 @@
    "prox": "acidente_envolveu_animal_14",
    "opcoes": [
     {
+     "id": "sim",
+     "rotulo": "Sim",
+     "vai": ""
+    },
+    {
      "id": "nao",
      "rotulo": "Não",
      "vai": "",
      "relato": false
-    },
-    {
-     "id": "sim",
-     "rotulo": "Sim",
-     "vai": ""
     }
    ]
   },

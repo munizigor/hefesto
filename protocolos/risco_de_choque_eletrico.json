@@ -131,13 +131,14 @@
   {
    "id": "despacho",
    "tipo": "instrucao",
-   "texto": "🚒 Despacho conforme critério da COCB",
+   "texto": "Despacho conforme critério da COCB",
    "obrig": false,
    "outro": false,
    "mermaid": "",
    "prox": "fique_pelo_menos",
    "opcoes": [],
-   "despacho": true
+   "despacho": true,
+   "nota": true
   },
   {
    "id": "fique_pelo_menos",

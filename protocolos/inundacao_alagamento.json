@@ -34,7 +34,8 @@
    "mermaid": "",
    "prox": "sendo_levado_pela",
    "opcoes": [],
-   "despacho": true
+   "despacho": true,
+   "fala": "padrao"
   },
   {
    "id": "sendo_levado_pela",
@@ -57,7 +58,7 @@
     },
     {
      "id": "nao_sei",
-     "rotulo": "Não sei",
+     "rotulo": "Não sabe",
      "vai": "troca_pessoa_arrastada_2",
      "relato": false
     }
@@ -191,13 +192,14 @@
   {
    "id": "despacho_2",
    "tipo": "instrucao",
-   "texto": "🚒 Despacho conforme critério da COCB; avaliar acionamento da Defesa Civil",
+   "texto": "Despacho conforme critério da COCB; avaliar acionamento da Defesa Civil",
    "obrig": false,
    "outro": false,
    "mermaid": "",
    "prox": "desligue_disjuntor_geral",
    "opcoes": [],
-   "despacho": true
+   "despacho": true,
+   "nota": true
   },
   {
    "id": "desligue_disjuntor_geral",

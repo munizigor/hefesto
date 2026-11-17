@@ -23,7 +23,8 @@
    "mermaid": "",
    "prox": "realize_videochamada_fac",
    "opcoes": [],
-   "despacho": true
+   "despacho": true,
+   "fala": "video"
   },
   {
    "id": "realize_videochamada_fac",

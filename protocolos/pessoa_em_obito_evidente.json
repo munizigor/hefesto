@@ -140,7 +140,8 @@
    "mermaid": "",
    "prox": "nao_mexa_corpo",
    "opcoes": [],
-   "despacho": true
+   "despacho": true,
+   "fala": "padrao"
   },
   {
    "id": "nao_mexa_corpo",

@@ -25,7 +25,7 @@
     },
     {
      "id": "nao_sei",
-     "rotulo": "Não sei",
+     "rotulo": "Não sabe",
      "vai": "",
      "relato": false
     }
@@ -113,7 +113,8 @@
    "mermaid": "",
    "prox": "pessoa_ali_porque",
    "opcoes": [],
-   "despacho": true
+   "despacho": true,
+   "fala": "padrao"
   },
   {
    "id": "pessoa_ali_porque",
@@ -125,14 +126,14 @@
    "prox": "pessoa_consciente_segura",
    "opcoes": [
     {
-     "id": "nao",
-     "rotulo": "Não",
-     "vai": ""
-    },
-    {
      "id": "sim",
      "rotulo": "Sim",
      "vai": "troca_tentativa_suicidio"
+    },
+    {
+     "id": "nao",
+     "rotulo": "Não",
+     "vai": ""
     },
     {
      "id": "nao_sabe",

@@ -39,7 +39,8 @@
    "mermaid": "",
    "prox": "tocou_abriu_levou",
    "opcoes": [],
-   "despacho": true
+   "despacho": true,
+   "fala": "padrao"
   },
   {
    "id": "tocou_abriu_levou",

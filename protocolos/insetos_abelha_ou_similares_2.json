@@ -61,14 +61,14 @@
      "vai": ""
     },
     {
-     "id": "nao_sei",
-     "rotulo": "Não sei",
-     "vai": "troca_picada_inseto_2"
-    },
-    {
      "id": "nao",
      "rotulo": "Não",
      "vai": "troca_picada_inseto_3"
+    },
+    {
+     "id": "nao_sei",
+     "rotulo": "Não sabe",
+     "vai": "troca_picada_inseto_2"
     }
    ]
   },
@@ -299,7 +299,8 @@
    "mermaid": "",
    "prox": "FIM",
    "opcoes": [],
-   "despacho": true
+   "despacho": true,
+   "fala": "padrao"
   }
  ],
  "notas": [
