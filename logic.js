@@ -70,7 +70,11 @@ function validar(itens){
 function respondido(it,r){
   if(!ehPergunta(it)) return r===true;
   if(!r) return false;
-  if(temOpcoes(it)) return (r.ops&&r.ops.length>0)||(!!r.outro&&String(r.outro).trim()!=='')||r.pulada===true;
+  if(r.pulada===true) return true;
+  var tem=(r.ops&&r.ops.length>0)||(!!r.outro&&String(r.outro).trim()!=='');
+  /* múltipla escolha só conta como respondida quando o atendente confirma (“Pronto”): dá tempo de marcar várias */
+  if(it.tipo==='multipla') return tem&&r.feito===true;
+  if(temOpcoes(it)) return tem;
   return r.pulada===true||(r.valor!==undefined&&String(r.valor).trim()!=='');
 }
 function caminhar(itens,resp){
@@ -278,6 +282,63 @@ function validarBloco(itens,getBloco,id){
   var v=validar(lista),limpa=function(m){ return m.replace(/b__/g,'').replace(/__/g,' › '); };
   (itens||[]).forEach(function(x){ if(x.tipo==='bloco'&&x.bloco===id) v.erros.push('O bloco usa a si mesmo em “'+x.id+'”.'); });
   return {erros:v.erros.map(limpa),avisos:v.avisos.map(limpa)};
+}
+/* ===== VERIFICAÇÃO DO PROCESSO DE EMERGÊNCIA =====
+   Recebe a entrevista já expandida (sem blocos) e os nomes das naturezas cadastradas. Devolve pontos a revisar:
+   {nivel:'alto'|'atencao'|'info', msg, caminho:[textos]}.
+   - caminho que chega ao fim sem despacho (nem troca para natureza cadastrada, nem encaminhamento a outro órgão)
+   - muitas perguntas antes do despacho
+   - troca para natureza que não existe
+   - natureza sem nenhum despacho */
+var LIMITE_PERGUNTAS_ANTES_DESPACHO=5;
+function verificarProcesso(itens,nomesNaturezas){
+  var out=[]; itens=itens||[]; if(!itens.length) return out;
+  var g=grafo(itens),norm=function(t){ return String(t||'').normalize('NFD').replace(/[̀-ͯ]/g,'').toLowerCase().replace(/[^a-z0-9]+/g,' ').trim(); };
+  var nomes={}; (nomesNaturezas||[]).forEach(function(n){ nomes[norm(n)]=1; });
+  var existe=function(nome){ return !!nomes[norm(nome)]; };
+  var curto=function(t,n){ t=String(t||''); return t.length>(n||55)?t.slice(0,(n||55)-1)+'…':t; };
+  var resolve=function(x){ /* passos possíveis a partir do item: [{rotulo, para}] */
+    var r=[];
+    if(temOpcoes(x)){ x.opcoes.forEach(function(o){ r.push({rotulo:o.rotulo,para:o.vai||g.def[x.id]}); }); if(!x.obrig||x.outro) r.push({rotulo:x.outro?'outra resposta / pulada':'pulada',para:g.def[x.id]}); }
+    else if(ehPergunta(x)) r.push({rotulo:'resposta',para:g.def[x.id]});
+    else r.push({rotulo:'',para:g.def[x.id]});
+    return r;
+  };
+  var seguro=function(x){ return !!x.despacho||(x.tipo==='troca'&&existe(x.texto))||/outros? [oó]rg[aã]os?|fora de compet[eê]ncia|agendad/i.test(x.texto)||(x._doBloco&&/fora de compet[eê]ncia/i.test(x._doBloco)); };
+  var desc=function(x){ return x.tipo==='troca'?'Troca para '+x.texto+(existe(x.texto)?'':' (não cadastrada)'):ehPergunta(x)?'“'+curto(x.texto)+'”':curto(x.texto,40); };
+  var temDespacho=itens.some(function(x){ return x.despacho; });
+  /* trocas para naturezas que não existem */
+  itens.forEach(function(x){ if(x.tipo==='troca'&&!existe(x.texto)) out.push({nivel:'atencao',msg:'Troca para “'+x.texto+'”, natureza não cadastrada. No atendimento o atendente não consegue trocar; o fluxo segue para '+(g.def[x.id]==='FIM'?'o fim da entrevista':'“'+curto((g.item[g.def[x.id]]||{}).texto,40)+'”')+'.',item:x.id}); });
+  if(!temDespacho){ out.push({nivel:'info',msg:'Nenhum caminho desta natureza encaminha ao despacho. Se for emergência, inclua o despacho imediato; se for atendimento agendável, este aviso pode ficar.'}); return out; }
+  /* caminhos que chegam ao fim sem passar por despacho: busca em largura a partir do início, parando nos itens seguros */
+  var ini=itens[0].id,pai={},fila=[ini],vis={},vazamentos=[];
+  pai[ini]=null;
+  if(!seguro(g.item[ini])){
+    vis[ini]=1;
+    while(fila.length){
+      var id=fila.shift(),x=g.item[id];
+      resolve(x).forEach(function(e){
+        if(e.para==='FIM'){ if(!vazamentos.some(function(v){ return v.de===id&&v.rotulo===e.rotulo; })) vazamentos.push({de:id,rotulo:e.rotulo}); return; }
+        var y=g.item[e.para]; if(!y||vis[e.para]||seguro(y)) return;
+        vis[e.para]=1; pai[e.para]={de:id,rotulo:e.rotulo}; fila.push(e.para);
+      });
+    }
+  }
+  var caminho=function(id,ultimo){ var passos=[],cur=id,r=ultimo; while(cur){ var x=g.item[cur]; passos.unshift(desc(x)+(r?' → '+r:'')); var p=pai[cur]; r=p?p.rotulo:''; cur=p?p.de:null; } return passos.concat(['fim da entrevista']); };
+  /* um aviso por ponto de saída; respostas "não sabe" e "pulada" ficam juntas no mesmo ponto */
+  var porItem={}; vazamentos.forEach(function(v){ (porItem[v.de]=porItem[v.de]||[]).push(v.rotulo); });
+  Object.keys(porItem).forEach(function(id){
+    var rot=porItem[id],soPulo=rot.every(function(r){ return /pulada/.test(r); });
+    out.push({nivel:soPulo?'atencao':'alto',msg:(soPulo?'Se a pergunta for pulada, a entrevista termina sem despacho':'A entrevista pode terminar sem despacho')+' depois de '+desc(g.item[id])+(rot.length&&rot[0]?' (resposta: '+rot.join(', ')+')':'')+'.',caminho:caminho(id,rot[0]),item:id});
+  });
+  /* perguntas antes do despacho: maior número num caminho até o primeiro despacho */
+  var memo={},tr={};
+  var maxQ=function(id){ if(id==='FIM'||!g.item[id]) return -1; if(memo[id]!=null) return memo[id]; memo[id]=-1; var x=g.item[id]; if(x.despacho) return memo[id]=0; if(x.tipo==='troca') return memo[id]=-1; var melhor=-1,qual=null; resolve(x).forEach(function(e){ var v=maxQ(e.para); if(v>melhor){ melhor=v; qual=e; } }); if(melhor<0) return memo[id]=-1; tr[id]=qual; return memo[id]=melhor+(ehPergunta(x)?1:0); };
+  var m=maxQ(ini);
+  if(m>LIMITE_PERGUNTAS_ANTES_DESPACHO){ var passos=[],cur=ini; while(cur&&g.item[cur]&&!g.item[cur].despacho){ var x=g.item[cur]; if(ehPergunta(x)) passos.push(desc(x)+' → '+tr[cur].rotulo); cur=tr[cur]?tr[cur].para:null; } passos.push('despacho');
+    out.push({nivel:'atencao',msg:'Até '+m+' perguntas antes do despacho. Leve para depois do despacho o que não muda o recurso enviado.',caminho:passos}); }
+  var ordem={alto:0,atencao:1,info:2}; out.sort(function(a,b){ return ordem[a.nivel]-ordem[b.nivel]; });
+  return out;
 }
 /* texto da resposta de um item, para ficha, relato e registro */
 function valorResposta(it,r){
@@ -775,4 +836,4 @@ function lerFormularioGoogle(link){
   if(!campos.COMENTARIO) return {erro:'O link não tem a resposta COMENTARIO. Gere de novo o link pré-preenchido respondendo cada pergunta com a palavra indicada em config.js.'};
   return {envio:'https://docs.google.com/forms/d/e/'+m[1]+'/formResponse',campos:campos};
 }
-if(typeof module!=='undefined') module.exports={exemplo:exemplo,exemplos:exemplos,NATUREZAS:NATUREZAS,grafo:grafo,validar:validar,caminhar:caminhar,previsao:previsao,valorResposta:valorResposta,valorRelato:valorRelato,respondido:respondido,fluxoMermaid:fluxoMermaid,aplicarFluxo:aplicarFluxo,formJSON:formJSON,idLivre:idLivre,usados:usados,expandir:expandir,temBlocos:temBlocos,validarBloco:validarBloco,lerFormularioGoogle:lerFormularioGoogle,zipCriar:zipCriar,zipLer:zipLer,aplicarForm:aplicarForm,I:I,O:O,importarMermaidLivre:importarMermaidLivre,importarMiroHefesto:importarMiroHefesto,fluxoMiro:fluxoMiro,aplicarFluxoMiro:aplicarFluxoMiro,ehConvencaoMiro:ehConvencaoMiro,slug:slug,lerRespostaIA:lerRespostaIA,promptMiro:promptMiro,ehPergunta:ehPergunta,temOpcoes:temOpcoes};
+if(typeof module!=='undefined') module.exports={exemplo:exemplo,exemplos:exemplos,NATUREZAS:NATUREZAS,grafo:grafo,validar:validar,caminhar:caminhar,previsao:previsao,valorResposta:valorResposta,valorRelato:valorRelato,respondido:respondido,fluxoMermaid:fluxoMermaid,aplicarFluxo:aplicarFluxo,formJSON:formJSON,verificarProcesso:verificarProcesso,idLivre:idLivre,usados:usados,expandir:expandir,temBlocos:temBlocos,validarBloco:validarBloco,lerFormularioGoogle:lerFormularioGoogle,zipCriar:zipCriar,zipLer:zipLer,aplicarForm:aplicarForm,I:I,O:O,importarMermaidLivre:importarMermaidLivre,importarMiroHefesto:importarMiroHefesto,fluxoMiro:fluxoMiro,aplicarFluxoMiro:aplicarFluxoMiro,ehConvencaoMiro:ehConvencaoMiro,slug:slug,lerRespostaIA:lerRespostaIA,promptMiro:promptMiro,ehPergunta:ehPergunta,temOpcoes:temOpcoes};
