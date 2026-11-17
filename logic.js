@@ -303,6 +303,47 @@ function validarBloco(itens,getBloco,id){
    - muitas perguntas antes do despacho
    - troca para natureza que não existe
    - natureza sem nenhum despacho */
+/* O que mudou entre duas versões de uma entrevista, em frases para quem revisa (sem identificadores).
+   Compara item a item pelo identificador e os caminhos já resolvidos (o "item seguinte" vira o item de fato). */
+var NOME_TIPO={unica:'Pergunta',multipla:'Pergunta de múltipla escolha',lista:'Pergunta de lista',numero:'Pergunta numérica',texto:'Pergunta aberta',instrucao:'Orientação',informacao:'Informação ao atendente',diagrama:'Fluxograma',troca:'Troca de natureza',bloco:'Bloco'};
+function diferencas(antes,depois){
+  antes=antes||[]; depois=depois||[]; var out=[],GA=grafo(antes),GB=grafo(depois);
+  var curto=function(t){ t=String(t||'').replace(/\s+/g,' ').trim(); return '“'+(t.length>70?t.slice(0,67)+'…':t)+'”'; };
+  var nomeItem=function(x){ return x.despacho?(x.nota?'Nota de despacho':'Fala de despacho'):(NOME_TIPO[x.tipo]||'Item'); };
+  var dest=function(G,id){ if(id==='FIM') return 'o fechamento'; if(id==='SAIDA') return 'a saída do bloco'; var y=G.item[id]; return y?curto(textoFala(y)):'“'+id+'” (não existe)'; };
+  var relato=function(v){ return v===false?'fora do relato':'no relato'; };
+  antes.forEach(function(x){ if(!GB.item[x.id]) out.push({tipo:'saiu',msg:nomeItem(x)+' removida: '+curto(textoFala(x))}); });
+  depois.forEach(function(y,i){
+    var x=GA.item[y.id],ty=curto(textoFala(y));
+    if(!x){ out.push({tipo:'entrou',msg:nomeItem(y)+' nova: '+ty+(i===0?' (agora abre a entrevista)':'')}); return; }
+    var m=[];
+    if(textoFala(x)!==textoFala(y)) m.push('texto mudou de '+curto(textoFala(x))+' para '+ty);
+    if(x.tipo!==y.tipo) m.push('passou de '+(NOME_TIPO[x.tipo]||x.tipo).toLowerCase()+' para '+(NOME_TIPO[y.tipo]||y.tipo).toLowerCase());
+    if(!!x.despacho!==!!y.despacho) m.push(y.despacho?'passou a ser o ponto de despacho':'deixou de ser ponto de despacho');
+    if(!!x.obrig!==!!y.obrig) m.push(y.obrig?'passou a ser obrigatória':'deixou de ser obrigatória');
+    if((x.relato!==false)!==(y.relato!==false)&&!temOpcoes(y)) m.push('agora vai '+relato(y.relato));
+    if(x.tipo==='bloco'&&y.tipo==='bloco'&&x.bloco!==y.bloco) m.push('passou a usar outro bloco');
+    var OA={}; (x.opcoes||[]).forEach(function(o){ OA[o.id]=o; });
+    var OB={}; (y.opcoes||[]).forEach(function(o){ OB[o.id]=o; });
+    (x.opcoes||[]).forEach(function(o){ if(!OB[o.id]) m.push('resposta “'+o.rotulo+'” removida'); });
+    var mov={},movOrd=[];
+    (y.opcoes||[]).forEach(function(o){ var a=OA[o.id];
+      if(!a){ m.push('resposta nova “'+o.rotulo+'”'+(temOpcoes(y)&&y.tipo!=='multipla'?', que vai para '+dest(GB,o.vai||GB.def[y.id]):'')); return; }
+      if(a.rotulo!==o.rotulo) m.push('resposta “'+a.rotulo+'” virou “'+o.rotulo+'”');
+      if((a.relato!==false)!==(o.relato!==false)) m.push('resposta “'+o.rotulo+'” agora fica '+relato(o.relato));
+      var da=a.vai||GA.def[x.id],db=o.vai||GB.def[y.id];
+      if(y.tipo!=='multipla'&&da!==db&&(a.vai||o.vai)){ var k=db+'|'+da; if(!mov[k]){ mov[k]=[]; movOrd.push(k); } mov[k].push('“'+o.rotulo+'”'); }
+    });
+    movOrd.forEach(function(k){ var r=mov[k],p=k.split('|'); m.push('quem responde '+(r.length>1?r.slice(0,-1).join(', ')+' ou '+r[r.length-1]:r[0])+' agora vai para '+dest(GB,p[0])+' (antes: '+dest(GA,p[1])+')'); });
+    if(GA.def[x.id]!==GB.def[y.id]) m.push((temOpcoes(y)?'as demais respostas agora vão':'depois, agora vai')+' para '+dest(GB,GB.def[y.id])+' (antes: '+dest(GA,GA.def[x.id])+')');
+    if(m.length) out.push({tipo:'mudou',msg:nomeItem(y)+' '+ty+': '+m.join('; ')+'.'});
+  });
+  if(antes.length&&depois.length&&antes[0].id!==depois[0].id&&GA.item[depois[0].id]) out.push({tipo:'mudou',msg:'A entrevista agora começa por '+curto(textoFala(depois[0]))+'.'});
+  var ordem=function(l){ return l.map(function(x){ return x.id; }).filter(function(id){ return GA.item[id]&&GB.item[id]; }).join(','); };
+  if(!out.length&&ordem(antes)!==ordem(depois)) out.push({tipo:'mudou',msg:'Só a ordem dos itens no roteiro mudou; os caminhos são os mesmos.'});
+  return out;
+}
+
 var LIMITE_PERGUNTAS_ANTES_DESPACHO=5;
 function verificarProcesso(itens,nomesNaturezas,politica){
   var out=[]; itens=itens||[]; if(!itens.length) return out;
@@ -853,4 +894,4 @@ function lerFormularioGoogle(link){
   if(!campos.COMENTARIO) return {erro:'O link não tem a resposta COMENTARIO. Gere de novo o link pré-preenchido respondendo cada pergunta com a palavra indicada em config.js.'};
   return {envio:'https://docs.google.com/forms/d/e/'+m[1]+'/formResponse',campos:campos};
 }
-if(typeof module!=='undefined') module.exports={exemplo:exemplo,exemplos:exemplos,NATUREZAS:NATUREZAS,grafo:grafo,validar:validar,caminhar:caminhar,previsao:previsao,valorResposta:valorResposta,valorRelato:valorRelato,respondido:respondido,fluxoMermaid:fluxoMermaid,aplicarFluxo:aplicarFluxo,formJSON:formJSON,definirFalas:definirFalas,textoFala:textoFala,RESPOSTAS_PADRAO:RESPOSTAS_PADRAO,respostasForaDoPadrao:respostasForaDoPadrao,verificarProcesso:verificarProcesso,idLivre:idLivre,usados:usados,expandir:expandir,temBlocos:temBlocos,validarBloco:validarBloco,lerFormularioGoogle:lerFormularioGoogle,zipCriar:zipCriar,zipLer:zipLer,aplicarForm:aplicarForm,I:I,O:O,importarMermaidLivre:importarMermaidLivre,importarMiroHefesto:importarMiroHefesto,fluxoMiro:fluxoMiro,aplicarFluxoMiro:aplicarFluxoMiro,ehConvencaoMiro:ehConvencaoMiro,slug:slug,lerRespostaIA:lerRespostaIA,promptMiro:promptMiro,ehPergunta:ehPergunta,temOpcoes:temOpcoes};
+if(typeof module!=='undefined') module.exports={exemplo:exemplo,exemplos:exemplos,NATUREZAS:NATUREZAS,grafo:grafo,validar:validar,caminhar:caminhar,previsao:previsao,valorResposta:valorResposta,valorRelato:valorRelato,respondido:respondido,fluxoMermaid:fluxoMermaid,aplicarFluxo:aplicarFluxo,formJSON:formJSON,definirFalas:definirFalas,textoFala:textoFala,RESPOSTAS_PADRAO:RESPOSTAS_PADRAO,respostasForaDoPadrao:respostasForaDoPadrao,verificarProcesso:verificarProcesso,idLivre:idLivre,usados:usados,expandir:expandir,temBlocos:temBlocos,validarBloco:validarBloco,lerFormularioGoogle:lerFormularioGoogle,zipCriar:zipCriar,zipLer:zipLer,aplicarForm:aplicarForm,I:I,O:O,importarMermaidLivre:importarMermaidLivre,importarMiroHefesto:importarMiroHefesto,fluxoMiro:fluxoMiro,aplicarFluxoMiro:aplicarFluxoMiro,ehConvencaoMiro:ehConvencaoMiro,slug:slug,lerRespostaIA:lerRespostaIA,promptMiro:promptMiro,ehPergunta:ehPergunta,temOpcoes:temOpcoes,diferencas:diferencas};

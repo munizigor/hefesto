@@ -330,3 +330,17 @@ input.id.oculto{display:none}
 #pMain>#pEditor:empty{display:none}
 .natCfg{margin:4px 0 0}.natCfg>summary{cursor:pointer;font-size:13px;color:#495057;padding:4px 0}
 .dzEmb .dzStatus.inf{display:none}
+.revisao{margin-top:8px}
+.revLinha{gap:10px;align-items:center;padding:8px 10px;border-radius:4px;border:1px solid #DEE2E6;background:#F8F9FA;font-size:14px}
+.revSit{font-weight:700;font-size:12px;text-transform:uppercase;letter-spacing:.3px;padding:2px 8px;border-radius:10px;white-space:nowrap;background:#E9ECEF;color:#495057}
+.revSit.mini{font-size:10px;padding:1px 6px;margin-top:3px;align-self:flex-start}
+.rev-rascunho .revSit,.revSit.rev-rascunho{background:#FFF3CD;color:#7A5B00}
+.rev-pronta .revSit,.revSit.rev-pronta{background:#E3F2FD;color:#0D47A1}
+.rev-aprovada .revSit,.revSit.rev-aprovada{background:#D4EDDA;color:#155724}
+.rev-devolvida .revSit,.revSit.rev-devolvida{background:#F8D7DA;color:#721C24}
+.revMud{margin-top:6px;font-size:14px}.revMud>summary{cursor:pointer;color:#1565C0}
+.revMud ul{margin:6px 0 0 18px;padding:0}.revMud li{margin:3px 0}
+.dzEtapas{display:flex;flex-wrap:wrap;gap:14px;align-items:center;padding:6px 12px;font-size:13px;background:#F8F9FA;border-bottom:1px solid #DEE2E6}
+.etL{display:inline-flex;align-items:center;gap:6px}.etL::before{content:'';width:22px;height:6px;border-radius:3px;background:var(--et)}
+.et-antes{--et:#1976D2}.et-desp{--et:#C62828}.et-depois{--et:#2E7D32}
+.dzNo.et-antes::before,.dzNo.et-desp::before,.dzNo.et-depois::before{content:'';position:absolute;left:-2px;right:-2px;top:-9px;height:6px;border-radius:3px;background:var(--et)}
